@@ -10,7 +10,7 @@ const tints = [
 ] as const;
 
 const sizeStyles = {
-  sm: "size-7 text-[11px]",
+  sm: "size-7 text-xs",
   md: "size-9 text-sm",
   lg: "size-10 text-sm",
 } as const;

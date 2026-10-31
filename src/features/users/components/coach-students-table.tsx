@@ -1,19 +1,10 @@
 "use client";
 
-import {
-  Avatar,
-  BeltChip,
-  DataTable,
-  type DataTableColumn,
-  MobileCard,
-  MobileCardChips,
-  MobileCardLine,
-  MobileCardTop,
-  SkeletonRows,
-} from "@/components/shared";
+import { Avatar, BeltChip, DataTable, type DataTableColumn, SkeletonRows } from "@/components/shared";
 import { useBelts } from "@/features/base-data";
 import type { Student } from "@/features/students";
 import { formatJalaliDate, formatNumber } from "@/lib/format";
+import { CoachStudentCard } from "./coach-student-card";
 
 export function CoachStudentsTable({ students, isLoading }: { students: Student[]; isLoading: boolean }) {
   const { belts } = useBelts();
@@ -77,21 +68,5 @@ export function CoachStudentsTable({ students, isLoading }: { students: Student[
       getRowId={(row) => row.id}
       renderCard={(row) => <CoachStudentCard student={row} belts={belts} />}
     />
-  );
-}
-
-function CoachStudentCard({ student, belts }: { student: Student; belts: ReturnType<typeof useBelts>["belts"] }) {
-  const belt = belts.find((item) => item.id === student.beltId);
-
-  return (
-    <MobileCard>
-      <MobileCardTop leading={<Avatar id={student.id} name={student.fullName} size="md" />} title={student.fullName} />
-      <MobileCardChips>{belt ? <BeltChip belt={belt} /> : null}</MobileCardChips>
-      <MobileCardLine
-        label="وزن"
-        value={<span className="tabular-nums">{student.weightKg !== null ? `${formatNumber(student.weightKg)} کیلوگرم` : "—"}</span>}
-      />
-      <MobileCardLine label="تاریخ تولد" value={formatJalaliDate(new Date(student.birthDate))} />
-    </MobileCard>
   );
 }

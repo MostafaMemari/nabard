@@ -8,8 +8,8 @@ import { LoginForm } from "./login-form";
 export default function LoginPage() {
   return (
     <main className="flex min-h-svh bg-background">
-      <div className="flex w-full flex-col items-center justify-center px-6 py-10 lg:w-[440px] lg:px-10">
-        <div className="flex w-full max-w-[380px] flex-col gap-6">
+      <div className="flex w-full flex-col items-center justify-center px-6 py-10 lg:max-w-auth lg:w-full lg:px-10">
+        <div className="flex w-full max-w-auth-form flex-col gap-6">
           <div className="flex flex-col items-center gap-3 text-center lg:hidden">
             <BrandMark className="size-10 rounded-xl" />
             <div className="flex flex-col gap-1">

@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ErrorBanner } from "@/components/shared";
-import { Skeleton } from "@/components/ui/skeleton";
+import { ErrorBanner, SkeletonRows } from "@/components/shared";
 
 export function HomeListSection({
   title,
@@ -38,10 +37,8 @@ export function HomeListSection({
       {error ? (
         <ErrorBanner onRetry={onRetry} />
       ) : isLoading ? (
-        <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 shadow-card">
-          {["s1", "s2", "s3"].map((key) => (
-            <Skeleton key={key} className="h-12 w-full" />
-          ))}
+        <div className="rounded-xl border border-border bg-card p-4 shadow-card">
+          <SkeletonRows rows={3} className="h-12" />
         </div>
       ) : isEmpty ? (
         <div className="rounded-xl border border-border bg-card shadow-card">{empty}</div>

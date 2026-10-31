@@ -1,19 +1,13 @@
 "use client";
 
 import { Avatar, type DataTableColumn, StatusBadge } from "@/components/shared";
-import { useCompetitions } from "@/features/competitions";
-import { useRegistrations } from "@/features/registrations";
-import { useCoaches } from "@/features/users";
 import { formatJalaliDate, formatRialsAsToman, toPersianDigits } from "@/lib/format";
 import { paymentBadgeStatus } from "../status";
 import type { Payment } from "../types";
+import { usePaymentMeta } from "./use-payment-meta";
 
 export function usePaymentColumns(): DataTableColumn<Payment>[] {
-  const { coaches } = useCoaches();
-  const { competitions } = useCompetitions();
-  const { registrations } = useRegistrations();
-
-  const coachName = (coachId: string) => coaches.find((coach) => coach.id === coachId)?.fullName ?? coachId;
+  const { coachName, competitionTitle, studentCount } = usePaymentMeta();
 
   return [
     {
@@ -30,14 +24,14 @@ export function usePaymentColumns(): DataTableColumn<Payment>[] {
     {
       id: "competition",
       header: "مسابقه",
-      cell: (row) => competitions.find((competition) => competition.id === row.competitionId)?.title ?? row.competitionId,
-      sortValue: (row) => competitions.find((competition) => competition.id === row.competitionId)?.title ?? row.competitionId,
+      cell: (row) => competitionTitle(row.competitionId),
+      sortValue: (row) => competitionTitle(row.competitionId),
       minScreen: "lg",
     },
     {
       id: "students",
       header: "هنرجویان",
-      cell: (row) => toPersianDigits(registrations.filter((registration) => registration.paymentId === row.id).length),
+      cell: (row) => toPersianDigits(studentCount(row.id)),
       align: "end",
       minScreen: "lg",
     },

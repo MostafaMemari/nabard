@@ -1,32 +1,16 @@
 "use client";
 
-import { type ReactNode, useMemo } from "react";
+import { useMemo } from "react";
 import { Table } from "@/components/ui/table";
 import { DataTableBody } from "./data-table-body";
 import { DataTableCards } from "./data-table-cards";
 import { DataTableHeader } from "./data-table-header";
 import { DataTablePagination } from "./data-table-pagination";
 import { useTableSort } from "./data-table-sort";
-import type { DataTableColumn } from "./data-table-types";
+import type { DataTableProps } from "./data-table-types";
 import { ErrorBanner } from "./error-banner";
 
-export type { DataTableColumn } from "./data-table-types";
-
-export type DataTableProps<T> = {
-  columns: DataTableColumn<T>[];
-  rows: T[];
-  getRowId: (row: T) => string;
-  isLoading?: boolean;
-  error?: unknown;
-  onRetry?: () => void;
-  toolbar?: ReactNode;
-  emptyTitle?: string;
-  emptyAction?: ReactNode;
-  pageSize?: number;
-  skeletonRows?: number;
-  onRowClick?: (row: T) => void;
-  renderCard?: (row: T) => ReactNode;
-};
+export type { DataTableColumn, DataTableProps } from "./data-table-types";
 
 export function DataTable<T>({
   columns,

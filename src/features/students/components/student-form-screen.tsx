@@ -12,7 +12,7 @@ export function StudentFormScreen({ coachId, studentId }: { coachId: string; stu
 
   if (isEdit && isLoading) {
     return (
-      <div className="mx-auto flex w-full max-w-[560px] flex-col gap-4">
+      <div className="mx-auto flex w-full max-w-form flex-col gap-4">
         <Skeleton className="h-8 w-32" />
         <Skeleton className="h-96 w-full" />
       </div>
@@ -21,7 +21,7 @@ export function StudentFormScreen({ coachId, studentId }: { coachId: string; stu
 
   if (isEdit && (error || !student)) {
     return (
-      <div className="mx-auto w-full max-w-[560px]">
+      <div className="mx-auto w-full max-w-form">
         <PageHeader title="ویرایش هنرجو" />
         <div className="mt-4 rounded-xl border border-border bg-card shadow-card">
           <EmptyState
@@ -38,7 +38,7 @@ export function StudentFormScreen({ coachId, studentId }: { coachId: string; stu
   }
 
   return (
-    <form onSubmit={form.handleSubmit(submit)} noValidate className="mx-auto flex w-full max-w-[560px] flex-col gap-4">
+    <form onSubmit={form.handleSubmit(submit)} noValidate className="mx-auto flex w-full max-w-form flex-col gap-4">
       <PageHeader
         title={isEdit ? "ویرایش هنرجو" : "هنرجوی جدید"}
         description={isEdit ? "اطلاعات هنرجو را ویرایش کنید." : "اطلاعات هنرجو را وارد کنید تا در ثبت‌نام مسابقات قابل استفاده باشد."}
