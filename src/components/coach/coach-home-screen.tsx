@@ -1,12 +1,12 @@
 "use client";
 
 import { useMemo } from "react";
-import { DataTable, PageHeader } from "@/components/shared";
+import { DataTable, HomeListSection, PageHeader } from "@/components/shared";
 import { CoachCompetitionList, useCompetitions } from "@/features/competitions";
 import { usePayments } from "@/features/payments";
 import { CoachRegistrationCard, coachRegistrationColumns } from "@/features/registrations";
 import { CoachSummaryCards } from "./coach-summary-cards";
-import { EmptyRegistrations as EmptyRegistrationsBlock, HomeListSection } from "./home-list-section";
+import { EmptyRegistrations as EmptyRegistrationsBlock } from "./empty-registrations";
 import { useCoachRegistrationRows } from "./use-coach-registration-rows";
 
 function isRegistrationOpen(deadline: string, now: Date): boolean {

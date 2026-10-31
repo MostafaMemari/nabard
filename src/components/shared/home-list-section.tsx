@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { EmptyState, ErrorBanner } from "@/components/shared";
-import { Button } from "@/components/ui/button";
+import { ErrorBanner } from "@/components/shared";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function HomeListSection({
@@ -29,7 +28,10 @@ export function HomeListSection({
     <section className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-base font-semibold">{title}</h2>
-        <Link href={href} className="text-subtle font-medium text-primary underline-offset-4 hover:underline">
+        <Link
+          href={href}
+          className="text-subtle min-h-11 py-2.5 font-medium text-primary underline-offset-4 hover:underline md:min-h-0 md:py-0"
+        >
           مشاهده همه
         </Link>
       </div>
@@ -47,18 +49,5 @@ export function HomeListSection({
         children
       )}
     </section>
-  );
-}
-
-export function EmptyRegistrations() {
-  return (
-    <EmptyState
-      title="هنوز ثبت‌نامی انجام نشده است."
-      action={
-        <Button size="sm" render={<Link href="/coach/competitions" />}>
-          مشاهده مسابقات باز
-        </Button>
-      }
-    />
   );
 }

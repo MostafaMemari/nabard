@@ -28,7 +28,7 @@ export function CoachCompetitionList({ competitions }: { competitions: Competiti
           <span className="text-subtle whitespace-nowrap text-muted-foreground">
             {formatRialsAsToman(Number(competition.feePerStudent))} <span className="text-xs">هر هنرجو</span>
           </span>
-          <Button size="sm" render={<Link href={`/coach/competitions/${competition.id}/register`} />}>
+          <Button size="sm" className="h-11 md:h-8" render={<Link href={`/coach/competitions/${competition.id}/register`} />}>
             ثبت‌نام
             <ArrowLeftIcon data-icon="inline-end" />
           </Button>

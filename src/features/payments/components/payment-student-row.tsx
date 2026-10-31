@@ -46,6 +46,7 @@ export function PaymentStudentRow({
           <Button
             size="sm"
             variant="outline"
+            className="h-11 md:h-8"
             disabled={!canApprove || registration.status === "APPROVED" || busy}
             onClick={() => void onApprove(registration)}
           >
@@ -54,7 +55,7 @@ export function PaymentStudentRow({
           <Button
             size="sm"
             variant="outline"
-            className="text-danger"
+            className="h-11 text-danger md:h-8"
             disabled={registration.status === "REJECTED" || busy}
             onClick={() => onRejectOpen(registration)}
           >

@@ -50,6 +50,8 @@ export function LoginForm() {
               inputMode="numeric"
               autoComplete="username"
               spellCheck={false}
+              dir="ltr"
+              className="h-11 lg:h-10"
               placeholder="۰۹۱۲۱۲۳۴۵۶۷"
               {...field}
             />
@@ -63,7 +65,15 @@ export function LoginForm() {
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid ? "" : undefined}>
             <FieldLabel htmlFor="password">رمز عبور</FieldLabel>
-            <Input id="password" type="password" autoComplete="current-password" placeholder="••••••••" {...field} />
+            <Input
+              id="password"
+              type="password"
+              autoComplete="current-password"
+              dir="ltr"
+              className="h-11 lg:h-10"
+              placeholder="••••••••"
+              {...field}
+            />
             <FieldError errors={[fieldState.error]} />
           </Field>
         )}

@@ -67,10 +67,10 @@ export function PaymentStep({
         {error ? <p className="text-subtle text-danger">{error}</p> : null}
       </FormSection>
       <div className="flex items-center justify-end gap-3">
-        <Button type="button" variant="outline" onClick={onBack} disabled={submitting}>
+        <Button type="button" variant="outline" className="h-11 md:h-10" onClick={onBack} disabled={submitting}>
           بازگشت
         </Button>
-        <Button type="button" onClick={submit} disabled={submitting}>
+        <Button type="button" className="h-11 md:h-10" onClick={submit} disabled={submitting}>
           ثبت پرداخت
         </Button>
       </div>
