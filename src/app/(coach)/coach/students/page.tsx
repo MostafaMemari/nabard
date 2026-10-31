@@ -1,14 +1,14 @@
+import { Suspense } from "react";
 import { CoachShell } from "@/components/layout/coach-shell";
-import { EmptyState, PageHeader } from "@/components/shared";
+import { StudentsScreen } from "@/features/students";
 import { demoCoach } from "@/lib/demo";
 
 export default function CoachStudentsPage() {
   return (
     <CoachShell active="students" user={demoCoach}>
-      <PageHeader title="هنرجویان" description="مدیریت هنرجویان باشگاه شما." />
-      <section className="rounded-xl border border-border bg-card shadow-card">
-        <EmptyState title="هنوز هنرجویی اضافه نکرده‌اید." />
-      </section>
+      <Suspense fallback={null}>
+        <StudentsScreen coachId={demoCoach.id} />
+      </Suspense>
     </CoachShell>
   );
 }

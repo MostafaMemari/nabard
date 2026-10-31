@@ -26,7 +26,7 @@ function dotClass(name: Belt["name"]): string {
   return name.startsWith("POOM") ? "bg-belt-poom" : "bg-belt-dan";
 }
 
-function labelOf(name: Belt["name"]): string {
+export function beltLabel(name: Belt["name"]): string {
   const colorLabel = colorBeltLabels[name];
   if (colorLabel) {
     return colorLabel;
@@ -34,6 +34,10 @@ function labelOf(name: Belt["name"]): string {
   const [rank, level] = name.split("_");
   const rankLabel = rank === "POOM" ? "پوم" : "دان";
   return `${rankLabel} ${toPersianDigits(Number(level))}`;
+}
+
+export function BeltDot({ name }: { name: Belt["name"] }) {
+  return <span aria-hidden className={cn("size-2 shrink-0 rounded-full", dotClass(name))} />;
 }
 
 export function BeltChip({ belt, className }: { belt: Belt; className?: string }) {
@@ -44,8 +48,8 @@ export function BeltChip({ belt, className }: { belt: Belt; className?: string }
         className,
       )}
     >
-      <span aria-hidden className={cn("size-2 shrink-0 rounded-full", dotClass(belt.name))} />
-      {labelOf(belt.name)}
+      <BeltDot name={belt.name} />
+      {beltLabel(belt.name)}
     </span>
   );
 }
