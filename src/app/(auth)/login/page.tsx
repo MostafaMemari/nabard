@@ -1,13 +1,26 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
 import { BrandMark } from "@/components/layout/brand-mark";
 import { Button } from "@/components/ui/button";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { APP_NAME, APP_SUBTITLE } from "@/lib/app";
+
+const loginSchema = z.object({
+  mobile: z
+    .string()
+    .transform((value) => value.replace(/[۰-۹]/g, (digit) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit))))
+    .pipe(z.string().regex(/^09\d{9}$/, "شماره همراه باید ۱۱ رقم باشد و با ۰۹ شروع شود.")),
+  password: z.string().min(8, "رمز عبور باید حداقل ۸ کاراکتر باشد."),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
 
 function TatamiPattern() {
   return (
@@ -25,10 +38,18 @@ function TatamiPattern() {
 
 export default function LoginPage() {
   const router = useRouter();
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { mobile: "", password: "" },
+  });
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleSubmit(_values: LoginFormValues) {
+    router.push("/admin");
+  }
+
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    router.push("/");
+    void form.handleSubmit(handleSubmit)(event);
   }
 
   return (
@@ -48,26 +69,40 @@ export default function LoginPage() {
             <p className="text-subtle text-muted-foreground">{APP_SUBTITLE}</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
-            <Field>
-              <FieldLabel htmlFor="mobile">شماره همراه</FieldLabel>
-              <Input id="mobile" name="mobile" type="tel" inputMode="numeric" autoComplete="username" placeholder="۰۹۱۲۱۲۳۴۵۶۷" />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="password">رمز عبور</FieldLabel>
-              <Input id="password" name="password" type="password" autoComplete="current-password" placeholder="••••••••" />
-            </Field>
+          <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
+            <Controller
+              name="mobile"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid ? "" : undefined}>
+                  <FieldLabel htmlFor="mobile">شماره همراه</FieldLabel>
+                  <Input id="mobile" type="tel" inputMode="numeric" autoComplete="username" placeholder="۰۹۱۲۱۲۳۴۵۶۷" {...field} />
+                  <FieldError errors={[fieldState.error]} />
+                </Field>
+              )}
+            />
+            <Controller
+              name="password"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid ? "" : undefined}>
+                  <FieldLabel htmlFor="password">رمز عبور</FieldLabel>
+                  <Input id="password" type="password" autoComplete="current-password" placeholder="••••••••" {...field} />
+                  <FieldError errors={[fieldState.error]} />
+                </Field>
+              )}
+            />
             <Button type="submit" size="lg" className="w-full">
               ورود
               <ArrowLeftIcon aria-hidden />
             </Button>
           </form>
 
+          {/* Dev-only entry point; remove when auth is built. */}
           {process.env.NODE_ENV !== "production" ? (
             <p className="text-center text-subtle text-muted-foreground">
-              حالت توسعه:{" "}
-              <a href="/dev/ui" className="font-medium text-primary underline-offset-4 hover:underline">
-                ورود آزمایشی به عنوان مربی
+              <a href="/coach" className="font-medium text-primary underline-offset-4 hover:underline">
+                ورود به‌عنوان مربی (آزمایشی)
               </a>
             </p>
           ) : null}
