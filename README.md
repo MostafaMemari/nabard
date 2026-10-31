@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# نبرد (Nabard)
 
-## Getting Started
+سامانه مدیریت مسابقات تکواندو استان تهران — ثبت‌نام هنرجوها توسط مربی‌ها، بارگذاری رسید پرداخت کارت به کارت و بررسی و تأیید آن‌ها توسط مدیریت استان.
 
-First, run the development server:
+> این مخزن قبلاً با نام «میدان» (meydan) شناخته می‌شد و به «نبرد» (nabard) تغییر نام یافت.
+
+## وضعیت پروژه
+
+فاز فعلی: **UI-first** — تمام صفحات با داده‌های نمونه (mock) کار می‌کنند و هنوز به بک‌اند متصل نیستند.
+
+## راه‌اندازی
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+سپس:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `/` — صفحه اصلی
+- `/login` — صفحه ورود
+- `/dev/ui` — گالری کامپوننت‌ها و شِل‌ها برای بازبینی طراحی
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## اسکریپت‌ها
 
-## Learn More
+| دستور | کار |
+| --- | --- |
+| `pnpm dev` | اجرای سرور توسعه |
+| `pnpm build` | بیلد نسخه پروداکشن |
+| `pnpm check` | بررسی lint و فرمت با Biome |
+| `pnpm fix` | اعمال خودکار اصلاحات Biome |
+| `pnpm typecheck` | بررسی تایپ‌ها با TypeScript |
+| `pnpm test` | اجرای تست‌ها با Vitest |
 
-To learn more about Next.js, take a look at the following resources:
+## تکنولوژی‌ها
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Next.js (App Router) · React · TypeScript (strict) · Tailwind CSS 4 · shadcn/ui (Base UI) · SWR · Zustand · zod + react-hook-form · date-fns-jalali · Biome · Vitest
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+فونت پروژه **Vazirmatn** است و همه صفحات راست‌به‌چپ (RTL) و فارسی هستند.
 
-## Deploy on Vercel
+## مستندات
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [`AGENTS.md`](AGENTS.md) — قوانین کار روی این مخزن؛ قبل از هر تغییری بخوانید
+- [`docs/DESIGN.md`](docs/DESIGN.md) — سند طراحی (v2)؛ هر تغییر UI باید مطابق آن باشد
+- [`docs/api.md`](docs/api.md) — قرارداد API
+- [`docs/schema.prisma`](docs/schema.prisma) — مدل داده
