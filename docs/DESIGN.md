@@ -67,7 +67,7 @@ These make the product feel designed. Use them consistently.
 ## Layout
 
 - Admin: dark sidebar on the start side, app background behind content, content in white cards.
-- Coach: mobile-first with a clean top bar and bottom navigation on phones, sidebar on desktop. 44px touch targets. Tables become stacked rows below 768px.
+- Coach: mobile-first with a clean top bar and bottom navigation on phones, sidebar on desktop. 44px touch targets. Tables become card lists below 768px (see Mobile cards).
 - Forms: single column, max width 640px inside a card, labels above inputs, helper text only when needed, error directly under the field, actions at the end.
 - Detail pages: header card (avatar or icon-less title, status badge, actions), then cards per topic with description lists. Side summary column sticky on desktop.
 
@@ -86,7 +86,19 @@ These make the product feel designed. Use them consistently.
 - Sorting on header click. Filter, sort and page state live in the URL.
 - Row click opens the record page. Short edits open in a side sheet.
 - Bulk actions bar appears above the table after selecting rows.
-- Below 768px a table becomes a list of rows: avatar and name, one secondary line, status badge. Filters move to a bottom sheet.
+- Below 768px a table becomes a list of cards (see Mobile cards). Filters move to a bottom sheet.
+
+## Mobile cards
+
+Below 768px every table is replaced by a list of cards. Never squeeze columns and never scroll horizontally. Re-organize the data by priority instead.
+
+- Card: white, 12px radius, hairline border, soft shadow, 16px padding, 12px gap between cards. The whole card is one tap target (min 44px) that opens the record.
+- Top row: avatar or leading element and the title on the start side, the status badge on the end side.
+- Body: at most two secondary lines of the most important facts as short label and value pairs (small muted label, regular value). Chips (belt, deadline) sit in one wrapping row.
+- Footer (optional): the single most useful action as a text button, and an overflow menu.
+- Lowest-priority columns are not shown on the card; they appear on the record page.
+- Selection lists (for example choosing students to register) use cards with a checkbox at the start; ineligible cards are dimmed and show the reason in muted text.
+- Totals and the main action live in a sticky bottom bar with safe-area padding.
 
 ## Screen blueprints
 
@@ -94,9 +106,9 @@ These make the product feel designed. Use them consistently.
 
 **Admin home.** Summary cards: receipts awaiting review, open competitions, registrations this week. Below, two cards side by side: «نیازمند اقدام» (latest pending receipts, each row with coach avatar, amount, time, a review button) and «مسابقات پیش‌رو» (title, deadline chip, registration count).
 
-**Admin competitions list.** Header with «مسابقه جدید». Toolbar with search and status tabs with counts (همه، پیش‌نویس، منتشر شده، لغو شده). Table: title with discipline, age category, gender, belt chips, deadline chip, registrations count, status.
+**Admin competitions list.** Header with «مسابقه جدید». Toolbar with search and status tabs with counts (همه، پیش‌نویس، منتشر شده، لغو شده). Table: title with discipline, age category, gender, belt range chips, deadline chip, registrations count, status.
 
-**Admin competition form.** Single card sections: «اطلاعات پایه»، «شرکت‌کنندگان» (gender, age category, allowed belts as a multiple-choice chip set), «زمان و پرداخت» (deadline, event date, fee, payee card number, card holder). For kyorugi, a read-only weight class table appears in «شرکت‌کنندگان». Actions at the end.
+**Admin competition form.** Single card sections: «اطلاعات پایه»، «شرکت‌کنندگان» (gender, age category, belt from and to), «زمان و پرداخت» (deadline, event date, fee, payee card number, card holder). For kyorugi, a read-only weight class table appears in «شرکت‌کنندگان». Actions at the end.
 
 **Admin payments review.** List with status tabs and counts; table: coach with avatar, competition, student count, amount, date, status. Detail page: two columns. Main: receipt image card, then student table with per-row approve and reject. Side (sticky): coach, competition, student count, total, confirm and reject receipt buttons. Rejection opens a dialog that requires a note.
 
@@ -112,7 +124,7 @@ These make the product feel designed. Use them consistently.
 
 Navigation: خانه، مسابقات، بررسی پرداخت‌ها، مربیان، هنرجویان، ثبت‌نام‌های من.
 Actions: مسابقه جدید، هنرجوی جدید، ثبت‌نام هنرجویان، آپلود رسید، تأیید رسید، رد رسید، تأیید ثبت‌نام، رد ثبت‌نام، ذخیره، انصراف، حذف.
-Statuses: در انتظار پرداخت (warning)، در انتظار بررسی (pending)، تأیید شده (success)، رد شده (danger)، لغو شده (pending)، پیش‌نویس (pending)، منتشر شده (success)، فعال (success)، غیرفعال (pending).
+Statuses: در انتظار پرداخت (warning)، در انتظار بررسی (pending)، تأیید شده (success)، رد شده (danger)، لغو شده (pending)، پیش‌نویس (pending)، منتشر شده (success).
 Empty states: «هنوز مسابقه‌ای ثبت نشده است.»، «هنوز هنرجویی اضافه نکرده‌اید.»، «پرداختی برای بررسی وجود ندارد.»
 Errors say what is wrong and what to do: «کد ملی باید ۱۰ رقم باشد.»
 Persian digits and thousands separators; Jalali dates; money through `lib/format.ts`.
