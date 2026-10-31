@@ -68,3 +68,9 @@ Viewport audit result: no page-level horizontal overflow anywhere (document scro
 | 16 | `/dev/ui` | Frozen showcase; no functional issues found; left as is. | low |
 
 Verified non-issues: login form layout at 390 is correct live (screenshot artifact); inputs are 16px on mobile (hidden RHF internals report 14.5px but are unfocusable); deadline chip colors match DESIGN (warning ≤3 days, danger when passed); back/forward arrows mirror correctly in RTL; skeletons, empty states and error banners exist on all lists; focus-visible rings present on buttons and inputs; sidebar/nav/nav-labels use logical classes throughout.
+
+## Resolution (post-fix)
+
+Issues 1–6 fixed by a shared card mode on `DataTable` (`renderCard`) with per-column `minScreen` triage, one `MobileCard` anatomy, bottom-sheet filters (`ListToolbar`), and mobile bottom navigation in `AdminShell`. Issue 7 fixed in `ListToolbar`; issue 8 fixed with the admin bottom nav; issue 9 rebuilt as selection cards with dimmed ineligible rows and reasons; issues 10–13 fixed (44px mobile targets, `dir="ltr"` + inputMode/autoComplete on numeric fields, `prefers-reduced-motion`, tabular numerals, token widths). Issue 14 accepted: sort buttons live inside desktop-only tables. Issue 15 fixed by reusing the shared empty state. Final sweep: 54/54 route–viewport checks with no page overflow and zero console errors.
+
+Remaining accepted deviations: `/dev/ui` demo files stay over 80 lines (frozen showcase); table-header sort buttons are pointer-sized (desktop-only context).
