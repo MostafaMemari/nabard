@@ -19,10 +19,10 @@ export function LoginBrandPanel() {
   return (
     <div className="login-brand-panel relative hidden flex-1 overflow-hidden lg:block">
       <TatamiPattern />
-      <div className="absolute inset-x-10 bottom-10 flex flex-col gap-2">
-        <div className="flex items-center gap-3">
-          <BrandMark className="size-10 rounded-xl" />
-          <span className="text-3xl font-semibold text-white">{APP_NAME}</span>
+      <div className="absolute inset-x-10 bottom-10 flex flex-col gap-3">
+        <div className="flex items-center gap-4">
+          <BrandMark className="size-12 rounded-xl shadow-overlay" />
+          <span className="text-4xl font-semibold text-white">{APP_NAME}</span>
         </div>
         <p className="text-sm text-sidebar-foreground">{APP_SUBTITLE}</p>
       </div>
