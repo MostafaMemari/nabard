@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import type { Competition } from "@/features/competitions";
 import type { User } from "@/features/users";
 import { formatRialsAsToman, toPersianDigits } from "@/lib/format";
+import { paymentBadgeStatus } from "../status";
 import type { Payment } from "../types";
 
 export function PaymentSideSummary({
@@ -51,15 +52,8 @@ export function PaymentSideSummary({
               ),
             },
             { term: "تعداد هنرجویان", value: `${toPersianDigits(studentCount)} هنرجو` },
-            { term: "مبلغ", value: formatRialsAsToman(Number(payment.amount)) },
-            {
-              term: "وضعیت رسید",
-              value: (
-                <StatusBadge
-                  status={payment.status === "PENDING" ? "PENDING_REVIEW" : payment.status === "CONFIRMED" ? "APPROVED" : "REJECTED"}
-                />
-              ),
-            },
+            { term: "مبلغ", value: <span className="tabular-nums">{formatRialsAsToman(Number(payment.amount))}</span> },
+            { term: "وضعیت رسید", value: <StatusBadge status={paymentBadgeStatus(payment.status)} /> },
           ]}
         />
         {decided ? (

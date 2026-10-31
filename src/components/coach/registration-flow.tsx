@@ -1,89 +1,40 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
-import { EmptyState } from "@/components/shared";
-import { Skeleton } from "@/components/ui/skeleton";
+import { useMemo, useState } from "react";
 import { ageCategoryLabel, genderLabels } from "@/features/base-data";
 import { disciplineLabels } from "@/features/competitions";
-import { createPayment } from "@/features/payments";
-import {
-  CompetitionSummaryCard,
-  createRegistrations,
-  PaymentStep,
-  SelectionSummaryBar,
-  StudentSelectionList,
-} from "@/features/registrations";
+import { CompetitionSummaryCard, PaymentStep, SelectionSummaryBar, StudentSelectionList } from "@/features/registrations";
 import { formatRialsAsToman } from "@/lib/format";
+import { RegistrationFlowStates } from "./registration-flow-states";
 import { useRegistrationRows } from "./use-registration-rows";
+import { useRegistrationSubmit } from "./use-registration-submit";
 
 export function RegistrationFlow({ competitionId, coachId }: { competitionId: string; coachId: string }) {
-  const router = useRouter();
   const [step, setStep] = useState<"students" | "payment">("students");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const [submitting, setSubmitting] = useState(false);
   const { competition, rows, ready, error, retry } = useRegistrationRows(competitionId, coachId);
 
-  const selectedRows = rows.filter((row) => selectedIds.includes(row.student.id) && row.eligibility.eligible && !row.registered);
+  const selectedRows = useMemo(
+    () => rows.filter((row) => selectedIds.includes(row.student.id) && row.eligibility.eligible && !row.registered),
+    [rows, selectedIds],
+  );
   const totalRials = selectedRows.length * Number(competition?.feePerStudent ?? 0);
+  const { submitting, submit } = useRegistrationSubmit({
+    competitionId,
+    coachId,
+    amountRials: String(totalRials),
+    students: selectedRows.map((row) => ({
+      studentId: row.student.id,
+      weightClassId: row.eligibility.eligible ? (row.eligibility.weightClass?.id ?? null) : null,
+    })),
+  });
 
   function toggle(studentId: string) {
     setSelectedIds((current) => (current.includes(studentId) ? current.filter((id) => id !== studentId) : [...current, studentId]));
   }
 
-  async function submit(receipt: File) {
-    if (!competition) {
-      return;
-    }
-
-    setSubmitting(true);
-    try {
-      const payment = await createPayment({
-        competitionId,
-        coachId,
-        amount: String(totalRials),
-        receiptKey: `receipts/mock-${Date.now()}-${receipt.name}`,
-      });
-      await createRegistrations({
-        competitionId,
-        coachId,
-        paymentId: payment.id,
-        students: selectedRows.map((row) => ({
-          studentId: row.student.id,
-          weightClassId: row.eligibility.eligible ? (row.eligibility.weightClass?.id ?? null) : null,
-        })),
-      });
-      toast.success("ثبت‌نام انجام شد و رسید برای بررسی ارسال شد.");
-      router.push("/coach/registrations");
-    } catch {
-      toast.error("انجام نشد. دوباره تلاش کنید.");
-      setSubmitting(false);
-    }
-  }
-
-  if (error) {
-    return (
-      <div className="rounded-xl border border-border bg-card shadow-card">
-        <EmptyState
-          title="این مسابقه یافت نشد."
-          action={
-            <button type="button" onClick={() => void retry()} className="text-sm font-medium text-primary hover:underline">
-              تلاش دوباره
-            </button>
-          }
-        />
-      </div>
-    );
-  }
-
-  if (!ready || !competition) {
-    return (
-      <div className="flex flex-col gap-4">
-        <Skeleton className="h-28 w-full" />
-        <Skeleton className="h-48 w-full" />
-      </div>
-    );
+  if (error || !ready || !competition) {
+    return <RegistrationFlowStates error={error} retry={() => void retry()} />;
   }
 
   const summary = (

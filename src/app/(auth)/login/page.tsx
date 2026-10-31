@@ -1,57 +1,11 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeftIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import type { FormEvent } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
 import { BrandMark } from "@/components/layout/brand-mark";
-import { Button } from "@/components/ui/button";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { APP_NAME, APP_SUBTITLE } from "@/lib/app";
-
-const loginSchema = z.object({
-  mobile: z
-    .string()
-    .transform((value) => value.replace(/[۰-۹]/g, (digit) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit))))
-    .pipe(z.string().regex(/^09\d{9}$/, "شماره همراه باید ۱۱ رقم باشد و با ۰۹ شروع شود.")),
-  password: z.string().min(8, "رمز عبور باید حداقل ۸ کاراکتر باشد."),
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
-
-function TatamiPattern() {
-  return (
-    <svg aria-hidden className="absolute inset-0 size-full" role="presentation">
-      <defs>
-        <pattern id="tatami-grid" width="96" height="48" patternUnits="userSpaceOnUse">
-          <rect x="0.5" y="0.5" width="95" height="47" rx="2" fill="none" stroke="white" strokeOpacity="0.05" />
-          <line x1="48" y1="0" x2="48" y2="48" stroke="white" strokeOpacity="0.05" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#tatami-grid)" />
-    </svg>
-  );
-}
+import { LoginBrandPanel } from "./login-brand-panel";
+import { LoginForm } from "./login-form";
 
 export default function LoginPage() {
-  const router = useRouter();
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { mobile: "", password: "" },
-  });
-
-  function handleSubmit(_values: LoginFormValues) {
-    router.push("/admin");
-  }
-
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    void form.handleSubmit(handleSubmit)(event);
-  }
-
   return (
     <main className="flex min-h-svh bg-background">
       <div className="flex w-full flex-col items-center justify-center px-6 py-10 lg:w-[440px] lg:px-10">
@@ -69,34 +23,7 @@ export default function LoginPage() {
             <p className="text-subtle text-muted-foreground">{APP_SUBTITLE}</p>
           </div>
 
-          <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
-            <Controller
-              name="mobile"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid ? "" : undefined}>
-                  <FieldLabel htmlFor="mobile">شماره همراه</FieldLabel>
-                  <Input id="mobile" type="tel" inputMode="numeric" autoComplete="username" placeholder="۰۹۱۲۱۲۳۴۵۶۷" {...field} />
-                  <FieldError errors={[fieldState.error]} />
-                </Field>
-              )}
-            />
-            <Controller
-              name="password"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid ? "" : undefined}>
-                  <FieldLabel htmlFor="password">رمز عبور</FieldLabel>
-                  <Input id="password" type="password" autoComplete="current-password" placeholder="••••••••" {...field} />
-                  <FieldError errors={[fieldState.error]} />
-                </Field>
-              )}
-            />
-            <Button type="submit" size="lg" className="w-full">
-              ورود
-              <ArrowLeftIcon aria-hidden />
-            </Button>
-          </form>
+          <LoginForm />
 
           {/* Dev-only entry point; remove when auth is built. */}
           {process.env.NODE_ENV !== "production" ? (
@@ -109,16 +36,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      <div className="login-brand-panel relative hidden flex-1 overflow-hidden lg:block">
-        <TatamiPattern />
-        <div className="absolute inset-x-10 bottom-10 flex flex-col gap-2">
-          <div className="flex items-center gap-3">
-            <BrandMark className="size-10 rounded-xl" />
-            <span className="text-3xl font-semibold text-white">{APP_NAME}</span>
-          </div>
-          <p className="text-sm text-sidebar-foreground">{APP_SUBTITLE}</p>
-        </div>
-      </div>
+      <LoginBrandPanel />
     </main>
   );
 }

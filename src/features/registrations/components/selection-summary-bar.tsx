@@ -34,7 +34,10 @@ export function SelectionSummaryBar({
         <div className="flex items-center gap-4">{summary}</div>
         {action}
       </div>
-      <div className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-3 border-t border-border bg-card px-4 py-3 @lg:hidden">
+      <div
+        className="fixed inset-x-0 z-30 flex items-center justify-between gap-3 border-t border-border bg-card px-4 py-3 shadow-overlay @lg:hidden"
+        style={{ bottom: "calc(3rem + env(safe-area-inset-bottom))" }}
+      >
         <div className="flex min-w-0 flex-col">{summary}</div>
         {action}
       </div>

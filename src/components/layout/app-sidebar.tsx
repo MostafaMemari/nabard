@@ -1,9 +1,9 @@
 import { cn } from "cn";
 import type { LucideIcon } from "lucide-react";
-import Link from "next/link";
 import { Avatar } from "@/components/shared";
 import { APP_NAME, APP_SUBTITLE } from "@/lib/app";
 import { BrandMark } from "./brand-mark";
+import { SidebarLink } from "./sidebar-link";
 
 export type SidebarNavItem = {
   id: string;
@@ -44,27 +44,11 @@ export function AppSidebar({
       <nav aria-label={groupLabel} className="flex-1 overflow-y-auto p-3">
         <p className="px-3 pt-1 pb-2 text-xs text-sidebar-foreground/60">{groupLabel}</p>
         <ul className="flex flex-col gap-1">
-          {items.map((item) => {
-            const isActive = item.id === active;
-            return (
-              <li key={item.id}>
-                <Link
-                  href={item.href}
-                  aria-current={isActive ? "page" : undefined}
-                  className={cn(
-                    "relative flex h-10 items-center gap-2.5 rounded-lg px-3 text-sm font-medium transition-colors duration-150",
-                    isActive
-                      ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                      : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground",
-                  )}
-                >
-                  {isActive ? <span aria-hidden className="absolute inset-y-2 start-0 w-0.75 rounded-full bg-primary" /> : null}
-                  <item.icon aria-hidden className="size-4.5 shrink-0" strokeWidth={1.75} />
-                  {item.label}
-                </Link>
-              </li>
-            );
-          })}
+          {items.map((item) => (
+            <li key={item.id}>
+              <SidebarLink item={item} active={item.id === active} />
+            </li>
+          ))}
         </ul>
       </nav>
       <div className="h-px bg-sidebar-border" aria-hidden />

@@ -33,7 +33,13 @@ export function ReceiptUploadField({ file, onChange }: { file: File | null; onCh
       {file && previewUrl ? (
         <div className="flex flex-col gap-3 rounded-xl border border-border p-3">
           {/* biome-ignore lint/performance/noImgElement: preview of a locally selected file blob */}
-          <img src={previewUrl} alt={`پیش‌نمایش رسید ${file.name}`} className="h-48 w-full rounded-lg object-cover" />
+          <img
+            src={previewUrl}
+            alt={`پیش‌نمایش رسید ${file.name}`}
+            width={640}
+            height={360}
+            className="h-48 w-full rounded-lg object-cover"
+          />
           <div className="flex items-center justify-between gap-3">
             <span className="text-subtle min-w-0 truncate text-muted-foreground">
               {file.name} · {formatNumber(Math.round(file.size / 1024))} کیلوبایت

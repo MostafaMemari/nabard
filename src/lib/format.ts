@@ -1,10 +1,36 @@
-import { format } from "date-fns-jalali";
-import { faIR } from "date-fns-jalali/locale";
-
 export const MONEY_UNIT = "تومان";
 
 const persianDigits = ["۰", "۱", "۲", "۳", "۴", "۵", "۶", "۷", "۸", "۹"];
 const numberFormatter = new Intl.NumberFormat("fa-IR");
+
+const dateFormatter = new Intl.DateTimeFormat("fa-IR", {
+  calendar: "persian",
+  timeZone: "Asia/Tehran",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
+const dateTimeFormatter = new Intl.DateTimeFormat("fa-IR", {
+  calendar: "persian",
+  timeZone: "Asia/Tehran",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
+
+function joinedParts(formatter: Intl.DateTimeFormat, value: Date | number, separator: string): string {
+  const parts = formatter
+    .formatToParts(new Date(value))
+    .filter((part) => part.type !== "literal")
+    .map((part) => part.value);
+  const [year, month, day, hour, minute] = parts;
+  const date = [year, month, day].join(separator);
+  return hour === undefined ? date : `${date} ${hour}:${minute}`;
+}
 
 export function toPersianDigits(value: string | number): string {
   return String(value).replace(/\d/g, (digit) => persianDigits[Number(digit)]);
@@ -30,9 +56,13 @@ export function formatRialsAsToman(value: number): string {
 }
 
 export function formatJalaliDate(value: Date | number): string {
-  return toPersianDigits(format(value, "yyyy/MM/dd", { locale: faIR }));
+  return joinedParts(dateFormatter, value, "/");
 }
 
 export function formatJalaliDateTime(value: Date | number): string {
-  return toPersianDigits(format(value, "yyyy/MM/dd HH:mm", { locale: faIR }));
+  return joinedParts(dateTimeFormatter, value, "/");
+}
+
+export function formatCardNumber(cardNumber: string): string {
+  return toPersianDigits(cardNumber.replace(/(\d{4})(?=\d)/g, "$1-"));
 }

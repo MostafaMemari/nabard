@@ -1,105 +1,20 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LockIcon } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import { toast } from "sonner";
-import { EmptyState, PageHeader } from "@/components/shared";
-import { Button } from "@/components/ui/button";
+import { ErrorBanner, FormActions, PageHeader } from "@/components/shared";
 import { Skeleton } from "@/components/ui/skeleton";
-import { type Gender, useBelts, useWeightClasses } from "@/features/base-data";
-import { useRegistrations } from "@/features/registrations";
-import { createCompetition, updateCompetition } from "../api";
-import { useCompetition } from "../hooks/use-competitions";
-import { disciplineLabels } from "../labels";
-import { type CompetitionFormValues, competitionSchema, emptyCompetitionForm } from "../schemas";
-import type { CompetitionInput, Discipline } from "../types";
+import { useCompetitionForm } from "../hooks/use-competition-form";
 import { BasicInfoSection } from "./basic-info-section";
+import { CompetitionFormLocked } from "./competition-form-locked";
 import { ParticipantsSection } from "./participants-section";
 import { SchedulePaymentSection } from "./schedule-payment-section";
-import { WeightClassTable } from "./weight-class-table";
+import { WeightClassHint } from "./weight-class-hint";
 
 export function CompetitionFormScreen({ competitionId }: { competitionId?: string }) {
-  const router = useRouter();
-  const isEdit = competitionId !== undefined;
+  const { isEdit, form, values, belts, weightClasses, weightLoading, locked, competitionLoading, competitionError, missing, submit } =
+    useCompetitionForm(competitionId);
 
-  const { competition, isLoading: competitionLoading } = useCompetition(competitionId ?? "");
-  const { registrations } = useRegistrations();
-  const { belts } = useBelts();
-
-  const hasRegistrations = registrations.some((registration) => registration.competitionId === competitionId);
-
-  const form = useForm<CompetitionFormValues, unknown, CompetitionFormValues>({
-    resolver: zodResolver(competitionSchema),
-    defaultValues: emptyCompetitionForm,
-  });
-  const values = useWatch({ control: form.control });
-
-  const { weightClasses, isLoading: weightLoading } = useWeightClasses(
-    values.ageCategoryId !== "" && values.gender !== "" ? { ageCategoryId: values.ageCategoryId, gender: values.gender as Gender } : {},
-  );
-
-  useEffect(() => {
-    if (isEdit && competition) {
-      form.reset({
-        title: competition.title,
-        discipline: competition.discipline,
-        gender: competition.gender,
-        ageCategoryId: competition.ageCategoryId,
-        beltIds: [...competition.beltIds],
-        feePerStudent: competition.feePerStudent,
-        payeeCardNumber: competition.payeeCardNumber,
-        payeeCardHolder: competition.payeeCardHolder,
-        registrationDeadline: competition.registrationDeadline,
-        eventDate: competition.eventDate,
-      });
-    }
-  }, [isEdit, competition, form]);
-
-  if (isEdit && hasRegistrations) {
-    return (
-      <section className="mx-auto w-full max-w-2xl">
-        <PageHeader title="ویرایش مسابقه" />
-        <div className="mt-4 rounded-xl border border-border bg-card shadow-card">
-          <EmptyState
-            icon={<LockIcon aria-hidden />}
-            title="این مسابقه ثبت‌نام دارد و اطلاعات آن قابل ویرایش نیست."
-            action={
-              <Button render={<Link href={`/admin/competitions/${competitionId}`} />} size="sm" variant="outline">
-                بازگشت به جزئیات مسابقه
-              </Button>
-            }
-          />
-        </div>
-      </section>
-    );
-  }
-
-  async function submit(values: CompetitionFormValues) {
-    const input: CompetitionInput = {
-      title: values.title.trim(),
-      discipline: values.discipline as Discipline,
-      gender: values.gender as Gender,
-      ageCategoryId: values.ageCategoryId,
-      beltIds: values.beltIds,
-      feePerStudent: values.feePerStudent,
-      payeeCardNumber: values.payeeCardNumber,
-      payeeCardHolder: values.payeeCardHolder.trim(),
-      registrationDeadline: values.registrationDeadline,
-      eventDate: values.eventDate,
-      province: "TEHRAN",
-    };
-
-    try {
-      const saved = isEdit && competitionId ? await updateCompetition(competitionId, input) : await createCompetition(input);
-      toast.success(isEdit ? "تغییرات مسابقه ذخیره شد." : "مسابقه ساخته شد.");
-      router.push(`/admin/competitions/${saved.id}`);
-    } catch {
-      toast.error("ذخیره انجام نشد. دوباره تلاش کنید.");
-    }
+  if (locked) {
+    return <CompetitionFormLocked competitionId={competitionId ?? ""} />;
   }
 
   if (isEdit && competitionLoading) {
@@ -108,6 +23,14 @@ export function CompetitionFormScreen({ competitionId }: { competitionId?: strin
         <Skeleton className="h-8 w-40" />
         <Skeleton className="h-44 w-full" />
         <Skeleton className="h-64 w-full" />
+      </div>
+    );
+  }
+
+  if (isEdit && (competitionError || missing)) {
+    return (
+      <div className="mx-auto w-full max-w-2xl pt-8">
+        <ErrorBanner message="مسابقه یافت نشد." />
       </div>
     );
   }
@@ -122,30 +45,20 @@ export function CompetitionFormScreen({ competitionId }: { competitionId?: strin
       <BasicInfoSection control={form.control} />
 
       <ParticipantsSection control={form.control} belts={belts}>
-        {values.discipline === "KYORUGI" && values.ageCategoryId !== "" && values.gender !== "" ? (
-          <div className="flex flex-col gap-2 rounded-lg bg-primary-subtle/60 p-3">
-            <p className="text-subtle text-muted-foreground">
-              رده‌های وزنی {disciplineLabels.KYORUGI} برای رده سنی و جنسیت انتخاب‌شده به‌صورت خودکار تعیین می‌شود:
-            </p>
-            <WeightClassTable classes={weightClasses} isLoading={weightLoading} />
-          </div>
-        ) : null}
+        <WeightClassHint
+          visible={values.discipline === "KYORUGI" && values.ageCategoryId !== "" && values.gender !== ""}
+          classes={weightClasses}
+          isLoading={weightLoading}
+        />
       </ParticipantsSection>
 
       <SchedulePaymentSection control={form.control} />
 
-      <div className="flex items-center justify-end gap-3">
-        <Button
-          type="button"
-          variant="ghost"
-          render={<Link href={isEdit ? `/admin/competitions/${competitionId}` : "/admin/competitions"} />}
-        >
-          انصراف
-        </Button>
-        <Button type="submit" disabled={form.formState.isSubmitting}>
-          {form.formState.isSubmitting ? "در حال ذخیره…" : "ذخیره"}
-        </Button>
-      </div>
+      <FormActions
+        cancelHref={isEdit ? `/admin/competitions/${competitionId}` : "/admin/competitions"}
+        submitLabel="ذخیره"
+        submitting={form.formState.isSubmitting}
+      />
     </form>
   );
 }

@@ -1,8 +1,8 @@
 "use client";
 
 import { getDate, getDaysInMonth, getMonth, getYear, newDate } from "date-fns-jalali";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toPersianDigits } from "@/lib/format";
+import { DatePartSelect } from "./date-part-select";
 
 const monthLabels = ["فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن", "اسفند"];
 const firstYear = 1395;
@@ -12,7 +12,7 @@ function range(from: number, to: number): number[] {
   return Array.from({ length: to - from + 1 }, (_, index) => from + index);
 }
 
-function selectItems(values: number[], label: (value: number) => string): Record<string, string> {
+function itemsMap(values: number[], label: (value: number) => string): Record<string, string> {
   return Object.fromEntries(values.map((value) => [String(value), label(value)]));
 }
 
@@ -31,64 +31,29 @@ export function JalaliDateField({ value, onChange, disabled }: { value: string; 
     onChange(newDate(nextYear, nextMonth, nextDay).toISOString());
   }
 
-  const triggerClass = "w-full justify-between";
-  const dayItems = selectItems(range(1, daysInMonth), (item) => toPersianDigits(item));
-  const monthItems = Object.fromEntries(monthLabels.map((label, index) => [String(index), label]));
-  const yearItems = selectItems(range(firstYear, lastYear), (item) => toPersianDigits(item));
-
   return (
     <div className="grid grid-cols-[1fr_1.5fr_1fr] gap-2">
-      <Select
-        items={dayItems}
+      <DatePartSelect
+        items={itemsMap(range(1, daysInMonth), (item) => toPersianDigits(item))}
         value={day !== null ? String(day) : ""}
-        onValueChange={(next) => update("day", String(next))}
+        placeholder="روز"
+        onChange={(next) => update("day", next)}
         disabled={disabled}
-      >
-        <SelectTrigger aria-label="روز" className={triggerClass}>
-          <SelectValue placeholder="روز" />
-        </SelectTrigger>
-        <SelectContent>
-          {Object.keys(dayItems).map((item) => (
-            <SelectItem key={item} value={item}>
-              {dayItems[item]}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      <Select
-        items={monthItems}
+      />
+      <DatePartSelect
+        items={Object.fromEntries(monthLabels.map((label, index) => [String(index), label]))}
         value={month !== null ? String(month) : ""}
-        onValueChange={(next) => update("month", String(next))}
+        placeholder="ماه"
+        onChange={(next) => update("month", next)}
         disabled={disabled}
-      >
-        <SelectTrigger aria-label="ماه" className={triggerClass}>
-          <SelectValue placeholder="ماه" />
-        </SelectTrigger>
-        <SelectContent>
-          {Object.keys(monthItems).map((item) => (
-            <SelectItem key={item} value={item}>
-              {monthItems[item]}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      <Select
-        items={yearItems}
+      />
+      <DatePartSelect
+        items={itemsMap(range(firstYear, lastYear), (item) => toPersianDigits(item))}
         value={year !== null ? String(year) : ""}
-        onValueChange={(next) => update("year", String(next))}
+        placeholder="سال"
+        onChange={(next) => update("year", next)}
         disabled={disabled}
-      >
-        <SelectTrigger aria-label="سال" className={triggerClass}>
-          <SelectValue placeholder="سال" />
-        </SelectTrigger>
-        <SelectContent>
-          {Object.keys(yearItems).map((item) => (
-            <SelectItem key={item} value={item}>
-              {yearItems[item]}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      />
     </div>
   );
 }
