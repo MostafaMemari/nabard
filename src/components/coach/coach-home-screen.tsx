@@ -2,6 +2,7 @@
 
 import { TrophyIcon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { DataTable, EmptyState, HomeListSection, PageHeader } from "@/components/shared";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ function isRegistrationOpen(deadline: string, now: Date): boolean {
 }
 
 export function CoachHomeScreen({ coachId }: { coachId: string }) {
+  const router = useRouter();
   const {
     competitions,
     isLoading: competitionsLoading,
@@ -85,6 +87,7 @@ export function CoachHomeScreen({ coachId }: { coachId: string }) {
           rows={recentRows}
           getRowId={(row) => row.registration.id}
           pageSize={5}
+          onRowClick={(row) => router.push(`/coach/registrations/${row.registration.id}`)}
           renderCard={(row) => <CoachRegistrationCard row={row} />}
         />
       </HomeListSection>

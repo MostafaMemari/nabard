@@ -1,10 +1,13 @@
 "use client";
 
+import { ClipboardListIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { DataTable, EmptyState, PageHeader, SkeletonRows } from "@/components/shared";
 import { CoachRegistrationCard, coachRegistrationColumns } from "@/features/registrations";
 import { useCoachRegistrationRows } from "./use-coach-registration-rows";
 
 export function CoachRegistrationsScreen({ coachId }: { coachId: string }) {
+  const router = useRouter();
   const { rows, isLoading, error, mutate } = useCoachRegistrationRows(coachId);
 
   return (
@@ -23,13 +26,14 @@ export function CoachRegistrationsScreen({ coachId }: { coachId: string }) {
         </div>
       ) : rows.length === 0 ? (
         <div className="rounded-xl border border-border bg-card shadow-card">
-          <EmptyState title="هنوز ثبت‌نامی انجام نشده است." />
+          <EmptyState icon={ClipboardListIcon} title="هنوز ثبت‌نامی انجام نشده است." />
         </div>
       ) : (
         <DataTable
           columns={coachRegistrationColumns()}
           rows={rows}
           getRowId={(row) => row.registration.id}
+          onRowClick={(row) => router.push(`/coach/registrations/${row.registration.id}`)}
           renderCard={(row) => <CoachRegistrationCard row={row} />}
         />
       )}

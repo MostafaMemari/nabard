@@ -5,6 +5,7 @@ export * from "./components/coach-registrations-columns";
 export * from "./components/competition-summary-card";
 export * from "./components/payment-step";
 export * from "./components/receipt-upload-field";
+export * from "./components/registration-timeline";
 export * from "./components/selection-summary-bar";
 export * from "./components/student-selection-list";
 export * from "./hooks/use-registrations";

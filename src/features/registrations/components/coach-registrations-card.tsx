@@ -1,12 +1,12 @@
 "use client";
 
-import { Avatar, MobileCard, MobileCardChips, MobileCardLine, MobileCardTop, StatusBadge } from "@/components/shared";
+import { Avatar, MobileCardChips, MobileCardLine, MobileCardLink, MobileCardTop, StatusBadge } from "@/components/shared";
 import { formatJalaliDate } from "@/lib/format";
 import { type CoachRegistrationRow, paymentStatusKey, registrationStatusKey } from "./coach-registration-row";
 
 export function CoachRegistrationCard({ row }: { row: CoachRegistrationRow }) {
   return (
-    <MobileCard>
+    <MobileCardLink href={`/coach/registrations/${row.registration.id}`}>
       <MobileCardTop
         leading={row.studentName ? <Avatar id={row.registration.studentId} name={row.studentName} size="md" /> : undefined}
         title={row.studentName ?? "—"}
@@ -18,6 +18,6 @@ export function CoachRegistrationCard({ row }: { row: CoachRegistrationRow }) {
         {row.paymentStatus ? <StatusBadge status={paymentStatusKey(row.paymentStatus)} /> : null}
         <span className="text-subtle text-muted-foreground">{formatJalaliDate(new Date(row.registration.createdAt))}</span>
       </MobileCardChips>
-    </MobileCard>
+    </MobileCardLink>
   );
 }
