@@ -1,4 +1,5 @@
 "use client";
+import { UsersIcon } from "lucide-react";
 
 import Link from "next/link";
 import { EmptyState, FormActions, FormContainer, FormSection, PageHeader } from "@/components/shared";
@@ -45,7 +46,7 @@ export function StudentFormScreen({ coachId, studentId }: { coachId: string; stu
           description={isEdit ? "اطلاعات هنرجو را ویرایش کنید." : "اطلاعات هنرجو را وارد کنید تا در ثبت‌نام مسابقات قابل استفاده باشد."}
         />
 
-        <FormSection title="اطلاعات هنرجو">
+        <FormSection title="اطلاعات هنرجو" icon={UsersIcon}>
           <StudentTextField
             control={form.control}
             name="fullName"

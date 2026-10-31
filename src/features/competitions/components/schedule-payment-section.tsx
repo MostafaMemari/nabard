@@ -1,4 +1,5 @@
 "use client";
+import { BanknoteIcon } from "lucide-react";
 
 import type { Control } from "react-hook-form";
 import { FormSection } from "@/components/shared";
@@ -7,7 +8,7 @@ import { FormDateField, FormTextField } from "./form-fields";
 
 export function SchedulePaymentSection({ control }: { control: Control<CompetitionFormValues> }) {
   return (
-    <FormSection title="زمان و پرداخت" description="مهلت ثبت‌نام، تاریخ برگزاری و اطلاعات پرداخت هزینه.">
+    <FormSection title="زمان و پرداخت" description="مهلت ثبت‌نام، تاریخ برگزاری و اطلاعات پرداخت هزینه." icon={BanknoteIcon}>
       <div className="grid gap-4 sm:grid-cols-2">
         <FormDateField control={control} name="registrationDeadline" label="مهلت ثبت‌نام" />
         <FormDateField control={control} name="eventDate" label="تاریخ برگزاری" />

@@ -1,6 +1,6 @@
 "use client";
 
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import { DataTable, EmptyState, ErrorBanner } from "@/components/shared";
 import { Button } from "@/components/ui/button";
@@ -47,6 +47,7 @@ export function StudentsResults({
     return (
       <div className="rounded-xl border border-border bg-card shadow-card">
         <EmptyState
+          icon={UsersIcon}
           title={query !== "" ? `نتیجه‌ای برای «${query}» پیدا نشد.` : "هنوز هنرجویی اضافه نکرده‌اید."}
           action={
             query === "" ? (

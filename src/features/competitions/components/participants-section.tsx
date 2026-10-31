@@ -1,4 +1,5 @@
 "use client";
+import { UsersRoundIcon } from "lucide-react";
 
 import type { Control } from "react-hook-form";
 import { Controller } from "react-hook-form";
@@ -27,7 +28,7 @@ export function ParticipantsSection({
   );
 
   return (
-    <FormSection title="شرکت‌کنندگان" description="جنسیت و بازه سنی و کمربندهای مجاز برای شرکت در مسابقه.">
+    <FormSection title="شرکت‌کنندگان" description="جنسیت و بازه سنی و کمربندهای مجاز برای شرکت در مسابقه." icon={UsersRoundIcon}>
       <div className="grid gap-4 sm:grid-cols-2">
         <FormSelectField control={control} name="gender" label="جنسیت" items={genderLabels} />
         <FormSelectField control={control} name="ageCategoryId" label="رده سنی" items={ageItems} />

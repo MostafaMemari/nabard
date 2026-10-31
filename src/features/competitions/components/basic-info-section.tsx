@@ -1,4 +1,5 @@
 "use client";
+import { TrophyIcon } from "lucide-react";
 
 import type { Control } from "react-hook-form";
 import { FormSection } from "@/components/shared";
@@ -8,7 +9,7 @@ import { FormSelectField, FormTextField } from "./form-fields";
 
 export function BasicInfoSection({ control }: { control: Control<CompetitionFormValues> }) {
   return (
-    <FormSection title="اطلاعات پایه" description="نام و رشته ورزشی مسابقه.">
+    <FormSection title="اطلاعات پایه" description="نام و رشته ورزشی مسابقه." icon={TrophyIcon}>
       <FormTextField control={control} name="title" label="عنوان مسابقه" placeholder="مثلاً مسابقات قهرمانی استان تهران" />
       <FormSelectField control={control} name="discipline" label="رشته" items={disciplineLabels} />
     </FormSection>
