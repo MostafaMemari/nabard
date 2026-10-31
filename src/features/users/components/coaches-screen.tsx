@@ -1,19 +1,17 @@
 "use client";
 
-import { MoreHorizontalIcon, PlusIcon, SearchIcon } from "lucide-react";
+import { PlusIcon, SearchIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { Avatar, ConfirmDialog, DataTable, type DataTableColumn, PageHeader, StatusBadge } from "@/components/shared";
+import { DataTable, PageHeader } from "@/components/shared";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { useStudents } from "@/features/students";
-import { toPersianDigits } from "@/lib/format";
-import { updateCoachStatus } from "../api";
 import { useCoaches } from "../hooks/use-coaches";
 import type { User } from "../types";
 import { CoachFormSheet } from "./coach-form-sheet";
+import { CoachStatusDialog } from "./coach-status-dialog";
+import { coachColumns } from "./coaches-columns";
 
 const statusTabs = [
   { id: "all", label: "همه" },
@@ -36,7 +34,6 @@ export function CoachesScreen() {
   const { students } = useStudents();
   const [sheetOpen, setSheetOpen] = useState(false);
   const [pendingStatus, setPendingStatus] = useState<{ coach: User; isActive: boolean } | null>(null);
-  const [working, setWorking] = useState(false);
 
   const counts = {
     all: coaches.length,
@@ -64,69 +61,7 @@ export function CoachesScreen() {
     router.replace(query === "" ? "/admin/coaches" : `/admin/coaches?${query}`, { scroll: false });
   }
 
-  async function runStatusUpdate() {
-    if (!pendingStatus) {
-      return;
-    }
-    setWorking(true);
-    try {
-      await updateCoachStatus(pendingStatus.coach.id, pendingStatus.isActive);
-      toast.success(pendingStatus.isActive ? "مربی فعال شد." : "مربی غیرفعال شد.");
-      await mutate();
-      setPendingStatus(null);
-    } catch {
-      toast.error("انجام نشد. دوباره تلاش کنید.");
-    } finally {
-      setWorking(false);
-    }
-  }
-
-  const columns: DataTableColumn<User>[] = [
-    {
-      id: "name",
-      header: "مربی",
-      cell: (row) => (
-        <div className="flex items-center gap-2.5">
-          <Avatar id={row.id} name={row.fullName} size="sm" />
-          <span className="font-medium">{row.fullName}</span>
-        </div>
-      ),
-      sortValue: (row) => row.fullName,
-    },
-    { id: "mobile", header: "شماره همراه", cell: (row) => toPersianDigits(row.mobile) },
-    {
-      id: "students",
-      header: "هنرجویان",
-      cell: (row) => toPersianDigits(students.filter((student) => student.coachId === row.id).length),
-      align: "end",
-    },
-    { id: "status", header: "وضعیت", cell: (row) => <StatusBadge status={row.isActive ? "ACTIVE" : "INACTIVE"} /> },
-    {
-      id: "actions",
-      header: "عملیات",
-      cell: (row) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger
-            render={
-              <Button variant="ghost" size="icon-sm" aria-label={`عملیات ${row.fullName}`} onClick={(event) => event.stopPropagation()} />
-            }
-          >
-            <MoreHorizontalIcon />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuItem
-              onClick={(event) => {
-                event.stopPropagation();
-                setPendingStatus({ coach: row, isActive: !row.isActive });
-              }}
-            >
-              {row.isActive ? "غیرفعال‌سازی" : "فعال‌سازی"}
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ),
-    },
-  ];
+  const columns = coachColumns({ students, onToggleStatus: (coach) => setPendingStatus({ coach, isActive: !coach.isActive }) });
 
   return (
     <>
@@ -197,23 +132,11 @@ export function CoachesScreen() {
 
       <CoachFormSheet open={sheetOpen} onOpenChange={setSheetOpen} onSaved={() => void mutate()} />
 
-      <ConfirmDialog
-        open={pendingStatus !== null}
-        onOpenChange={(open) => {
-          if (!open) {
-            setPendingStatus(null);
-          }
-        }}
-        title={pendingStatus?.isActive ? "فعال‌سازی مربی" : "غیرفعال کردن مربی"}
-        description={
-          pendingStatus?.isActive
-            ? `با فعال‌سازی، «${pendingStatus.coach.fullName}» می‌تواند دوباره وارد سامانه شود.`
-            : `با غیرفعال کردن حساب، «${pendingStatus?.coach.fullName}» دیگر نمی‌تواند وارد سامانه شود. اطلاعات هنرجویان او حفظ می‌شود.`
-        }
-        confirmLabel={pendingStatus?.isActive ? "فعال‌سازی" : "غیرفعال کردن"}
-        destructive={pendingStatus ? !pendingStatus.isActive : false}
-        loading={working}
-        onConfirm={() => void runStatusUpdate()}
+      <CoachStatusDialog
+        coach={pendingStatus?.coach ?? null}
+        targetActive={pendingStatus?.isActive ?? null}
+        onDone={mutate}
+        onClose={() => setPendingStatus(null)}
       />
     </>
   );
