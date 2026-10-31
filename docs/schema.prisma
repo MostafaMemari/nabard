@@ -1,0 +1,301 @@
+// Taekwondo Competitions - minimal MVP
+// Flow: admin creates a competition -> coach registers students and uploads a
+// card-to-card receipt -> admin confirms the receipt and approves/rejects each student.
+//
+// Belt, AgeCategory and WeightClass are the same models as the existing project schema.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ───────────── Enums ─────────────
+
+enum Gender {
+  MALE   @map("male")
+  FEMALE @map("female")
+}
+
+enum Role {
+  ADMIN @map("admin") // province admin (province is set on the user)
+  COACH @map("coach")
+}
+
+enum Province {
+  TEHRAN                     @map("tehran")
+  ISFAHAN                    @map("isfahan")
+  FARS                       @map("fars")
+  RAZAVI_KHORASAN            @map("razavi_khorasan")
+  KHUZESTAN                  @map("khuzestan")
+  EAST_AZERBAIJAN            @map("east_azerbaijan")
+  WEST_AZERBAIJAN            @map("west_azerbaijan")
+  MAZANDARAN                 @map("mazandaran")
+  GILAN                      @map("gilan")
+  KERMAN                     @map("kerman")
+  SISTAN_AND_BALUCHESTAN     @map("sistan_and_baluchestan")
+  GOLESTAN                   @map("golestan")
+  ARDABIL                    @map("ardabil")
+  QOM                        @map("qom")
+  MARKAZI                    @map("markazi")
+  HORMOZGAN                  @map("hormozgan")
+  KERMANSHAH                 @map("kermanshah")
+  ALBORZ                     @map("alborz")
+  LORESTAN                   @map("lorestan")
+  HAMADAN                    @map("hamadan")
+  YAZD                       @map("yazd")
+  KOHGILUYEH_AND_BOYER_AHMAD @map("kohgiluyeh_and_boyer_ahmad")
+  CHAHARMAHAL_AND_BAKHTIARI  @map("chaharmahal_and_bakhtiari")
+  NORTH_KHORASAN             @map("north_khorasan")
+  SOUTH_KHORASAN             @map("south_khorasan")
+  ILAM                       @map("ilam")
+  BUSHEHR                    @map("bushehr")
+  ZANJAN                     @map("zanjan")
+  QAZVIN                     @map("qazvin")
+  SEMNAN                     @map("semnan")
+  KURDISTAN                  @map("kurdistan")
+}
+
+enum BeltName {
+  WHITE  @map("white")
+  YELLOW @map("yellow")
+  GREEN  @map("green")
+  BLUE   @map("blue")
+  RED    @map("red")
+  POOM_1 @map("poom_1")
+  POOM_2 @map("poom_2")
+  POOM_3 @map("poom_3")
+  POOM_4 @map("poom_4")
+  DAN_1  @map("dan_1")
+  DAN_2  @map("dan_2")
+  DAN_3  @map("dan_3")
+  DAN_4  @map("dan_4")
+  DAN_5  @map("dan_5")
+  DAN_6  @map("dan_6")
+  DAN_7  @map("dan_7")
+  DAN_8  @map("dan_8")
+  DAN_9  @map("dan_9")
+  DAN_10 @map("dan_10")
+}
+
+enum RankType {
+  COLOR @map("color")
+  POOM  @map("poom")
+  DAN   @map("dan")
+}
+
+enum AgeCategoryName {
+  BLOSSOM @map("blossom")
+  YOUTH   @map("youth")
+  CADET   @map("cadet")
+  JUNIOR  @map("junior")
+  YOUNG   @map("young")
+  SENIOR  @map("senior")
+  ULTRA   @map("ultra")
+}
+
+enum Discipline {
+  KYORUGI @map("kyorugi")
+  POOMSAE @map("poomsae")
+}
+
+enum CompetitionStatus {
+  DRAFT     @map("draft")
+  PUBLISHED @map("published")
+  CANCELED  @map("canceled")
+}
+
+enum PaymentStatus {
+  PENDING   @map("pending")
+  CONFIRMED @map("confirmed")
+  REJECTED  @map("rejected")
+}
+
+enum RegistrationStatus {
+  PENDING  @map("pending")
+  APPROVED @map("approved")
+  REJECTED @map("rejected")
+}
+
+// ───────────── Users ─────────────
+
+// Accounts are created by an admin. Coaches belong to a province.
+model User {
+  id           String   @id @default(uuid()) @map("id")
+  mobile       String   @unique @map("mobile") @db.VarChar(11)
+  passwordHash String   @map("password_hash")
+  fullName     String   @map("full_name") @db.VarChar(80)
+  nationalCode String?  @unique @map("national_code") @db.VarChar(10)
+  role         Role     @map("role")
+  province     Province @map("province")
+  isActive     Boolean  @default(true) @map("is_active")
+
+  students      Student[]
+  registrations Registration[]
+  payments      Payment[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
+
+model Student {
+  id           String   @id @default(uuid()) @map("id")
+  fullName     String   @map("full_name") @db.VarChar(80)
+  gender       Gender   @map("gender")
+  nationalCode String   @unique @map("national_code") @db.VarChar(10)
+  birthDate    DateTime @map("birth_date") @db.Date
+  weightKg     Decimal? @map("weight_kg") @db.Decimal(5, 2) // declared by the coach
+
+  beltId  String @map("belt_id")
+  belt    Belt   @relation(fields: [beltId], references: [id])
+  coachId String @map("coach_id")
+  coach   User   @relation(fields: [coachId], references: [id])
+
+  registrations Registration[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([coachId])
+  @@map("students")
+}
+
+// ───────────── Base data (same as the existing schema) ─────────────
+
+model Belt {
+  id       String   @id @default(uuid()) @map("id")
+  name     BeltName @unique @map("name")
+  level    Int      @map("level")
+  order    Int?     @map("order")
+  rankType RankType @default(COLOR) @map("rank_type")
+  color    String?  @map("color")
+  colorHex String?  @map("color_hex")
+
+  students Student[]
+  minFor   Competition[] @relation("CompetitionMinBelt")
+  maxFor   Competition[] @relation("CompetitionMaxBelt")
+
+  @@map("belts")
+}
+
+model AgeCategory {
+  id             String          @id @default(uuid())
+  name           AgeCategoryName @unique @map("name")
+  startDate      DateTime        @map("start_date")
+  endDate        DateTime        @map("end_date")
+  birthYearStart Int?            @map("birth_year_start")
+  birthYearEnd   Int?            @map("birth_year_end")
+
+  weightClasses WeightClass[]
+  competitions  Competition[]
+
+  @@map("age_categories")
+}
+
+model WeightClass {
+  id            String      @id @default(uuid()) @map("id")
+  ageCategoryId String      @map("age_category_id")
+  ageCategory   AgeCategory @relation(fields: [ageCategoryId], references: [id], onDelete: Cascade)
+  gender        Gender      @map("gender")
+  label         String      @map("label")
+  minWeightKg   Decimal     @map("min_weight_kg") @db.Decimal(5, 3)
+  maxWeightKg   Decimal?    @map("max_weight_kg") @db.Decimal(5, 3)
+  order         Int         @map("order")
+  excludeMin    Boolean     @default(false) @map("exclude_min")
+  excludeMax    Boolean     @default(true) @map("exclude_max")
+
+  registrations Registration[]
+
+  @@index([ageCategoryId, gender, order], map: "weight_class_category_gender_order")
+  @@map("weight_classes")
+}
+
+// ───────────── Competitions ─────────────
+
+model Competition {
+  id       String   @id @default(uuid()) @map("id")
+  title    String   @map("title") @db.VarChar(150)
+  province Province @map("province")
+
+  discipline    Discipline  @map("discipline")
+  gender        Gender      @map("gender")
+  ageCategoryId String      @map("age_category_id")
+  ageCategory   AgeCategory @relation(fields: [ageCategoryId], references: [id])
+  minBeltId     String      @map("min_belt_id")
+  minBelt       Belt        @relation("CompetitionMinBelt", fields: [minBeltId], references: [id])
+  maxBeltId     String      @map("max_belt_id")
+  maxBelt       Belt        @relation("CompetitionMaxBelt", fields: [maxBeltId], references: [id])
+
+  feePerStudent        BigInt   @map("fee_per_student") // rials
+  payeeCardNumber      String   @map("payee_card_number") @db.VarChar(16)
+  payeeCardHolder      String   @map("payee_card_holder") @db.VarChar(80)
+  registrationDeadline DateTime @map("registration_deadline")
+  eventDate            DateTime @map("event_date")
+  status               CompetitionStatus @default(DRAFT) @map("status")
+
+  registrations Registration[]
+  payments      Payment[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([province, status])
+  @@map("competitions")
+}
+
+// ───────────── Registration and payment ─────────────
+
+// One payment (one receipt) can cover several students.
+// Later, a payment gateway can create Payment rows the same way.
+model Payment {
+  id            String        @id @default(uuid()) @map("id")
+  competitionId String        @map("competition_id")
+  competition   Competition   @relation(fields: [competitionId], references: [id])
+  coachId       String        @map("coach_id")
+  coach         User          @relation(fields: [coachId], references: [id])
+
+  amount     BigInt        @map("amount")
+  receiptKey String?       @map("receipt_key") // uploaded card-to-card receipt
+  status     PaymentStatus @default(PENDING) @map("status")
+  note       String?       @map("note") @db.VarChar(500) // admin note on rejection
+
+  registrations Registration[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([competitionId, status])
+  @@map("payments")
+}
+
+model Registration {
+  id            String      @id @default(uuid()) @map("id")
+  competitionId String      @map("competition_id")
+  competition   Competition @relation(fields: [competitionId], references: [id])
+  studentId     String      @map("student_id")
+  student       Student     @relation(fields: [studentId], references: [id])
+  coachId       String      @map("coach_id")
+  coach         User        @relation(fields: [coachId], references: [id])
+  paymentId     String?     @map("payment_id")
+  payment       Payment?    @relation(fields: [paymentId], references: [id])
+
+  // Kyorugi only: found automatically from the student's weight
+  weightClassId String?      @map("weight_class_id")
+  weightClass   WeightClass? @relation(fields: [weightClassId], references: [id])
+
+  status RegistrationStatus @default(PENDING) @map("status")
+  note   String?            @map("note") @db.VarChar(500) // admin note on rejection
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([competitionId, studentId])
+  @@index([competitionId, status])
+  @@index([coachId])
+  @@map("registrations")
+}

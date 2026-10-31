@@ -1,0 +1,68 @@
+"use client";
+
+import { cn } from "cn";
+import type { ReactNode } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { TableBody, TableCell, TableRow } from "@/components/ui/table";
+import type { DataTableColumn } from "./data-table-types";
+import { EmptyState } from "./empty-state";
+
+export function DataTableBody<T>({
+  columns,
+  rows,
+  getRowId,
+  isLoading,
+  skeletonKeys,
+  emptyTitle,
+  emptyAction,
+  onRowClick,
+}: {
+  columns: DataTableColumn<T>[];
+  rows: T[];
+  getRowId: (row: T) => string;
+  isLoading: boolean;
+  skeletonKeys: string[];
+  emptyTitle: string;
+  emptyAction?: ReactNode;
+  onRowClick?: (row: T) => void;
+}) {
+  return (
+    <TableBody>
+      {isLoading
+        ? skeletonKeys.map((key) => (
+            <TableRow key={key} className="h-11 hover:bg-transparent">
+              {columns.map((column) => (
+                <TableCell key={column.id}>
+                  <Skeleton className="h-4 w-24" />
+                </TableCell>
+              ))}
+            </TableRow>
+          ))
+        : null}
+
+      {!isLoading && rows.length === 0 ? (
+        <TableRow className="hover:bg-transparent">
+          <TableCell colSpan={columns.length} className="p-0">
+            <EmptyState title={emptyTitle} action={emptyAction} />
+          </TableCell>
+        </TableRow>
+      ) : null}
+
+      {!isLoading
+        ? rows.map((row) => (
+            <TableRow
+              key={getRowId(row)}
+              className={cn("h-11", onRowClick && "cursor-pointer")}
+              onClick={onRowClick ? () => onRowClick(row) : undefined}
+            >
+              {columns.map((column) => (
+                <TableCell key={column.id} className={cn("text-sm", column.align === "end" && "text-end tabular-nums")}>
+                  {column.cell(row)}
+                </TableCell>
+              ))}
+            </TableRow>
+          ))
+        : null}
+    </TableBody>
+  );
+}
