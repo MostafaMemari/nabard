@@ -2,11 +2,11 @@
 
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
-import { DeadlineChip } from "@/components/shared";
+import { CountdownChip, IconTile } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { ageCategoryLabel, genderLabels } from "@/features/base-data";
 import { formatRialsAsToman } from "@/lib/format";
-import { disciplineLabels } from "../labels";
+import { disciplineIcons, disciplineLabels } from "../labels";
 import type { Competition } from "../types";
 
 export function CoachCompetitionList({ competitions }: { competitions: Competition[] }) {
@@ -17,6 +17,7 @@ export function CoachCompetitionList({ competitions }: { competitions: Competiti
           key={competition.id}
           className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border px-4 py-3.5 last:border-b-0 @lg:flex-nowrap"
         >
+          <IconTile icon={disciplineIcons[competition.discipline]} />
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium">{competition.title}</p>
             <p className="text-subtle text-muted-foreground">
@@ -24,7 +25,7 @@ export function CoachCompetitionList({ competitions }: { competitions: Competiti
               {genderLabels[competition.gender]}
             </p>
           </div>
-          <DeadlineChip deadline={competition.registrationDeadline} />
+          <CountdownChip deadline={competition.registrationDeadline} />
           <span className="text-subtle whitespace-nowrap text-muted-foreground">
             {formatRialsAsToman(Number(competition.feePerStudent))} <span className="text-xs">هر هنرجو</span>
           </span>

@@ -1,5 +1,6 @@
 "use client";
 
+import { ClipboardListIcon, HourglassIcon, TrophyIcon } from "lucide-react";
 import { SummaryCard } from "@/components/shared";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatNumber } from "@/lib/format";
@@ -25,14 +26,21 @@ export function CoachSummaryCards({
         </>
       ) : (
         <>
-          <SummaryCard value={formatNumber(openCompetitions)} label="مسابقات باز" href="/coach/competitions" linkLabel="مشاهده مسابقات" />
           <SummaryCard
+            icon={TrophyIcon}
+            value={formatNumber(openCompetitions)}
+            label="مسابقات باز"
+            href="/coach/competitions"
+            linkLabel="مشاهده مسابقات"
+          />
+          <SummaryCard
+            icon={ClipboardListIcon}
             value={formatNumber(registrationsCount)}
             label="ثبت‌نام‌های من"
             href="/coach/registrations"
             linkLabel="مشاهده ثبت‌نام‌ها"
           />
-          <SummaryCard value={formatNumber(awaitingReview)} label="پرداخت‌های در انتظار بررسی" />
+          <SummaryCard icon={HourglassIcon} tone="warning" value={formatNumber(awaitingReview)} label="پرداخت‌های در انتظار بررسی" />
         </>
       )}
     </div>

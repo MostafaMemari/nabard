@@ -1,7 +1,10 @@
 "use client";
 
+import { TrophyIcon } from "lucide-react";
+import Link from "next/link";
 import { useMemo } from "react";
-import { DataTable, HomeListSection, PageHeader } from "@/components/shared";
+import { DataTable, EmptyState, HomeListSection, PageHeader } from "@/components/shared";
+import { Button } from "@/components/ui/button";
 import { CoachCompetitionList, useCompetitions } from "@/features/competitions";
 import { usePayments } from "@/features/payments";
 import { CoachRegistrationCard, coachRegistrationColumns } from "@/features/registrations";
@@ -53,7 +56,17 @@ export function CoachHomeScreen({ coachId }: { coachId: string }) {
         onRetry={() => void retryCompetitions()}
         isLoading={competitionsLoading}
         isEmpty={openCompetitions.length === 0}
-        empty={<p className="px-4 py-10 text-center text-sm text-muted-foreground">هم‌اکنون مسابقه‌ای برای ثبت‌نام وجود ندارد.</p>}
+        empty={
+          <EmptyState
+            icon={TrophyIcon}
+            title="هم‌اکنون مسابقه‌ای برای ثبت‌نام وجود ندارد."
+            action={
+              <Button size="sm" variant="outline" render={<Link href="/coach/competitions" />}>
+                مشاهده همه مسابقات
+              </Button>
+            }
+          />
+        }
       >
         <CoachCompetitionList competitions={openCompetitions} />
       </HomeListSection>
