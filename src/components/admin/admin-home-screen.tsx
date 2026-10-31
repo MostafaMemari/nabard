@@ -1,8 +1,11 @@
 "use client";
 
 import { startOfWeek } from "date-fns-jalali";
+import { ClipboardListIcon, PlusIcon, ReceiptTextIcon, TrophyIcon } from "lucide-react";
+import Link from "next/link";
 import { useMemo } from "react";
-import { HomeListSection, PageHeader, SummaryCard } from "@/components/shared";
+import { EmptyState, HomeListSection, PageHeader, SummaryCard } from "@/components/shared";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCompetitions } from "@/features/competitions";
 import { usePayments } from "@/features/payments";
@@ -43,13 +46,21 @@ export function AdminHomeScreen() {
         ) : (
           <>
             <SummaryCard
+              icon={ReceiptTextIcon}
+              tone="warning"
               value={formatNumber(pendingCount)}
               label="رسیدهای در انتظار بررسی"
               href="/admin/payments?status=pending"
               linkLabel="مشاهده پرداخت‌ها"
             />
-            <SummaryCard value={formatNumber(upcoming.length)} label="مسابقات باز" href="/admin/competitions" linkLabel="مشاهده مسابقات" />
-            <SummaryCard value={formatNumber(weekCount)} label="ثبت‌نام‌های این هفته" />
+            <SummaryCard
+              icon={TrophyIcon}
+              value={formatNumber(upcoming.length)}
+              label="مسابقات باز"
+              href="/admin/competitions"
+              linkLabel="مشاهده مسابقات"
+            />
+            <SummaryCard icon={ClipboardListIcon} value={formatNumber(weekCount)} label="ثبت‌نام‌های این هفته" />
           </>
         )}
       </div>
@@ -62,7 +73,7 @@ export function AdminHomeScreen() {
           onRetry={() => void retryPayments()}
           isLoading={paymentsLoading}
           isEmpty={pendingPayments.length === 0}
-          empty={<p className="px-4 py-10 text-center text-sm text-muted-foreground">پرداختی برای بررسی وجود ندارد.</p>}
+          empty={<EmptyState icon={ReceiptTextIcon} title="پرداختی برای بررسی وجود ندارد." />}
         >
           <AdminActionList payments={pendingPayments} />
         </HomeListSection>
@@ -74,7 +85,18 @@ export function AdminHomeScreen() {
           onRetry={() => void retryCompetitions()}
           isLoading={competitionsLoading}
           isEmpty={upcoming.length === 0}
-          empty={<p className="px-4 py-10 text-center text-sm text-muted-foreground">هنوز مسابقه‌ای ثبت نشده است.</p>}
+          empty={
+            <EmptyState
+              icon={TrophyIcon}
+              title="هنوز مسابقه‌ای ثبت نشده است."
+              action={
+                <Button size="sm" render={<Link href="/admin/competitions/new" />}>
+                  <PlusIcon data-icon="inline-start" />
+                  مسابقه جدید
+                </Button>
+              }
+            />
+          }
         >
           <AdminUpcomingList
             competitions={upcoming}

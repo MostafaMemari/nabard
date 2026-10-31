@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { DeadlineChip } from "@/components/shared";
-import type { Competition } from "@/features/competitions/types";
+import { CountdownChip, IconTile } from "@/components/shared";
+import { type Competition, disciplineIcons } from "@/features/competitions";
 import { formatNumber } from "@/lib/format";
 
 export function AdminUpcomingList({
@@ -20,13 +20,14 @@ export function AdminUpcomingList({
           href={`/admin/competitions/${competition.id}`}
           className="flex min-h-11 items-center gap-3 px-4 py-3 transition-colors duration-150 hover:bg-muted/50"
         >
+          <IconTile icon={disciplineIcons[competition.discipline]} />
           <div className="min-w-0 flex-1 leading-tight">
             <p className="truncate text-sm font-medium">{competition.title}</p>
             <p className="text-subtle mt-0.5 text-muted-foreground tabular-nums">
               {formatNumber(registrationCount(competition.id))} ثبت‌نام
             </p>
           </div>
-          <DeadlineChip deadline={competition.registrationDeadline} />
+          <CountdownChip deadline={competition.registrationDeadline} />
         </Link>
       ))}
     </div>
