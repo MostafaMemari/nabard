@@ -1,0 +1,28 @@
+"use client";
+
+import type { Control } from "react-hook-form";
+import { FormSection } from "@/components/shared";
+import type { CompetitionFormValues } from "../schemas";
+import { FormDateField, FormTextField } from "./form-fields";
+
+export function SchedulePaymentSection({ control }: { control: Control<CompetitionFormValues> }) {
+  return (
+    <FormSection title="زمان و پرداخت" description="مهلت ثبت‌نام، تاریخ برگزاری و اطلاعات پرداخت هزینه.">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <FormDateField control={control} name="registrationDeadline" label="مهلت ثبت‌نام" />
+        <FormDateField control={control} name="eventDate" label="تاریخ برگزاری" />
+      </div>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <FormTextField control={control} name="feePerStudent" label="هزینه هر هنرجو (ریال)" inputMode="numeric" placeholder="۳۵۰۰۰۰۰" />
+        <FormTextField
+          control={control}
+          name="payeeCardNumber"
+          label="شماره کارت دریافت‌کننده"
+          inputMode="numeric"
+          placeholder="۶۱۰۴۳۳۷۸۱۲۳۴۵۶۷۸"
+        />
+      </div>
+      <FormTextField control={control} name="payeeCardHolder" label="نام صاحب کارت" placeholder="فدراسیون تکواندو استان تهران" />
+    </FormSection>
+  );
+}

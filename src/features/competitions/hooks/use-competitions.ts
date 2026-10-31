@@ -10,7 +10,7 @@ export function useCompetitions(params: CompetitionListParams = {}) {
 }
 
 export function useCompetition(id: string) {
-  const { data, error, isLoading, mutate } = useSWR(["competitions", id], () => getCompetition(id));
+  const { data, error, isLoading, mutate } = useSWR(id !== "" ? ["competitions", id] : null, () => getCompetition(id));
 
   return { competition: data, isLoading, error, mutate };
 }
