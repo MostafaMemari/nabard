@@ -1,6 +1,8 @@
 "use client";
 
+import { ReceiptTextIcon } from "lucide-react";
 import Image from "next/image";
+import { IconTile } from "@/components/shared";
 import { formatJalaliDateTime, toPersianDigits } from "@/lib/format";
 import type { Payment } from "../types";
 
@@ -8,12 +10,16 @@ export function PaymentReceiptCard({ payment }: { payment: Payment }) {
   return (
     <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-card md:p-6">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-base font-semibold">تصویر رسید</h2>
+        <div className="flex items-center gap-3">
+          <IconTile icon={ReceiptTextIcon} />
+          <h2 className="text-base font-semibold">تصویر رسید</h2>
+        </div>
         <span className="text-subtle text-muted-foreground">ارسال شده در {formatJalaliDateTime(new Date(payment.createdAt))}</span>
       </div>
 
       {payment.receiptKey === null ? (
-        <div className="flex h-48 items-center justify-center rounded-lg border border-dashed border-border bg-muted/40 text-sm text-muted-foreground">
+        <div className="flex h-48 flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border bg-muted/40 text-sm text-muted-foreground">
+          <IconTile icon={ReceiptTextIcon} tone="pending" />
           رسیدی برای این پرداخت بارگذاری نشده است.
         </div>
       ) : (

@@ -1,7 +1,8 @@
 "use client";
 
+import { UserRoundIcon } from "lucide-react";
 import Link from "next/link";
-import { Avatar, DescriptionList, StatusBadge } from "@/components/shared";
+import { Avatar, DescriptionList, IconTile, StatusBadge } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import type { Competition } from "@/features/competitions";
 import type { User } from "@/features/users";
@@ -31,7 +32,10 @@ export function PaymentSideSummary({
   return (
     <aside className="flex flex-col gap-4 self-start lg:sticky lg:top-8">
       <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-card md:p-6">
-        <h2 className="text-base font-semibold">خلاصه پرداخت</h2>
+        <div className="flex items-center gap-3">
+          <IconTile icon={UserRoundIcon} />
+          <h2 className="text-base font-semibold">خلاصه پرداخت</h2>
+        </div>
         <div className="flex items-center gap-3">
           <Avatar id={payment.coachId} name={coach?.fullName ?? payment.coachId} size="md" />
           <div className="flex flex-col gap-0.5">
@@ -65,7 +69,12 @@ export function PaymentSideSummary({
             <Button disabled={working} onClick={() => void onConfirmReceipt()}>
               تأیید رسید
             </Button>
-            <Button variant="outline" className="text-danger" disabled={working} onClick={onOpenReject}>
+            <Button
+              variant="outline"
+              className="text-danger hover:bg-danger-bg hover:text-danger"
+              disabled={working}
+              onClick={onOpenReject}
+            >
               رد رسید
             </Button>
           </div>
