@@ -1,7 +1,8 @@
 "use client";
 
+import { UsersIcon } from "lucide-react";
 import { useState } from "react";
-import { Avatar, DetailPageHeader, ErrorBanner, StatusBadge } from "@/components/shared";
+import { Avatar, DetailPageHeader, ErrorBanner, IconTile, StatusBadge } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useStudents } from "@/features/students";
@@ -59,7 +60,10 @@ export function CoachDetailScreen({ coachId }: { coachId: string }) {
 
       <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-card md:p-6">
         <div className="flex items-center justify-between gap-3">
-          <h2 className="text-base font-semibold">هنرجویان</h2>
+          <div className="flex items-center gap-3">
+            <IconTile icon={UsersIcon} />
+            <h2 className="text-base font-semibold">هنرجویان</h2>
+          </div>
           <span className="text-subtle text-muted-foreground">{toPersianDigits(coachStudents.length)} هنرجو</span>
         </div>
         <CoachStudentsTable students={coachStudents} isLoading={studentsLoading} />

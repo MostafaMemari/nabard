@@ -1,6 +1,6 @@
 "use client";
 
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, UserRoundIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { DataTable, ListToolbar, PageHeader } from "@/components/shared";
@@ -52,6 +52,7 @@ export function CoachesScreen() {
             onToggleStatus={(coach) => setPendingStatus({ coach, isActive: !coach.isActive })}
           />
         )}
+        emptyIcon={UserRoundIcon}
         emptyTitle={
           filters.search.value.trim() !== "" ? `نتیجه‌ای برای «${filters.search.value.trim()}» پیدا نشد.` : "هنوز مربی‌ای اضافه نشده است."
         }
