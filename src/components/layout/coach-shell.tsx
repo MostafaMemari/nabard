@@ -36,6 +36,12 @@ function BottomNavItem({ item, active }: { item: SidebarNavItem; active: boolean
 export function CoachShell({ active, user, children }: { active: string; user: SidebarUser; children: ReactNode }) {
   return (
     <div className="@container flex min-h-svh bg-background">
+      <a
+        href="#coach-main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:start-2 focus:z-50 focus:rounded-lg focus:bg-card focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-foreground focus:shadow-overlay"
+      >
+        پرش به محتوا
+      </a>
       <AppSidebar items={coachNavItems} active={active} user={user} groupLabel="پنل مربی" breakpoint="lg" />
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-20 shrink-0 border-b border-border bg-card @lg:hidden">
@@ -47,7 +53,7 @@ export function CoachShell({ active, user, children }: { active: string; user: S
             <Avatar id={user.id} name={user.name} size="sm" />
           </div>
         </header>
-        <main className="flex-1 pb-20 @lg:pb-8">
+        <main id="coach-main" className="flex-1 pb-20 @lg:pb-8">
           <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 @lg:p-8">{children}</div>
         </main>
         <nav

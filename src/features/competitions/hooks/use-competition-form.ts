@@ -16,7 +16,12 @@ export function useCompetitionForm(competitionId?: string) {
   const router = useRouter();
   const isEdit = competitionId !== undefined;
 
-  const { competition, isLoading: competitionLoading, error: competitionError, mutate: retryCompetition } = useCompetition(competitionId ?? "");
+  const {
+    competition,
+    isLoading: competitionLoading,
+    error: competitionError,
+    mutate: retryCompetition,
+  } = useCompetition(competitionId ?? "");
   const { registrations } = useRegistrations();
   const { belts } = useBelts();
 

@@ -33,13 +33,19 @@ function MobileNavItem({ item, active }: { item: SidebarNavItem; active: boolean
 export function AdminShell({ active, user, children }: { active: string; user: SidebarUser; children: ReactNode }) {
   return (
     <div className="flex min-h-svh bg-background">
+      <a
+        href="#admin-main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:start-2 focus:z-50 focus:rounded-lg focus:bg-card focus:px-3 focus:py-2 focus:text-sm focus:font-medium focus:text-foreground focus:shadow-overlay"
+      >
+        پرش به محتوا
+      </a>
       <AppSidebar items={navItems.slice(1)} active={active} user={user} groupLabel="مدیریت مسابقات" />
       <div className="flex min-w-0 flex-1 flex-col">
         <div className="flex h-14 shrink-0 items-center gap-2.5 border-b border-border bg-card px-4 md:hidden">
           <BrandMark className="size-7" />
           <span className="text-sm font-semibold">{APP_NAME}</span>
         </div>
-        <main className="flex-1 pb-20 md:pb-0">
+        <main id="admin-main" className="flex-1 pb-20 md:pb-0">
           <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 md:p-8">{children}</div>
         </main>
         <nav
