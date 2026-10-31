@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -15,30 +16,27 @@ export type ConfirmDialogProps = {
   onConfirm: () => void;
 };
 
-export function ConfirmDialog({
-  open,
-  onOpenChange,
-  title,
-  description,
-  confirmLabel,
-  cancelLabel = "انصراف",
-  destructive = false,
-  loading = false,
-  onConfirm,
-}: ConfirmDialogProps) {
+export function ConfirmDialog(props: ConfirmDialogProps) {
+  const { open, onOpenChange } = props;
+  const snapshotRef = useRef(props);
+  if (open) {
+    snapshotRef.current = props;
+  }
+  const view = snapshotRef.current;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent showCloseButton={false}>
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          {description ? <DialogDescription>{description}</DialogDescription> : null}
+          <DialogTitle>{view.title}</DialogTitle>
+          {view.description ? <DialogDescription>{view.description}</DialogDescription> : null}
         </DialogHeader>
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            {cancelLabel}
+            {view.cancelLabel ?? "انصراف"}
           </Button>
-          <Button type="button" variant={destructive ? "destructive" : "default"} disabled={loading} onClick={onConfirm}>
-            {confirmLabel}
+          <Button type="button" variant={view.destructive ? "destructive" : "default"} disabled={view.loading} onClick={props.onConfirm}>
+            {view.confirmLabel}
           </Button>
         </DialogFooter>
       </DialogContent>
