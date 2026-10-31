@@ -10,8 +10,20 @@ import { SchedulePaymentSection } from "./schedule-payment-section";
 import { WeightClassHint } from "./weight-class-hint";
 
 export function CompetitionFormScreen({ competitionId }: { competitionId?: string }) {
-  const { isEdit, form, values, belts, weightClasses, weightLoading, locked, competitionLoading, competitionError, missing, submit } =
-    useCompetitionForm(competitionId);
+  const {
+    isEdit,
+    form,
+    values,
+    belts,
+    weightClasses,
+    weightLoading,
+    locked,
+    competitionLoading,
+    competitionError,
+    retryCompetition,
+    missing,
+    submit,
+  } = useCompetitionForm(competitionId);
 
   if (locked) {
     return <CompetitionFormLocked competitionId={competitionId ?? ""} />;
@@ -30,7 +42,7 @@ export function CompetitionFormScreen({ competitionId }: { competitionId?: strin
   if (isEdit && (competitionError || missing)) {
     return (
       <div className="mx-auto w-full max-w-2xl pt-8">
-        <ErrorBanner message="مسابقه یافت نشد." />
+        <ErrorBanner message="مسابقه یافت نشد." onRetry={() => void retryCompetition()} />
       </div>
     );
   }
