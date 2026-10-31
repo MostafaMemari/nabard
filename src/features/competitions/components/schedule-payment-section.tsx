@@ -13,12 +13,23 @@ export function SchedulePaymentSection({ control }: { control: Control<Competiti
         <FormDateField control={control} name="eventDate" label="تاریخ برگزاری" />
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
-        <FormTextField control={control} name="feePerStudent" label="هزینه هر هنرجو (ریال)" inputMode="numeric" placeholder="۳۵۰۰۰۰۰" />
+        <FormTextField
+          control={control}
+          name="feePerStudent"
+          label="هزینه هر هنرجو (ریال)"
+          inputMode="numeric"
+          dir="ltr"
+          autoComplete="off"
+          placeholder="۳۵۰۰۰۰۰"
+        />
         <FormTextField
           control={control}
           name="payeeCardNumber"
           label="شماره کارت دریافت‌کننده"
           inputMode="numeric"
+          dir="ltr"
+          autoComplete="off"
+          spellCheck={false}
           placeholder="۶۱۰۴۳۳۷۸۱۲۳۴۵۶۷۸"
         />
       </div>

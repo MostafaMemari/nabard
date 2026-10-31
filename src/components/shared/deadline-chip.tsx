@@ -32,7 +32,7 @@ export function DeadlineChip({ deadline, now = new Date(), className }: { deadli
   return (
     <span
       className={cn(
-        "inline-flex h-6 w-fit items-center rounded-full px-2.5 text-subtle font-medium whitespace-nowrap",
+        "inline-flex h-6 w-fit items-center rounded-full px-2.5 text-subtle font-medium whitespace-nowrap tabular-nums",
         chipClass(days),
         className,
       )}

@@ -38,8 +38,14 @@ export function MobileCardTop({
     <div className="flex items-center gap-3">
       {leading}
       <div className="min-w-0 flex-1 leading-tight">
-        <p className="truncate text-sm font-medium">{title}</p>
-        {subtitle ? <p className="text-subtle mt-0.5 truncate text-muted-foreground">{subtitle}</p> : null}
+        <p className="truncate text-sm font-medium" title={typeof title === "string" ? title : undefined}>
+          {title}
+        </p>
+        {subtitle ? (
+          <p className="text-subtle mt-0.5 truncate text-muted-foreground" title={typeof subtitle === "string" ? subtitle : undefined}>
+            {subtitle}
+          </p>
+        ) : null}
       </div>
       {end}
     </div>
@@ -50,7 +56,9 @@ export function MobileCardLine({ label, value }: { label: string; value: ReactNo
   return (
     <div className="flex items-baseline justify-between gap-3">
       <span className="text-subtle shrink-0 text-muted-foreground">{label}</span>
-      <span className="min-w-0 truncate text-sm">{value}</span>
+      <span className="min-w-0 truncate text-sm tabular-nums" title={typeof value === "string" ? value : undefined}>
+        {value}
+      </span>
     </div>
   );
 }

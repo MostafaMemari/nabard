@@ -58,6 +58,7 @@ export function StudentFormScreen({ coachId, studentId }: { coachId: string; stu
           name="nationalCode"
           label="کد ملی"
           inputMode="numeric"
+          dir="ltr"
           placeholder="۰۰۱۲۳۴۵۶۷۸۹"
           spellCheck={false}
           autoComplete="off"
@@ -69,6 +70,7 @@ export function StudentFormScreen({ coachId, studentId }: { coachId: string; stu
           name="weightKg"
           label="وزن (کیلوگرم)"
           inputMode="decimal"
+          dir="ltr"
           placeholder="مثلاً ۵۴٫۵"
           autoComplete="off"
         />

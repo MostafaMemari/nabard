@@ -51,8 +51,24 @@ export function CoachFormSheet({
         </SheetHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="mt-6 flex flex-col gap-4">
           <CoachTextField control={form.control} name="fullName" label="نام و نام خانوادگی" placeholder="مثلاً رضا محمدی" />
-          <CoachTextField control={form.control} name="mobile" label="شماره همراه" inputMode="numeric" placeholder="۰۹۱۲۳۴۵۶۷۸۹" />
-          <CoachTextField control={form.control} name="nationalCode" label="کد ملی" inputMode="numeric" placeholder="۰۰۱۲۳۴۵۶۷۸۹" />
+          <CoachTextField
+            control={form.control}
+            name="mobile"
+            label="شماره همراه"
+            inputMode="numeric"
+            dir="ltr"
+            autoComplete="off"
+            placeholder="۰۹۱۲۳۴۵۶۷۸۹"
+          />
+          <CoachTextField
+            control={form.control}
+            name="nationalCode"
+            label="کد ملی"
+            inputMode="numeric"
+            dir="ltr"
+            autoComplete="off"
+            placeholder="۰۰۱۲۳۴۵۶۷۸۹"
+          />
           <CoachTextField
             control={form.control}
             name="initialPassword"
