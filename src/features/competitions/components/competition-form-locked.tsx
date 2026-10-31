@@ -11,7 +11,8 @@ export function CompetitionFormLocked({ competitionId }: { competitionId: string
       <PageHeader title="ویرایش مسابقه" />
       <div className="mt-4 rounded-xl border border-border bg-card shadow-card">
         <EmptyState
-          icon={<LockIcon aria-hidden />}
+          icon={LockIcon}
+          tone="warning"
           title="این مسابقه ثبت‌نام دارد و اطلاعات آن قابل ویرایش نیست."
           action={
             <Button render={<Link href={`/admin/competitions/${competitionId}`} />} size="sm" variant="outline">
