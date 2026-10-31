@@ -1,5 +1,5 @@
 import { cn } from "cn";
-import { ClipboardListIcon, TrophyIcon, UsersIcon } from "lucide-react";
+import { ClipboardListIcon, HouseIcon, TrophyIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Avatar } from "@/components/shared";
@@ -8,6 +8,7 @@ import { AppSidebar, type SidebarUser } from "./app-sidebar";
 import { BrandMark } from "./brand-mark";
 
 const navItems = [
+  { id: "home", label: "خانه", href: "/coach", icon: HouseIcon },
   { id: "competitions", label: "مسابقات", href: "/coach/competitions", icon: TrophyIcon },
   { id: "students", label: "هنرجویان", href: "/coach/students", icon: UsersIcon },
   { id: "registrations", label: "ثبت‌نام‌های من", href: "/coach/registrations", icon: ClipboardListIcon },
@@ -26,7 +27,7 @@ export function CoachShell({ active, user, children }: { active: string; user: S
             </div>
             <Avatar id={user.id} name={user.name} size="sm" />
           </div>
-          <nav aria-label="ناوبری مربی" className="grid grid-cols-3">
+          <nav aria-label="ناوبری مربی" className="grid grid-cols-4">
             {navItems.map((item) => {
               const isActive = item.id === active;
               return (

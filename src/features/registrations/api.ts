@@ -10,6 +10,40 @@ export type RegistrationListParams = ListQuery & {
   status?: RegistrationStatus;
 };
 
+export type CreateRegistrationsInput = {
+  competitionId: string;
+  coachId: string;
+  paymentId: string;
+  students: Array<{ studentId: string; weightClassId: string | null }>;
+};
+
+let nextId = registrations.length + 1;
+
+export async function createRegistrations(input: CreateRegistrationsInput): Promise<Registration[]> {
+  await mockDelay();
+  const now = new Date().toISOString();
+  const created = input.students.map((student, index) => {
+    const registration: Registration = {
+      id: `reg-new-${nextId + index}`,
+      competitionId: input.competitionId,
+      studentId: student.studentId,
+      coachId: input.coachId,
+      paymentId: input.paymentId,
+      weightClassId: student.weightClassId,
+      status: "PENDING",
+      note: null,
+      createdAt: now,
+      updatedAt: now,
+    };
+
+    return registration;
+  });
+  nextId += created.length;
+  registrations.push(...created);
+
+  return created;
+}
+
 export async function listRegistrations(params: RegistrationListParams = {}): Promise<ListResult<Registration>> {
   await mockDelay();
   const filtered = registrations.filter(

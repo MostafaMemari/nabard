@@ -1,0 +1,58 @@
+"use client";
+
+import { ImagePlusIcon, Trash2Icon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { formatNumber } from "@/lib/format";
+
+export function ReceiptUploadField({ file, onChange }: { file: File | null; onChange: (file: File | null) => void }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!file) {
+      setPreviewUrl(null);
+      return;
+    }
+
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+
+  return (
+    <div className="flex flex-col gap-2">
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(event) => onChange(event.target.files?.[0] ?? null)}
+      />
+      {file && previewUrl ? (
+        <div className="flex flex-col gap-3 rounded-xl border border-border p-3">
+          {/* biome-ignore lint/performance/noImgElement: preview of a locally selected file blob */}
+          <img src={previewUrl} alt={`پیش‌نمایش رسید ${file.name}`} className="h-48 w-full rounded-lg object-cover" />
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-subtle min-w-0 truncate text-muted-foreground">
+              {file.name} · {formatNumber(Math.round(file.size / 1024))} کیلوبایت
+            </span>
+            <Button type="button" variant="ghost" size="icon-sm" aria-label="حذف تصویر رسید" onClick={() => onChange(null)}>
+              <Trash2Icon />
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          className="flex h-32 w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border text-sm text-muted-foreground transition-colors duration-150 hover:border-primary hover:text-primary"
+        >
+          <ImagePlusIcon aria-hidden className="size-5" />
+          انتخاب تصویر رسید
+        </button>
+      )}
+    </div>
+  );
+}

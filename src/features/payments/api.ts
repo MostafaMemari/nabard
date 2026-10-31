@@ -9,6 +9,35 @@ export type PaymentListParams = ListQuery & {
   competitionId?: string;
 };
 
+export type CreatePaymentInput = {
+  competitionId: string;
+  coachId: string;
+  amount: string;
+  receiptKey: string;
+};
+
+let nextId = payments.length + 1;
+
+export async function createPayment(input: CreatePaymentInput): Promise<Payment> {
+  await mockDelay();
+  const now = new Date().toISOString();
+  const payment: Payment = {
+    id: `pay-${nextId}`,
+    competitionId: input.competitionId,
+    coachId: input.coachId,
+    amount: input.amount,
+    receiptKey: input.receiptKey,
+    status: "PENDING",
+    note: null,
+    createdAt: now,
+    updatedAt: now,
+  };
+  nextId += 1;
+  payments.push(payment);
+
+  return payment;
+}
+
 export async function listPayments(params: PaymentListParams = {}): Promise<ListResult<Payment>> {
   await mockDelay();
   const filtered = payments.filter(
