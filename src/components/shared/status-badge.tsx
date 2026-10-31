@@ -8,6 +8,8 @@ const statusStyles = {
   CANCELED: { label: "لغو شده", className: "bg-pending-bg text-pending" },
   DRAFT: { label: "پیش‌نویس", className: "bg-pending-bg text-pending" },
   PUBLISHED: { label: "منتشر شده", className: "bg-success-bg text-success" },
+  ACTIVE: { label: "فعال", className: "bg-success-bg text-success" },
+  INACTIVE: { label: "غیرفعال", className: "bg-pending-bg text-pending" },
 } as const;
 
 export type StatusKey = keyof typeof statusStyles;

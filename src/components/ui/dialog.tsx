@@ -61,7 +61,7 @@ function DialogContent({
             render={<Button variant="ghost" className="absolute top-3 end-3" size="icon-sm" />}
           >
             <XIcon />
-            <span className="sr-only">Close</span>
+            <span className="sr-only">بستن</span>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Popup>
@@ -88,7 +88,7 @@ function DialogFooter({
       {...props}
     >
       {children}
-      {showCloseButton && <DialogPrimitive.Close render={<Button variant="outline" />}>Close</DialogPrimitive.Close>}
+      {showCloseButton && <DialogPrimitive.Close render={<Button variant="outline" />}>بستن</DialogPrimitive.Close>}
     </div>
   );
 }

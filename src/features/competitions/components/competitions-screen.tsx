@@ -12,7 +12,7 @@ import { useRegistrations } from "@/features/registrations";
 import { useCompetitions } from "../hooks/use-competitions";
 import { disciplineLabels } from "../labels";
 import type { Competition } from "../types";
-import { BeltRange } from "./belt-range";
+import { BeltChips } from "./belt-chips";
 
 const statusTabs = [
   { id: "all", label: "همه" },
@@ -78,11 +78,7 @@ export function CompetitionsScreen() {
     {
       id: "belts",
       header: "کمربندها",
-      cell: (row) => {
-        const from = belts.find((belt) => belt.id === row.minBeltId);
-        const to = belts.find((belt) => belt.id === row.maxBeltId);
-        return from && to ? <BeltRange from={from} to={to} /> : "—";
-      },
+      cell: (row) => <BeltChips belts={belts} ids={row.beltIds} />,
     },
     {
       id: "deadline",

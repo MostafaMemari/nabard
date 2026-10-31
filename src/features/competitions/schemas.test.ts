@@ -1,16 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { createCompetitionSchema, normalizeDigits } from "./schemas";
-
-const beltLevels = { "belt-white": 1, "belt-green": 3, "belt-blue": 4, "belt-dan_3": 12 };
-const schema = createCompetitionSchema(beltLevels);
+import { normalizeDigits } from "../../lib/format";
+import { competitionSchema } from "./schemas";
 
 const valid = {
   title: "مسابقات قهرمانی استان",
   discipline: "KYORUGI",
   gender: "MALE",
   ageCategoryId: "senior",
-  minBeltId: "belt-blue",
-  maxBeltId: "belt-dan_3",
+  beltIds: ["belt-red", "belt-poom_1", "belt-dan_1"],
   feePerStudent: "3500000",
   payeeCardNumber: "6104337812345678",
   payeeCardHolder: "فدراسیون تکواندو استان تهران",
@@ -20,20 +17,20 @@ const valid = {
 
 describe("competition form schema", () => {
   it("accepts a valid competition", () => {
-    const result = schema.safeParse(valid);
+    const result = competitionSchema.safeParse(valid);
     expect(result.success).toBe(true);
   });
 
-  it("rejects a final belt ranked before the initial belt", () => {
-    const result = schema.safeParse({ ...valid, minBeltId: "belt-dan_3", maxBeltId: "belt-white" });
+  it("requires at least one belt", () => {
+    const result = competitionSchema.safeParse({ ...valid, beltIds: [] });
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues.some((issue) => issue.path[0] === "maxBeltId")).toBe(true);
+      expect(result.error.issues.some((issue) => issue.path[0] === "beltIds")).toBe(true);
     }
   });
 
   it("rejects an event date before the registration deadline", () => {
-    const result = schema.safeParse({ ...valid, eventDate: "2026-11-01T08:00:00.000Z" });
+    const result = competitionSchema.safeParse({ ...valid, eventDate: "2026-11-01T08:00:00.000Z" });
     expect(result.success).toBe(false);
     if (!result.success) {
       expect(result.error.issues.some((issue) => issue.path[0] === "eventDate")).toBe(true);
@@ -41,7 +38,7 @@ describe("competition form schema", () => {
   });
 
   it("normalizes persian digits in the card number", () => {
-    const result = schema.safeParse({ ...valid, payeeCardNumber: "۶۱۰۴۳۳۷۸۱۲۳۴۵۶۷۸" });
+    const result = competitionSchema.safeParse({ ...valid, payeeCardNumber: "۶۱۰۴۳۳۷۸۱۲۳۴۵۶۷۸" });
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.data.payeeCardNumber).toBe("6104337812345678");
@@ -49,7 +46,7 @@ describe("competition form schema", () => {
   });
 
   it("rejects a card number that is not 16 digits", () => {
-    const result = schema.safeParse({ ...valid, payeeCardNumber: "61043378123456" });
+    const result = competitionSchema.safeParse({ ...valid, payeeCardNumber: "61043378123456" });
     expect(result.success).toBe(false);
   });
 

@@ -10,6 +10,13 @@ export function toPersianDigits(value: string | number): string {
   return String(value).replace(/\d/g, (digit) => persianDigits[Number(digit)]);
 }
 
+export function normalizeDigits(value: string): string {
+  return value
+    .replace(/[۰-۹]/g, (digit) => String(persianDigits.indexOf(digit)))
+    .replace(/[٠-٩]/g, (digit) => String("٠١٢٣٤٥٦٧٨٩".indexOf(digit)))
+    .replace(/\D/g, "");
+}
+
 export function formatNumber(value: number): string {
   return numberFormatter.format(value);
 }

@@ -94,9 +94,9 @@ These make the product feel designed. Use them consistently.
 
 **Admin home.** Summary cards: receipts awaiting review, open competitions, registrations this week. Below, two cards side by side: «نیازمند اقدام» (latest pending receipts, each row with coach avatar, amount, time, a review button) and «مسابقات پیش‌رو» (title, deadline chip, registration count).
 
-**Admin competitions list.** Header with «مسابقه جدید». Toolbar with search and status tabs with counts (همه، پیش‌نویس، منتشر شده، لغو شده). Table: title with discipline, age category, gender, belt range chips, deadline chip, registrations count, status.
+**Admin competitions list.** Header with «مسابقه جدید». Toolbar with search and status tabs with counts (همه، پیش‌نویس، منتشر شده، لغو شده). Table: title with discipline, age category, gender, belt chips, deadline chip, registrations count, status.
 
-**Admin competition form.** Single card sections: «اطلاعات پایه»، «شرکت‌کنندگان» (gender, age category, belt from and to), «زمان و پرداخت» (deadline, event date, fee, payee card number, card holder). For kyorugi, a read-only weight class table appears in «شرکت‌کنندگان». Actions at the end.
+**Admin competition form.** Single card sections: «اطلاعات پایه»، «شرکت‌کنندگان» (gender, age category, allowed belts as a multiple-choice chip set), «زمان و پرداخت» (deadline, event date, fee, payee card number, card holder). For kyorugi, a read-only weight class table appears in «شرکت‌کنندگان». Actions at the end.
 
 **Admin payments review.** List with status tabs and counts; table: coach with avatar, competition, student count, amount, date, status. Detail page: two columns. Main: receipt image card, then student table with per-row approve and reject. Side (sticky): coach, competition, student count, total, confirm and reject receipt buttons. Rejection opens a dialog that requires a note.
 
@@ -112,7 +112,7 @@ These make the product feel designed. Use them consistently.
 
 Navigation: خانه، مسابقات، بررسی پرداخت‌ها، مربیان، هنرجویان، ثبت‌نام‌های من.
 Actions: مسابقه جدید، هنرجوی جدید، ثبت‌نام هنرجویان، آپلود رسید، تأیید رسید، رد رسید، تأیید ثبت‌نام، رد ثبت‌نام، ذخیره، انصراف، حذف.
-Statuses: در انتظار پرداخت (warning)، در انتظار بررسی (pending)، تأیید شده (success)، رد شده (danger)، لغو شده (pending)، پیش‌نویس (pending)، منتشر شده (success).
+Statuses: در انتظار پرداخت (warning)، در انتظار بررسی (pending)، تأیید شده (success)، رد شده (danger)، لغو شده (pending)، پیش‌نویس (pending)، منتشر شده (success)، فعال (success)، غیرفعال (pending).
 Empty states: «هنوز مسابقه‌ای ثبت نشده است.»، «هنوز هنرجویی اضافه نکرده‌اید.»، «پرداختی برای بررسی وجود ندارد.»
 Errors say what is wrong and what to do: «کد ملی باید ۱۰ رقم باشد.»
 Persian digits and thousands separators; Jalali dates; money through `lib/format.ts`.

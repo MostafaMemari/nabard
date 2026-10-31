@@ -8,17 +8,17 @@ function nationalCode(base: number): string {
   return `${digits}${remainder < 2 ? remainder : 11 - remainder}`;
 }
 
-const seeds: Array<{ fullName: string; role: Role }> = [
+const seeds: Array<{ fullName: string; role: Role; active?: boolean }> = [
   { fullName: "حمیدرضا کاظمی", role: "ADMIN" },
   { fullName: "مریم صادقی", role: "ADMIN" },
   { fullName: "علی رستمی", role: "ADMIN" },
   { fullName: "رضا محمدی", role: "COACH" },
   { fullName: "سعید احمدی", role: "COACH" },
   { fullName: "مهدی کریمی", role: "COACH" },
-  { fullName: "حسین موسوی", role: "COACH" },
+  { fullName: "حسین موسوی", role: "COACH", active: false },
   { fullName: "امیر حسین زاده", role: "COACH" },
   { fullName: "محمد رضایی", role: "COACH" },
-  { fullName: "بابک نیک پور", role: "COACH" },
+  { fullName: "بابک نیک پور", role: "COACH", active: false },
   { fullName: "کامران شریفی", role: "COACH" },
 ];
 
@@ -35,7 +35,7 @@ export const users: User[] = seeds.map((seed, index) => {
     nationalCode: nationalCode(100000000 + index * 137),
     role: seed.role,
     province: "TEHRAN",
-    isActive: true,
+    isActive: seed.active ?? true,
     createdAt,
     updatedAt: createdAt,
   };

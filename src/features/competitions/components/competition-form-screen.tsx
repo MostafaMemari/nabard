@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LockIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { EmptyState, PageHeader } from "@/components/shared";
@@ -15,7 +15,7 @@ import { useRegistrations } from "@/features/registrations";
 import { createCompetition, updateCompetition } from "../api";
 import { useCompetition } from "../hooks/use-competitions";
 import { disciplineLabels } from "../labels";
-import { type CompetitionFormValues, createCompetitionSchema, emptyCompetitionForm } from "../schemas";
+import { type CompetitionFormValues, competitionSchema, emptyCompetitionForm } from "../schemas";
 import type { CompetitionInput, Discipline } from "../types";
 import { BasicInfoSection } from "./basic-info-section";
 import { ParticipantsSection } from "./participants-section";
@@ -32,11 +32,8 @@ export function CompetitionFormScreen({ competitionId }: { competitionId?: strin
 
   const hasRegistrations = registrations.some((registration) => registration.competitionId === competitionId);
 
-  const beltLevels = useMemo(() => Object.fromEntries(belts.map((belt) => [belt.id, belt.level])), [belts]);
-  const schema = useMemo(() => createCompetitionSchema(beltLevels), [beltLevels]);
-
   const form = useForm<CompetitionFormValues, unknown, CompetitionFormValues>({
-    resolver: zodResolver(schema),
+    resolver: zodResolver(competitionSchema),
     defaultValues: emptyCompetitionForm,
   });
   const values = useWatch({ control: form.control });
@@ -52,8 +49,7 @@ export function CompetitionFormScreen({ competitionId }: { competitionId?: strin
         discipline: competition.discipline,
         gender: competition.gender,
         ageCategoryId: competition.ageCategoryId,
-        minBeltId: competition.minBeltId,
-        maxBeltId: competition.maxBeltId,
+        beltIds: [...competition.beltIds],
         feePerStudent: competition.feePerStudent,
         payeeCardNumber: competition.payeeCardNumber,
         payeeCardHolder: competition.payeeCardHolder,
@@ -88,8 +84,7 @@ export function CompetitionFormScreen({ competitionId }: { competitionId?: strin
       discipline: values.discipline as Discipline,
       gender: values.gender as Gender,
       ageCategoryId: values.ageCategoryId,
-      minBeltId: values.minBeltId,
-      maxBeltId: values.maxBeltId,
+      beltIds: values.beltIds,
       feePerStudent: values.feePerStudent,
       payeeCardNumber: values.payeeCardNumber,
       payeeCardHolder: values.payeeCardHolder.trim(),

@@ -68,8 +68,7 @@ describe("mock data", () => {
     expect(students.every((student) => coachIds.has(student.coachId) && beltIds.has(student.beltId))).toBe(true);
     expect(
       competitions.every(
-        (competition) =>
-          categoryIds.has(competition.ageCategoryId) && beltIds.has(competition.minBeltId) && beltIds.has(competition.maxBeltId),
+        (competition) => categoryIds.has(competition.ageCategoryId) && competition.beltIds.every((beltId) => beltIds.has(beltId)),
       ),
     ).toBe(true);
     expect(payments.every((payment) => coachIds.has(payment.coachId) && competitionIds.has(payment.competitionId))).toBe(true);

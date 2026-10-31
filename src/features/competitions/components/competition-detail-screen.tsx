@@ -13,7 +13,7 @@ import { formatJalaliDate, formatRialsAsToman } from "@/lib/format";
 import { updateCompetitionStatus } from "../api";
 import { useCompetition } from "../hooks/use-competitions";
 import { disciplineLabels } from "../labels";
-import { BeltRange } from "./belt-range";
+import { BeltChips } from "./belt-chips";
 import { CompetitionRegistrations } from "./competition-registrations";
 
 export function CompetitionDetailScreen({ competitionId }: { competitionId: string }) {
@@ -49,8 +49,6 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
   }
 
   const hasRegistrations = registrations.some((registration) => registration.competitionId === competitionId);
-  const from = belts.find((belt) => belt.id === competition.minBeltId);
-  const to = belts.find((belt) => belt.id === competition.maxBeltId);
 
   async function runStatusUpdate(status: "PUBLISHED" | "CANCELED", successMessage: string) {
     setWorking(true);
@@ -130,7 +128,7 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
               { term: "رده‌های وزنی", value: `${weightClasses.length} رده` },
               {
                 term: "کمربندها",
-                value: from && to ? <BeltRange from={from} to={to} /> : "—",
+                value: <BeltChips belts={belts} ids={competition.beltIds} />,
               },
             ]}
           />

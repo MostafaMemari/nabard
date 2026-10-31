@@ -12,8 +12,7 @@ export type Competition = {
   discipline: Discipline;
   gender: Gender;
   ageCategoryId: string;
-  minBeltId: string;
-  maxBeltId: string;
+  beltIds: string[];
   feePerStudent: string;
   payeeCardNumber: string;
   payeeCardHolder: string;
