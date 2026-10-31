@@ -46,4 +46,25 @@
 
 ## Phase 2 — Issues
 
-(To be filled by the audit.)
+Viewport audit result: no page-level horizontal overflow anywhere (document scrollWidth = innerWidth on all 18 routes × 3 viewports, zero console errors). All overflow findings below are inner scroll containers (tables) measured with a DOM probe; several mobile screenshots initially showed artifacts from full-page capture in RTL and were re-verified live.
+
+| # | Route / file | Issue | Severity |
+| --- | --- | --- | --- |
+| 1 | `/admin` | Admin home is a «به‌زودی» placeholder; DESIGN blueprint (summary cards, «نیازمند اقدام», «مسابقات پیش‌رو») not built. Signature screen. | high |
+| 2 | `/admin/competitions` | Table scrolls horizontally inside the card at 768/390 (probe sw 771 vs cw 446/356); belt chips stack vertically at 768. No card mode below 768. | high |
+| 3 | `/admin/payments` | Same: table overflow at 768/390 (sw 763). No card mode. | high |
+| 4 | `/coach/registrations`, `/coach` | Registrations table overflows at 768 (sw 823); table/card switch happens at container 512px so widths 512–1152 get an overflowing table. | high |
+| 5 | `/admin/competitions/[id]` | Registrations table overflows at 390 (sw 506 vs 316). | high |
+| 6 | `/admin/coaches/[id]` | Students table overflows at 390 (sw 432 vs 316). | high |
+| 7 | All list pages | Filters stay inline below 768; DESIGN requires a bottom sheet for filters on mobile. | medium |
+| 8 | `/admin/*` <768px | No navigation at all on admin mobile (sidebar hidden below md, top bar has brand only). | medium |
+| 9 | Registration flow | Selectable student list renders as rows, not Mobile-cards anatomy (checkbox cards, dimmed ineligible with reason, registered state). | medium |
+| 10 | FilterTabs, DataTablePagination, row action buttons, belt choice chips | Touch targets 32px on mobile (audit threshold 44px). | medium |
+| 11 | Login form, student form, competition form | No `dir="ltr"` + inputMode/autoComplete on Latin/numeric fields (mobile, national code, card number, password). | medium |
+| 12 | Global CSS | `prefers-reduced-motion` not honored. | medium |
+| 13 | DataTablePagination, SummaryCard, some numeric cells | Numbers lack tabular numerals; pagination uses arbitrary `text-[13px]`, avatar `text-[11px]`. | low |
+| 14 | Table headers | Sort buttons ~20px tall (desktop-only, inside table). | low |
+| 15 | Coach home «مسابقات باز» empty | Plain `<p>` instead of the shared EmptyState. | low |
+| 16 | `/dev/ui` | Frozen showcase; no functional issues found; left as is. | low |
+
+Verified non-issues: login form layout at 390 is correct live (screenshot artifact); inputs are 16px on mobile (hidden RHF internals report 14.5px but are unfocusable); deadline chip colors match DESIGN (warning ≤3 days, danger when passed); back/forward arrows mirror correctly in RTL; skeletons, empty states and error banners exist on all lists; focus-visible rings present on buttons and inputs; sidebar/nav/nav-labels use logical classes throughout.
