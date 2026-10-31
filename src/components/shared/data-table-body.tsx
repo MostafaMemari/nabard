@@ -30,7 +30,7 @@ export function DataTableBody<T>({
     <TableBody>
       {isLoading
         ? skeletonKeys.map((key) => (
-            <TableRow key={key} className="h-11 hover:bg-transparent">
+            <TableRow key={key} className="h-13 hover:bg-transparent">
               {columns.map((column) => (
                 <TableCell key={column.id}>
                   <Skeleton className="h-4 w-24" />
@@ -52,7 +52,7 @@ export function DataTableBody<T>({
         ? rows.map((row) => (
             <TableRow
               key={getRowId(row)}
-              className={cn("h-11", onRowClick && "cursor-pointer")}
+              className={cn("h-13", onRowClick && "cursor-pointer")}
               onClick={onRowClick ? () => onRowClick(row) : undefined}
             >
               {columns.map((column) => (

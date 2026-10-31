@@ -7,10 +7,10 @@ export type DescriptionItem = {
 
 export function DescriptionList({ items }: { items: DescriptionItem[] }) {
   return (
-    <dl className="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-[minmax(8rem,12rem)_1fr]">
+    <dl className="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-[8rem_1fr]">
       {items.map((item) => (
         <div key={item.term} className="contents">
-          <dt className="text-[13px] text-muted-foreground">{item.term}</dt>
+          <dt className="text-subtle text-muted-foreground">{item.term}</dt>
           <dd className="text-sm">{item.value}</dd>
         </div>
       ))}

@@ -95,7 +95,7 @@ export function DataTable<T>({
         </div>
       ) : (
         <>
-          <div className="overflow-hidden rounded-xl border">
+          <div className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
             <Table>
               <DataTableHeader columns={columns} sort={sort} onToggleSort={toggleSort} />
               <DataTableBody

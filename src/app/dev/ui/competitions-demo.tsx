@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { DataTable, type DataTableColumn, StatusBadge } from "@/components/shared";
+import { DataTable, type DataTableColumn, DeadlineChip, StatusBadge } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { type Competition, useCompetitions } from "@/features/competitions";
-import { formatJalaliDate, formatRialsAsToman } from "@/lib/format";
+import { formatRialsAsToman } from "@/lib/format";
 
 type DemoState = "data" | "loading" | "empty" | "error";
 
@@ -35,15 +35,19 @@ const columns: DataTableColumn<Competition>[] = [
   {
     id: "title",
     header: "عنوان",
-    cell: (row) => <span className="font-medium">{row.title}</span>,
+    cell: (row) => (
+      <div className="flex flex-col leading-tight">
+        <span className="font-medium">{row.title}</span>
+        <span className="text-subtle text-muted-foreground">{disciplineLabels[row.discipline]}</span>
+      </div>
+    ),
     sortValue: (row) => row.title,
   },
-  { id: "discipline", header: "رشته", cell: (row) => disciplineLabels[row.discipline] },
   { id: "age", header: "رده سنی", cell: (row) => ageCategoryLabels[row.ageCategoryId] ?? row.ageCategoryId },
   {
     id: "deadline",
     header: "مهلت ثبت نام",
-    cell: (row) => formatJalaliDate(new Date(row.registrationDeadline)),
+    cell: (row) => <DeadlineChip deadline={row.registrationDeadline} />,
     sortValue: (row) => row.registrationDeadline,
   },
   {

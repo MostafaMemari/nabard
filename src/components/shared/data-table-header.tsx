@@ -35,13 +35,13 @@ export function DataTableHeader<T>({
   onToggleSort: (columnId: string) => void;
 }) {
   return (
-    <TableHeader className="bg-surface">
+    <TableHeader className="bg-muted/50">
       <TableRow className="hover:bg-transparent">
         {columns.map((column) => (
           <TableHead
             key={column.id}
             aria-sort={getAriaSort(column, sort)}
-            className={cn("h-10 text-[13px] font-medium text-muted-foreground", column.align === "end" && "text-end")}
+            className={cn("h-11 text-subtle font-medium text-muted-foreground", column.align === "end" && "text-end")}
           >
             {column.sortValue ? (
               <button
