@@ -2,13 +2,13 @@
 
 import { PencilIcon } from "lucide-react";
 import Link from "next/link";
-import { DeadlineChip, DetailPageHeader, ErrorBanner, StatusBadge } from "@/components/shared";
+import { CountdownChip, DetailPageHeader, ErrorBanner, IconTile, StatusBadge } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ageCategoryLabel, genderLabels, useBelts, useWeightClasses } from "@/features/base-data";
 import { useRegistrations } from "@/features/registrations";
 import { useCompetition } from "../hooks/use-competitions";
-import { disciplineLabels } from "../labels";
+import { disciplineIcons, disciplineLabels } from "../labels";
 import { CompetitionInfoSections } from "./competition-info-sections";
 import { CompetitionRegistrations } from "./competition-registrations";
 import { CompetitionStatusActions } from "./competition-status-actions";
@@ -57,9 +57,12 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
       />
 
       <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5 shadow-card md:flex-row md:items-center md:justify-between md:p-6">
-        <div className="flex items-center gap-3">
-          <StatusBadge status={competition.status} />
-          <DeadlineChip deadline={competition.registrationDeadline} />
+        <div className="flex flex-wrap items-center gap-3">
+          <IconTile icon={disciplineIcons[competition.discipline]} />
+          <div className="flex flex-wrap items-center gap-2">
+            <StatusBadge status={competition.status} />
+            <CountdownChip deadline={competition.registrationDeadline} />
+          </div>
         </div>
         {hasRegistrations ? <p className="text-subtle text-muted-foreground">به دلیل وجود ثبت‌نام، ویرایش این مسابقه ممکن نیست.</p> : null}
       </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "cn";
+import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TableBody, TableCell, TableRow } from "@/components/ui/table";
@@ -15,6 +16,7 @@ export function DataTableBody<T>({
   skeletonKeys,
   emptyTitle,
   emptyAction,
+  emptyIcon,
   onRowClick,
 }: {
   columns: DataTableColumn<T>[];
@@ -24,6 +26,7 @@ export function DataTableBody<T>({
   skeletonKeys: string[];
   emptyTitle: string;
   emptyAction?: ReactNode;
+  emptyIcon?: LucideIcon;
   onRowClick?: (row: T) => void;
 }) {
   return (
@@ -43,7 +46,7 @@ export function DataTableBody<T>({
       {!isLoading && rows.length === 0 ? (
         <TableRow className="hover:bg-transparent">
           <TableCell colSpan={columns.length} className="p-0">
-            <EmptyState title={emptyTitle} action={emptyAction} />
+            <EmptyState title={emptyTitle} action={emptyAction} icon={emptyIcon} />
           </TableCell>
         </TableRow>
       ) : null}

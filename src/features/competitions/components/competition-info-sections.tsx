@@ -1,5 +1,6 @@
 "use client";
 
+import { BanknoteIcon, UsersRoundIcon } from "lucide-react";
 import { DescriptionList, FormSection } from "@/components/shared";
 import { ageCategoryLabel, type Belt, genderLabels } from "@/features/base-data";
 import { formatCardNumber, formatJalaliDate, formatRialsAsToman, toPersianDigits } from "@/lib/format";
@@ -18,7 +19,7 @@ export function CompetitionInfoSections({
 }) {
   return (
     <div className="grid items-start gap-4 lg:grid-cols-2">
-      <FormSection title="شرکت‌کنندگان">
+      <FormSection title="شرکت‌کنندگان" icon={UsersRoundIcon}>
         <DescriptionList
           items={[
             { term: "رشته", value: disciplineLabels[competition.discipline] },
@@ -30,7 +31,7 @@ export function CompetitionInfoSections({
         />
       </FormSection>
 
-      <FormSection title="زمان و پرداخت">
+      <FormSection title="زمان و پرداخت" icon={BanknoteIcon}>
         <DescriptionList
           items={[
             { term: "مهلت ثبت‌نام", value: formatJalaliDate(new Date(competition.registrationDeadline)) },

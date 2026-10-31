@@ -1,5 +1,6 @@
 "use client";
 
+import type { LucideIcon } from "lucide-react";
 import { Fragment, type ReactNode } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "./empty-state";
@@ -11,6 +12,7 @@ export function DataTableCards<T>({
   skeletonCount,
   emptyTitle,
   emptyAction,
+  emptyIcon,
   renderCard,
 }: {
   rows: T[];
@@ -19,6 +21,7 @@ export function DataTableCards<T>({
   skeletonCount: number;
   emptyTitle: string;
   emptyAction?: ReactNode;
+  emptyIcon?: LucideIcon;
   renderCard: (row: T) => ReactNode;
 }) {
   if (isLoading) {
@@ -38,7 +41,7 @@ export function DataTableCards<T>({
   if (rows.length === 0) {
     return (
       <div className="rounded-xl border border-border bg-card shadow-card">
-        <EmptyState title={emptyTitle} action={emptyAction} />
+        <EmptyState title={emptyTitle} action={emptyAction} icon={emptyIcon} />
       </div>
     );
   }

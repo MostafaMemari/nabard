@@ -1,8 +1,8 @@
 "use client";
 
-import { type DataTableColumn, DeadlineChip, StatusBadge } from "@/components/shared";
+import { type DataTableColumn, DeadlineChip, IconTile, StatusBadge } from "@/components/shared";
 import { ageCategoryLabel, type Belt, genderLabels } from "@/features/base-data";
-import { disciplineLabels } from "../labels";
+import { disciplineIcons, disciplineLabels } from "../labels";
 import type { Competition } from "../types";
 import { BeltChips } from "./belt-chips";
 
@@ -17,9 +17,12 @@ export function competitionsColumns(options: {
       id: "title",
       header: "عنوان",
       cell: (row) => (
-        <div className="flex min-w-36 flex-col leading-tight">
-          <span className="font-medium">{row.title}</span>
-          <span className="text-subtle text-muted-foreground">{disciplineLabels[row.discipline]}</span>
+        <div className="flex items-center gap-2.5">
+          <IconTile icon={disciplineIcons[row.discipline]} size="sm" />
+          <div className="flex min-w-36 flex-col leading-tight">
+            <span className="font-medium">{row.title}</span>
+            <span className="text-subtle text-muted-foreground">{disciplineLabels[row.discipline]}</span>
+          </div>
         </div>
       ),
       sortValue: (row) => row.title,

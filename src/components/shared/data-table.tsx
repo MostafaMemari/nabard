@@ -22,6 +22,7 @@ export function DataTable<T>({
   toolbar,
   emptyTitle = "موردی برای نمایش وجود ندارد.",
   emptyAction,
+  emptyIcon,
   pageSize = 10,
   skeletonRows = 5,
   onRowClick,
@@ -46,6 +47,7 @@ export function DataTable<T>({
           skeletonKeys={skeletonKeys}
           emptyTitle={emptyTitle}
           emptyAction={emptyAction}
+          emptyIcon={emptyIcon}
           onRowClick={onRowClick}
         />
       </Table>
@@ -71,6 +73,7 @@ export function DataTable<T>({
                   skeletonCount={Math.min(skeletonRows, 4)}
                   emptyTitle={emptyTitle}
                   emptyAction={emptyAction}
+                  emptyIcon={emptyIcon}
                   renderCard={renderCard}
                 />
               </div>

@@ -1,3 +1,4 @@
+import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 
 export type DataTableColumn<T> = {
@@ -21,6 +22,7 @@ export type DataTableProps<T> = {
   toolbar?: ReactNode;
   emptyTitle?: string;
   emptyAction?: ReactNode;
+  emptyIcon?: LucideIcon;
   pageSize?: number;
   skeletonRows?: number;
   onRowClick?: (row: T) => void;

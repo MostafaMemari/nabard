@@ -1,9 +1,9 @@
 "use client";
 
-import { DeadlineChip, MobileCardChips, MobileCardLine, MobileCardLink, MobileCardTop, StatusBadge } from "@/components/shared";
+import { CountdownChip, IconTile, MobileCardChips, MobileCardLine, MobileCardLink, MobileCardTop, StatusBadge } from "@/components/shared";
 import { ageCategoryLabel, type Belt, genderLabels } from "@/features/base-data";
 import { formatNumber } from "@/lib/format";
-import { disciplineLabels } from "../labels";
+import { disciplineIcons, disciplineLabels } from "../labels";
 import type { Competition } from "../types";
 import { BeltChips } from "./belt-chips";
 
@@ -19,6 +19,7 @@ export function CompetitionCard({
   return (
     <MobileCardLink href={`/admin/competitions/${competition.id}`}>
       <MobileCardTop
+        leading={<IconTile icon={disciplineIcons[competition.discipline]} size="sm" />}
         title={competition.title}
         subtitle={disciplineLabels[competition.discipline]}
         end={<StatusBadge status={competition.status} />}
@@ -27,7 +28,7 @@ export function CompetitionCard({
       <MobileCardLine label="ثبت‌نام‌ها" value={`${formatNumber(registrationCount)} هنرجو`} />
       <MobileCardChips>
         <BeltChips belts={belts} ids={competition.beltIds} />
-        <DeadlineChip deadline={competition.registrationDeadline} />
+        <CountdownChip deadline={competition.registrationDeadline} />
       </MobileCardChips>
     </MobileCardLink>
   );

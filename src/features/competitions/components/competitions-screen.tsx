@@ -1,6 +1,6 @@
 "use client";
 
-import { PlusIcon } from "lucide-react";
+import { PlusIcon, TrophyIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { DataTable, ListToolbar, PageHeader } from "@/components/shared";
@@ -34,6 +34,7 @@ export function CompetitionsScreen() {
         onRetry={() => view.retry()}
         onRowClick={(row) => router.push(`/admin/competitions/${row.id}`)}
         renderCard={(row) => <CompetitionCard competition={row} belts={view.belts} registrationCount={view.registrationCount(row.id)} />}
+        emptyIcon={TrophyIcon}
         emptyTitle={
           view.search.value.trim() !== "" ? `نتیجه‌ای برای «${view.search.value.trim()}» پیدا نشد.` : "هنوز مسابقه‌ای ثبت نشده است."
         }

@@ -1,5 +1,6 @@
 "use client";
 
+import { ReceiptTextIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { DataTable, ListToolbar, PageHeader } from "@/components/shared";
 import { useSearchParam } from "@/lib/use-search-param";
@@ -37,6 +38,7 @@ export function PaymentsScreen() {
         onRetry={() => mutate()}
         onRowClick={(row) => router.push(`/admin/payments/${row.id}`)}
         renderCard={(row) => <PaymentCard payment={row} />}
+        emptyIcon={ReceiptTextIcon}
         emptyTitle="پرداختی برای بررسی وجود ندارد."
         toolbar={
           <ListToolbar
