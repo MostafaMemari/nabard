@@ -43,6 +43,7 @@ export function RegistrationFlow({ competitionId, coachId }: { competitionId: st
       meta={`${disciplineLabels[competition.discipline]} · رده سنی ${ageCategoryLabel(competition.ageCategoryId)} · ${genderLabels[competition.gender]}`}
       deadline={competition.registrationDeadline}
       feeLabel={formatRialsAsToman(Number(competition.feePerStudent))}
+      discipline={competition.discipline}
     />
   );
 

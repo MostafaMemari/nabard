@@ -1,9 +1,9 @@
 "use client";
 
-import { CheckIcon, CopyIcon } from "lucide-react";
+import { BanknoteIcon, CheckIcon, CopyIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { DescriptionList } from "@/components/shared";
+import { DescriptionList, IconTile } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { formatCardNumber, formatNumber, formatRialsAsToman } from "@/lib/format";
 
@@ -34,6 +34,7 @@ export function PaymentInfoSection({
           <span className="text-subtle text-muted-foreground">مبلغ ثبت‌نام ({formatNumber(selectedCount)} هنرجو)</span>
           <span className="text-display font-semibold tabular-nums">{formatRialsAsToman(Number(amountRials))}</span>
         </div>
+        <IconTile icon={BanknoteIcon} />
       </div>
       <DescriptionList
         items={[

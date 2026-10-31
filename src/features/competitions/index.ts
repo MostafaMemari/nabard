@@ -1,4 +1,5 @@
 export * from "./api";
+export * from "./components/belt-chips";
 export * from "./components/coach-competition-list";
 export * from "./components/competition-detail-screen";
 export * from "./components/competition-form-screen";

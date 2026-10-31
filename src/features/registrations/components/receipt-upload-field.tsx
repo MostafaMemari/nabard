@@ -1,7 +1,8 @@
 "use client";
 
-import { ImagePlusIcon, Trash2Icon } from "lucide-react";
+import { Trash2Icon, UploadIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { IconTile } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { formatNumber } from "@/lib/format";
 
@@ -53,9 +54,9 @@ export function ReceiptUploadField({ file, onChange }: { file: File | null; onCh
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="flex h-32 w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-border text-sm text-muted-foreground transition-colors duration-150 hover:border-primary hover:text-primary"
+          className="flex h-32 w-full flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border text-sm text-muted-foreground transition-colors duration-150 hover:border-primary hover:text-primary"
         >
-          <ImagePlusIcon aria-hidden className="size-5" />
+          <IconTile icon={UploadIcon} />
           انتخاب تصویر رسید
         </button>
       )}

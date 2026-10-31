@@ -19,7 +19,12 @@ export function CoachCompetitionList({ competitions }: { competitions: Competiti
         >
           <IconTile icon={disciplineIcons[competition.discipline]} />
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-medium">{competition.title}</p>
+            <Link
+              href={`/coach/competitions/${competition.id}`}
+              className="truncate text-sm font-medium underline-offset-4 hover:underline"
+            >
+              {competition.title}
+            </Link>
             <p className="text-subtle text-muted-foreground">
               {disciplineLabels[competition.discipline]} · رده سنی {ageCategoryLabel(competition.ageCategoryId)} ·{" "}
               {genderLabels[competition.gender]}
