@@ -71,8 +71,9 @@
   --shadow-card: 0 1px 2px rgb(16 24 40 / 0.04), 0 1px 3px rgb(16 24 40 / 0.06);
   --shadow-overlay: 0 8px 24px rgb(16 24 40 / 0.12);
   --container-content: 1200px;
-  --container-form: 560px;
-  --container-auth: 440px;
+  --container-form: 640px;
+  --container-form-sm: 560px;
+  --container-auth: 460px;
   --container-auth-form: 380px;
 }
 

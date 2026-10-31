@@ -2,12 +2,12 @@
 
 import { LockIcon } from "lucide-react";
 import Link from "next/link";
-import { EmptyState, PageHeader } from "@/components/shared";
+import { EmptyState, FormContainer, PageHeader } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 
 export function CompetitionFormLocked({ competitionId }: { competitionId: string }) {
   return (
-    <section className="mx-auto w-full max-w-2xl">
+    <FormContainer variant="standard">
       <PageHeader title="ویرایش مسابقه" />
       <div className="mt-4 rounded-xl border border-border bg-card shadow-card">
         <EmptyState
@@ -20,6 +20,6 @@ export function CompetitionFormLocked({ competitionId }: { competitionId: string
           }
         />
       </div>
-    </section>
+    </FormContainer>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { ErrorBanner, FormActions, PageHeader } from "@/components/shared";
+import { ErrorBanner, FormActions, FormContainer, PageHeader } from "@/components/shared";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCompetitionForm } from "../hooks/use-competition-form";
 import { BasicInfoSection } from "./basic-info-section";
@@ -31,46 +31,48 @@ export function CompetitionFormScreen({ competitionId }: { competitionId?: strin
 
   if (isEdit && competitionLoading) {
     return (
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-4">
+      <FormContainer variant="standard" className="flex flex-col gap-4">
         <Skeleton className="h-8 w-40" />
         <Skeleton className="h-44 w-full" />
         <Skeleton className="h-64 w-full" />
-      </div>
+      </FormContainer>
     );
   }
 
   if (isEdit && (competitionError || missing)) {
     return (
-      <div className="mx-auto w-full max-w-2xl pt-8">
+      <FormContainer variant="standard" className="pt-8">
         <ErrorBanner message="مسابقه یافت نشد." onRetry={() => void retryCompetition()} />
-      </div>
+      </FormContainer>
     );
   }
 
   return (
-    <form onSubmit={form.handleSubmit(submit)} className="mx-auto flex w-full max-w-2xl flex-col gap-4" noValidate>
-      <PageHeader
-        title={isEdit ? "ویرایش مسابقه" : "مسابقه جدید"}
-        description={isEdit ? "اطلاعات مسابقه را ویرایش کنید." : "اطلاعات مسابقه را کامل کنید؛ مسابقه ابتدا به‌صورت پیش‌نویس ذخیره می‌شود."}
-      />
-
-      <BasicInfoSection control={form.control} />
-
-      <ParticipantsSection control={form.control} belts={belts}>
-        <WeightClassHint
-          visible={values.discipline === "KYORUGI" && values.ageCategoryId !== "" && values.gender !== ""}
-          classes={weightClasses}
-          isLoading={weightLoading}
+    <FormContainer variant="standard">
+      <form onSubmit={form.handleSubmit(submit)} className="flex flex-col gap-4" noValidate>
+        <PageHeader
+          title={isEdit ? "ویرایش مسابقه" : "مسابقه جدید"}
+          description={isEdit ? "اطلاعات مسابقه را ویرایش کنید." : "اطلاعات مسابقه را کامل کنید؛ مسابقه ابتدا به‌صورت پیش‌نویس ذخیره می‌شود."}
         />
-      </ParticipantsSection>
 
-      <SchedulePaymentSection control={form.control} />
+        <BasicInfoSection control={form.control} />
 
-      <FormActions
-        cancelHref={isEdit ? `/admin/competitions/${competitionId}` : "/admin/competitions"}
-        submitLabel="ذخیره"
-        submitting={form.formState.isSubmitting}
-      />
-    </form>
+        <ParticipantsSection control={form.control} belts={belts}>
+          <WeightClassHint
+            visible={values.discipline === "KYORUGI" && values.ageCategoryId !== "" && values.gender !== ""}
+            classes={weightClasses}
+            isLoading={weightLoading}
+          />
+        </ParticipantsSection>
+
+        <SchedulePaymentSection control={form.control} />
+
+        <FormActions
+          cancelHref={isEdit ? `/admin/competitions/${competitionId}` : "/admin/competitions"}
+          submitLabel="ذخیره"
+          submitting={form.formState.isSubmitting}
+        />
+      </form>
+    </FormContainer>
   );
 }
