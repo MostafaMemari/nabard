@@ -1,10 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { DataTable, FilterTabs, PageHeader } from "@/components/shared";
+import { DataTable, ListToolbar, PageHeader } from "@/components/shared";
 import { useSearchParam } from "@/lib/use-search-param";
 import { usePayments } from "../hooks/use-payments";
 import { paymentsTabs } from "../tabs";
+import { PaymentCard } from "./payment-card";
 import { usePaymentColumns } from "./payments-columns";
 
 export function PaymentsScreen() {
@@ -35,13 +36,14 @@ export function PaymentsScreen() {
         error={error}
         onRetry={() => mutate()}
         onRowClick={(row) => router.push(`/admin/payments/${row.id}`)}
+        renderCard={(row) => <PaymentCard payment={row} />}
         emptyTitle="پرداختی برای بررسی وجود ندارد."
         toolbar={
-          <FilterTabs
-            items={paymentsTabs}
+          <ListToolbar
+            tabs={paymentsTabs}
             counts={counts}
-            value={activeTab?.id ?? "all"}
-            onChange={(id) => setStatusFilter(id === "all" ? null : id)}
+            statusValue={activeTab?.id ?? "all"}
+            onStatusChange={(id) => setStatusFilter(id === "all" ? null : id)}
           />
         }
       />

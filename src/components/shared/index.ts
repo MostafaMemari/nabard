@@ -15,6 +15,7 @@ export * from "./form-actions";
 export * from "./form-section";
 export * from "./jalali-date-field";
 export * from "./list-toolbar";
+export * from "./mobile-card";
 export * from "./page-header";
 export * from "./rows-skeleton";
 export * from "./search-input";

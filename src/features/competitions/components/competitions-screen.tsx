@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { DataTable, ListToolbar, PageHeader } from "@/components/shared";
 import { Button } from "@/components/ui/button";
+import { CompetitionCard } from "./competition-card";
 import { useCompetitionsView } from "./use-competitions-view";
 
 export function CompetitionsScreen() {
@@ -32,6 +33,7 @@ export function CompetitionsScreen() {
         error={view.error}
         onRetry={() => view.retry()}
         onRowClick={(row) => router.push(`/admin/competitions/${row.id}`)}
+        renderCard={(row) => <CompetitionCard competition={row} belts={view.belts} registrationCount={view.registrationCount(row.id)} />}
         emptyTitle={
           view.search.value.trim() !== "" ? `نتیجه‌ای برای «${view.search.value.trim()}» پیدا نشد.` : "هنوز مسابقه‌ای ثبت نشده است."
         }

@@ -29,6 +29,7 @@ export function coachColumns(options: { students: Student[]; onToggleStatus: (co
       header: "هنرجویان",
       cell: (row) => toPersianDigits(students.filter((student) => student.coachId === row.id).length),
       align: "end",
+      minScreen: "lg",
     },
     { id: "status", header: "وضعیت", cell: (row) => <StatusBadge status={row.isActive ? "ACTIVE" : "INACTIVE"} /> },
     {

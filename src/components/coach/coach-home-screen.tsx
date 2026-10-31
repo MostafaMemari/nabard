@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { DataTable, PageHeader } from "@/components/shared";
 import { CoachCompetitionList, useCompetitions } from "@/features/competitions";
 import { usePayments } from "@/features/payments";
-import { CoachRegistrationCards, coachRegistrationColumns } from "@/features/registrations";
+import { CoachRegistrationCard, coachRegistrationColumns } from "@/features/registrations";
 import { CoachSummaryCards } from "./coach-summary-cards";
 import { EmptyRegistrations as EmptyRegistrationsBlock, HomeListSection } from "./home-list-section";
 import { useCoachRegistrationRows } from "./use-coach-registration-rows";
@@ -67,12 +67,13 @@ export function CoachHomeScreen({ coachId }: { coachId: string }) {
         isEmpty={recentRows.length === 0}
         empty={<EmptyRegistrationsBlock />}
       >
-        <div className="hidden @lg:block">
-          <DataTable columns={coachRegistrationColumns()} rows={recentRows} getRowId={(row) => row.registration.id} pageSize={5} />
-        </div>
-        <div className="@lg:hidden">
-          <CoachRegistrationCards rows={recentRows} />
-        </div>
+        <DataTable
+          columns={coachRegistrationColumns()}
+          rows={recentRows}
+          getRowId={(row) => row.registration.id}
+          pageSize={5}
+          renderCard={(row) => <CoachRegistrationCard row={row} />}
+        />
       </HomeListSection>
     </>
   );

@@ -1,8 +1,16 @@
 "use client";
 
-import { Avatar, BeltChip } from "@/components/shared";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Avatar,
+  BeltChip,
+  DataTable,
+  type DataTableColumn,
+  MobileCard,
+  MobileCardChips,
+  MobileCardLine,
+  MobileCardTop,
+  SkeletonRows,
+} from "@/components/shared";
 import { useBelts } from "@/features/base-data";
 import type { Student } from "@/features/students";
 import { formatJalaliDate, formatNumber } from "@/lib/format";
@@ -10,14 +18,52 @@ import { formatJalaliDate, formatNumber } from "@/lib/format";
 export function CoachStudentsTable({ students, isLoading }: { students: Student[]; isLoading: boolean }) {
   const { belts } = useBelts();
 
+  const columns: DataTableColumn<Student>[] = [
+    {
+      id: "name",
+      header: "هنرجو",
+      cell: (row) => (
+        <div className="flex items-center gap-2.5">
+          <Avatar id={row.id} name={row.fullName} size="sm" />
+          <span className="font-medium">{row.fullName}</span>
+        </div>
+      ),
+      sortValue: (row) => row.fullName,
+    },
+    {
+      id: "belt",
+      header: "کمربند",
+      cell: (row) => {
+        const belt = belts.find((item) => item.id === row.beltId);
+        return belt ? <BeltChip belt={belt} /> : "—";
+      },
+      minScreen: "lg",
+    },
+    {
+      id: "weight",
+      header: "وزن",
+      cell: (row) => (
+        <span className="text-subtle whitespace-nowrap text-muted-foreground tabular-nums">
+          {row.weightKg !== null ? `${formatNumber(row.weightKg)} کیلوگرم` : "—"}
+        </span>
+      ),
+      align: "end",
+      sortValue: (row) => row.weightKg ?? 0,
+      minScreen: "lg",
+    },
+    {
+      id: "birthDate",
+      header: "تاریخ تولد",
+      cell: (row) => (
+        <span className="text-subtle whitespace-nowrap text-muted-foreground">{formatJalaliDate(new Date(row.birthDate))}</span>
+      ),
+      sortValue: (row) => row.birthDate,
+      minScreen: "xl",
+    },
+  ];
+
   if (isLoading) {
-    return (
-      <div className="flex flex-col gap-2">
-        {["s1", "s2", "s3"].map((id) => (
-          <Skeleton key={id} className="h-12 w-full" />
-        ))}
-      </div>
-    );
+    return <SkeletonRows rows={3} className="h-12" />;
   }
 
   if (students.length === 0) {
@@ -25,39 +71,27 @@ export function CoachStudentsTable({ students, isLoading }: { students: Student[
   }
 
   return (
-    <div className="overflow-x-auto">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>هنرجو</TableHead>
-            <TableHead>کمربند</TableHead>
-            <TableHead>وزن</TableHead>
-            <TableHead>تاریخ تولد</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {students.map((student) => {
-            const belt = belts.find((item) => item.id === student.beltId);
-            return (
-              <TableRow key={student.id}>
-                <TableCell>
-                  <div className="flex items-center gap-2.5">
-                    <Avatar id={student.id} name={student.fullName} size="sm" />
-                    <span className="text-sm font-medium">{student.fullName}</span>
-                  </div>
-                </TableCell>
-                <TableCell>{belt ? <BeltChip belt={belt} /> : "—"}</TableCell>
-                <TableCell className="text-subtle whitespace-nowrap text-muted-foreground">
-                  {student.weightKg !== null ? `${formatNumber(student.weightKg)} کیلوگرم` : "—"}
-                </TableCell>
-                <TableCell className="text-subtle whitespace-nowrap text-muted-foreground">
-                  {formatJalaliDate(new Date(student.birthDate))}
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </div>
+    <DataTable
+      columns={columns}
+      rows={students}
+      getRowId={(row) => row.id}
+      renderCard={(row) => <CoachStudentCard student={row} belts={belts} />}
+    />
+  );
+}
+
+function CoachStudentCard({ student, belts }: { student: Student; belts: ReturnType<typeof useBelts>["belts"] }) {
+  const belt = belts.find((item) => item.id === student.beltId);
+
+  return (
+    <MobileCard>
+      <MobileCardTop leading={<Avatar id={student.id} name={student.fullName} size="md" />} title={student.fullName} />
+      <MobileCardChips>{belt ? <BeltChip belt={belt} /> : null}</MobileCardChips>
+      <MobileCardLine
+        label="وزن"
+        value={<span className="tabular-nums">{student.weightKg !== null ? `${formatNumber(student.weightKg)} کیلوگرم` : "—"}</span>}
+      />
+      <MobileCardLine label="تاریخ تولد" value={formatJalaliDate(new Date(student.birthDate))} />
+    </MobileCard>
   );
 }

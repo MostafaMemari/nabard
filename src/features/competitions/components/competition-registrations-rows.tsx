@@ -11,6 +11,16 @@ export type RegistrationRow = {
   weightClassLabel: string | null;
 };
 
+export function registrationBadgeStatus(status: string) {
+  if (status === "APPROVED") {
+    return "APPROVED" as const;
+  }
+  if (status === "REJECTED") {
+    return "REJECTED" as const;
+  }
+  return "PENDING_REVIEW" as const;
+}
+
 export function CompetitionRegistrationsRows({ rows }: { rows: RegistrationRow[] }) {
   return (
     <TableBody>
@@ -24,9 +34,7 @@ export function CompetitionRegistrationsRows({ rows }: { rows: RegistrationRow[]
             {formatJalaliDateTime(new Date(registration.createdAt))}
           </TableCell>
           <TableCell>
-            <StatusBadge
-              status={registration.status === "APPROVED" ? "APPROVED" : registration.status === "REJECTED" ? "REJECTED" : "PENDING_REVIEW"}
-            />
+            <StatusBadge status={registrationBadgeStatus(registration.status)} />
           </TableCell>
         </TableRow>
       ))}

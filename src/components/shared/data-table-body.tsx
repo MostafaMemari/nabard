@@ -4,7 +4,7 @@ import { cn } from "cn";
 import type { ReactNode } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { TableBody, TableCell, TableRow } from "@/components/ui/table";
-import type { DataTableColumn } from "./data-table-types";
+import { columnScreenClass, type DataTableColumn } from "./data-table-types";
 import { EmptyState } from "./empty-state";
 
 export function DataTableBody<T>({
@@ -32,7 +32,7 @@ export function DataTableBody<T>({
         ? skeletonKeys.map((key) => (
             <TableRow key={key} className="h-13 hover:bg-transparent">
               {columns.map((column) => (
-                <TableCell key={column.id}>
+                <TableCell key={column.id} className={columnScreenClass(column)}>
                   <Skeleton className="h-4 w-24" />
                 </TableCell>
               ))}
@@ -56,7 +56,10 @@ export function DataTableBody<T>({
               onClick={onRowClick ? () => onRowClick(row) : undefined}
             >
               {columns.map((column) => (
-                <TableCell key={column.id} className={cn("text-sm", column.align === "end" && "text-end tabular-nums")}>
+                <TableCell
+                  key={column.id}
+                  className={cn("text-sm", columnScreenClass(column), column.align === "end" && "text-end tabular-nums")}
+                >
                   {column.cell(row)}
                 </TableCell>
               ))}

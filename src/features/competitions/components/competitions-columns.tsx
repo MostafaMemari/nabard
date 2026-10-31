@@ -17,16 +17,16 @@ export function competitionsColumns(options: {
       id: "title",
       header: "عنوان",
       cell: (row) => (
-        <div className="flex min-w-44 flex-col leading-tight">
+        <div className="flex min-w-36 flex-col leading-tight">
           <span className="font-medium">{row.title}</span>
           <span className="text-subtle text-muted-foreground">{disciplineLabels[row.discipline]}</span>
         </div>
       ),
       sortValue: (row) => row.title,
     },
-    { id: "age", header: "رده سنی", cell: (row) => ageCategoryLabel(row.ageCategoryId) },
-    { id: "gender", header: "جنسیت", cell: (row) => genderLabels[row.gender] },
-    { id: "belts", header: "کمربندها", cell: (row) => <BeltChips belts={belts} ids={row.beltIds} /> },
+    { id: "age", header: "رده سنی", cell: (row) => ageCategoryLabel(row.ageCategoryId), minScreen: "lg" },
+    { id: "gender", header: "جنسیت", cell: (row) => genderLabels[row.gender], minScreen: "xl" },
+    { id: "belts", header: "کمربندها", cell: (row) => <BeltChips belts={belts} ids={row.beltIds} />, minScreen: "xl" },
     {
       id: "deadline",
       header: "مهلت ثبت‌نام",
@@ -38,6 +38,7 @@ export function competitionsColumns(options: {
       header: "ثبت‌نام‌ها",
       cell: (row) => registrationCount(row.id),
       align: "end",
+      minScreen: "lg",
     },
     { id: "status", header: "وضعیت", cell: (row) => <StatusBadge status={row.status} /> },
   ];

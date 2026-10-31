@@ -1,6 +1,6 @@
 export * from "./api";
 export * from "./components/coach-registration-row";
-export * from "./components/coach-registrations-cards";
+export * from "./components/coach-registrations-card";
 export * from "./components/coach-registrations-columns";
 export * from "./components/competition-summary-card";
 export * from "./components/payment-step";

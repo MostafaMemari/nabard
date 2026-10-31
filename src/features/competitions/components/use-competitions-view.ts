@@ -41,6 +41,8 @@ export function useCompetitionsView() {
     search,
     rows,
     columns,
+    belts,
+    registrationCount: (id: string) => registrations.filter((registration) => registration.competitionId === id).length,
     isLoading,
     error,
     retry: mutate,

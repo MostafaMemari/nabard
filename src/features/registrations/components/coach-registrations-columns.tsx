@@ -20,11 +20,12 @@ export function coachRegistrationColumns(): DataTableColumn<CoachRegistrationRow
         ),
       sortValue: (row) => row.studentName ?? "",
     },
-    { id: "competition", header: "مسابقه", cell: (row) => row.competitionTitle, sortValue: (row) => row.competitionTitle },
+    { id: "competition", header: "مسابقه", cell: (row) => row.competitionTitle, sortValue: (row) => row.competitionTitle, minScreen: "lg" },
     {
       id: "weightClass",
       header: "رده وزنی",
       cell: (row) => <span className="whitespace-nowrap text-muted-foreground">{row.weightClassLabel ?? "—"}</span>,
+      minScreen: "lg",
     },
     {
       id: "createdAt",
@@ -33,6 +34,7 @@ export function coachRegistrationColumns(): DataTableColumn<CoachRegistrationRow
         <span className="whitespace-nowrap text-muted-foreground">{formatJalaliDate(new Date(row.registration.createdAt))}</span>
       ),
       sortValue: (row) => row.registration.createdAt,
+      minScreen: "xl",
     },
     { id: "status", header: "وضعیت", cell: (row) => <StatusBadge status={registrationStatusKey(row.registration.status)} /> },
     {

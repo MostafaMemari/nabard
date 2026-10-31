@@ -3,7 +3,7 @@
 import { cn } from "cn";
 import { ChevronDownIcon, ChevronsUpDownIcon, ChevronUpIcon } from "lucide-react";
 import { TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import type { DataTableColumn, SortState } from "./data-table-types";
+import { columnScreenClass, type DataTableColumn, type SortState } from "./data-table-types";
 
 function SortIcon({ active, direction }: { active: boolean; direction: "asc" | "desc" }) {
   if (!active) {
@@ -41,7 +41,11 @@ export function DataTableHeader<T>({
           <TableHead
             key={column.id}
             aria-sort={getAriaSort(column, sort)}
-            className={cn("h-11 text-subtle font-medium text-muted-foreground", column.align === "end" && "text-end")}
+            className={cn(
+              "h-11 text-subtle font-medium text-muted-foreground",
+              columnScreenClass(column),
+              column.align === "end" && "text-end",
+            )}
           >
             {column.sortValue ? (
               <button

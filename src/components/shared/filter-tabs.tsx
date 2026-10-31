@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "cn";
+import { formatNumber } from "@/lib/format";
 
 export type FilterTab = {
   id: string;
@@ -9,7 +10,7 @@ export type FilterTab = {
 
 function tabClass(active: boolean): string {
   return cn(
-    "inline-flex h-8 items-center gap-1.5 rounded-lg px-3 text-sm transition-colors duration-150",
+    "inline-flex h-11 items-center gap-1.5 rounded-lg px-3 text-sm transition-colors duration-150 md:h-9",
     active ? "bg-primary-subtle font-medium text-primary" : "text-muted-foreground hover:bg-muted hover:text-foreground",
   );
 }
@@ -38,7 +39,11 @@ export function FilterTabs({
             onClick={() => onChange(item.id)}
           >
             {item.label}
-            {counts ? <span className={active ? "text-primary/70" : "text-muted-foreground/70"}>{counts[item.id]}</span> : null}
+            {counts ? (
+              <span className={cn("tabular-nums", active ? "text-primary/70" : "text-muted-foreground/70")}>
+                {formatNumber(counts[item.id] ?? 0)}
+              </span>
+            ) : null}
           </button>
         );
       })}

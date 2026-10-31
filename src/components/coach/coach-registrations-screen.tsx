@@ -1,8 +1,7 @@
 "use client";
 
-import { DataTable, EmptyState, PageHeader } from "@/components/shared";
-import { Skeleton } from "@/components/ui/skeleton";
-import { CoachRegistrationCards, coachRegistrationColumns } from "@/features/registrations";
+import { DataTable, EmptyState, PageHeader, SkeletonRows } from "@/components/shared";
+import { CoachRegistrationCard, coachRegistrationColumns } from "@/features/registrations";
 import { useCoachRegistrationRows } from "./use-coach-registration-rows";
 
 export function CoachRegistrationsScreen({ coachId }: { coachId: string }) {
@@ -19,24 +18,20 @@ export function CoachRegistrationsScreen({ coachId }: { coachId: string }) {
           </button>
         </div>
       ) : isLoading ? (
-        <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 shadow-card">
-          {["r1", "r2", "r3", "r4", "r5"].map((key) => (
-            <Skeleton key={key} className="h-12 w-full" />
-          ))}
+        <div className="rounded-xl border border-border bg-card p-4 shadow-card">
+          <SkeletonRows rows={5} className="h-12" />
         </div>
       ) : rows.length === 0 ? (
         <div className="rounded-xl border border-border bg-card shadow-card">
           <EmptyState title="هنوز ثبت‌نامی انجام نشده است." />
         </div>
       ) : (
-        <>
-          <div className="hidden @lg:block">
-            <DataTable columns={coachRegistrationColumns()} rows={rows} getRowId={(row) => row.registration.id} />
-          </div>
-          <div className="@lg:hidden">
-            <CoachRegistrationCards rows={rows} />
-          </div>
-        </>
+        <DataTable
+          columns={coachRegistrationColumns()}
+          rows={rows}
+          getRowId={(row) => row.registration.id}
+          renderCard={(row) => <CoachRegistrationCard row={row} />}
+        />
       )}
     </>
   );

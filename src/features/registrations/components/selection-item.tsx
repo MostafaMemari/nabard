@@ -14,13 +14,16 @@ export function SelectionItem({ row, selected, onToggle }: { row: SelectionRow; 
     <label
       htmlFor={`select-${row.student.id}`}
       className={cn(
-        "flex items-center gap-3 border-b border-border px-4 py-3 last:border-b-0",
-        disabled ? "cursor-default opacity-60" : "cursor-pointer",
+        "flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border p-4 transition-colors duration-150",
+        selected ? "border-primary bg-primary-subtle" : "border-border bg-card shadow-card",
+        !disabled && "hover:border-ring/40",
+        disabled && "cursor-default shadow-none",
+        disabled && !row.registered && "opacity-60",
       )}
     >
       <Checkbox id={`select-${row.student.id}`} checked={selected} disabled={disabled} onCheckedChange={() => onToggle()} />
       <Avatar id={row.student.id} name={row.student.fullName} size="md" />
-      <div className="flex min-w-0 flex-1 flex-col gap-1">
+      <div className="flex min-w-0 flex-1 flex-col gap-1.5">
         <span className="flex flex-wrap items-center gap-2">
           <span className="truncate text-sm font-medium">{row.student.fullName}</span>
           {row.registered ? (
@@ -38,22 +41,17 @@ export function SelectionItem({ row, selected, onToggle }: { row: SelectionRow; 
           <span className="text-subtle text-muted-foreground">{row.eligibility.reason}</span>
         )}
       </div>
-      {row.eligibility.eligible && row.student.weightKg !== null ? (
-        <span className="text-subtle hidden whitespace-nowrap text-muted-foreground tabular-nums sm:block">
-          {formatNumber(row.student.weightKg)} کیلوگرم
-        </span>
-      ) : null}
     </label>
   );
 }
 
 export function SelectionGroup({ title, count, children }: { title: string; count: number; children: ReactNode }) {
   return (
-    <section className="flex flex-col gap-2">
+    <section className="flex flex-col gap-3">
       <h3 className="text-sm font-semibold">
         {title} <span className="font-normal text-muted-foreground">({formatNumber(count)})</span>
       </h3>
-      <div className="flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-card">{children}</div>
+      <div className="flex flex-col gap-3">{children}</div>
     </section>
   );
 }

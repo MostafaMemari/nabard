@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useStudents } from "@/features/students";
 import { useCoaches } from "../hooks/use-coaches";
 import type { User } from "../types";
+import { CoachCard } from "./coach-card";
 import { CoachFormSheet } from "./coach-form-sheet";
 import { CoachStatusDialog } from "./coach-status-dialog";
 import { coachColumns } from "./coaches-columns";
@@ -44,6 +45,13 @@ export function CoachesScreen() {
         error={error}
         onRetry={() => mutate()}
         onRowClick={(row) => router.push(`/admin/coaches/${row.id}`)}
+        renderCard={(row) => (
+          <CoachCard
+            coach={row}
+            studentCount={students.filter((student) => student.coachId === row.id).length}
+            onToggleStatus={(coach) => setPendingStatus({ coach, isActive: !coach.isActive })}
+          />
+        )}
         emptyTitle={
           filters.search.value.trim() !== "" ? `نتیجه‌ای برای «${filters.search.value.trim()}» پیدا نشد.` : "هنوز مربی‌ای اضافه نشده است."
         }

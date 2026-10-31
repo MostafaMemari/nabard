@@ -32,12 +32,14 @@ export function usePaymentColumns(): DataTableColumn<Payment>[] {
       header: "مسابقه",
       cell: (row) => competitions.find((competition) => competition.id === row.competitionId)?.title ?? row.competitionId,
       sortValue: (row) => competitions.find((competition) => competition.id === row.competitionId)?.title ?? row.competitionId,
+      minScreen: "lg",
     },
     {
       id: "students",
       header: "هنرجویان",
       cell: (row) => toPersianDigits(registrations.filter((registration) => registration.paymentId === row.id).length),
       align: "end",
+      minScreen: "lg",
     },
     {
       id: "amount",
@@ -45,7 +47,7 @@ export function usePaymentColumns(): DataTableColumn<Payment>[] {
       cell: (row) => <span className="tabular-nums">{formatRialsAsToman(Number(row.amount))}</span>,
       align: "end",
     },
-    { id: "date", header: "تاریخ", cell: (row) => formatJalaliDate(new Date(row.createdAt)) },
+    { id: "date", header: "تاریخ", cell: (row) => formatJalaliDate(new Date(row.createdAt)), minScreen: "lg" },
     { id: "status", header: "وضعیت", cell: (row) => <StatusBadge status={paymentBadgeStatus(row.status)} /> },
   ];
 }
