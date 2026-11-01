@@ -26,7 +26,7 @@ export function CoachCompetitionList({ competitions }: { competitions: Competiti
               {competition.title}
             </Link>
             <p className="text-subtle truncate text-muted-foreground">
-              {disciplineLabels[competition.discipline]} · رده سنی {ageCategoryLabel(competition.ageCategoryId)} ·{" "}
+              {disciplineLabels[competition.discipline]} · {ageCategoryLabel(competition.ageCategoryId)} ·{" "}
               {genderLabels[competition.gender]}
             </p>
           </div>

@@ -40,7 +40,7 @@ export function RegistrationFlow({ competitionId, coachId }: { competitionId: st
   const summary = (
     <CompetitionSummaryCard
       title={competition.title}
-      meta={`${disciplineLabels[competition.discipline]} · رده سنی ${ageCategoryLabel(competition.ageCategoryId)} · ${genderLabels[competition.gender]}`}
+      meta={`${disciplineLabels[competition.discipline]} · ${ageCategoryLabel(competition.ageCategoryId)} · ${genderLabels[competition.gender]}`}
       deadline={competition.registrationDeadline}
       feeLabel={formatRialsAsToman(Number(competition.feePerStudent))}
       discipline={competition.discipline}

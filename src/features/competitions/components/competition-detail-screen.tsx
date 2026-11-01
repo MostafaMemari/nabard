@@ -44,7 +44,7 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
         backHref="/admin/competitions"
         backLabel="مسابقات"
         title={competition.title}
-        description={`${disciplineLabels[competition.discipline]} · ${genderLabels[competition.gender]} · رده ${ageCategoryLabel(competition.ageCategoryId)}`}
+        description={`${disciplineLabels[competition.discipline]} · ${ageCategoryLabel(competition.ageCategoryId)} · ${genderLabels[competition.gender]}`}
         action={
           <div className="flex flex-wrap items-center gap-2">
             <Button variant="outline" disabled={hasRegistrations} render={<Link href={`/admin/competitions/${competitionId}/edit`} />}>

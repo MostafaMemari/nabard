@@ -35,7 +35,7 @@ export function CoachCompetitionDetailScreen({ competitionId }: { competitionId:
         backHref="/coach/competitions"
         backLabel="مسابقات"
         title={competition.title}
-        description={`${disciplineLabels[competition.discipline]} · ${genderLabels[competition.gender]} · رده ${ageCategoryLabel(competition.ageCategoryId)}`}
+        description={`${disciplineLabels[competition.discipline]} · ${ageCategoryLabel(competition.ageCategoryId)} · ${genderLabels[competition.gender]}`}
         action={
           open ? (
             <Button render={<Link href={`/coach/competitions/${competitionId}/register`} />}>
