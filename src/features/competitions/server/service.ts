@@ -4,12 +4,13 @@ import { AppError } from "@/lib/api";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
 import type { CompetitionListQuery, CreateCompetitionInput, UpdateCompetitionInput } from "../schemas";
-import type { CompetitionRegistrationState, Discipline } from "../types";
+import type { CompetitionRegistrationState, Discipline, ExtendCompetitionInput } from "../types";
 import type {
   AgeCategoryRow,
   CompetitionFilters,
   CompetitionRow,
   CompetitionsRepository,
+  DeadlineExtensionRow,
   NewCompetitionData,
   UserIdentityRecord,
 } from "./repository";
@@ -428,4 +429,50 @@ export async function cancelCompetition(
   const updated = await repo.updateCompetition(id, { status: "CANCELED", cancelReason: reason });
 
   return toRecord(updated, belts);
+}
+
+export async function extendCompetition(
+  repo: CompetitionsRepository,
+  user: CurrentUser,
+  id: string,
+  input: ExtendCompetitionInput,
+): Promise<CompetitionRecord> {
+  const identity = await requireActiveUser(repo, user);
+  if (identity.role !== "ADMIN") throw forbidden();
+
+  const row = await repo.findCompetitionById(id);
+  if (!row || row.province !== identity.province) throw competitionNotFound();
+
+  if (row.status === "CANCELED") {
+    throw new AppError(409, "CONFLICT", "مسابقه لغو شده قابل تمدید نیست.");
+  }
+
+  const newDeadline = new Date(input.newDeadline);
+  if (newDeadline.getTime() <= row.registrationDeadline.getTime()) {
+    throw new AppError(400, "VALIDATION_ERROR", "مهلت جدید باید بعد از مهلت فعلی باشد.");
+  }
+  if (newDeadline.getTime() >= row.eventDate.getTime()) {
+    throw new AppError(400, "VALIDATION_ERROR", "مهلت جدید باید قبل از تاریخ برگزاری باشد.");
+  }
+
+  const updated = await repo.extendDeadline({
+    competitionId: id,
+    previousDeadline: row.registrationDeadline,
+    newDeadline,
+    reopenForRejected: input.reopenForRejected ?? false,
+    reason: input.reason,
+    createdById: user.id,
+  });
+
+  return toRecord(updated, await repo.findAllBelts());
+}
+
+export async function listDeadlineExtensions(repo: CompetitionsRepository, user: CurrentUser, id: string): Promise<DeadlineExtensionRow[]> {
+  const identity = await requireActiveUser(repo, user);
+  if (identity.role !== "ADMIN") throw forbidden();
+
+  const row = await repo.findCompetitionById(id);
+  if (!row || row.province !== identity.province) throw competitionNotFound();
+
+  return repo.findDeadlineExtensions(id);
 }

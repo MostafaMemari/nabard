@@ -9,11 +9,13 @@ import { checkEligibility, type EligibilityCompetition, type EligibilityStudent 
 import type {
   AgeCategoryRow,
   CompetitionRegistrationRow,
+  DeadlineExtensionStatusRow,
   ParticipantRow,
   RegistrationBundle,
   RegistrationDetailRow,
   RegistrationFilters,
   RegistrationRecord,
+  RegistrationRejectionRow,
   RegistrationRepository,
   RegistrationStudentRow,
   RegistrationTransitionInput,
@@ -189,6 +191,34 @@ function assertRegistrationWindow(competition: CompetitionRegistrationRow, now: 
   }
 }
 
+const DUPLICATE_REASON = "این هنرجو قبلا در این مسابقه ثبت نام شده است.";
+const REJECTED_NOT_REOPENED_REASON = "ثبت نام قبلی این هنرجو رد شده و مهلت جدیدی برای ثبت نام مجدد او باز نشده است.";
+
+function registrationProblems(
+  students: RegistrationStudentRow[],
+  activeIds: string[],
+  rejections: RegistrationRejectionRow[],
+  extension: DeadlineExtensionStatusRow | null,
+): RegistrationProblem[] {
+  const problems: RegistrationProblem[] = [];
+  for (const student of students) {
+    if (activeIds.includes(student.id)) {
+      problems.push({ studentId: student.id, fullName: student.fullName, reason: DUPLICATE_REASON });
+      continue;
+    }
+
+    const rejection = rejections.find((row) => row.studentId === student.id);
+    if (rejection === undefined) continue;
+
+    const reopened = extension?.reopenForRejected === true && extension.createdAt.getTime() > rejection.rejectedAt.getTime();
+    if (!reopened) {
+      problems.push({ studentId: student.id, fullName: student.fullName, reason: REJECTED_NOT_REOPENED_REASON });
+    }
+  }
+
+  return problems;
+}
+
 export async function createRegistrations(
   repo: RegistrationRepository,
   storage: Storage,
@@ -217,21 +247,18 @@ export async function createRegistrations(
     throw new AppError(409, "CONFLICT", "رده سنی این مسابقه معتبر نیست.");
   }
 
-  const [belts, weightClasses, registeredIds] = await Promise.all([
+  const [belts, weightClasses, activeIds, rejections] = await Promise.all([
     repo.findAllBelts(),
     repo.findWeightClasses(competition.ageCategoryId, competition.gender),
-    repo.findRegisteredStudentIds(competitionId, uniqueIds),
+    repo.findActiveRegisteredStudentIds(competitionId, uniqueIds),
+    repo.findLatestRejectionsByStudentIds(competitionId, uniqueIds),
   ]);
 
-  const duplicates = students.filter((student) => registeredIds.includes(student.id));
-  if (duplicates.length > 0) {
-    const problems = duplicates.map((student) => ({
-      studentId: student.id,
-      fullName: student.fullName,
-      reason: "این هنرجو قبلا در این مسابقه ثبت نام شده است.",
-    }));
+  const extension = rejections.length > 0 ? await repo.findLatestDeadlineExtension(competitionId) : null;
 
-    throw new AppError(409, "CONFLICT", "برای برخی از هنرجوهای انتخاب شده قبلا در این مسابقه ثبت نام شده است.", problems);
+  const problems = registrationProblems(students, activeIds, rejections, extension);
+  if (problems.length > 0) {
+    throw new AppError(409, "CONFLICT", "برای برخی از هنرجوهای انتخاب شده امکان ثبت نام در این مسابقه نیست.", problems);
   }
 
   const eligibilityCompetition = toEligibilityCompetition(competition, ageCategory, belts, weightClasses);

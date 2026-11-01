@@ -403,6 +403,7 @@ export const ModelName = {
   AgeCategory: 'AgeCategory',
   WeightClass: 'WeightClass',
   Competition: 'Competition',
+  DeadlineExtension: 'DeadlineExtension',
   StoredFile: 'StoredFile',
   Payment: 'Payment',
   LoginFailure: 'LoginFailure',
@@ -422,7 +423,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "student" | "belt" | "ageCategory" | "weightClass" | "competition" | "storedFile" | "payment" | "loginFailure" | "registration"
+    modelProps: "user" | "student" | "belt" | "ageCategory" | "weightClass" | "competition" | "deadlineExtension" | "storedFile" | "payment" | "loginFailure" | "registration"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -870,6 +871,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DeadlineExtension: {
+      payload: Prisma.$DeadlineExtensionPayload<ExtArgs>
+      fields: Prisma.DeadlineExtensionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DeadlineExtensionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DeadlineExtensionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload>
+        }
+        findFirst: {
+          args: Prisma.DeadlineExtensionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DeadlineExtensionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload>
+        }
+        findMany: {
+          args: Prisma.DeadlineExtensionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload>[]
+        }
+        create: {
+          args: Prisma.DeadlineExtensionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload>
+        }
+        createMany: {
+          args: Prisma.DeadlineExtensionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DeadlineExtensionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload>[]
+        }
+        delete: {
+          args: Prisma.DeadlineExtensionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload>
+        }
+        update: {
+          args: Prisma.DeadlineExtensionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload>
+        }
+        deleteMany: {
+          args: Prisma.DeadlineExtensionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DeadlineExtensionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DeadlineExtensionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload>[]
+        }
+        upsert: {
+          args: Prisma.DeadlineExtensionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DeadlineExtensionPayload>
+        }
+        aggregate: {
+          args: Prisma.DeadlineExtensionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDeadlineExtension>
+        }
+        groupBy: {
+          args: Prisma.DeadlineExtensionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeadlineExtensionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DeadlineExtensionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DeadlineExtensionCountAggregateOutputType> | number
+        }
+      }
+    }
     StoredFile: {
       payload: Prisma.$StoredFilePayload<ExtArgs>
       fields: Prisma.StoredFileFieldRefs
@@ -1298,6 +1373,20 @@ export const CompetitionScalarFieldEnum = {
 } as const
 
 export type CompetitionScalarFieldEnum = (typeof CompetitionScalarFieldEnum)[keyof typeof CompetitionScalarFieldEnum]
+
+
+export const DeadlineExtensionScalarFieldEnum = {
+  id: 'id',
+  competitionId: 'competitionId',
+  previousDeadline: 'previousDeadline',
+  newDeadline: 'newDeadline',
+  reopenForRejected: 'reopenForRejected',
+  reason: 'reason',
+  createdById: 'createdById',
+  createdAt: 'createdAt'
+} as const
+
+export type DeadlineExtensionScalarFieldEnum = (typeof DeadlineExtensionScalarFieldEnum)[keyof typeof DeadlineExtensionScalarFieldEnum]
 
 
 export const StoredFileScalarFieldEnum = {
@@ -1782,6 +1871,7 @@ export type GlobalOmitConfig = {
   ageCategory?: Prisma.AgeCategoryOmit
   weightClass?: Prisma.WeightClassOmit
   competition?: Prisma.CompetitionOmit
+  deadlineExtension?: Prisma.DeadlineExtensionOmit
   storedFile?: Prisma.StoredFileOmit
   payment?: Prisma.PaymentOmit
   loginFailure?: Prisma.LoginFailureOmit

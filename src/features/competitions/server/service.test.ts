@@ -6,8 +6,10 @@ import type { CompetitionRow, CompetitionsRepository, UserIdentityRecord } from 
 import {
   cancelCompetition,
   createCompetition,
+  extendCompetition,
   getCompetition,
   listCompetitions,
+  listDeadlineExtensions,
   publishCompetition,
   registrationState,
   updateCompetition,
@@ -129,6 +131,12 @@ function repoWith(overrides: Partial<CompetitionsRepository> = {}): Competitions
     countRegistrations: vi.fn().mockResolvedValue(0),
     createCompetition: vi.fn().mockResolvedValue(draftRow),
     updateCompetition: vi.fn().mockImplementation(async (_id: string, data: Record<string, unknown>) => ({ ...draftRow, ...data })),
+    extendDeadline: vi.fn().mockImplementation(async (input: { competitionId: string; newDeadline: Date }) => ({
+      ...draftRow,
+      id: input.competitionId,
+      registrationDeadline: input.newDeadline,
+    })),
+    findDeadlineExtensions: vi.fn().mockResolvedValue([]),
     findAllBelts: vi.fn().mockResolvedValue(belts),
     findAllAgeCategories: vi.fn().mockResolvedValue([seniorCategory]),
     findWeightClasses: vi.fn().mockResolvedValue(seniorMaleWeightClasses),
@@ -501,5 +509,155 @@ describe("cancelCompetition", () => {
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
     expect(repo.updateCompetition).not.toHaveBeenCalled();
+  });
+});
+
+describe("extendCompetition", () => {
+  const extendInput = { newDeadline: new Date(Date.now() + 10 * DAY_MS).toISOString(), reason: "تمدید به دلیل درخواست هیئت ها" };
+
+  it("stores the previous deadline, new deadline, reason and admin and updates the deadline", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findCompetitionById: vi.fn().mockResolvedValue(publishedOpenRow),
+    });
+    const result = await extendCompetition(repo, admin, "comp-1", extendInput);
+
+    expect(repo.extendDeadline).toHaveBeenCalledWith({
+      competitionId: "comp-1",
+      previousDeadline: publishedOpenRow.registrationDeadline,
+      newDeadline: new Date(extendInput.newDeadline),
+      reopenForRejected: false,
+      reason: extendInput.reason,
+      createdById: "admin-1",
+    });
+    expect(result.registrationDeadline).toEqual(new Date(extendInput.newDeadline));
+  });
+
+  it("keeps reopenForRejected true when requested", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findCompetitionById: vi.fn().mockResolvedValue(publishedOpenRow),
+    });
+    await extendCompetition(repo, admin, "comp-1", { ...extendInput, reopenForRejected: true });
+
+    expect(repo.extendDeadline).toHaveBeenCalledWith(expect.objectContaining({ reopenForRejected: true }));
+  });
+
+  it("rejects a new deadline before or at the current deadline with 400", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findCompetitionById: vi.fn().mockResolvedValue(publishedOpenRow),
+    });
+    const failure = await failureOf(
+      extendCompetition(repo, admin, "comp-1", { ...extendInput, newDeadline: publishedOpenRow.registrationDeadline.toISOString() }),
+    );
+
+    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
+    expect((failure as AppError).message).toContain("بعد از مهلت فعلی");
+    expect(repo.extendDeadline).not.toHaveBeenCalled();
+  });
+
+  it("rejects a new deadline at or after the event date with 400", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findCompetitionById: vi.fn().mockResolvedValue(publishedOpenRow),
+    });
+    const failure = await failureOf(
+      extendCompetition(repo, admin, "comp-1", { ...extendInput, newDeadline: publishedOpenRow.eventDate.toISOString() }),
+    );
+
+    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
+    expect((failure as AppError).message).toContain("قبل از تاریخ برگزاری");
+    expect(repo.extendDeadline).not.toHaveBeenCalled();
+  });
+
+  it("rejects extending a canceled competition with 409", async () => {
+    const canceledRow = rowWith({ id: "comp-4", status: "CANCELED", cancelReason: "دلیل" });
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findCompetitionById: vi.fn().mockResolvedValue(canceledRow),
+    });
+    const failure = await failureOf(extendCompetition(repo, admin, "comp-4", extendInput));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect((failure as AppError).message).toContain("لغو شده");
+    expect(repo.extendDeadline).not.toHaveBeenCalled();
+  });
+
+  it("rejects a coach with 403", async () => {
+    const repo = repoWith();
+    const failure = await failureOf(extendCompetition(repo, coach, "comp-9", extendInput));
+
+    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect(repo.extendDeadline).not.toHaveBeenCalled();
+  });
+
+  it("hides another province competition behind 404", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findCompetitionById: vi.fn().mockResolvedValue(farsRow),
+    });
+    const failure = await failureOf(extendCompetition(repo, admin, "comp-2", extendInput));
+
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+    expect(repo.extendDeadline).not.toHaveBeenCalled();
+  });
+
+  it("allows extending a published competition whose deadline already passed", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findCompetitionById: vi.fn().mockResolvedValue(publishedClosedRow),
+    });
+    const between = new Date(Date.now() + 12 * 3_600_000).toISOString();
+    const result = await extendCompetition(repo, admin, "comp-3", { ...extendInput, newDeadline: between });
+
+    expect(repo.extendDeadline).toHaveBeenCalledWith(
+      expect.objectContaining({ previousDeadline: publishedClosedRow.registrationDeadline }),
+    );
+    expect(result.registrationDeadline).toEqual(new Date(between));
+  });
+});
+
+describe("listDeadlineExtensions", () => {
+  it("returns the extension history of the competition", async () => {
+    const history = [
+      {
+        id: "ext-1",
+        previousDeadline: publishedOpenRow.registrationDeadline,
+        newDeadline: new Date(Date.now() + 10 * DAY_MS),
+        reopenForRejected: true,
+        reason: "تمدید به دلیل درخواست هیئت ها",
+        createdByName: "مدیر استان",
+        createdAt: new Date(),
+      },
+    ];
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findCompetitionById: vi.fn().mockResolvedValue(publishedOpenRow),
+      findDeadlineExtensions: vi.fn().mockResolvedValue(history),
+    });
+    const result = await listDeadlineExtensions(repo, admin, "comp-1");
+
+    expect(repo.findDeadlineExtensions).toHaveBeenCalledWith("comp-1");
+    expect(result).toEqual(history);
+  });
+
+  it("rejects a coach with 403", async () => {
+    const repo = repoWith();
+    const failure = await failureOf(listDeadlineExtensions(repo, coach, "comp-9"));
+
+    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect(repo.findDeadlineExtensions).not.toHaveBeenCalled();
+  });
+
+  it("hides another province competition behind 404", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findCompetitionById: vi.fn().mockResolvedValue(farsRow),
+    });
+    const failure = await failureOf(listDeadlineExtensions(repo, admin, "comp-2"));
+
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+    expect(repo.findDeadlineExtensions).not.toHaveBeenCalled();
   });
 });

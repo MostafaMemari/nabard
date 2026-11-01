@@ -139,6 +139,16 @@ export type ParticipantRow = {
   weightClass: { label: string; order: number } | null;
 };
 
+export type RegistrationRejectionRow = {
+  studentId: string;
+  rejectedAt: Date;
+};
+
+export type DeadlineExtensionStatusRow = {
+  reopenForRejected: boolean;
+  createdAt: Date;
+};
+
 export type RegistrationRepository = {
   findUserById(id: string): Promise<UserIdentityRecord | null>;
   findCompetitionTitleById(id: string): Promise<string | null>;
@@ -148,7 +158,9 @@ export type RegistrationRepository = {
   findCoachStudentsByIds(coachId: string, studentIds: string[]): Promise<RegistrationStudentRow[]>;
   findAllBelts(): Promise<Belt[]>;
   findWeightClasses(ageCategoryId: string, gender: Gender): Promise<WeightClass[]>;
-  findRegisteredStudentIds(competitionId: string, studentIds: string[]): Promise<string[]>;
+  findActiveRegisteredStudentIds(competitionId: string, studentIds: string[]): Promise<string[]>;
+  findLatestRejectionsByStudentIds(competitionId: string, studentIds: string[]): Promise<RegistrationRejectionRow[]>;
+  findLatestDeadlineExtension(competitionId: string): Promise<DeadlineExtensionStatusRow | null>;
   countRegistrations(filters: RegistrationFilters): Promise<number>;
   findRegistrations(filters: RegistrationFilters, skip: number, take: number): Promise<RegistrationWithScope[]>;
   findRegistrationById(id: string): Promise<RegistrationWithScope | null>;
@@ -310,13 +322,38 @@ export async function findWeightClasses(ageCategoryId: string, gender: Gender): 
   }));
 }
 
-export async function findRegisteredStudentIds(competitionId: string, studentIds: string[]): Promise<string[]> {
+export async function findActiveRegisteredStudentIds(competitionId: string, studentIds: string[]): Promise<string[]> {
   const rows = await getPrisma().registration.findMany({
-    where: { competitionId, studentId: { in: studentIds } },
+    where: { competitionId, studentId: { in: studentIds }, status: { not: "REJECTED" } },
     select: { studentId: true },
   });
 
   return rows.map((row) => row.studentId);
+}
+
+export async function findLatestRejectionsByStudentIds(competitionId: string, studentIds: string[]): Promise<RegistrationRejectionRow[]> {
+  const rows = await getPrisma().registration.findMany({
+    where: { competitionId, studentId: { in: studentIds }, status: "REJECTED" },
+    select: { studentId: true, updatedAt: true },
+    orderBy: { updatedAt: "desc" },
+  });
+
+  const latest = new Map<string, Date>();
+  for (const row of rows) {
+    if (!latest.has(row.studentId)) latest.set(row.studentId, row.updatedAt);
+  }
+
+  return [...latest].map(([studentId, rejectedAt]) => ({ studentId, rejectedAt }));
+}
+
+export async function findLatestDeadlineExtension(competitionId: string): Promise<DeadlineExtensionStatusRow | null> {
+  const row = await getPrisma().deadlineExtension.findFirst({
+    where: { competitionId },
+    select: { reopenForRejected: true, createdAt: true },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return row;
 }
 
 export async function countRegistrations(filters: RegistrationFilters): Promise<number> {

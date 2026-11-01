@@ -139,9 +139,10 @@ model User {
   province     Province @map("province")
   isActive     Boolean  @default(true) @map("is_active")
 
-  students      Student[]
-  registrations Registration[]
-  payments      Payment[]
+  students            Student[]
+  registrations       Registration[]
+  payments            Payment[]
+  deadlineExtensions  DeadlineExtension[] @relation("DeadlineExtensionCreatedBy")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -245,14 +246,34 @@ model Competition {
   status               CompetitionStatus @default(DRAFT) @map("status")
   cancelReason         String?  @map("cancel_reason") @db.VarChar(500) // admin note on cancel
 
-  registrations Registration[]
-  payments      Payment[]
+  registrations       Registration[]
+  deadlineExtensions  DeadlineExtension[]
+  payments            Payment[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([province, status])
   @@map("competitions")
+}
+
+// Each row is the only allowed change to a competition deadline once
+// registrations exist: it keeps the previous deadline and who extended it.
+model DeadlineExtension {
+  id                String      @id @default(uuid()) @map("id")
+  competitionId     String      @map("competition_id")
+  competition       Competition @relation(fields: [competitionId], references: [id])
+  previousDeadline  DateTime    @map("previous_deadline")
+  newDeadline       DateTime    @map("new_deadline")
+  reopenForRejected Boolean     @default(false) @map("reopen_for_rejected")
+  reason            String      @map("reason") @db.VarChar(500)
+  createdById       String      @map("created_by_id")
+  createdBy         User        @relation("DeadlineExtensionCreatedBy", fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([competitionId])
+  @@map("deadline_extensions")
 }
 
 // ───────────── Registration and payment ─────────────
@@ -325,7 +346,9 @@ model Registration {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@unique([competitionId, studentId])
+  // Uniqueness of one active registration per (competition, student) is a
+  // partial unique index committed in a raw SQL migration, so REJECTED rows
+  // stay as history and a new registration can be created.
   @@index([competitionId, status])
   @@index([coachId])
   @@map("registrations")

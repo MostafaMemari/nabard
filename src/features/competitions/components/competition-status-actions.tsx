@@ -1,18 +1,21 @@
 "use client";
 
-import { BanIcon, SendIcon } from "lucide-react";
+import { BanIcon, CalendarClockIcon, SendIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ConfirmDialog } from "@/components/shared";
 import { Button } from "@/components/ui/button";
-import { updateCompetitionStatus } from "../api";
-import type { Competition } from "../types";
+import { ApiError } from "@/lib/http";
+import { extendCompetition, updateCompetitionStatus } from "../api";
+import type { Competition, ExtendCompetitionInput } from "../types";
 import { CompetitionCancelDialog } from "./competition-cancel-dialog";
 import { competitionStatusConfig } from "./competition-status-config";
+import { DeadlineExtensionDialog } from "./deadline-extension-dialog";
 
 export function CompetitionStatusActions({ competition, onChanged }: { competition: Competition; onChanged: () => Promise<unknown> }) {
   const [pendingPublish, setPendingPublish] = useState(false);
   const [pendingCancel, setPendingCancel] = useState(false);
+  const [pendingExtend, setPendingExtend] = useState(false);
   const [working, setWorking] = useState(false);
 
   async function publish() {
@@ -43,6 +46,21 @@ export function CompetitionStatusActions({ competition, onChanged }: { competiti
     }
   }
 
+  async function extend(input: ExtendCompetitionInput) {
+    setWorking(true);
+    try {
+      await extendCompetition(competition.id, input);
+      toast.success("مهلت ثبت نام تمدید شد.");
+      await onChanged();
+      setPendingExtend(false);
+    } catch (error) {
+      toast.error(error instanceof ApiError ? error.message : "انجام نشد. دوباره تلاش کنید.");
+      throw error;
+    } finally {
+      setWorking(false);
+    }
+  }
+
   return (
     <>
       {competition.status === "DRAFT" ? (
@@ -52,10 +70,16 @@ export function CompetitionStatusActions({ competition, onChanged }: { competiti
         </Button>
       ) : null}
       {competition.status === "PUBLISHED" ? (
-        <Button variant="outline" className="text-danger" onClick={() => setPendingCancel(true)}>
-          <BanIcon data-icon="inline-start" />
-          لغو مسابقه
-        </Button>
+        <>
+          <Button variant="outline" onClick={() => setPendingExtend(true)}>
+            <CalendarClockIcon data-icon="inline-start" />
+            تمدید مهلت
+          </Button>
+          <Button variant="outline" className="text-danger" onClick={() => setPendingCancel(true)}>
+            <BanIcon data-icon="inline-start" />
+            لغو مسابقه
+          </Button>
+        </>
       ) : null}
       <ConfirmDialog
         open={pendingPublish}
@@ -71,6 +95,13 @@ export function CompetitionStatusActions({ competition, onChanged }: { competiti
         onOpenChange={setPendingCancel}
         loading={working}
         onConfirm={(reason) => cancel(reason)}
+      />
+      <DeadlineExtensionDialog
+        open={pendingExtend}
+        onOpenChange={setPendingExtend}
+        competition={competition}
+        loading={working}
+        onConfirm={(input) => extend(input)}
       />
     </>
   );

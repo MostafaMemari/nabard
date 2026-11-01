@@ -57,6 +57,7 @@ export const ModelName = {
   AgeCategory: 'AgeCategory',
   WeightClass: 'WeightClass',
   Competition: 'Competition',
+  DeadlineExtension: 'DeadlineExtension',
   StoredFile: 'StoredFile',
   Payment: 'Payment',
   LoginFailure: 'LoginFailure',
@@ -172,6 +173,20 @@ export const CompetitionScalarFieldEnum = {
 } as const
 
 export type CompetitionScalarFieldEnum = (typeof CompetitionScalarFieldEnum)[keyof typeof CompetitionScalarFieldEnum]
+
+
+export const DeadlineExtensionScalarFieldEnum = {
+  id: 'id',
+  competitionId: 'competitionId',
+  previousDeadline: 'previousDeadline',
+  newDeadline: 'newDeadline',
+  reopenForRejected: 'reopenForRejected',
+  reason: 'reason',
+  createdById: 'createdById',
+  createdAt: 'createdAt'
+} as const
+
+export type DeadlineExtensionScalarFieldEnum = (typeof DeadlineExtensionScalarFieldEnum)[keyof typeof DeadlineExtensionScalarFieldEnum]
 
 
 export const StoredFileScalarFieldEnum = {

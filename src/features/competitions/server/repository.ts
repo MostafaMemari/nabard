@@ -88,6 +88,25 @@ export type CompetitionUpdateData = {
   cancelReason?: string | null;
 };
 
+export type DeadlineExtensionInput = {
+  competitionId: string;
+  previousDeadline: Date;
+  newDeadline: Date;
+  reopenForRejected: boolean;
+  reason: string;
+  createdById: string;
+};
+
+export type DeadlineExtensionRow = {
+  id: string;
+  previousDeadline: Date;
+  newDeadline: Date;
+  reopenForRejected: boolean;
+  reason: string;
+  createdByName: string;
+  createdAt: Date;
+};
+
 export type CompetitionsRepository = {
   findUserById(id: string): Promise<UserIdentityRecord | null>;
   countCompetitions(filters: CompetitionFilters): Promise<number>;
@@ -96,6 +115,8 @@ export type CompetitionsRepository = {
   countRegistrations(competitionId: string): Promise<number>;
   createCompetition(data: NewCompetitionData): Promise<CompetitionRow>;
   updateCompetition(id: string, data: CompetitionUpdateData): Promise<CompetitionRow>;
+  extendDeadline(input: DeadlineExtensionInput): Promise<CompetitionRow>;
+  findDeadlineExtensions(competitionId: string): Promise<DeadlineExtensionRow[]>;
   findAllBelts(): Promise<BeltRow[]>;
   findAllAgeCategories(): Promise<AgeCategoryRow[]>;
   findWeightClasses(ageCategoryId: string, gender: Gender): Promise<WeightClassRow[]>;
@@ -198,6 +219,53 @@ export async function createCompetition(data: NewCompetitionData): Promise<Compe
 
 export async function updateCompetition(id: string, data: CompetitionUpdateData): Promise<CompetitionRow> {
   return getPrisma().competition.update({ where: { id }, data, select: competitionSelection });
+}
+
+export async function extendDeadline(input: DeadlineExtensionInput): Promise<CompetitionRow> {
+  return getPrisma().$transaction(async (tx) => {
+    await tx.deadlineExtension.create({
+      data: {
+        competitionId: input.competitionId,
+        previousDeadline: input.previousDeadline,
+        newDeadline: input.newDeadline,
+        reopenForRejected: input.reopenForRejected,
+        reason: input.reason,
+        createdById: input.createdById,
+      },
+    });
+
+    return tx.competition.update({
+      where: { id: input.competitionId },
+      data: { registrationDeadline: input.newDeadline },
+      select: competitionSelection,
+    });
+  });
+}
+
+export async function findDeadlineExtensions(competitionId: string): Promise<DeadlineExtensionRow[]> {
+  const rows = await getPrisma().deadlineExtension.findMany({
+    where: { competitionId },
+    select: {
+      id: true,
+      previousDeadline: true,
+      newDeadline: true,
+      reopenForRejected: true,
+      reason: true,
+      createdAt: true,
+      createdBy: { select: { fullName: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+
+  return rows.map((row) => ({
+    id: row.id,
+    previousDeadline: row.previousDeadline,
+    newDeadline: row.newDeadline,
+    reopenForRejected: row.reopenForRejected,
+    reason: row.reason,
+    createdByName: row.createdBy.fullName,
+    createdAt: row.createdAt,
+  }));
 }
 
 export async function findAllBelts(): Promise<BeltRow[]> {

@@ -93,6 +93,12 @@ export const cancelCompetitionSchema = z.object({
   reason: z.string().trim().min(3, "دلیل لغو مسابقه را وارد کنید.").max(500, "دلیل لغو حداکثر ۵۰۰ نویسه است."),
 });
 
+export const extendCompetitionSchema = z.object({
+  newDeadline: z.string().min(1, "مهلت جدید را انتخاب کنید.").refine(isIsoDate, "مهلت جدید معتبر نیست."),
+  reason: z.string().trim().min(3, "دلیل تمدید مهلت را وارد کنید.").max(500, "دلیل تمدید حداکثر ۵۰۰ نویسه است."),
+  reopenForRejected: z.boolean().optional(),
+});
+
 export const competitionListQuerySchema = z.object({
   status: z.enum(["DRAFT", "PUBLISHED", "CANCELED"]).optional(),
   discipline: z.enum(["KYORUGI", "POOMSAE"]).optional(),

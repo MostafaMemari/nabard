@@ -316,6 +316,7 @@ export type CompetitionWhereInput = {
   minBelt?: Prisma.XOR<Prisma.BeltScalarRelationFilter, Prisma.BeltWhereInput>
   maxBelt?: Prisma.XOR<Prisma.BeltScalarRelationFilter, Prisma.BeltWhereInput>
   registrations?: Prisma.RegistrationListRelationFilter
+  deadlineExtensions?: Prisma.DeadlineExtensionListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
 }
 
@@ -341,6 +342,7 @@ export type CompetitionOrderByWithRelationInput = {
   minBelt?: Prisma.BeltOrderByWithRelationInput
   maxBelt?: Prisma.BeltOrderByWithRelationInput
   registrations?: Prisma.RegistrationOrderByRelationAggregateInput
+  deadlineExtensions?: Prisma.DeadlineExtensionOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
 }
 
@@ -369,6 +371,7 @@ export type CompetitionWhereUniqueInput = Prisma.AtLeast<{
   minBelt?: Prisma.XOR<Prisma.BeltScalarRelationFilter, Prisma.BeltWhereInput>
   maxBelt?: Prisma.XOR<Prisma.BeltScalarRelationFilter, Prisma.BeltWhereInput>
   registrations?: Prisma.RegistrationListRelationFilter
+  deadlineExtensions?: Prisma.DeadlineExtensionListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
 }, "id">
 
@@ -439,6 +442,7 @@ export type CompetitionCreateInput = {
   minBelt: Prisma.BeltCreateNestedOneWithoutMinForInput
   maxBelt: Prisma.BeltCreateNestedOneWithoutMaxForInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCompetitionInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCompetitionInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCompetitionInput
 }
 
@@ -461,6 +465,7 @@ export type CompetitionUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCompetitionInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCompetitionInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCompetitionInput
 }
 
@@ -483,6 +488,7 @@ export type CompetitionUpdateInput = {
   minBelt?: Prisma.BeltUpdateOneRequiredWithoutMinForNestedInput
   maxBelt?: Prisma.BeltUpdateOneRequiredWithoutMaxForNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCompetitionNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCompetitionNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCompetitionNestedInput
 }
 
@@ -505,6 +511,7 @@ export type CompetitionUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCompetitionNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCompetitionNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutCompetitionNestedInput
 }
 
@@ -790,6 +797,20 @@ export type EnumCompetitionStatusFieldUpdateOperationsInput = {
   set?: $Enums.CompetitionStatus
 }
 
+export type CompetitionCreateNestedOneWithoutDeadlineExtensionsInput = {
+  create?: Prisma.XOR<Prisma.CompetitionCreateWithoutDeadlineExtensionsInput, Prisma.CompetitionUncheckedCreateWithoutDeadlineExtensionsInput>
+  connectOrCreate?: Prisma.CompetitionCreateOrConnectWithoutDeadlineExtensionsInput
+  connect?: Prisma.CompetitionWhereUniqueInput
+}
+
+export type CompetitionUpdateOneRequiredWithoutDeadlineExtensionsNestedInput = {
+  create?: Prisma.XOR<Prisma.CompetitionCreateWithoutDeadlineExtensionsInput, Prisma.CompetitionUncheckedCreateWithoutDeadlineExtensionsInput>
+  connectOrCreate?: Prisma.CompetitionCreateOrConnectWithoutDeadlineExtensionsInput
+  upsert?: Prisma.CompetitionUpsertWithoutDeadlineExtensionsInput
+  connect?: Prisma.CompetitionWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CompetitionUpdateToOneWithWhereWithoutDeadlineExtensionsInput, Prisma.CompetitionUpdateWithoutDeadlineExtensionsInput>, Prisma.CompetitionUncheckedUpdateWithoutDeadlineExtensionsInput>
+}
+
 export type CompetitionCreateNestedOneWithoutPaymentsInput = {
   create?: Prisma.XOR<Prisma.CompetitionCreateWithoutPaymentsInput, Prisma.CompetitionUncheckedCreateWithoutPaymentsInput>
   connectOrCreate?: Prisma.CompetitionCreateOrConnectWithoutPaymentsInput
@@ -836,6 +857,7 @@ export type CompetitionCreateWithoutMinBeltInput = {
   ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutCompetitionsInput
   maxBelt: Prisma.BeltCreateNestedOneWithoutMaxForInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCompetitionInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCompetitionInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCompetitionInput
 }
 
@@ -857,6 +879,7 @@ export type CompetitionUncheckedCreateWithoutMinBeltInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCompetitionInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCompetitionInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCompetitionInput
 }
 
@@ -888,6 +911,7 @@ export type CompetitionCreateWithoutMaxBeltInput = {
   ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutCompetitionsInput
   minBelt: Prisma.BeltCreateNestedOneWithoutMinForInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCompetitionInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCompetitionInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCompetitionInput
 }
 
@@ -909,6 +933,7 @@ export type CompetitionUncheckedCreateWithoutMaxBeltInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCompetitionInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCompetitionInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCompetitionInput
 }
 
@@ -995,6 +1020,7 @@ export type CompetitionCreateWithoutAgeCategoryInput = {
   minBelt: Prisma.BeltCreateNestedOneWithoutMinForInput
   maxBelt: Prisma.BeltCreateNestedOneWithoutMaxForInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCompetitionInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCompetitionInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCompetitionInput
 }
 
@@ -1016,6 +1042,7 @@ export type CompetitionUncheckedCreateWithoutAgeCategoryInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCompetitionInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCompetitionInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCompetitionInput
 }
 
@@ -1045,6 +1072,110 @@ export type CompetitionUpdateManyWithWhereWithoutAgeCategoryInput = {
   data: Prisma.XOR<Prisma.CompetitionUpdateManyMutationInput, Prisma.CompetitionUncheckedUpdateManyWithoutAgeCategoryInput>
 }
 
+export type CompetitionCreateWithoutDeadlineExtensionsInput = {
+  id?: string
+  title: string
+  province: $Enums.Province
+  discipline: $Enums.Discipline
+  gender: $Enums.Gender
+  feePerStudent: bigint | number
+  payeeCardNumber: string
+  payeeCardHolder: string
+  registrationDeadline: Date | string
+  eventDate: Date | string
+  status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutCompetitionsInput
+  minBelt: Prisma.BeltCreateNestedOneWithoutMinForInput
+  maxBelt: Prisma.BeltCreateNestedOneWithoutMaxForInput
+  registrations?: Prisma.RegistrationCreateNestedManyWithoutCompetitionInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutCompetitionInput
+}
+
+export type CompetitionUncheckedCreateWithoutDeadlineExtensionsInput = {
+  id?: string
+  title: string
+  province: $Enums.Province
+  discipline: $Enums.Discipline
+  gender: $Enums.Gender
+  ageCategoryId: string
+  minBeltId: string
+  maxBeltId: string
+  feePerStudent: bigint | number
+  payeeCardNumber: string
+  payeeCardHolder: string
+  registrationDeadline: Date | string
+  eventDate: Date | string
+  status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCompetitionInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCompetitionInput
+}
+
+export type CompetitionCreateOrConnectWithoutDeadlineExtensionsInput = {
+  where: Prisma.CompetitionWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompetitionCreateWithoutDeadlineExtensionsInput, Prisma.CompetitionUncheckedCreateWithoutDeadlineExtensionsInput>
+}
+
+export type CompetitionUpsertWithoutDeadlineExtensionsInput = {
+  update: Prisma.XOR<Prisma.CompetitionUpdateWithoutDeadlineExtensionsInput, Prisma.CompetitionUncheckedUpdateWithoutDeadlineExtensionsInput>
+  create: Prisma.XOR<Prisma.CompetitionCreateWithoutDeadlineExtensionsInput, Prisma.CompetitionUncheckedCreateWithoutDeadlineExtensionsInput>
+  where?: Prisma.CompetitionWhereInput
+}
+
+export type CompetitionUpdateToOneWithWhereWithoutDeadlineExtensionsInput = {
+  where?: Prisma.CompetitionWhereInput
+  data: Prisma.XOR<Prisma.CompetitionUpdateWithoutDeadlineExtensionsInput, Prisma.CompetitionUncheckedUpdateWithoutDeadlineExtensionsInput>
+}
+
+export type CompetitionUpdateWithoutDeadlineExtensionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  feePerStudent?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  payeeCardNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  payeeCardHolder?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutCompetitionsNestedInput
+  minBelt?: Prisma.BeltUpdateOneRequiredWithoutMinForNestedInput
+  maxBelt?: Prisma.BeltUpdateOneRequiredWithoutMaxForNestedInput
+  registrations?: Prisma.RegistrationUpdateManyWithoutCompetitionNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutCompetitionNestedInput
+}
+
+export type CompetitionUncheckedUpdateWithoutDeadlineExtensionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  ageCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  minBeltId?: Prisma.StringFieldUpdateOperationsInput | string
+  maxBeltId?: Prisma.StringFieldUpdateOperationsInput | string
+  feePerStudent?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  payeeCardNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  payeeCardHolder?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCompetitionNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutCompetitionNestedInput
+}
+
 export type CompetitionCreateWithoutPaymentsInput = {
   id?: string
   title: string
@@ -1064,6 +1195,7 @@ export type CompetitionCreateWithoutPaymentsInput = {
   minBelt: Prisma.BeltCreateNestedOneWithoutMinForInput
   maxBelt: Prisma.BeltCreateNestedOneWithoutMaxForInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCompetitionInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCompetitionInput
 }
 
 export type CompetitionUncheckedCreateWithoutPaymentsInput = {
@@ -1085,6 +1217,7 @@ export type CompetitionUncheckedCreateWithoutPaymentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCompetitionInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCompetitionInput
 }
 
 export type CompetitionCreateOrConnectWithoutPaymentsInput = {
@@ -1122,6 +1255,7 @@ export type CompetitionUpdateWithoutPaymentsInput = {
   minBelt?: Prisma.BeltUpdateOneRequiredWithoutMinForNestedInput
   maxBelt?: Prisma.BeltUpdateOneRequiredWithoutMaxForNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCompetitionNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCompetitionNestedInput
 }
 
 export type CompetitionUncheckedUpdateWithoutPaymentsInput = {
@@ -1143,6 +1277,7 @@ export type CompetitionUncheckedUpdateWithoutPaymentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCompetitionNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCompetitionNestedInput
 }
 
 export type CompetitionCreateWithoutRegistrationsInput = {
@@ -1163,6 +1298,7 @@ export type CompetitionCreateWithoutRegistrationsInput = {
   ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutCompetitionsInput
   minBelt: Prisma.BeltCreateNestedOneWithoutMinForInput
   maxBelt: Prisma.BeltCreateNestedOneWithoutMaxForInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCompetitionInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCompetitionInput
 }
 
@@ -1184,6 +1320,7 @@ export type CompetitionUncheckedCreateWithoutRegistrationsInput = {
   cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCompetitionInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCompetitionInput
 }
 
@@ -1221,6 +1358,7 @@ export type CompetitionUpdateWithoutRegistrationsInput = {
   ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutCompetitionsNestedInput
   minBelt?: Prisma.BeltUpdateOneRequiredWithoutMinForNestedInput
   maxBelt?: Prisma.BeltUpdateOneRequiredWithoutMaxForNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCompetitionNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCompetitionNestedInput
 }
 
@@ -1242,6 +1380,7 @@ export type CompetitionUncheckedUpdateWithoutRegistrationsInput = {
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCompetitionNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutCompetitionNestedInput
 }
 
@@ -1301,6 +1440,7 @@ export type CompetitionUpdateWithoutMinBeltInput = {
   ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutCompetitionsNestedInput
   maxBelt?: Prisma.BeltUpdateOneRequiredWithoutMaxForNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCompetitionNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCompetitionNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCompetitionNestedInput
 }
 
@@ -1322,6 +1462,7 @@ export type CompetitionUncheckedUpdateWithoutMinBeltInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCompetitionNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCompetitionNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutCompetitionNestedInput
 }
 
@@ -1362,6 +1503,7 @@ export type CompetitionUpdateWithoutMaxBeltInput = {
   ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutCompetitionsNestedInput
   minBelt?: Prisma.BeltUpdateOneRequiredWithoutMinForNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCompetitionNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCompetitionNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCompetitionNestedInput
 }
 
@@ -1383,6 +1525,7 @@ export type CompetitionUncheckedUpdateWithoutMaxBeltInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCompetitionNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCompetitionNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutCompetitionNestedInput
 }
 
@@ -1442,6 +1585,7 @@ export type CompetitionUpdateWithoutAgeCategoryInput = {
   minBelt?: Prisma.BeltUpdateOneRequiredWithoutMinForNestedInput
   maxBelt?: Prisma.BeltUpdateOneRequiredWithoutMaxForNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCompetitionNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCompetitionNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCompetitionNestedInput
 }
 
@@ -1463,6 +1607,7 @@ export type CompetitionUncheckedUpdateWithoutAgeCategoryInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCompetitionNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCompetitionNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutCompetitionNestedInput
 }
 
@@ -1492,11 +1637,13 @@ export type CompetitionUncheckedUpdateManyWithoutAgeCategoryInput = {
 
 export type CompetitionCountOutputType = {
   registrations: number
+  deadlineExtensions: number
   payments: number
 }
 
 export type CompetitionCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   registrations?: boolean | CompetitionCountOutputTypeCountRegistrationsArgs
+  deadlineExtensions?: boolean | CompetitionCountOutputTypeCountDeadlineExtensionsArgs
   payments?: boolean | CompetitionCountOutputTypeCountPaymentsArgs
 }
 
@@ -1515,6 +1662,13 @@ export type CompetitionCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.
  */
 export type CompetitionCountOutputTypeCountRegistrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.RegistrationWhereInput
+}
+
+/**
+ * CompetitionCountOutputType without action
+ */
+export type CompetitionCountOutputTypeCountDeadlineExtensionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DeadlineExtensionWhereInput
 }
 
 /**
@@ -1547,6 +1701,7 @@ export type CompetitionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   minBelt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
   maxBelt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
   registrations?: boolean | Prisma.Competition$registrationsArgs<ExtArgs>
+  deadlineExtensions?: boolean | Prisma.Competition$deadlineExtensionsArgs<ExtArgs>
   payments?: boolean | Prisma.Competition$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.CompetitionCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["competition"]>
@@ -1623,6 +1778,7 @@ export type CompetitionInclude<ExtArgs extends runtime.Types.Extensions.Internal
   minBelt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
   maxBelt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
   registrations?: boolean | Prisma.Competition$registrationsArgs<ExtArgs>
+  deadlineExtensions?: boolean | Prisma.Competition$deadlineExtensionsArgs<ExtArgs>
   payments?: boolean | Prisma.Competition$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.CompetitionCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1644,6 +1800,7 @@ export type $CompetitionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     minBelt: Prisma.$BeltPayload<ExtArgs>
     maxBelt: Prisma.$BeltPayload<ExtArgs>
     registrations: Prisma.$RegistrationPayload<ExtArgs>[]
+    deadlineExtensions: Prisma.$DeadlineExtensionPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -2062,6 +2219,7 @@ export interface Prisma__CompetitionClient<T, Null = never, ExtArgs extends runt
   minBelt<T extends Prisma.BeltDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BeltDefaultArgs<ExtArgs>>): Prisma.Prisma__BeltClient<runtime.Types.Result.GetResult<Prisma.$BeltPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   maxBelt<T extends Prisma.BeltDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BeltDefaultArgs<ExtArgs>>): Prisma.Prisma__BeltClient<runtime.Types.Result.GetResult<Prisma.$BeltPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   registrations<T extends Prisma.Competition$registrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Competition$registrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  deadlineExtensions<T extends Prisma.Competition$deadlineExtensionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Competition$deadlineExtensionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeadlineExtensionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.Competition$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Competition$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2531,6 +2689,30 @@ export type Competition$registrationsArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   distinct?: Prisma.RegistrationScalarFieldEnum | Prisma.RegistrationScalarFieldEnum[]
+}
+
+/**
+ * Competition.deadlineExtensions
+ */
+export type Competition$deadlineExtensionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DeadlineExtension
+   */
+  select?: Prisma.DeadlineExtensionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DeadlineExtension
+   */
+  omit?: Prisma.DeadlineExtensionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DeadlineExtensionInclude<ExtArgs> | null
+  where?: Prisma.DeadlineExtensionWhereInput
+  orderBy?: Prisma.DeadlineExtensionOrderByWithRelationInput | Prisma.DeadlineExtensionOrderByWithRelationInput[]
+  cursor?: Prisma.DeadlineExtensionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DeadlineExtensionScalarFieldEnum | Prisma.DeadlineExtensionScalarFieldEnum[]
 }
 
 /**

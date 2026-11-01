@@ -249,7 +249,6 @@ export type RegistrationOrderByWithRelationInput = {
 
 export type RegistrationWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  competitionId_studentId?: Prisma.RegistrationCompetitionIdStudentIdCompoundUniqueInput
   AND?: Prisma.RegistrationWhereInput | Prisma.RegistrationWhereInput[]
   OR?: Prisma.RegistrationWhereInput[]
   NOT?: Prisma.RegistrationWhereInput | Prisma.RegistrationWhereInput[]
@@ -267,7 +266,7 @@ export type RegistrationWhereUniqueInput = Prisma.AtLeast<{
   coach?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
   weightClass?: Prisma.XOR<Prisma.WeightClassNullableScalarRelationFilter, Prisma.WeightClassWhereInput> | null
-}, "id" | "competitionId_studentId">
+}, "id">
 
 export type RegistrationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -395,11 +394,6 @@ export type RegistrationListRelationFilter = {
 
 export type RegistrationOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type RegistrationCompetitionIdStudentIdCompoundUniqueInput = {
-  competitionId: string
-  studentId: string
 }
 
 export type RegistrationCountOrderByAggregateInput = {

@@ -31,3 +31,19 @@ export type Competition = {
 export type CompetitionInput = Omit<Competition, "id" | "createdAt" | "updatedAt" | "status"> & {
   status?: CompetitionStatus;
 };
+
+export type DeadlineExtension = {
+  id: string;
+  previousDeadline: string;
+  newDeadline: string;
+  reopenForRejected: boolean;
+  reason: string;
+  createdByName: string;
+  createdAt: string;
+};
+
+export type ExtendCompetitionInput = {
+  newDeadline: string;
+  reason: string;
+  reopenForRejected?: boolean;
+};

@@ -137,7 +137,9 @@ function repoWith(overrides: Partial<RegistrationRepository> = {}): Registration
     findCoachStudentsByIds: vi.fn().mockResolvedValue([studentRow, secondStudent]),
     findAllBelts: vi.fn().mockResolvedValue(belts),
     findWeightClasses: vi.fn().mockResolvedValue(weightClasses),
-    findRegisteredStudentIds: vi.fn().mockResolvedValue([]),
+    findActiveRegisteredStudentIds: vi.fn().mockResolvedValue([]),
+    findLatestRejectionsByStudentIds: vi.fn().mockResolvedValue([]),
+    findLatestDeadlineExtension: vi.fn().mockResolvedValue(null),
     countRegistrations: vi.fn().mockResolvedValue(1),
     findRegistrations: vi.fn().mockResolvedValue([registrationRow]),
     findRegistrationById: vi.fn().mockResolvedValue(registrationRow),
@@ -328,7 +330,7 @@ describe("createRegistrations", () => {
   });
 
   it("blocks duplicates with per-student reasons", async () => {
-    const repo = repoWith({ findRegisteredStudentIds: vi.fn().mockResolvedValue(["student-1"]) });
+    const repo = repoWith({ findActiveRegisteredStudentIds: vi.fn().mockResolvedValue(["student-1"]) });
     const failure = await failureOf(
       createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1", "student-2"], receipt: receiptFile() }),
     );
@@ -338,6 +340,120 @@ describe("createRegistrations", () => {
       { studentId: "student-1", fullName: "علی محمدی", reason: "این هنرجو قبلا در این مسابقه ثبت نام شده است." },
     ]);
     expect(repo.createRegistrationBundle).not.toHaveBeenCalled();
+  });
+
+  it("blocks a rejected registration when no extension exists", async () => {
+    const repo = repoWith({
+      findCoachStudentsByIds: vi.fn().mockResolvedValue([studentRow]),
+      findLatestRejectionsByStudentIds: vi
+        .fn()
+        .mockResolvedValue([{ studentId: "student-1", rejectedAt: new Date("2026-10-25T10:00:00.000Z") }]),
+    });
+    const failure = await failureOf(
+      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+    );
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect((failure as AppError).details).toEqual([
+      {
+        studentId: "student-1",
+        fullName: "علی محمدی",
+        reason: "ثبت نام قبلی این هنرجو رد شده و مهلت جدیدی برای ثبت نام مجدد او باز نشده است.",
+      },
+    ]);
+    expect(repo.findLatestDeadlineExtension).toHaveBeenCalledWith("comp-1");
+    expect(repo.createRegistrationBundle).not.toHaveBeenCalled();
+  });
+
+  it("blocks a rejected registration when the latest extension did not reopen", async () => {
+    const repo = repoWith({
+      findCoachStudentsByIds: vi.fn().mockResolvedValue([studentRow]),
+      findLatestRejectionsByStudentIds: vi
+        .fn()
+        .mockResolvedValue([{ studentId: "student-1", rejectedAt: new Date("2026-10-25T10:00:00.000Z") }]),
+      findLatestDeadlineExtension: vi.fn().mockResolvedValue({ reopenForRejected: false, createdAt: new Date("2026-10-26T10:00:00.000Z") }),
+    });
+    const failure = await failureOf(
+      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+    );
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect(repo.createRegistrationBundle).not.toHaveBeenCalled();
+  });
+
+  it("blocks a rejected registration when the reopen extension was created before the rejection", async () => {
+    const repo = repoWith({
+      findCoachStudentsByIds: vi.fn().mockResolvedValue([studentRow]),
+      findLatestRejectionsByStudentIds: vi
+        .fn()
+        .mockResolvedValue([{ studentId: "student-1", rejectedAt: new Date("2026-10-27T10:00:00.000Z") }]),
+      findLatestDeadlineExtension: vi.fn().mockResolvedValue({ reopenForRejected: true, createdAt: new Date("2026-10-26T10:00:00.000Z") }),
+    });
+    const failure = await failureOf(
+      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+    );
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect(repo.createRegistrationBundle).not.toHaveBeenCalled();
+  });
+
+  it("re-registers a rejected student when the latest extension reopened after that rejection", async () => {
+    const repo = repoWith({
+      findCoachStudentsByIds: vi.fn().mockResolvedValue([studentRow]),
+      findLatestRejectionsByStudentIds: vi
+        .fn()
+        .mockResolvedValue([{ studentId: "student-1", rejectedAt: new Date("2026-10-25T10:00:00.000Z") }]),
+      findLatestDeadlineExtension: vi.fn().mockResolvedValue({ reopenForRejected: true, createdAt: new Date("2026-10-26T10:00:00.000Z") }),
+    });
+    await createRegistrations(repo, storageWith(), coach, "comp-1", {
+      studentIds: ["student-1"],
+      receipt: receiptFile(),
+    });
+
+    expect(repo.createRegistrationBundle).toHaveBeenCalledWith(
+      expect.objectContaining({ students: [{ studentId: "student-1", weightClassId: "wc-middle" }] }),
+    );
+  });
+
+  it("uses the latest rejection when a student has several rejected registrations", async () => {
+    const repo = repoWith({
+      findCoachStudentsByIds: vi.fn().mockResolvedValue([studentRow]),
+      findLatestRejectionsByStudentIds: vi
+        .fn()
+        .mockResolvedValue([{ studentId: "student-1", rejectedAt: new Date("2026-10-27T10:00:00.000Z") }]),
+      findLatestDeadlineExtension: vi.fn().mockResolvedValue({ reopenForRejected: true, createdAt: new Date("2026-10-26T10:00:00.000Z") }),
+    });
+    const failure = await failureOf(
+      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+    );
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+  });
+
+  it("keeps blocking an active registration even when a reopen extension exists", async () => {
+    const repo = repoWith({
+      findCoachStudentsByIds: vi.fn().mockResolvedValue([studentRow]),
+      findActiveRegisteredStudentIds: vi.fn().mockResolvedValue(["student-1"]),
+      findLatestRejectionsByStudentIds: vi
+        .fn()
+        .mockResolvedValue([{ studentId: "student-1", rejectedAt: new Date("2026-10-25T10:00:00.000Z") }]),
+      findLatestDeadlineExtension: vi.fn().mockResolvedValue({ reopenForRejected: true, createdAt: new Date("2026-10-26T10:00:00.000Z") }),
+    });
+    const failure = await failureOf(
+      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+    );
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect((failure as AppError).details).toEqual([
+      { studentId: "student-1", fullName: "علی محمدی", reason: "این هنرجو قبلا در این مسابقه ثبت نام شده است." },
+    ]);
+  });
+
+  it("does not load the extension when no rejected registration exists", async () => {
+    const repo = repoWith({ findCoachStudentsByIds: vi.fn().mockResolvedValue([studentRow]) });
+    await createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() });
+
+    expect(repo.findLatestDeadlineExtension).not.toHaveBeenCalled();
   });
 
   it("rejects the whole request with per-student reasons when one student is ineligible", async () => {

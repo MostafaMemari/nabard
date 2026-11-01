@@ -1,6 +1,6 @@
 import { api } from "@/lib/http";
 import type { ListQuery, ListResult } from "@/lib/pagination";
-import type { Competition, CompetitionInput, CompetitionStatus, Discipline } from "./types";
+import type { Competition, CompetitionInput, CompetitionStatus, DeadlineExtension, Discipline, ExtendCompetitionInput } from "./types";
 
 export type CompetitionListParams = ListQuery & {
   status?: CompetitionStatus;
@@ -38,4 +38,12 @@ export function updateCompetitionStatus(id: string, status: CompetitionStatus, o
   }
 
   return api<Competition>(`/api/v1/competitions/${id}/publish`, { method: "POST" });
+}
+
+export function extendCompetition(id: string, input: ExtendCompetitionInput): Promise<Competition> {
+  return api<Competition>(`/api/v1/competitions/${id}/extend`, { method: "POST", body: input });
+}
+
+export function listDeadlineExtensions(id: string): Promise<DeadlineExtension[]> {
+  return api<DeadlineExtension[]>(`/api/v1/competitions/${id}/extensions`);
 }

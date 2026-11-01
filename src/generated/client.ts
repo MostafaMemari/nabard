@@ -72,6 +72,11 @@ export type WeightClass = Prisma.WeightClassModel
  */
 export type Competition = Prisma.CompetitionModel
 /**
+ * Model DeadlineExtension
+ * 
+ */
+export type DeadlineExtension = Prisma.DeadlineExtensionModel
+/**
  * Model StoredFile
  * 
  */
