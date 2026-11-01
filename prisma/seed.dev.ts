@@ -1,8 +1,10 @@
 import "dotenv/config";
 import { hashSync } from "bcryptjs";
-import { prisma } from "../src/lib/prisma";
+import { getPrisma } from "../src/lib/prisma";
 import { belts } from "./data/base-data";
 import { demoCompetitions, demoPayments, demoRegistrations, demoStudents, demoUsers } from "./data/demo";
+
+const prisma = getPrisma();
 
 if (process.env.NODE_ENV === "production") {
   console.error("اجرای داده های نمونه توسعه در محیط production مجاز نیست.");

@@ -40,7 +40,9 @@ All API routes live under `src/app/api/**/route.ts` and return the same JSON env
 | 400    | `VALIDATION_ERROR` | Zod rejected the body or query                  |
 | 400    | `INVALID_JSON`     | The request body is not valid JSON              |
 | 401    | `UNAUTHORIZED`     | No current user on a protected route            |
+| 401    | `INVALID_CREDENTIALS` | Login with a wrong mobile or password        |
 | 403    | `FORBIDDEN`        | The user may not perform this action            |
+| 403    | `USER_INACTIVE`    | The account is inactive and cannot be used      |
 | 404    | `NOT_FOUND`        | The record does not exist                       |
 | 409    | `CONFLICT`         | Duplicate or state conflict                     |
 | 500    | `INTERNAL_ERROR`   | Unexpected failure; details are logged, not sent |
@@ -55,12 +57,13 @@ throw new AppError(404, "NOT_FOUND", "مسابقه پیدا نشد.");
 
 ## Authentication
 
-The wrapper reads the current user from the standard `Request` headers:
+- `POST /api/v1/auth/login` with `{ mobile, password }` returns `{ id, role, fullName, province }` and sets the session cookie. Wrong credentials return `401 INVALID_CREDENTIALS`; an inactive account returns `403 USER_INACTIVE`.
+- `POST /api/v1/auth/logout` clears the session cookie.
+- `GET /api/v1/auth/me` returns the current user's profile and returns `401` when the cookie is missing or invalid.
 
-- `x-user-id` (required for protected routes)
-- `x-user-role` (`admin` or `coach`, optional)
+The session is a signed JWT (jose, HS256) in an HttpOnly cookie named `nabard_session`, `Secure` and `SameSite=Lax` in production. The signing key is `SESSION_SECRET` when set, otherwise it is derived from `DATABASE_URL`. The current user comes only from `getCurrentUser(request)` in `lib/session.ts`; identity headers from the client such as `x-user-id` are never trusted. Use `requireUser(request, ...roles)` for guards outside the wrapper.
 
-An upstream middleware or proxy verifies the session and sets these headers. It must strip any client-supplied `x-user-*` headers before adding its own, otherwise a caller can impersonate a user. If `x-user-id` is missing, protected routes return `401` before the handler runs. Pass `auth: false` for public routes.
+The proxy (`src/proxy.ts`) redirects a visitor without a valid session to `/login` and sends each role to its own section (`/admin` or `/coach`). It is an optimistic redirect; the routes and services still enforce authorization themselves.
 
 ## Route handler wrapper
 
@@ -70,16 +73,16 @@ import { route } from "@/lib/api";
 
 const bodySchema = z.object({ title: z.string().min(1) });
 
-export const POST = route({ body: bodySchema }, async ({ user, body }) => {
-  return { id: "cmp_1", title: body.title, createdBy: user?.id };
+export const POST = route({ roles: ["ADMIN"], body: bodySchema }, async ({ user, body }) => {
+  return { id: "cmp_1", title: body.title, createdBy: user.id };
 });
 ```
 
 The wrapper:
 
-1. Reads the current user.
+1. Reads the current user from the session cookie and rejects the request with `401` when `auth` is not `false` and there is no user, and with `403` when `roles` is set and the role does not match.
 2. Parses the JSON body with the given Zod schema when `body` is set.
-3. Passes `{ request, user, body }` to the handler.
+3. Passes `{ request, user, body }` to the handler. With `auth: false` the user may be `null`.
 4. Wraps a returned value with `ok()`, or passes a returned `Response` through.
 5. Maps `AppError` and `ZodError` to the error envelope. Any other error becomes `500 INTERNAL_ERROR`.
 

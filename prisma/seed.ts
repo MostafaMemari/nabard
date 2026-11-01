@@ -1,8 +1,10 @@
 import "dotenv/config";
 import { hashSync } from "bcryptjs";
 import { getServerEnv } from "../src/lib/env";
-import { prisma } from "../src/lib/prisma";
+import { getPrisma } from "../src/lib/prisma";
 import { ageCategories, belts, weightClasses } from "./data/base-data";
+
+const prisma = getPrisma();
 
 async function main() {
   const serverEnv = getServerEnv();
@@ -59,6 +61,10 @@ async function main() {
         excludeMax: weightClass.excludeMax,
       })),
     });
+  }
+
+  if (!serverEnv.ADMIN_MOBILE || !serverEnv.ADMIN_PASSWORD || !serverEnv.ADMIN_PROVINCE) {
+    throw new Error("ADMIN_MOBILE, ADMIN_PASSWORD and ADMIN_PROVINCE are required for seeding.");
   }
 
   const passwordHash = hashSync(serverEnv.ADMIN_PASSWORD, 10);

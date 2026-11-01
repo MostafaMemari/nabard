@@ -4,31 +4,33 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeftIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { FormEvent } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-
-const loginSchema = z.object({
-  mobile: z
-    .string()
-    .transform((value) => value.replace(/[۰-۹]/g, (digit) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit))))
-    .pipe(z.string().regex(/^09\d{9}$/, "شماره همراه باید ۱۱ رقم باشد و با ۰۹ شروع شود.")),
-  password: z.string().min(8, "رمز عبور باید حداقل ۸ کاراکتر باشد."),
-});
+import { login, loginSchema } from "@/features/auth";
+import { ApiError } from "@/lib/http";
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
   const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { mobile: "", password: "" },
   });
 
-  function handleSubmit(_values: LoginFormValues) {
-    router.push("/admin");
+  async function handleSubmit(values: LoginFormValues) {
+    setError(null);
+    try {
+      const user = await login(values);
+      router.replace(user.role === "ADMIN" ? "/admin" : "/coach");
+    } catch (caught) {
+      setError(caught instanceof ApiError ? caught.message : "ورود ناموفق بود. دوباره تلاش کنید.");
+    }
   }
 
   function onSubmit(event: FormEvent<HTMLFormElement>) {
@@ -78,7 +80,12 @@ export function LoginForm() {
           </Field>
         )}
       />
-      <Button type="submit" size="lg" className="w-full">
+      {error ? (
+        <p role="alert" className="text-sm text-destructive">
+          {error}
+        </p>
+      ) : null}
+      <Button type="submit" size="lg" className="w-full" disabled={form.formState.isSubmitting}>
         ورود
         <ArrowLeftIcon aria-hidden />
       </Button>

@@ -47,7 +47,6 @@ The UI is finished and runs on an in-memory mock data layer. Build the real back
 - Add every endpoint to `docs/api.md`.
 - Write Vitest tests for authorization, scoping and status transitions in services.
 - The seed script creates base data (belts, age categories, weight classes), one admin from env vars, and a separate dev seed with realistic Persian demo data built from the former mock data.
-- The dev-only coach login link is removed when real auth lands.
 
 Definition of done for every step: `pnpm check`, `pnpm typecheck`, `pnpm test` and `pnpm build` pass; the affected flow is walked through in the browser against the real API; the summary is a few lines.
 
@@ -156,7 +155,7 @@ The interface must look like a real, hand-designed product, not generated output
 
 - The app is deployed on Vercel from `main` with Neon PostgreSQL. A failed build never replaces the live version, so fix the build before anything else.
 - No writes to the local file system and no state in memory that must survive between requests (sessions, rate limits, uploads). Use the database.
-- Environment variables live in Vercel project settings. The app needs only `DATABASE_URL` and `SESSION_SECRET`. `DATABASE_URL` is the direct Neon connection string (host without `-pooler`) and is used by the app and by `prisma migrate deploy`. `DIRECT_URL` is optional and is used by the Prisma CLI only if set. `ADMIN_*` variables are only for seeding.
+- Environment variables live in Vercel project settings. At runtime the app needs only `DATABASE_URL`. `DATABASE_URL` is the direct Neon connection string (host without `-pooler`); it is used by the app, by `prisma migrate deploy`, and to derive the session signing key. `SESSION_SECRET` is optional and overrides the derived key when set. `DIRECT_URL` is optional and is used by the Prisma CLI only if set. `ADMIN_*` variables are only for seeding.
 - `prisma generate` must run during install or build so deployment works.
 - Request bodies are limited to about 4.5MB. Receipt images are compressed in the browser to under 1MB before upload, and the server rejects files over 2MB and non-image types.
 - The build script is `prisma generate && prisma migrate deploy && next build`. It applies pending migrations on every deploy. Never put seed scripts in the build.
