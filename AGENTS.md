@@ -156,10 +156,11 @@ The interface must look like a real, hand-designed product, not generated output
 
 - The app is deployed on Vercel from `main` with Neon PostgreSQL. A failed build never replaces the live version, so fix the build before anything else.
 - No writes to the local file system and no state in memory that must survive between requests (sessions, rate limits, uploads). Use the database.
-- Environment variables live in Vercel project settings. The app at runtime needs `DATABASE_URL` (pooled), `DIRECT_URL` and `SESSION_SECRET`. `ADMIN_*` variables are only for seeding and must not be required at runtime.
+- Environment variables live in Vercel project settings. The app at runtime needs `DATABASE_URL` (pooled) and `SESSION_SECRET`. `DIRECT_URL` (not pooled) is needed at build time by `prisma migrate deploy`. `ADMIN_*` variables are only for seeding and must not be required at runtime or in the build.
 - `prisma generate` must run during install or build so deployment works.
 - Request bodies are limited to about 4.5MB. Receipt images are compressed in the browser to under 1MB before upload, and the server rejects files over 2MB and non-image types.
-- Migrations are applied explicitly with `pnpm db:migrate`, never automatically during a Vercel build.
+- The build script is `prisma generate && prisma migrate deploy && next build`. It applies pending migrations on every deploy. Never put seed scripts in the build.
+- Every schema change comes with a migration file committed in `prisma/migrations`. Never edit an applied migration. Never run `prisma migrate reset` or `prisma db push` on the shared database.
 
 ## Testing
 
