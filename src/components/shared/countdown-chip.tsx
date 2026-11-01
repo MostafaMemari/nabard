@@ -52,7 +52,7 @@ export function CountdownChip({ deadline, className }: { deadline: string; class
       )}
     >
       {!current.passed && remaining !== null && remaining < DAY_MS ? (
-        <span aria-hidden className="size-1.5 rounded-full bg-current animate-pulse motion-reduce:animate-none" />
+        <span aria-hidden className="size-1.5 rounded-full bg-current" />
       ) : null}
       {remaining === null ? formatJalaliDate(new Date(deadline)) : remaining < 0 ? "مهلت ثبت نام تمام شد" : remainingLabel(remaining)}
     </span>
