@@ -32,25 +32,24 @@ Source documents live in `docs/`: the requirements document, `schema.prisma` and
 - Prefer existing shadcn components. Add new ones with `pnpm dlx shadcn@latest add <name>`.
 - Use the installed skills (Next.js, React, shadcn, Prisma) instead of guessing API details.
 - Every new or changed endpoint is added to `docs/api.md` in the same step.
-- Summarize what changed in a few lines when done. Do not paste whole files into the summary.
+- Write every message and summary to the owner in Persian, in a few lines. Do not paste whole files into the summary.
+- The owner only talks to you through prompts. Commit your work and push it to `main`; Vercel deploys from `main`. Push only when `pnpm check`, `pnpm typecheck`, `pnpm test` and `pnpm build` pass. Never force push.
+- Never write secrets (connection strings, passwords, tokens) into any file that is tracked, any summary, or any log. Never create default passwords; read them from `.env` only.
 
-## Current phase: database ready, API not built yet
+## Current phase: backend integration
 
-Prisma 7 is set up against Neon PostgreSQL. Until the owner opens the next step:
+The UI is finished and runs on an in-memory mock data layer. Build the real backend one feature per step.
 
-- The schema lives in `prisma/schema.prisma` (source document: `docs/schema.prisma`, keep them in sync). The datasource block has no url: the CLI and migrations read `DIRECT_URL` from `prisma.config.ts`, and the runtime client connects through the Neon driver adapter with `DATABASE_URL` (see `lib/prisma.ts`).
-- Read environment variables only through `lib/env.ts`: `env` is safe on the client, server-only variables (both database URLs and the admin account) come from `getServerEnv()`. Never print, log or commit connection strings. `.env` is gitignored; `.env.example` lists the variable names only.
-- `pnpm db:migrate` creates and applies migrations, `pnpm db:seed` loads base data (belts, age categories, weight classes) plus the admin account from env vars, `pnpm db:seed:dev` loads realistic Persian demo data. `prisma/seed.dev.ts` refuses to run when `NODE_ENV` is production.
-- Do not call Prisma from features, components or route handlers yet, and do not touch `features/*/api.ts`. Route handlers under `src/app/api/v1` come in a later step; repositories will hold the Prisma queries.
-- Each feature has `api.ts` exporting async functions that return mock data after a short delay (about 300ms) and keep mutations in an in-memory store. Their signatures and return shapes must match the future REST responses, so replacing the body with a `lib/http.ts` call is the only change later.
-- Mock data lives in `features/<feature>/mock/` and must be realistic Persian data: real-sounding names, Tehran only, valid-looking national codes, birth dates fitting the age categories, several statuses.
-- Types live in `features/<feature>/types.ts` and mirror `docs/schema.prisma` (BigInt as string, dates as ISO strings).
-- Hooks in `features/<feature>/hooks/` use SWR over `api.ts`. Components never import mock data directly.
-- Pure business logic (for example eligibility) may be written now in `features/<feature>/server/` as plain functions with Vitest tests.
-- A login form may navigate to the right area without checking anything. In development only, show a small link to enter as a coach. Mark it clearly so it is removed when auth is built.
-- Use the app name constant `APP_NAME` from `lib/app.ts` for every place the name appears.
+- Follow the API rules below. Each endpoint: route handler, zod validation, service, repository. Authorization and scoping live in the service.
+- Replace the body of each `features/<feature>/api.ts` with calls through `lib/http.ts`. Keep the exported function signatures and return shapes so the UI does not change. Delete that feature's mock data once its endpoints work.
+- Change UI components only when real data requires a fix.
+- Never send Prisma types to the client. Use the types in `features/<feature>/types.ts` and serialize BigInt and Date in `lib/api`.
+- Add every endpoint to `docs/api.md`.
+- Write Vitest tests for authorization, scoping and status transitions in services.
+- The seed script creates base data (belts, age categories, weight classes), one admin from env vars, and a separate dev seed with realistic Persian demo data built from the former mock data.
+- The dev-only coach login link is removed when real auth lands.
 
-Definition of done for every step: `pnpm check`, `pnpm typecheck`, `pnpm test` and `pnpm build` pass; steps that touch the schema or seed data also require `pnpm db:migrate`, `pnpm db:seed` and `pnpm db:seed:dev` to run cleanly against the database; new screens are reviewed against the checklist in `docs/DESIGN.md` at 1440px and 390px when the app can be run; the summary is a few lines.
+Definition of done for every step: `pnpm check`, `pnpm typecheck`, `pnpm test` and `pnpm build` pass; the affected flow is walked through in the browser against the real API; the summary is a few lines.
 
 ## Code style
 
@@ -134,7 +133,7 @@ The backend lives in Next.js now and will move to NestJS or Express later. Build
 - Services enforce authorization and scoping themselves: `ADMIN` only touches data of their own province, `COACH` only touches their own students, registrations and payments.
 - Response shape: success `{ data }`, lists `{ data, meta: { page, pageSize, total } }`, errors `{ error: { code, message, details? } }` with the correct HTTP status. User-facing messages are Persian.
 - BigInt and Date values are serialized as strings (ISO for dates) in one place in `lib/api`.
-- File uploads go through `Request.formData()` and a `Storage` interface in `lib/storage`. The local disk implementation is the only one for now. Files are private and served through an authenticated endpoint.
+- File uploads go through `Request.formData()` and a `Storage` interface in `lib/storage`. The first implementation stores files in PostgreSQL (a `StoredFile` model with `Bytes`), because Vercel has no persistent disk. Files are private and served through an authenticated endpoint.
 - The browser talks to the API only through `lib/http.ts`. The base URL comes from `NEXT_PUBLIC_API_URL` (empty means same origin) so the API can move to another host later.
 - Read environment variables only through `lib/env.ts`.
 - Never log passwords, tokens or national codes.
@@ -153,6 +152,15 @@ The interface must look like a real, hand-designed product, not generated output
 - Use realistic Persian content and data. Never lorem ipsum or English placeholder names.
 - After finishing UI work, review the result against the checklist in `docs/DESIGN.md`. If you can run the app and take screenshots, check 1440px and 390px widths.
 
+## Hosting (Vercel, serverless)
+
+- The app is deployed on Vercel from `main` with Neon PostgreSQL. A failed build never replaces the live version, so fix the build before anything else.
+- No writes to the local file system and no state in memory that must survive between requests (sessions, rate limits, uploads). Use the database.
+- Environment variables live in Vercel project settings. The app at runtime needs `DATABASE_URL` (pooled), `DIRECT_URL` and `SESSION_SECRET`. `ADMIN_*` variables are only for seeding and must not be required at runtime.
+- `prisma generate` must run during install or build so deployment works.
+- Request bodies are limited to about 4.5MB. Receipt images are compressed in the browser to under 1MB before upload, and the server rejects files over 2MB and non-image types.
+- Migrations are applied explicitly with `pnpm db:migrate`, never automatically during a Vercel build.
+
 ## Testing
 
 - Write Vitest tests for pure business logic: eligibility (age, belt, gender, weight class) and status transitions.
@@ -161,26 +169,9 @@ The interface must look like a real, hand-designed product, not generated output
 ## Git
 
 - Small commits, one per finished step or logical unit. Message format: `feat(students): add student list`.
-- Never commit `.env` or uploaded files. Never push.
+- Never commit `.env` or uploaded files.
+- Secrets such as connection strings come from the environment configured by the owner (local `.env`, the agent environment and Vercel project settings), never from prompts or files in the repository.
 
 ## Out of scope for the MVP
 
 Counties, super admin, delegates, profile and document approval, student transfers, deadline extensions, refunds, notifications, audit log, payment gateway, match day management, dark mode. Do not build them unless a step explicitly asks.
-
-<!-- antislop:start -->
-## antislop
-
-For UI, copy, people, mobile layout, or code comments work, read `antislop.md` (core) and then the skill for the task:
-
-- UI / visual: `skills/antislop-ui/SKILL.md`
-- Copy & text: `skills/antislop-copywriting/SKILL.md`
-- People: `skills/antislop-human/SKILL.md`
-- Mobile / responsive: `skills/antislop-layoutmobile/SKILL.md`
-- Code comments: `skills/antislop-code/SKILL.md`
-
-Before starting, follow the core's "Two Usage Modes" section in strict order: explicit session instruction first, then global preference, then ask. A session instruction always wins. For a resolved mode, say `antislop active: <mode> (session override).` or `antislop active: <mode> (global preference).` once before presenting findings or making edits, using the actual mode and source. Acknowledging the user's request without naming the source does not replace this notice.
-
-Only an explicit choice of antislop during or after selects a session mode. A request to review, audit, or avoid file edits does not select a mode; read the global preference in that case. Another skill's mode does not select antislop's mode.
-
-If the mode is unresolved, ask during/after and end the response; wait for the answer before any UI review, planning, or concept. For read-only tasks, put the active-mode notice only at the start of the final answer, never in progress messages. For editing tasks, announce before the first edit and omit it from the final answer.
-<!-- antislop:end -->
