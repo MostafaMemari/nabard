@@ -4,8 +4,13 @@ import { AppError } from "./app-error";
 
 export { AppError };
 
+const jsonReplacer = (_key: string, value: unknown): unknown => (typeof value === "bigint" ? value.toString() : value);
+
 export function ok<T>(data: T, init?: ResponseInit): Response {
-  return Response.json({ ok: true, data }, init);
+  const headers = new Headers(init?.headers);
+  headers.set("content-type", "application/json");
+
+  return new Response(JSON.stringify({ ok: true, data }, jsonReplacer), { ...init, headers });
 }
 
 export function fail(error: AppError): Response {
@@ -28,6 +33,7 @@ type RouteContext<TBody, TUser> = {
   request: Request;
   user: TUser;
   body: TBody;
+  params: Promise<Record<string, string>>;
 };
 
 type RouteOptions<TSchema extends ZodType | undefined, TAuth extends boolean> = {
@@ -35,6 +41,8 @@ type RouteOptions<TSchema extends ZodType | undefined, TAuth extends boolean> = 
   roles?: TAuth extends false ? never : SessionRole[];
   body?: TSchema;
 };
+
+type HandlerArgs = { params?: Promise<Record<string, string>> };
 
 async function readBody<TSchema extends ZodType>(request: Request, schema: TSchema): Promise<z.infer<TSchema>> {
   let raw: unknown;
@@ -49,15 +57,16 @@ async function readBody<TSchema extends ZodType>(request: Request, schema: TSche
 export function route<TSchema extends ZodType | undefined = undefined, TResult = unknown, TAuth extends boolean = true>(
   options: RouteOptions<TSchema, TAuth>,
   handler: (context: RouteContext<BodyOf<TSchema>, TAuth extends false ? CurrentUser | null : CurrentUser>) => TResult | Promise<TResult>,
-): (request: Request) => Promise<Response> {
-  return async (request: Request): Promise<Response> => {
+): (request: Request, context?: HandlerArgs) => Promise<Response> {
+  return async (request: Request, context?: HandlerArgs): Promise<Response> => {
     try {
       const opts = options as { auth?: boolean; roles?: SessionRole[] };
       const user = opts.auth === false ? await getCurrentUser(request) : await requireUser(request, ...(opts.roles ?? []));
 
       const body = options.body ? await readBody(request, options.body) : undefined;
-      const context = { request, user, body } as unknown as Parameters<typeof handler>[0];
-      const result = await handler(context);
+      const params = context?.params ?? Promise.resolve({});
+      const contextValue = { request, user, body, params } as unknown as Parameters<typeof handler>[0];
+      const result = await handler(contextValue);
 
       return result instanceof Response ? result : ok(result);
     } catch (error) {

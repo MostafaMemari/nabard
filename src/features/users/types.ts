@@ -44,10 +44,3 @@ export type User = {
   createdAt: string;
   updatedAt: string;
 };
-
-export type CoachInput = {
-  fullName: string;
-  mobile: string;
-  nationalCode: string;
-  initialPassword: string;
-};

@@ -1,0 +1,243 @@
+import { compareSync } from "bcryptjs";
+import { describe, expect, it, vi } from "vitest";
+import { AppError } from "@/lib/api";
+import type { CurrentUser } from "@/lib/session";
+import type { CoachRecord, CoachRepository, UserIdentityRecord } from "./repository";
+import { createCoach, getCoach, listCoaches, updateCoach } from "./service";
+
+const admin: CurrentUser = { id: "admin-1", role: "ADMIN" };
+const coach: CurrentUser = { id: "coach-1", role: "COACH" };
+
+const adminRecord: UserIdentityRecord = { id: "admin-1", role: "ADMIN", province: "TEHRAN", isActive: true };
+const inactiveAdminRecord: UserIdentityRecord = { ...adminRecord, isActive: false };
+const coachIdentityRecord: UserIdentityRecord = { id: "admin-1", role: "COACH", province: "TEHRAN", isActive: true };
+
+const createdAt = new Date("2026-07-15T08:30:00.000Z");
+
+const tehranCoach: CoachRecord = {
+  id: "coach-9",
+  mobile: "09121110000",
+  fullName: "رضا محمدی",
+  nationalCode: "1234567890",
+  role: "COACH",
+  province: "TEHRAN",
+  isActive: true,
+  createdAt,
+  updatedAt: createdAt,
+};
+
+const farsCoach: CoachRecord = { ...tehranCoach, id: "coach-2", province: "FARS" };
+const adminRow: CoachRecord = { ...tehranCoach, id: "coach-3", role: "ADMIN" };
+
+function repoWith(overrides: Partial<CoachRepository> = {}): CoachRepository {
+  return {
+    findUserById: vi.fn().mockResolvedValue(adminRecord),
+    countCoaches: vi.fn().mockResolvedValue(1),
+    findCoaches: vi.fn().mockResolvedValue([tehranCoach]),
+    findCoachById: vi.fn().mockResolvedValue(tehranCoach),
+    findMobileOwner: vi.fn().mockResolvedValue(null),
+    findNationalCodeOwner: vi.fn().mockResolvedValue(null),
+    createCoach: vi.fn().mockResolvedValue(tehranCoach),
+    updateCoach: vi.fn().mockResolvedValue(tehranCoach),
+    ...overrides,
+  };
+}
+
+function failureOf(promise: Promise<unknown>): Promise<unknown> {
+  return promise.catch((error: unknown) => error);
+}
+
+describe("listCoaches", () => {
+  it("scopes the query to the admin province", async () => {
+    const repo = repoWith();
+    const result = await listCoaches(repo, admin, {});
+
+    expect(repo.findCoaches).toHaveBeenCalledWith("TEHRAN", { search: undefined, isActive: undefined }, 0, 100);
+    expect(repo.countCoaches).toHaveBeenCalledWith("TEHRAN", { search: undefined, isActive: undefined });
+    expect(result).toEqual({ data: [tehranCoach], meta: { page: 1, pageSize: 100, total: 1 } });
+  });
+
+  it("passes search, status and pagination to the repository", async () => {
+    const repo = repoWith();
+    await listCoaches(repo, admin, { search: "  رضا  ", status: "inactive", page: 2, pageSize: 10 });
+
+    expect(repo.findCoaches).toHaveBeenCalledWith("TEHRAN", { search: "رضا", isActive: false }, 10, 10);
+    expect(repo.countCoaches).toHaveBeenCalledWith("TEHRAN", { search: "رضا", isActive: false });
+  });
+
+  it("caps pageSize at 100", async () => {
+    const repo = repoWith();
+    await listCoaches(repo, admin, { pageSize: 500 });
+
+    expect(repo.findCoaches).toHaveBeenCalledWith("TEHRAN", { search: undefined, isActive: undefined }, 0, 100);
+  });
+
+  it("rejects a coach with 403 without touching the repository", async () => {
+    const repo = repoWith();
+    const failure = await failureOf(listCoaches(repo, coach, {}));
+
+    expect(failure).toBeInstanceOf(AppError);
+    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect(repo.findCoaches).not.toHaveBeenCalled();
+  });
+
+  it("rejects an inactive admin with 403", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(inactiveAdminRecord) });
+    const failure = await failureOf(listCoaches(repo, admin, {}));
+
+    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+  });
+
+  it("rejects when the admin row is gone with 401", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(null) });
+    const failure = await failureOf(listCoaches(repo, admin, {}));
+
+    expect(failure).toMatchObject({ status: 401, code: "UNAUTHORIZED" });
+  });
+
+  it("rejects when the session role no longer matches the database role", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(coachIdentityRecord) });
+    const failure = await failureOf(listCoaches(repo, admin, {}));
+
+    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+  });
+});
+
+describe("getCoach", () => {
+  it("returns a coach of the admin province", async () => {
+    const repo = repoWith();
+    const result = await getCoach(repo, admin, "coach-9");
+
+    expect(result).toEqual(tehranCoach);
+  });
+
+  it("hides a coach of another province behind 404", async () => {
+    const repo = repoWith({ findCoachById: vi.fn().mockResolvedValue(farsCoach) });
+    const failure = await failureOf(getCoach(repo, admin, "coach-2"));
+
+    expect(failure).toBeInstanceOf(AppError);
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+  });
+
+  it("hides admin accounts behind 404", async () => {
+    const repo = repoWith({ findCoachById: vi.fn().mockResolvedValue(adminRow) });
+    const failure = await failureOf(getCoach(repo, admin, "coach-3"));
+
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+  });
+
+  it("rejects a coach with 403", async () => {
+    const repo = repoWith();
+    const failure = await failureOf(getCoach(repo, coach, "coach-9"));
+
+    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect(repo.findCoachById).not.toHaveBeenCalled();
+  });
+});
+
+describe("createCoach", () => {
+  const input = { fullName: "سعید احمدی", mobile: "09122220000", nationalCode: "0987654321", initialPassword: "Secret!1234" };
+
+  it("creates an active coach in the admin province with a bcrypt hash", async () => {
+    const repo = repoWith();
+    await createCoach(repo, admin, input);
+
+    expect(repo.createCoach).toHaveBeenCalledTimes(1);
+    const data = vi.mocked(repo.createCoach).mock.calls[0][0];
+    expect(data).toMatchObject({
+      mobile: "09122220000",
+      fullName: "سعید احمدی",
+      nationalCode: "0987654321",
+      province: "TEHRAN",
+    });
+    expect(compareSync("Secret!1234", data.passwordHash)).toBe(true);
+    expect(compareSync("WrongPass123", data.passwordHash)).toBe(false);
+  });
+
+  it("never returns or stores the plain password", async () => {
+    const repo = repoWith();
+    const result = await createCoach(repo, admin, input);
+
+    expect(JSON.stringify(result)).not.toContain("Secret!1234");
+    expect((result as Record<string, unknown>).passwordHash).toBeUndefined();
+  });
+
+  it("rejects a duplicate mobile with 409", async () => {
+    const repo = repoWith({ findMobileOwner: vi.fn().mockResolvedValue({ id: "other" }) });
+    const failure = await failureOf(createCoach(repo, admin, input));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect(repo.createCoach).not.toHaveBeenCalled();
+  });
+
+  it("rejects a duplicate national code with 409", async () => {
+    const repo = repoWith({ findNationalCodeOwner: vi.fn().mockResolvedValue({ id: "other" }) });
+    const failure = await failureOf(createCoach(repo, admin, input));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect(repo.createCoach).not.toHaveBeenCalled();
+  });
+
+  it("rejects a coach with 403", async () => {
+    const repo = repoWith();
+    const failure = await failureOf(createCoach(repo, coach, input));
+
+    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect(repo.createCoach).not.toHaveBeenCalled();
+  });
+});
+
+describe("updateCoach", () => {
+  it("deactivates a coach of the admin province", async () => {
+    const repo = repoWith();
+    await updateCoach(repo, admin, "coach-9", { isActive: false });
+
+    expect(repo.updateCoach).toHaveBeenCalledWith("coach-9", { isActive: false });
+  });
+
+  it("edits fields of a coach", async () => {
+    const repo = repoWith();
+    await updateCoach(repo, admin, "coach-9", { fullName: "نام تازه", mobile: "09123330000" });
+
+    expect(repo.updateCoach).toHaveBeenCalledWith("coach-9", { fullName: "نام تازه", mobile: "09123330000" });
+  });
+
+  it("keeps a coach of another province behind 404", async () => {
+    const repo = repoWith({ findCoachById: vi.fn().mockResolvedValue(farsCoach) });
+    const failure = await failureOf(updateCoach(repo, admin, "coach-2", { isActive: true }));
+
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+    expect(repo.updateCoach).not.toHaveBeenCalled();
+  });
+
+  it("rejects a mobile that belongs to another user with 409", async () => {
+    const repo = repoWith({ findMobileOwner: vi.fn().mockResolvedValue({ id: "other" }) });
+    const failure = await failureOf(updateCoach(repo, admin, "coach-9", { mobile: "09122220000" }));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect(repo.updateCoach).not.toHaveBeenCalled();
+  });
+
+  it("allows keeping the coach own mobile", async () => {
+    const repo = repoWith({ findMobileOwner: vi.fn().mockResolvedValue({ id: "coach-9" }) });
+    await updateCoach(repo, admin, "coach-9", { mobile: "09121110000" });
+
+    expect(repo.updateCoach).toHaveBeenCalledWith("coach-9", { mobile: "09121110000" });
+  });
+
+  it("rejects a national code that belongs to another user with 409", async () => {
+    const repo = repoWith({ findNationalCodeOwner: vi.fn().mockResolvedValue({ id: "other" }) });
+    const failure = await failureOf(updateCoach(repo, admin, "coach-9", { nationalCode: "0987654321" }));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect(repo.updateCoach).not.toHaveBeenCalled();
+  });
+
+  it("rejects a coach with 403", async () => {
+    const repo = repoWith();
+    const failure = await failureOf(updateCoach(repo, coach, "coach-9", { isActive: true }));
+
+    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect(repo.updateCoach).not.toHaveBeenCalled();
+  });
+});

@@ -1,7 +1,7 @@
-import { mockDelay } from "@/lib/mock";
-import { type ListQuery, type ListResult, paginate } from "@/lib/pagination";
-import { users } from "./mock/users";
-import type { CoachInput, User } from "./types";
+import { api } from "@/lib/http";
+import type { ListQuery, ListResult } from "@/lib/pagination";
+import type { CoachInput } from "./schemas";
+import type { User } from "./types";
 
 export type CoachListParams = ListQuery & {
   search?: string;
@@ -9,66 +9,24 @@ export type CoachListParams = ListQuery & {
 };
 
 export async function listCoaches(params: CoachListParams = {}): Promise<ListResult<User>> {
-  await mockDelay();
-  const search = params.search?.trim() ?? "";
-  const filtered = users.filter(
-    (user) =>
-      user.role === "COACH" &&
-      (params.status === undefined || (params.status === "active" ? user.isActive : !user.isActive)) &&
-      (search === "" || user.fullName.includes(search) || user.mobile.includes(search)),
-  );
+  const query = new URLSearchParams();
+  if (params.search) query.set("search", params.search);
+  if (params.status) query.set("status", params.status);
+  if (params.page !== undefined) query.set("page", String(params.page));
+  if (params.pageSize !== undefined) query.set("pageSize", String(params.pageSize));
 
-  return paginate(filtered, params);
+  const queryString = query.toString();
+  return api<ListResult<User>>(`/api/v1/coaches${queryString === "" ? "" : `?${queryString}`}`);
 }
 
-export async function getCoach(id: string): Promise<User> {
-  await mockDelay();
-  const coach = users.find((user) => user.id === id && user.role === "COACH");
-
-  if (!coach) {
-    throw new Error("مربی یافت نشد.");
-  }
-
-  return coach;
+export function getCoach(id: string): Promise<User> {
+  return api<User>(`/api/v1/coaches/${id}`);
 }
 
-export async function createCoach(input: CoachInput): Promise<User> {
-  await mockDelay();
-
-  if (users.some((user) => user.mobile === input.mobile)) {
-    throw new Error("این شماره همراه قبلاً ثبت شده است.");
-  }
-  if (users.some((user) => user.nationalCode === input.nationalCode)) {
-    throw new Error("این کد ملی قبلاً ثبت شده است.");
-  }
-
-  const now = new Date().toISOString();
-  const coach: User = {
-    id: `coach-${users.filter((user) => user.role === "COACH").length + 1}`,
-    mobile: input.mobile,
-    fullName: input.fullName,
-    nationalCode: input.nationalCode,
-    role: "COACH",
-    province: "TEHRAN",
-    isActive: true,
-    createdAt: now,
-    updatedAt: now,
-  };
-  users.push(coach);
-
-  return coach;
+export function createCoach(input: CoachInput): Promise<User> {
+  return api<User>("/api/v1/coaches", { method: "POST", body: input });
 }
 
-export async function updateCoachStatus(id: string, isActive: boolean): Promise<User> {
-  await mockDelay();
-  const coach = users.find((user) => user.id === id && user.role === "COACH");
-
-  if (!coach) {
-    throw new Error("مربی یافت نشد.");
-  }
-
-  coach.isActive = isActive;
-  coach.updatedAt = new Date().toISOString();
-
-  return coach;
+export function updateCoachStatus(id: string, isActive: boolean): Promise<User> {
+  return api<User>(`/api/v1/coaches/${id}`, { method: "PATCH", body: { isActive } });
 }

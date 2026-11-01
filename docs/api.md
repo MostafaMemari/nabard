@@ -65,6 +65,19 @@ The session is a signed JWT (jose, HS256) in an HttpOnly cookie named `nabard_se
 
 The proxy (`src/proxy.ts`) redirects a visitor without a valid session to `/login` and sends each role to its own section (`/admin` or `/coach`). It is an optimistic redirect; the routes and services still enforce authorization themselves.
 
+## Coaches
+
+Admin-only. An admin sees and manages coaches of their own province only; a `COACH` session gets `403 FORBIDDEN`.
+
+- `GET /api/v1/coaches?search=&status=active|inactive&page=&pageSize=` returns `{ data: User[], meta: { page, pageSize, total } }`. `search` matches full name or mobile, `status` filters `isActive`, `page` defaults to 1 and `pageSize` to 100 (max 100).
+- `POST /api/v1/coaches` with `{ fullName, mobile, nationalCode, initialPassword }` creates an active coach in the admin's province. The initial password is hashed with bcryptjs; password hashes are never returned or logged. A duplicate mobile or national code returns `409 CONFLICT`.
+- `GET /api/v1/coaches/:id` returns one coach. A coach of another province returns `404 NOT_FOUND`.
+- `PATCH /api/v1/coaches/:id` accepts any subset of `{ fullName, mobile, nationalCode, isActive }` and returns the updated coach. An empty body is a validation error.
+
+## Base data
+
+- `GET /api/v1/base-data` returns `{ belts, ageCategories, weightClasses }` for any logged-in user. Belts are ordered by level, age categories by name, weight classes by category, gender and order.
+
 ## Route handler wrapper
 
 ```ts
