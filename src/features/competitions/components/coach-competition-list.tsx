@@ -15,17 +15,17 @@ export function CoachCompetitionList({ competitions }: { competitions: Competiti
       {competitions.map((competition) => (
         <div
           key={competition.id}
-          className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-border px-4 py-3.5 last:border-b-0 @lg:flex-nowrap"
+          className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-border p-4 last:border-b-0 @lg:flex-nowrap @lg:gap-x-4 @lg:px-4 @lg:py-3.5"
         >
           <IconTile icon={disciplineIcons[competition.discipline]} />
-          <div className="min-w-0 flex-1">
+          <div className="min-w-52 flex-1 @lg:min-w-0">
             <Link
               href={`/coach/competitions/${competition.id}`}
               className="truncate text-sm font-medium underline-offset-4 hover:underline"
             >
               {competition.title}
             </Link>
-            <p className="text-subtle text-muted-foreground">
+            <p className="text-subtle truncate text-muted-foreground">
               {disciplineLabels[competition.discipline]} · رده سنی {ageCategoryLabel(competition.ageCategoryId)} ·{" "}
               {genderLabels[competition.gender]}
             </p>
@@ -34,7 +34,11 @@ export function CoachCompetitionList({ competitions }: { competitions: Competiti
           <span className="text-subtle whitespace-nowrap text-muted-foreground">
             {formatRialsAsToman(Number(competition.feePerStudent))} <span className="text-xs">هر هنرجو</span>
           </span>
-          <Button size="sm" className="h-11 md:h-8" render={<Link href={`/coach/competitions/${competition.id}/register`} />}>
+          <Button
+            size="sm"
+            className="h-11 w-full @lg:h-8 @lg:w-auto"
+            render={<Link href={`/coach/competitions/${competition.id}/register`} />}
+          >
             ثبت نام
             <ArrowLeftIcon data-icon="inline-end" />
           </Button>
