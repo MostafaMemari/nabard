@@ -1,6 +1,7 @@
 import { cn } from "cn";
 import type { LucideIcon } from "lucide-react";
 import { Avatar } from "@/components/shared";
+import { ChangePasswordButton } from "@/features/auth";
 import { APP_NAME, APP_SUBTITLE } from "@/lib/app";
 import { BrandMark } from "./brand-mark";
 import { LogoutButton } from "./logout-button";
@@ -63,6 +64,7 @@ export function AppSidebar({
               <span className="truncate text-sm font-medium text-sidebar-accent-foreground">{user.name}</span>
               <span className="truncate text-xs text-sidebar-foreground/80">{user.roleLabel}</span>
             </div>
+            <ChangePasswordButton className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" />
             <LogoutButton className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" />
           </div>
         ) : (

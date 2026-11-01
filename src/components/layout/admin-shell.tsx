@@ -3,7 +3,7 @@
 import { HouseIcon, ReceiptTextIcon, TrophyIcon, UsersIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { Avatar } from "@/components/shared";
-import { roleLabels, useMe } from "@/features/auth";
+import { ChangePasswordButton, roleLabels, useMe } from "@/features/auth";
 import { APP_NAME } from "@/lib/app";
 import { AppSidebar, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
 import { BrandMark } from "./brand-mark";
@@ -46,6 +46,7 @@ export function AdminShell({ active, children }: { active: string; children: Rea
             ) : (
               <span aria-hidden className="size-7 rounded-full bg-muted" />
             )}
+            <ChangePasswordButton />
             <LogoutButton />
           </div>
         </div>
