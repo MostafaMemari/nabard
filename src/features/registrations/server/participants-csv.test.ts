@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { csvCell, participantsCsvFilename, toParticipantsCsv } from "./participants-csv";
+import { csvCell, participantsCsvFilename, toParticipantsCsv, weightClassCell } from "./participants-csv";
 import type { ParticipantRecord } from "./service";
 
 function participant(overrides: Partial<ParticipantRecord> = {}): ParticipantRecord {
@@ -62,6 +62,15 @@ describe("participantsCsvFilename", () => {
   });
 });
 
+describe("weightClassCell", () => {
+  it("keeps the base-data label without a quote prefix and replaces a leading hyphen-minus with the Unicode minus", () => {
+    expect(weightClassCell("-54")).toBe("\u221254");
+    expect(weightClassCell("+53")).toBe("+53");
+    expect(weightClassCell("۳۳")).toBe("۳۳");
+    expect(weightClassCell(null)).toBe("");
+  });
+});
+
 describe("toParticipantsCsv", () => {
   it("starts with a UTF-8 BOM and a Persian header row", () => {
     const csv = toParticipantsCsv([participant()]);
@@ -80,13 +89,14 @@ describe("toParticipantsCsv", () => {
     expect(csv.endsWith("\r\n")).toBe(true);
   });
 
-  it("neutralizes dangerous cells in the final document", () => {
+  it("neutralizes only user-entered text cells in the final document", () => {
     const csv = toParticipantsCsv([
       participant({ fullName: "=SUM(A1)", weightClassLabel: "-54", coachName: "+extract", beltName: "DAN_1" }),
     ]);
     expect(csv).toContain("'=SUM(A1)");
-    expect(csv).toContain("'-54");
     expect(csv).toContain("'+extract");
+    expect(csv).toContain("دان ۱,\u221254");
+    expect(csv).not.toContain("'-54");
     expect(csv).not.toContain("\r\n=SUM");
   });
 

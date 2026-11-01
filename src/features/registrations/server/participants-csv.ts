@@ -11,27 +11,36 @@ const LINE_SEPARATOR = "\r\n";
 const HEADER = ["نام و نام خانوادگی", "کد ملی", "تاریخ تولد", "کمربند", "رده وزنی", "نام مربی"];
 
 const FORMULA_PREFIX = /^[=+@-]/;
+const UNICODE_MINUS = "\u2212";
 const UNSAFE_FILENAME_CHARS = [/[/\\:*?"<>|]/g, /[\p{Cc}]/gu, /^[.\s-]+|[.\s-]+$/g];
 
+export function csvBaseCell(value: string): string {
+  return /[",\r\n]/.test(value) ? `"${value.replaceAll('"', '""')}"` : value;
+}
+
 export function csvCell(value: string): string {
-  const neutralized = FORMULA_PREFIX.test(value) ? `'${value}` : value;
-  return /[",\r\n]/.test(neutralized) ? `"${neutralized.replaceAll('"', '""')}"` : neutralized;
+  return csvBaseCell(FORMULA_PREFIX.test(value) ? `'${value}` : value);
+}
+
+export function weightClassCell(label: string | null): string {
+  if (label === null) return "";
+  return label.startsWith("-") ? `${UNICODE_MINUS}${label.slice(1)}` : label;
 }
 
 function participantCells(participant: ParticipantRecord): string[] {
   return [
-    participant.fullName,
-    participant.nationalCode,
-    formatJalaliDate(participant.birthDate),
-    beltLabel(participant.beltName),
-    participant.weightClassLabel ?? "",
-    participant.coachName,
+    csvCell(participant.fullName),
+    csvCell(participant.nationalCode),
+    csvCell(formatJalaliDate(participant.birthDate)),
+    csvBaseCell(beltLabel(participant.beltName)),
+    csvBaseCell(weightClassCell(participant.weightClassLabel)),
+    csvCell(participant.coachName),
   ];
 }
 
 export function toParticipantsCsv(participants: ParticipantRecord[]): string {
-  const lines = [HEADER, ...participants.map(participantCells)];
-  return BOM + lines.map((cells) => cells.map(csvCell).join(",")).join(LINE_SEPARATOR) + LINE_SEPARATOR;
+  const lines = [HEADER.map(csvCell), ...participants.map(participantCells)];
+  return BOM + lines.map((cells) => cells.join(",")).join(LINE_SEPARATOR) + LINE_SEPARATOR;
 }
 
 export function participantsCsvFilename(title: string, competitionId: string): { ascii: string; utf8: string } {
