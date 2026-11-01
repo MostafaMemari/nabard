@@ -101,3 +101,11 @@ export async function updateCoach(repo: CoachRepository, user: CurrentUser, id: 
 
   return repo.updateCoach(id, data);
 }
+
+export async function resetCoachPassword(repo: CoachRepository, user: CurrentUser, id: string, password: string): Promise<CoachRecord> {
+  const admin = await requireActiveAdmin(repo, user);
+  const coach = await coachInScope(repo, admin, id);
+  const passwordHash = await hash(password, 10);
+
+  return repo.updateCoachPassword(coach.id, passwordHash);
+}

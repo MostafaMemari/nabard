@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { AppError } from "@/lib/api";
 import type { CurrentUser } from "@/lib/session";
 import type { CoachRecord, CoachRepository, UserIdentityRecord } from "./repository";
-import { createCoach, getCoach, listCoaches, updateCoach } from "./service";
+import { createCoach, getCoach, listCoaches, resetCoachPassword, updateCoach } from "./service";
 
 const admin: CurrentUser = { id: "admin-1", role: "ADMIN" };
 const coach: CurrentUser = { id: "coach-1", role: "COACH" };
@@ -39,6 +39,7 @@ function repoWith(overrides: Partial<CoachRepository> = {}): CoachRepository {
     findNationalCodeOwner: vi.fn().mockResolvedValue(null),
     createCoach: vi.fn().mockResolvedValue(tehranCoach),
     updateCoach: vi.fn().mockResolvedValue(tehranCoach),
+    updateCoachPassword: vi.fn().mockResolvedValue(tehranCoach),
     ...overrides,
   };
 }
@@ -239,5 +240,49 @@ describe("updateCoach", () => {
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
     expect(repo.updateCoach).not.toHaveBeenCalled();
+  });
+});
+
+describe("resetCoachPassword", () => {
+  it("stores a bcrypt hash of the new password for a coach of the admin province", async () => {
+    const repo = repoWith();
+    await resetCoachPassword(repo, admin, "coach-9", "FreshPass1234");
+
+    expect(repo.updateCoachPassword).toHaveBeenCalledTimes(1);
+    const [id, passwordHash] = vi.mocked(repo.updateCoachPassword).mock.calls[0];
+    expect(id).toBe("coach-9");
+    expect(compareSync("FreshPass1234", passwordHash)).toBe(true);
+  });
+
+  it("keeps a coach of another province behind 404", async () => {
+    const repo = repoWith({ findCoachById: vi.fn().mockResolvedValue(farsCoach) });
+    const failure = await failureOf(resetCoachPassword(repo, admin, "coach-2", "FreshPass1234"));
+
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+    expect(repo.updateCoachPassword).not.toHaveBeenCalled();
+  });
+
+  it("refuses to reset an admin account with 404", async () => {
+    const repo = repoWith({ findCoachById: vi.fn().mockResolvedValue(adminRow) });
+    const failure = await failureOf(resetCoachPassword(repo, admin, "coach-3", "FreshPass1234"));
+
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+    expect(repo.updateCoachPassword).not.toHaveBeenCalled();
+  });
+
+  it("rejects a coach session with 403", async () => {
+    const repo = repoWith();
+    const failure = await failureOf(resetCoachPassword(repo, coach, "coach-9", "FreshPass1234"));
+
+    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect(repo.updateCoachPassword).not.toHaveBeenCalled();
+  });
+
+  it("never returns the plain password or the hash", async () => {
+    const repo = repoWith();
+    const result = await resetCoachPassword(repo, admin, "coach-9", "FreshPass1234");
+
+    expect(JSON.stringify(result)).not.toContain("FreshPass1234");
+    expect((result as Record<string, unknown>).passwordHash).toBeUndefined();
   });
 });

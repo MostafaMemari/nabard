@@ -51,6 +51,7 @@ export type CoachRepository = {
   findNationalCodeOwner(nationalCode: string): Promise<{ id: string } | null>;
   createCoach(data: NewCoachData): Promise<CoachRecord>;
   updateCoach(id: string, data: CoachUpdateData): Promise<CoachRecord>;
+  updateCoachPassword(id: string, passwordHash: string): Promise<CoachRecord>;
 };
 
 const coachSelection = {
@@ -129,4 +130,8 @@ export async function createCoach(data: NewCoachData): Promise<CoachRecord> {
 
 export async function updateCoach(id: string, data: CoachUpdateData): Promise<CoachRecord> {
   return getPrisma().user.update({ where: { id }, data, select: coachSelection });
+}
+
+export async function updateCoachPassword(id: string, passwordHash: string): Promise<CoachRecord> {
+  return getPrisma().user.update({ where: { id }, data: { passwordHash }, select: coachSelection });
 }

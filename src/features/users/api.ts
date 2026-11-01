@@ -30,3 +30,7 @@ export function createCoach(input: CoachInput): Promise<User> {
 export function updateCoachStatus(id: string, isActive: boolean): Promise<User> {
   return api<User>(`/api/v1/coaches/${id}`, { method: "PATCH", body: { isActive } });
 }
+
+export function resetCoachPassword(id: string, password: string): Promise<User> {
+  return api<User>(`/api/v1/coaches/${id}/reset-password`, { method: "POST", body: { password } });
+}

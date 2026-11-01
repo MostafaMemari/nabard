@@ -26,6 +26,10 @@ export const updateCoachSchema = z
   })
   .refine((value) => Object.keys(value).length > 0, { message: "اطلاعاتی برای تغییر ارسال نشده است." });
 
+export const resetCoachPasswordSchema = z.object({
+  password: passwordField,
+});
+
 export const coachListQuerySchema = z.object({
   search: z.string().trim().max(80).optional(),
   status: z.enum(["active", "inactive"]).optional(),
@@ -37,3 +41,4 @@ export type CoachFormValues = z.input<typeof createCoachSchema>;
 export type CoachInput = z.output<typeof createCoachSchema>;
 export type UpdateCoachInput = z.output<typeof updateCoachSchema>;
 export type CoachListQuery = z.output<typeof coachListQuerySchema>;
+export type ResetCoachPasswordInput = z.output<typeof resetCoachPasswordSchema>;
