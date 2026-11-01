@@ -5,7 +5,6 @@ import { SkeletonRows } from "@/components/shared/rows-skeleton";
 import type { Gender } from "@/features/base-data";
 import { useWeightClasses } from "@/features/base-data";
 import { useRegistrations } from "@/features/registrations";
-import { useStudents } from "@/features/students";
 import { formatJalaliDateTime, toPersianDigits } from "@/lib/format";
 import { CompetitionRegistrationCard } from "./competition-registration-card";
 import { type RegistrationRow, registrationBadgeStatus } from "./competition-registrations-rows";
@@ -20,14 +19,13 @@ export function CompetitionRegistrationsTable({
   gender: Gender;
 }) {
   const { registrations, isLoading, error, mutate } = useRegistrations({ competitionId });
-  const { students } = useStudents();
   const { weightClasses } = useWeightClasses({ ageCategoryId, gender });
 
   const rows: RegistrationRow[] = registrations.map((registration) => {
     const weightClass = weightClasses.find((item) => item.id === registration.weightClassId);
     return {
       registration,
-      student: students.find((student) => student.id === registration.studentId),
+      student: registration.student,
       weightClassLabel: weightClass ? `${toPersianDigits(weightClass.label)} کیلوگرم` : null,
     };
   });

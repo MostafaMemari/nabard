@@ -1,58 +1,40 @@
 "use client";
 
-import { startOfWeek } from "date-fns-jalali";
 import { PlusIcon, ReceiptTextIcon, TrophyIcon } from "lucide-react";
 import Link from "next/link";
-import { useMemo } from "react";
 import { EmptyState, HomeListSection, PageHeader, SummaryCard } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useCompetitions } from "@/features/competitions";
-import { usePayments } from "@/features/payments";
-import { useRegistrations } from "@/features/registrations";
+import { useSummary } from "@/features/summary";
 import { formatNumber } from "@/lib/format";
 import { AdminActionList } from "./admin-action-list";
 import { AdminUpcomingList } from "./admin-upcoming-list";
 
 export function AdminHomeScreen() {
-  const { payments, isLoading: paymentsLoading, error: paymentsError, mutate: retryPayments } = usePayments();
-  const { competitions, isLoading: competitionsLoading, error: competitionsError, mutate: retryCompetitions } = useCompetitions();
-  const { registrations, isLoading: registrationsLoading } = useRegistrations();
-
-  const pendingPayments = useMemo(() => payments.filter((payment) => payment.status === "PENDING").slice(0, 5), [payments]);
-  const pendingCount = useMemo(() => payments.filter((payment) => payment.status === "PENDING").length, [payments]);
-  const upcoming = useMemo(
-    () =>
-      competitions
-        .filter((competition) => competition.status === "PUBLISHED")
-        .sort((a, b) => a.registrationDeadline.localeCompare(b.registrationDeadline))
-        .slice(0, 5),
-    [competitions],
-  );
-  const weekCount = useMemo(() => {
-    const start = startOfWeek(new Date(), { weekStartsOn: 6 }).getTime();
-    return registrations.filter((registration) => new Date(registration.createdAt).getTime() >= start).length;
-  }, [registrations]);
-
-  const isLoading = paymentsLoading || competitionsLoading || registrationsLoading;
+  const { summary, isLoading, error, mutate } = useSummary();
 
   return (
     <>
       <PageHeader title="خانه" description="رسیدهای در انتظار بررسی و مسابقات پیش رو." />
 
       <div className="grid gap-4 sm:grid-cols-3">
-        {isLoading ? (
+        {isLoading || !summary ? (
           [1, 2, 3].map((key) => <Skeleton key={key} className="h-32 w-full" />)
         ) : (
           <>
             <SummaryCard
-              value={formatNumber(pendingCount)}
+              value={formatNumber(summary.pendingPaymentsCount)}
               label="رسیدهای در انتظار بررسی"
               href="/admin/payments?status=pending"
               linkLabel="مشاهده پرداخت ها"
             />
-            <SummaryCard value={formatNumber(upcoming.length)} label="مسابقات باز" href="/admin/competitions" linkLabel="مشاهده مسابقات" />
-            <SummaryCard value={formatNumber(weekCount)} label="ثبت نام های این هفته" />
+            <SummaryCard
+              value={formatNumber(summary.openCompetitionsCount)}
+              label="مسابقات باز"
+              href="/admin/competitions"
+              linkLabel="مشاهده مسابقات"
+            />
+            <SummaryCard value={formatNumber(summary.weeklyRegistrationsCount)} label="ثبت نام های این هفته" />
           </>
         )}
       </div>
@@ -61,22 +43,22 @@ export function AdminHomeScreen() {
         <HomeListSection
           title="نیازمند اقدام"
           href="/admin/payments?status=pending"
-          error={paymentsError}
-          onRetry={() => void retryPayments()}
-          isLoading={paymentsLoading}
-          isEmpty={pendingPayments.length === 0}
+          error={error}
+          onRetry={() => void mutate()}
+          isLoading={isLoading}
+          isEmpty={(summary?.latestPendingPayments.length ?? 0) === 0}
           empty={<EmptyState icon={ReceiptTextIcon} title="پرداختی برای بررسی وجود ندارد." />}
         >
-          <AdminActionList payments={pendingPayments} />
+          {summary ? <AdminActionList payments={summary.latestPendingPayments} /> : null}
         </HomeListSection>
 
         <HomeListSection
           title="مسابقات پیش رو"
           href="/admin/competitions"
-          error={competitionsError}
-          onRetry={() => void retryCompetitions()}
-          isLoading={competitionsLoading}
-          isEmpty={upcoming.length === 0}
+          error={error}
+          onRetry={() => void mutate()}
+          isLoading={isLoading}
+          isEmpty={(summary?.upcomingCompetitions.length ?? 0) === 0}
           empty={
             <EmptyState
               icon={TrophyIcon}
@@ -90,10 +72,7 @@ export function AdminHomeScreen() {
             />
           }
         >
-          <AdminUpcomingList
-            competitions={upcoming}
-            registrationCount={(id) => registrations.filter((r) => r.competitionId === id).length}
-          />
+          {summary ? <AdminUpcomingList competitions={summary.upcomingCompetitions} /> : null}
         </HomeListSection>
       </div>
     </>

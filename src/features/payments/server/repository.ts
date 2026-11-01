@@ -41,12 +41,18 @@ export type PaymentUpdateData = {
   receiptKey?: string;
 };
 
+export type PaymentTransitionInput = {
+  status: "CONFIRMED" | "REJECTED";
+  note: string | null;
+};
+
 export type PaymentsRepository = {
   findUserById(id: string): Promise<UserIdentityRecord | null>;
   countPayments(filters: PaymentFilters): Promise<number>;
   findPayments(filters: PaymentFilters, skip: number, take: number): Promise<PaymentWithScope[]>;
   findPaymentById(id: string): Promise<PaymentWithScope | null>;
   updatePayment(id: string, data: PaymentUpdateData): Promise<PaymentWithScope>;
+  transitionPaymentFromPending(id: string, input: PaymentTransitionInput): Promise<PaymentWithScope | null>;
 };
 
 const paymentSelection = {
@@ -153,4 +159,18 @@ export async function updatePayment(id: string, data: PaymentUpdateData): Promis
   const row = await getPrisma().payment.update({ where: { id }, data, select: scopeSelection });
 
   return toPaymentWithScope(row);
+}
+
+export async function transitionPaymentFromPending(id: string, input: PaymentTransitionInput): Promise<PaymentWithScope | null> {
+  return getPrisma().$transaction(async (tx) => {
+    const applied = await tx.payment.updateMany({
+      where: { id, status: "PENDING" },
+      data: { status: input.status, note: input.note },
+    });
+    if (applied.count === 0) return null;
+
+    const row = await tx.payment.findUnique({ where: { id }, select: scopeSelection });
+
+    return row === null ? null : toPaymentWithScope(row);
+  });
 }

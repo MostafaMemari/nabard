@@ -2,8 +2,8 @@ import { describe, expect, it, vi } from "vitest";
 import type { AppError } from "@/lib/api";
 import type { CurrentUser } from "@/lib/session";
 import type { Storage } from "@/lib/storage/types";
-import type { PaymentsRepository, PaymentWithScope } from "./repository";
-import { decidePayment, getPayment, listPayments, readReceipt, uploadReceipt } from "./service";
+import type { PaymentsRepository, PaymentTransitionInput, PaymentWithScope } from "./repository";
+import { confirmPayment, getPayment, listPayments, readReceipt, rejectPayment, uploadReceipt } from "./service";
 
 const admin: CurrentUser = { id: "admin-1", role: "ADMIN" };
 const coach: CurrentUser = { id: "coach-1", role: "COACH" };
@@ -42,6 +42,7 @@ function repoWith(overrides: Partial<PaymentsRepository> = {}): PaymentsReposito
     findPayments: vi.fn().mockResolvedValue([paymentRow]),
     findPaymentById: vi.fn().mockResolvedValue(paymentRow),
     updatePayment: vi.fn().mockResolvedValue(paymentRow),
+    transitionPaymentFromPending: vi.fn().mockResolvedValue(null),
     ...overrides,
   };
 }
@@ -109,53 +110,119 @@ describe("getPayment", () => {
   });
 });
 
-describe("decidePayment", () => {
+describe("confirmPayment", () => {
   it("rejects a coach with 403", async () => {
     const repo = repoWith();
-    const failure = await failureOf(decidePayment(repo, coach, "pay-1", { status: "CONFIRMED" }));
+    const failure = await failureOf(confirmPayment(repo, coach, "pay-1"));
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect(repo.transitionPaymentFromPending).not.toHaveBeenCalled();
   });
 
   it("hides payments of another province from the admin with 404", async () => {
     const repo = repoWith({ findUserById: vi.fn().mockResolvedValue({ ...adminRecord, province: "FARS" }) });
-    const failure = await failureOf(decidePayment(repo, admin, "pay-1", { status: "CONFIRMED" }));
+    const failure = await failureOf(confirmPayment(repo, admin, "pay-1"));
 
     expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+    expect(repo.transitionPaymentFromPending).not.toHaveBeenCalled();
   });
 
-  it("blocks a second decision on a decided payment", async () => {
+  it("confirms a pending payment inside a conditional transaction and clears the note", async () => {
     const repo = repoWith({
       findUserById: vi.fn().mockResolvedValue(adminRecord),
-      findPaymentById: vi.fn().mockResolvedValue({ ...paymentRow, status: "CONFIRMED" }),
+      transitionPaymentFromPending: vi.fn().mockResolvedValue({ ...paymentRow, status: "CONFIRMED", note: null }),
     });
-    const failure = await failureOf(decidePayment(repo, admin, "pay-1", { status: "CONFIRMED" }));
+    const record = await confirmPayment(repo, admin, "pay-1");
+
+    expect(repo.transitionPaymentFromPending).toHaveBeenCalledWith("pay-1", { status: "CONFIRMED", note: null });
+    expect(record.status).toBe("CONFIRMED");
+    expect(record.note).toBeNull();
+  });
+
+  it("blocks confirming a confirmed payment with a Persian conflict", async () => {
+    const confirmed = { ...paymentRow, status: "CONFIRMED" as const };
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      transitionPaymentFromPending: vi.fn().mockResolvedValue(null),
+      findPaymentById: vi.fn().mockResolvedValue(confirmed),
+    });
+    const failure = await failureOf(confirmPayment(repo, admin, "pay-1"));
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
-    expect(repo.updatePayment).not.toHaveBeenCalled();
+    expect((failure as AppError).message).toContain("قبلا تایید شده");
   });
 
-  it("confirms a pending payment and clears the note", async () => {
+  it("blocks confirming a rejected payment until a new receipt arrives", async () => {
     const repo = repoWith({
       findUserById: vi.fn().mockResolvedValue(adminRecord),
-      updatePayment: vi.fn().mockResolvedValue({ ...paymentRow, status: "CONFIRMED" }),
+      transitionPaymentFromPending: vi.fn().mockResolvedValue(null),
+      findPaymentById: vi.fn().mockResolvedValue(rejectedPayment),
     });
-    const record = await decidePayment(repo, admin, "pay-1", { status: "CONFIRMED" });
+    const failure = await failureOf(confirmPayment(repo, admin, "pay-8"));
 
-    expect(repo.updatePayment).toHaveBeenCalledWith("pay-1", { status: "CONFIRMED", note: null });
-    expect(record.status).toBe("CONFIRMED");
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect((failure as AppError).message).toContain("رسید جدید");
   });
+});
 
+describe("rejectPayment", () => {
   it("rejects a pending payment with the given note", async () => {
     const repo = repoWith({
       findUserById: vi.fn().mockResolvedValue(adminRecord),
-      updatePayment: vi.fn().mockResolvedValue(rejectedPayment),
+      transitionPaymentFromPending: vi.fn().mockResolvedValue(rejectedPayment),
     });
-    const record = await decidePayment(repo, admin, "pay-8", { status: "REJECTED", note: "رسید ناخوانا است." });
+    const record = await rejectPayment(repo, admin, "pay-8", "رسید ناخوانا است.");
 
-    expect(repo.updatePayment).toHaveBeenCalledWith("pay-8", { status: "REJECTED", note: "رسید ناخوانا است." });
+    expect(repo.transitionPaymentFromPending).toHaveBeenCalledWith("pay-8", { status: "REJECTED", note: "رسید ناخوانا است." });
     expect(record.status).toBe("REJECTED");
     expect(record.note).toBe("رسید ناخوانا است.");
+  });
+
+  it("blocks rejecting a confirmed payment", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      transitionPaymentFromPending: vi.fn().mockResolvedValue(null),
+      findPaymentById: vi.fn().mockResolvedValue({ ...paymentRow, status: "CONFIRMED" }),
+    });
+    const failure = await failureOf(rejectPayment(repo, admin, "pay-1", "ناسازگار"));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect((failure as AppError).message).toContain("قابل رد کردن نیست");
+  });
+
+  it("blocks rejecting a rejected payment again", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      transitionPaymentFromPending: vi.fn().mockResolvedValue(null),
+      findPaymentById: vi.fn().mockResolvedValue(rejectedPayment),
+    });
+    const failure = await failureOf(rejectPayment(repo, admin, "pay-8", "ناسازگار"));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect((failure as AppError).message).toContain("قبلا رد شده");
+  });
+
+  it("applies the transition only once when two requests race", async () => {
+    let row: PaymentWithScope = { ...paymentRow };
+    const transition = vi.fn().mockImplementation(async (_id: string, input: PaymentTransitionInput) => {
+      if (row.status !== "PENDING") return null;
+      row = { ...row, status: input.status, note: input.note };
+      return row;
+    });
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findPaymentById: vi.fn().mockImplementation(async () => row),
+      transitionPaymentFromPending: transition,
+    });
+
+    const [first, second] = await Promise.all([
+      confirmPayment(repo, admin, "pay-1"),
+      confirmPayment(repo, admin, "pay-1").catch((error: unknown) => error),
+    ]);
+
+    expect(first).toMatchObject({ status: "CONFIRMED" });
+    expect(second).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect(transition).toHaveBeenCalledTimes(2);
   });
 });
 

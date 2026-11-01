@@ -14,8 +14,7 @@ type Decisions = ReturnType<typeof usePaymentDecisions>;
 export function PaymentDetailContent({ decisions }: { decisions: Decisions }) {
   const { coaches } = useCoaches();
   const { competitions } = useCompetitions();
-  const { payment, registrations, students, rowsLoading, rejectOpen, setRejectOpen, working, busyId, decideReceipt, decideRegistration } =
-    decisions;
+  const { payment, registrations, rowsLoading, rejectOpen, setRejectOpen, working, busyId, decideReceipt, decideRegistration } = decisions;
 
   if (!payment) {
     return null;
@@ -38,11 +37,10 @@ export function PaymentDetailContent({ decisions }: { decisions: Decisions }) {
         <PaymentDetailMain
           payment={payment}
           registrations={registrations}
-          students={students}
           rowsLoading={rowsLoading}
           busyId={busyId}
           onApprove={(registration) => decideRegistration(registration.id, "APPROVED")}
-          onReject={(registration) => decideRegistration(registration.id, "REJECTED")}
+          onReject={(registration, note) => decideRegistration(registration.id, "REJECTED", note)}
         />
         <PaymentSideSummary
           payment={payment}

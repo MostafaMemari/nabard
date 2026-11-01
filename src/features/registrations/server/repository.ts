@@ -14,6 +14,13 @@ export type UserIdentityRecord = {
   isActive: boolean;
 };
 
+export type RegistrationStudentInfo = {
+  id: string;
+  fullName: string;
+  beltId: string;
+  weightKg: number | null;
+};
+
 export type RegistrationRecord = {
   id: string;
   competitionId: string;
@@ -25,6 +32,7 @@ export type RegistrationRecord = {
   note: string | null;
   createdAt: Date;
   updatedAt: Date;
+  student: RegistrationStudentInfo;
 };
 
 export type RegistrationWithScope = RegistrationRecord & {
@@ -93,6 +101,37 @@ export type RegistrationBundle = {
   registrations: RegistrationRecord[];
 };
 
+export type RegistrationTransitionInput = {
+  status: "APPROVED" | "REJECTED";
+  note: string | null;
+};
+
+export type RegistrationTransitionResult =
+  | { kind: "updated"; row: RegistrationWithScope }
+  | { kind: "conflict"; reason: "REVIEWED" | "PAYMENT_NOT_CONFIRMED"; row: RegistrationWithScope };
+
+export type RegistrationPaymentRow = {
+  id: string;
+  status: PaymentStatus;
+  amount: bigint;
+  createdAt: Date;
+};
+
+export type RegistrationBundleRow = {
+  id: string;
+  studentName: string;
+  status: RegistrationStatus;
+  note: string | null;
+};
+
+export type RegistrationDetailRow = {
+  registration: RegistrationWithScope;
+  competition: { id: string; title: string; registrationDeadline: Date } | null;
+  weightClassLabel: string | null;
+  payment: RegistrationPaymentRow | null;
+  bundle: RegistrationBundleRow[];
+};
+
 export type RegistrationRepository = {
   findUserById(id: string): Promise<UserIdentityRecord | null>;
   findCompetitionById(id: string): Promise<CompetitionRegistrationRow | null>;
@@ -104,8 +143,9 @@ export type RegistrationRepository = {
   countRegistrations(filters: RegistrationFilters): Promise<number>;
   findRegistrations(filters: RegistrationFilters, skip: number, take: number): Promise<RegistrationWithScope[]>;
   findRegistrationById(id: string): Promise<RegistrationWithScope | null>;
+  findRegistrationDetailById(id: string): Promise<RegistrationDetailRow | null>;
   createRegistrationBundle(input: RegistrationBundleInput): Promise<RegistrationBundle>;
-  updateRegistration(id: string, data: { status?: RegistrationStatus; note?: string | null }): Promise<RegistrationWithScope>;
+  transitionRegistrationFromPending(id: string, input: RegistrationTransitionInput): Promise<RegistrationTransitionResult | null>;
 };
 
 const registrationSelection = {
@@ -119,9 +159,10 @@ const registrationSelection = {
   note: true,
   createdAt: true,
   updatedAt: true,
+  student: { select: { id: true, fullName: true, beltId: true, weightKg: true } },
 } as const;
 
-function toRegistrationRecord(row: {
+type RegistrationRowInput = {
   id: string;
   competitionId: string;
   studentId: string;
@@ -132,7 +173,10 @@ function toRegistrationRecord(row: {
   note: string | null;
   createdAt: Date;
   updatedAt: Date;
-}): RegistrationRecord {
+  student: { id: string; fullName: string; beltId: string; weightKg: unknown };
+};
+
+function toRegistrationRecord(row: RegistrationRowInput): RegistrationRecord {
   return {
     id: row.id,
     competitionId: row.competitionId,
@@ -144,6 +188,12 @@ function toRegistrationRecord(row: {
     note: row.note,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
+    student: {
+      id: row.student.id,
+      fullName: row.student.fullName,
+      beltId: row.student.beltId,
+      weightKg: row.student.weightKg === null ? null : Number(row.student.weightKg),
+    },
   };
 }
 
@@ -315,15 +365,75 @@ export async function createRegistrationBundle(input: RegistrationBundleInput): 
   });
 }
 
-export async function updateRegistration(
-  id: string,
-  data: { status?: RegistrationStatus; note?: string | null },
-): Promise<RegistrationWithScope> {
-  const row = await getPrisma().registration.update({
+export async function findRegistrationDetailById(id: string): Promise<RegistrationDetailRow | null> {
+  const prisma = getPrisma();
+  const row = await prisma.registration.findUnique({
     where: { id },
-    data,
-    select: { ...registrationSelection, coach: { select: { province: true } }, payment: { select: { status: true } } },
+    select: {
+      ...registrationSelection,
+      coach: { select: { province: true } },
+      payment: { select: { status: true } },
+      weightClass: { select: { label: true } },
+      competition: { select: { id: true, title: true, registrationDeadline: true } },
+    },
   });
+  if (row === null) return null;
 
-  return { ...toRegistrationRecord(row), coachProvince: row.coach.province, paymentStatus: row.payment?.status ?? null };
+  const payment = row.paymentId
+    ? await prisma.payment.findUnique({
+        where: { id: row.paymentId },
+        select: {
+          id: true,
+          status: true,
+          amount: true,
+          createdAt: true,
+          registrations: {
+            select: { id: true, status: true, note: true, student: { select: { fullName: true } } },
+            orderBy: { createdAt: "asc" as const },
+          },
+        },
+      })
+    : null;
+
+  return {
+    registration: {
+      ...toRegistrationRecord(row),
+      coachProvince: row.coach.province,
+      paymentStatus: row.payment?.status ?? null,
+    },
+    competition: row.competition,
+    weightClassLabel: row.weightClass?.label ?? null,
+    payment: payment === null ? null : { id: payment.id, status: payment.status, amount: payment.amount, createdAt: payment.createdAt },
+    bundle:
+      payment?.registrations.map((item) => ({ id: item.id, studentName: item.student.fullName, status: item.status, note: item.note })) ??
+      [],
+  };
+}
+
+export async function transitionRegistrationFromPending(
+  id: string,
+  input: RegistrationTransitionInput,
+): Promise<RegistrationTransitionResult | null> {
+  return getPrisma().$transaction(async (tx) => {
+    const applied = await tx.registration.updateMany({
+      where: { id, status: "PENDING", payment: { status: "CONFIRMED" } },
+      data: { status: input.status, note: input.note },
+    });
+
+    const row = await tx.registration.findUnique({
+      where: { id },
+      select: { ...registrationSelection, coach: { select: { province: true } }, payment: { select: { status: true } } },
+    });
+    if (row === null) return null;
+
+    const withScope = {
+      ...toRegistrationRecord(row),
+      coachProvince: row.coach.province,
+      paymentStatus: row.payment?.status ?? null,
+    };
+
+    if (applied.count > 0) return { kind: "updated", row: withScope };
+    if (row.status !== "PENDING") return { kind: "conflict", reason: "REVIEWED", row: withScope };
+    return { kind: "conflict", reason: "PAYMENT_NOT_CONFIRMED", row: withScope };
+  });
 }

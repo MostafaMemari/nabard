@@ -5,16 +5,17 @@ import type { CurrentUser } from "@/lib/session";
 import { readReceiptImage } from "@/lib/storage/image";
 import type { Storage } from "@/lib/storage/types";
 import type { RegistrationListQuery } from "../schemas";
-import type { RegistrationStatus } from "../types";
 import { checkEligibility, type EligibilityCompetition, type EligibilityStudent } from "./eligibility";
 import type {
   AgeCategoryRow,
   CompetitionRegistrationRow,
   RegistrationBundle,
+  RegistrationDetailRow,
   RegistrationFilters,
   RegistrationRecord,
   RegistrationRepository,
   RegistrationStudentRow,
+  RegistrationTransitionInput,
   RegistrationWithScope,
   UserIdentityRecord,
 } from "./repository";
@@ -104,6 +105,7 @@ function toRegistrationRecord(row: RegistrationWithScope): RegistrationRecord {
     note: row.note,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
+    student: row.student,
   };
 }
 
@@ -148,6 +150,17 @@ export async function getRegistration(repo: RegistrationRepository, user: Curren
   if (!inScope) throw registrationNotFound();
 
   return toRegistrationRecord(row);
+}
+
+export async function getRegistrationDetail(repo: RegistrationRepository, user: CurrentUser, id: string): Promise<RegistrationDetailRow> {
+  const identity = await requireActiveUser(repo, user);
+  const row = await repo.findRegistrationDetailById(id);
+  if (!row) throw registrationNotFound();
+
+  const inScope = identity.role === "ADMIN" ? row.registration.coachProvince === identity.province : row.registration.coachId === user.id;
+  if (!inScope) throw registrationNotFound();
+
+  return row;
 }
 
 function assertRegistrationWindow(competition: CompetitionRegistrationRow, now: Date): void {
@@ -241,28 +254,36 @@ export async function createRegistrations(
   });
 }
 
-export async function updateRegistrationStatus(
+async function transitionRegistration(
   repo: RegistrationRepository,
   user: CurrentUser,
   id: string,
-  status: Extract<RegistrationStatus, "APPROVED" | "REJECTED">,
-  note: string | null = null,
+  input: RegistrationTransitionInput,
 ): Promise<RegistrationRecord> {
   const identity = await requireActiveUser(repo, user);
   if (identity.role !== "ADMIN") throw forbidden();
 
-  const row = await repo.findRegistrationById(id);
-  if (!row || row.coachProvince !== identity.province) throw registrationNotFound();
+  const current = await repo.findRegistrationById(id);
+  if (!current || current.coachProvince !== identity.province) throw registrationNotFound();
 
-  if (row.status !== "PENDING") {
+  const result = await repo.transitionRegistrationFromPending(id, input);
+  if (result === null) throw registrationNotFound();
+  if (result.kind === "updated") return toRegistrationRecord(result.row);
+  if (result.reason === "REVIEWED") {
     throw new AppError(409, "CONFLICT", "این ثبت نام قبلا بررسی شده است.");
   }
+  throw new AppError(409, "CONFLICT", "برای بررسی ثبت نام، ابتدا رسید پرداخت باید تایید شود.");
+}
 
-  if (status === "APPROVED" && row.paymentStatus !== "CONFIRMED") {
-    throw new AppError(409, "CONFLICT", "برای تأیید ثبت نام، ابتدا رسید پرداخت باید تأیید شود.");
-  }
+export async function approveRegistration(repo: RegistrationRepository, user: CurrentUser, id: string): Promise<RegistrationRecord> {
+  return transitionRegistration(repo, user, id, { status: "APPROVED", note: null });
+}
 
-  const updated = await repo.updateRegistration(id, { status, note });
-
-  return toRegistrationRecord(updated);
+export async function rejectRegistration(
+  repo: RegistrationRepository,
+  user: CurrentUser,
+  id: string,
+  note: string,
+): Promise<RegistrationRecord> {
+  return transitionRegistration(repo, user, id, { status: "REJECTED", note });
 }

@@ -25,9 +25,9 @@ export function getPayment(id: string): Promise<Payment> {
 }
 
 export function confirmPayment(id: string): Promise<Payment> {
-  return api<Payment>(`/api/v1/payments/${id}`, { method: "PATCH", body: { status: "CONFIRMED" } });
+  return api<Payment>(`/api/v1/payments/${id}/confirm`, { method: "POST" });
 }
 
 export function rejectPayment(id: string, note: string): Promise<Payment> {
-  return api<Payment>(`/api/v1/payments/${id}`, { method: "PATCH", body: { status: "REJECTED", note } });
+  return api<Payment>(`/api/v1/payments/${id}/reject`, { method: "POST", body: { note } });
 }

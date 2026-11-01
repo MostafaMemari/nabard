@@ -2,14 +2,15 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { updateRegistrationStatus } from "@/features/registrations";
+import { approveRegistration, rejectRegistration } from "@/features/registrations";
+import { ApiError } from "@/lib/http";
 import { confirmPayment, rejectPayment } from "../api";
 import { usePaymentRegistrations } from "../hooks/use-payment-registrations";
 import { usePayment } from "../hooks/use-payments";
 
 export function usePaymentDecisions(paymentId: string) {
   const { payment, isLoading, error, mutate } = usePayment(paymentId);
-  const { registrations, students, isLoading: rowsLoading, mutate: mutateRegistrations } = usePaymentRegistrations(paymentId);
+  const { registrations, isLoading: rowsLoading, mutate: mutateRegistrations } = usePaymentRegistrations(paymentId);
   const [rejectOpen, setRejectOpen] = useState(false);
   const [working, setWorking] = useState(false);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -26,21 +27,26 @@ export function usePaymentDecisions(paymentId: string) {
       }
       await mutate();
       setRejectOpen(false);
-    } catch {
-      toast.error("انجام نشد. دوباره تلاش کنید.");
+    } catch (caught) {
+      toast.error(caught instanceof ApiError ? caught.message : "انجام نشد. دوباره تلاش کنید.");
     } finally {
       setWorking(false);
     }
   }
 
-  async function decideRegistration(registrationId: string, status: "APPROVED" | "REJECTED") {
+  async function decideRegistration(registrationId: string, action: "APPROVED" | "REJECTED", note?: string) {
     setBusyId(registrationId);
     try {
-      await updateRegistrationStatus(registrationId, status);
-      toast.success(status === "APPROVED" ? "ثبت نام تأیید شد." : "ثبت نام رد شد.");
+      if (action === "APPROVED") {
+        await approveRegistration(registrationId);
+        toast.success("ثبت نام تأیید شد.");
+      } else {
+        await rejectRegistration(registrationId, note ?? "");
+        toast.success("ثبت نام رد شد.");
+      }
       await mutateRegistrations();
-    } catch {
-      toast.error("انجام نشد. دوباره تلاش کنید.");
+    } catch (caught) {
+      toast.error(caught instanceof ApiError ? caught.message : "انجام نشد. دوباره تلاش کنید.");
     } finally {
       setBusyId(null);
     }
@@ -52,7 +58,6 @@ export function usePaymentDecisions(paymentId: string) {
     error,
     mutate,
     registrations,
-    students,
     rowsLoading,
     rejectOpen,
     setRejectOpen,

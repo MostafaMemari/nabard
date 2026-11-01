@@ -2,16 +2,11 @@
 
 import Link from "next/link";
 import { CountdownChip, IconTile } from "@/components/shared";
-import { type Competition, disciplineIcons } from "@/features/competitions";
+import { disciplineIcons } from "@/features/competitions";
+import type { SummaryUpcomingCompetition } from "@/features/summary";
 import { formatNumber } from "@/lib/format";
 
-export function AdminUpcomingList({
-  competitions,
-  registrationCount,
-}: {
-  competitions: Competition[];
-  registrationCount: (competitionId: string) => number;
-}) {
+export function AdminUpcomingList({ competitions }: { competitions: SummaryUpcomingCompetition[] }) {
   return (
     <div className="flex flex-col divide-y divide-border overflow-hidden rounded-xl border border-border bg-card shadow-card">
       {competitions.map((competition) => (
@@ -23,9 +18,7 @@ export function AdminUpcomingList({
           <IconTile icon={disciplineIcons[competition.discipline]} />
           <div className="min-w-0 flex-1 leading-tight">
             <p className="truncate text-sm font-medium">{competition.title}</p>
-            <p className="text-subtle mt-0.5 text-muted-foreground tabular-nums">
-              {formatNumber(registrationCount(competition.id))} ثبت نام
-            </p>
+            <p className="text-subtle mt-0.5 text-muted-foreground tabular-nums">{formatNumber(competition.registrationsCount)} ثبت نام</p>
           </div>
           <CountdownChip deadline={competition.registrationDeadline} />
         </Link>

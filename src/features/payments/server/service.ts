@@ -3,8 +3,15 @@ import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
 import { readReceiptImage } from "@/lib/storage/image";
 import type { Storage } from "@/lib/storage/types";
-import type { DecidePaymentInput, PaymentListQuery } from "../schemas";
-import type { PaymentFilters, PaymentRecord, PaymentsRepository, PaymentWithScope, UserIdentityRecord } from "./repository";
+import type { PaymentListQuery } from "../schemas";
+import type {
+  PaymentFilters,
+  PaymentRecord,
+  PaymentsRepository,
+  PaymentTransitionInput,
+  PaymentWithScope,
+  UserIdentityRecord,
+} from "./repository";
 
 const DEFAULT_PAGE_SIZE = 100;
 
@@ -77,27 +84,46 @@ export async function getPayment(repo: PaymentsRepository, user: CurrentUser, id
   return toRecord(row);
 }
 
-export async function decidePayment(
+async function decidePayment(
   repo: PaymentsRepository,
   user: CurrentUser,
   id: string,
-  input: DecidePaymentInput,
+  input: PaymentTransitionInput,
 ): Promise<PaymentRecord> {
   const identity = await requireActiveUser(repo, user);
   if (identity.role !== "ADMIN") throw forbidden();
 
+  const current = await repo.findPaymentById(id);
+  if (!current || current.coachProvince !== identity.province) throw paymentNotFound();
+
+  const updated = await repo.transitionPaymentFromPending(id, input);
+  if (updated) return toRecord(updated);
+
   const row = await repo.findPaymentById(id);
-  if (!row || row.coachProvince !== identity.province) throw paymentNotFound();
-
-  if (row.status !== "PENDING") {
-    throw new AppError(409, "CONFLICT", "این پرداخت قبلا بررسی شده است.");
+  if (row === null) throw paymentNotFound();
+  if (row.status === "CONFIRMED") {
+    throw new AppError(
+      409,
+      "CONFLICT",
+      input.status === "CONFIRMED" ? "این پرداخت قبلا تایید شده است." : "این پرداخت تایید شده و قابل رد کردن نیست.",
+    );
   }
+  if (row.status === "REJECTED") {
+    throw new AppError(
+      409,
+      "CONFLICT",
+      input.status === "CONFIRMED" ? "این پرداخت رد شده است؛ پس از بارگذاری رسید جدید قابل تایید است." : "این پرداخت قبلا رد شده است.",
+    );
+  }
+  throw new AppError(409, "CONFLICT", "این پرداخت قبلا بررسی شده است.");
+}
 
-  const data =
-    input.status === "CONFIRMED" ? { status: "CONFIRMED" as const, note: null } : { status: "REJECTED" as const, note: input.note ?? null };
-  const updated = await repo.updatePayment(id, data);
+export async function confirmPayment(repo: PaymentsRepository, user: CurrentUser, id: string): Promise<PaymentRecord> {
+  return decidePayment(repo, user, id, { status: "CONFIRMED", note: null });
+}
 
-  return toRecord(updated);
+export async function rejectPayment(repo: PaymentsRepository, user: CurrentUser, id: string, note: string): Promise<PaymentRecord> {
+  return decidePayment(repo, user, id, { status: "REJECTED", note });
 }
 
 export async function readReceipt(

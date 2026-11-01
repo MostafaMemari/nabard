@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo } from "react";
-import { useCoachRegistrationRows } from "./use-coach-registration-rows";
+import useSWR from "swr";
+import { getRegistrationDetail } from "@/features/registrations";
 
 export function useCoachRegistrationDetail({ registrationId }: { registrationId: string }) {
-  const { rows, isLoading, error, mutate } = useCoachRegistrationRows();
-  const row = useMemo(() => rows.find((item) => item.registration.id === registrationId) ?? null, [rows, registrationId]);
+  const { data, error, isLoading, mutate } = useSWR(registrationId !== "" ? ["registrations", "detail", registrationId] : null, () =>
+    getRegistrationDetail(registrationId),
+  );
 
-  return { row, isLoading, error, retry: mutate };
+  return { detail: data ?? null, isLoading, error, retry: mutate };
 }

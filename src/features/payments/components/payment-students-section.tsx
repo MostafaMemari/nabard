@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { SkeletonRows } from "@/components/shared/rows-skeleton";
 import type { Registration } from "@/features/registrations";
-import type { Student } from "@/features/students";
 import { toPersianDigits } from "@/lib/format";
 import { PaymentRegistrationRejectDialog } from "./payment-registration-reject-dialog";
 import type { PaymentStudentActions } from "./payment-student-actions";
@@ -12,7 +11,6 @@ import { PaymentStudentsTable } from "./payment-students-table";
 
 export function PaymentStudentsSection({
   registrations,
-  students,
   isLoading,
   canApprove,
   busyId,
@@ -20,12 +18,11 @@ export function PaymentStudentsSection({
   onReject,
 }: {
   registrations: Registration[];
-  students: Student[];
   isLoading: boolean;
   canApprove: boolean;
   busyId: string | null;
   onApprove: (registration: Registration) => Promise<void>;
-  onReject: (registration: Registration) => Promise<void>;
+  onReject: (registration: Registration, note: string) => Promise<void>;
 }) {
   const [pendingReject, setPendingReject] = useState<Registration | null>(null);
 
@@ -56,11 +53,11 @@ export function PaymentStudentsSection({
       ) : (
         <>
           <div className="hidden md:block">
-            <PaymentStudentsTable registrations={registrations} students={students} actions={actions} />
+            <PaymentStudentsTable registrations={registrations} actions={actions} />
           </div>
           <div className="flex flex-col overflow-hidden rounded-lg border border-border md:hidden">
             {registrations.map((registration) => (
-              <PaymentStudentCard key={registration.id} registration={registration} students={students} actions={actions} />
+              <PaymentStudentCard key={registration.id} registration={registration} actions={actions} />
             ))}
           </div>
         </>
@@ -68,10 +65,12 @@ export function PaymentStudentsSection({
 
       <PaymentRegistrationRejectDialog
         registration={pendingReject}
-        students={students}
         loading={busyId !== null}
         onClose={() => setPendingReject(null)}
-        onConfirm={(registration) => void onReject(registration).finally(() => setPendingReject(null))}
+        onConfirm={(registration, note) => {
+          setPendingReject(null);
+          void onReject(registration, note);
+        }}
       />
     </section>
   );

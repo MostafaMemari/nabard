@@ -1,7 +1,7 @@
 import type { Payment } from "@/features/payments";
 import { api } from "@/lib/http";
 import type { ListQuery, ListResult } from "@/lib/pagination";
-import type { Registration, RegistrationStatus } from "./types";
+import type { Registration, RegistrationDetail, RegistrationStatus } from "./types";
 
 export type RegistrationListParams = ListQuery & {
   competitionId?: string;
@@ -9,8 +9,6 @@ export type RegistrationListParams = ListQuery & {
   paymentId?: string;
   status?: RegistrationStatus;
 };
-
-export type RegistrationDecision = "APPROVED" | "REJECTED";
 
 export type CreateRegistrationsInput = {
   competitionId: string;
@@ -36,8 +34,8 @@ export async function listRegistrations(params: RegistrationListParams = {}): Pr
   return api<ListResult<Registration>>(`/api/v1/registrations${queryString === "" ? "" : `?${queryString}`}`);
 }
 
-export function getRegistration(id: string): Promise<Registration> {
-  return api<Registration>(`/api/v1/registrations/${id}`);
+export function getRegistrationDetail(id: string): Promise<RegistrationDetail> {
+  return api<RegistrationDetail>(`/api/v1/registrations/${id}`);
 }
 
 export function createRegistrations(input: CreateRegistrationsInput): Promise<CreateRegistrationsResult> {
@@ -50,6 +48,10 @@ export function createRegistrations(input: CreateRegistrationsInput): Promise<Cr
   return api<CreateRegistrationsResult>(`/api/v1/competitions/${input.competitionId}/registrations`, { method: "POST", body: form });
 }
 
-export function updateRegistrationStatus(id: string, status: RegistrationDecision, note: string | null = null): Promise<Registration> {
-  return api<Registration>(`/api/v1/registrations/${id}`, { method: "PATCH", body: { status, ...(note ? { note } : {}) } });
+export function approveRegistration(id: string): Promise<Registration> {
+  return api<Registration>(`/api/v1/registrations/${id}/approve`, { method: "POST" });
+}
+
+export function rejectRegistration(id: string, note: string): Promise<Registration> {
+  return api<Registration>(`/api/v1/registrations/${id}/reject`, { method: "POST", body: { note } });
 }

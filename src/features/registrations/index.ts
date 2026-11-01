@@ -9,5 +9,6 @@ export * from "./components/registration-timeline";
 export * from "./components/selection-summary-bar";
 export * from "./components/student-selection-list";
 export * from "./hooks/use-registrations";
+export * from "./schemas";
 export * from "./server/eligibility";
 export * from "./types";

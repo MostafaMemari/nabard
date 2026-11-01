@@ -15,11 +15,10 @@ export const createRegistrationsSchema = z.object({
   studentIds: z.array(z.string().min(1)).min(1, "حداقل یک هنرجو را انتخاب کنید.").max(50, "تعداد هنرجوهای انتخاب شده بیش از حد مجاز است."),
 });
 
-export const updateRegistrationSchema = z.object({
-  status: z.enum(["APPROVED", "REJECTED"], { message: "وضعیت ثبت نام را مشخص کنید." }),
-  note: z.string().trim().max(500, "توضیح حداکثر ۵۰۰ کاراکتر است.").optional(),
+export const rejectRegistrationSchema = z.object({
+  note: z.string().trim().min(3, "دلیل رد را وارد کنید.").max(500, "دلیل رد حداکثر ۵۰۰ کاراکتر است."),
 });
 
 export type RegistrationListQuery = z.output<typeof registrationListQuerySchema>;
 export type CreateRegistrationsPayload = z.output<typeof createRegistrationsSchema>;
-export type UpdateRegistrationInput = z.output<typeof updateRegistrationSchema>;
+export type RejectRegistrationValues = z.infer<typeof rejectRegistrationSchema>;

@@ -3,8 +3,15 @@ import type { Belt, WeightClass } from "@/features/base-data";
 import type { AppError } from "@/lib/api";
 import type { CurrentUser } from "@/lib/session";
 import type { Storage } from "@/lib/storage/types";
-import type { RegistrationRepository, RegistrationStudentRow, RegistrationWithScope } from "./repository";
-import { createRegistrations, getRegistration, listRegistrations, updateRegistrationStatus } from "./service";
+import type { RegistrationRepository, RegistrationStudentRow, RegistrationTransitionInput, RegistrationWithScope } from "./repository";
+import {
+  approveRegistration,
+  createRegistrations,
+  getRegistration,
+  getRegistrationDetail,
+  listRegistrations,
+  rejectRegistration,
+} from "./service";
 
 const admin: CurrentUser = { id: "admin-1", role: "ADMIN" };
 const coach: CurrentUser = { id: "coach-1", role: "COACH" };
@@ -71,6 +78,8 @@ const studentRow: RegistrationStudentRow = {
 
 const secondStudent: RegistrationStudentRow = { ...studentRow, id: "student-2", fullName: "سینا مرادی" };
 
+const studentInfo = { id: "student-1", fullName: "علی محمدی", beltId: "belt-green", weightKg: 35 };
+
 const registrationRow: RegistrationWithScope = {
   id: "reg-1",
   competitionId: "comp-1",
@@ -82,6 +91,7 @@ const registrationRow: RegistrationWithScope = {
   note: null,
   createdAt,
   updatedAt: createdAt,
+  student: studentInfo,
   coachProvince: "TEHRAN",
   paymentStatus: "PENDING",
 };
@@ -98,7 +108,10 @@ const bundle = {
     createdAt,
     updatedAt: createdAt,
   },
-  registrations: [registrationRow, { ...registrationRow, id: "reg-2", studentId: "student-2" }],
+  registrations: [
+    registrationRow,
+    { ...registrationRow, id: "reg-2", studentId: "student-2", student: { ...studentInfo, id: "student-2", fullName: "سینا مرادی" } },
+  ],
 };
 
 const PNG_BYTES = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 13]);
@@ -119,8 +132,18 @@ function repoWith(overrides: Partial<RegistrationRepository> = {}): Registration
     countRegistrations: vi.fn().mockResolvedValue(1),
     findRegistrations: vi.fn().mockResolvedValue([registrationRow]),
     findRegistrationById: vi.fn().mockResolvedValue(registrationRow),
+    findRegistrationDetailById: vi.fn().mockResolvedValue({
+      registration: registrationRow,
+      competition: { id: "comp-1", title: "مسابقات قهرمانی استان تهران", registrationDeadline: competition.registrationDeadline },
+      weightClassLabel: "۳۳",
+      payment: { id: "pay-1", status: "PENDING" as const, amount: BigInt(5000000), createdAt },
+      bundle: [
+        { id: "reg-1", studentName: "علی محمدی", status: "PENDING" as const, note: null },
+        { id: "reg-2", studentName: "سینا مرادی", status: "PENDING" as const, note: null },
+      ],
+    }),
     createRegistrationBundle: vi.fn().mockResolvedValue(bundle),
-    updateRegistration: vi.fn().mockResolvedValue(registrationRow),
+    transitionRegistrationFromPending: vi.fn().mockResolvedValue(null),
     ...overrides,
   };
 }
@@ -341,12 +364,55 @@ describe("createRegistrations", () => {
   });
 });
 
-describe("updateRegistrationStatus", () => {
+describe("getRegistrationDetail", () => {
+  it("returns the bundle with payment status to the owning coach", async () => {
+    const repo = repoWith();
+    const detail = await getRegistrationDetail(repo, coach, "reg-1");
+
+    expect(detail.registration.student.fullName).toBe("علی محمدی");
+    expect(detail.payment?.status).toBe("PENDING");
+    expect(detail.bundle).toHaveLength(2);
+  });
+
+  it("hides another coach registration from a coach with 404", async () => {
+    const repo = repoWith({
+      findRegistrationDetailById: vi.fn().mockResolvedValue({
+        registration: { ...registrationRow, coachId: "coach-2" },
+        competition: null,
+        weightClassLabel: null,
+        payment: null,
+        bundle: [],
+      }),
+    });
+    const failure = await failureOf(getRegistrationDetail(repo, coach, "reg-1"));
+
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+  });
+
+  it("hides registrations outside the admin province with 404", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findRegistrationDetailById: vi.fn().mockResolvedValue({
+        registration: { ...registrationRow, coachProvince: "FARS" },
+        competition: null,
+        weightClassLabel: null,
+        payment: null,
+        bundle: [],
+      }),
+    });
+    const failure = await failureOf(getRegistrationDetail(repo, admin, "reg-1"));
+
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+  });
+});
+
+describe("approveRegistration", () => {
   it("rejects a coach with 403", async () => {
     const repo = repoWith();
-    const failure = await failureOf(updateRegistrationStatus(repo, coach, "reg-1", "APPROVED"));
+    const failure = await failureOf(approveRegistration(repo, coach, "reg-1"));
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect(repo.transitionRegistrationFromPending).not.toHaveBeenCalled();
   });
 
   it("hides registrations of another province from the admin with 404", async () => {
@@ -354,51 +420,114 @@ describe("updateRegistrationStatus", () => {
       findUserById: vi.fn().mockResolvedValue(adminRecord),
       findRegistrationById: vi.fn().mockResolvedValue({ ...registrationRow, coachProvince: "FARS" }),
     });
-    const failure = await failureOf(updateRegistrationStatus(repo, admin, "reg-1", "APPROVED"));
+    const failure = await failureOf(approveRegistration(repo, admin, "reg-1"));
 
     expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+    expect(repo.transitionRegistrationFromPending).not.toHaveBeenCalled();
+  });
+
+  it("approves a pending registration of a confirmed payment inside a conditional transaction", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findRegistrationById: vi.fn().mockResolvedValue({ ...registrationRow, paymentStatus: "CONFIRMED" }),
+      transitionRegistrationFromPending: vi.fn().mockResolvedValue({
+        kind: "updated",
+        row: { ...registrationRow, status: "APPROVED", paymentStatus: "CONFIRMED" },
+      }),
+    });
+    const record = await approveRegistration(repo, admin, "reg-1");
+
+    expect(repo.transitionRegistrationFromPending).toHaveBeenCalledWith("reg-1", { status: "APPROVED", note: null });
+    expect(record.status).toBe("APPROVED");
+  });
+
+  it("blocks approving before the payment receipt is confirmed", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      transitionRegistrationFromPending: vi.fn().mockResolvedValue({
+        kind: "conflict",
+        reason: "PAYMENT_NOT_CONFIRMED",
+        row: registrationRow,
+      }),
+    });
+    const failure = await failureOf(approveRegistration(repo, admin, "reg-1"));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect((failure as AppError).message).toContain("رسید پرداخت");
   });
 
   it("blocks a second decision on a decided registration", async () => {
     const repo = repoWith({
       findUserById: vi.fn().mockResolvedValue(adminRecord),
-      findRegistrationById: vi.fn().mockResolvedValue({ ...registrationRow, status: "APPROVED" }),
+      transitionRegistrationFromPending: vi.fn().mockResolvedValue({
+        kind: "conflict",
+        reason: "REVIEWED",
+        row: { ...registrationRow, status: "APPROVED" },
+      }),
     });
-    const failure = await failureOf(updateRegistrationStatus(repo, admin, "reg-1", "REJECTED", "نامناسب"));
+    const failure = await failureOf(approveRegistration(repo, admin, "reg-1"));
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
-    expect(repo.updateRegistration).not.toHaveBeenCalled();
+    expect((failure as AppError).message).toContain("قبلا بررسی شده");
   });
 
-  it("blocks approving before the payment receipt is confirmed", async () => {
-    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    const failure = await failureOf(updateRegistrationStatus(repo, admin, "reg-1", "APPROVED"));
-
-    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
-    expect(repo.updateRegistration).not.toHaveBeenCalled();
-  });
-
-  it("approves a registration of a confirmed payment", async () => {
+  it("applies the transition only once when two requests race", async () => {
+    let row: RegistrationWithScope = { ...registrationRow, paymentStatus: "CONFIRMED" };
+    const transition = vi.fn().mockImplementation(async (_id: string, input: RegistrationTransitionInput) => {
+      if (row.status !== "PENDING" || row.paymentStatus !== "CONFIRMED") {
+        return { kind: "conflict", reason: row.status !== "PENDING" ? "REVIEWED" : "PAYMENT_NOT_CONFIRMED", row };
+      }
+      row = { ...row, status: input.status, note: input.note };
+      return { kind: "updated", row };
+    });
     const repo = repoWith({
       findUserById: vi.fn().mockResolvedValue(adminRecord),
-      findRegistrationById: vi.fn().mockResolvedValue({ ...registrationRow, paymentStatus: "CONFIRMED" }),
-      updateRegistration: vi.fn().mockResolvedValue({ ...registrationRow, status: "APPROVED", paymentStatus: "CONFIRMED" }),
+      findRegistrationById: vi.fn().mockImplementation(async () => row),
+      transitionRegistrationFromPending: transition,
     });
-    const record = await updateRegistrationStatus(repo, admin, "reg-1", "APPROVED");
 
-    expect(repo.updateRegistration).toHaveBeenCalledWith("reg-1", { status: "APPROVED", note: null });
-    expect(record.status).toBe("APPROVED");
+    const [first, second] = await Promise.all([
+      approveRegistration(repo, admin, "reg-1"),
+      approveRegistration(repo, admin, "reg-1").catch((error: unknown) => error),
+    ]);
+
+    expect(first).toMatchObject({ status: "APPROVED" });
+    expect(second).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect(transition).toHaveBeenCalledTimes(2);
   });
+});
 
-  it("rejects a registration with a note", async () => {
+describe("rejectRegistration", () => {
+  it("rejects a registration with a note after the payment is confirmed", async () => {
     const repo = repoWith({
       findUserById: vi.fn().mockResolvedValue(adminRecord),
-      updateRegistration: vi.fn().mockResolvedValue({ ...registrationRow, status: "REJECTED", note: "مدارک ناقص است." }),
+      transitionRegistrationFromPending: vi.fn().mockResolvedValue({
+        kind: "updated",
+        row: { ...registrationRow, status: "REJECTED", note: "رده وزنی با مسابقه همخوانی ندارد.", paymentStatus: "CONFIRMED" },
+      }),
     });
-    const record = await updateRegistrationStatus(repo, admin, "reg-1", "REJECTED", "مدارک ناقص است.");
+    const record = await rejectRegistration(repo, admin, "reg-1", "رده وزنی با مسابقه همخوانی ندارد.");
 
-    expect(repo.updateRegistration).toHaveBeenCalledWith("reg-1", { status: "REJECTED", note: "مدارک ناقص است." });
+    expect(repo.transitionRegistrationFromPending).toHaveBeenCalledWith("reg-1", {
+      status: "REJECTED",
+      note: "رده وزنی با مسابقه همخوانی ندارد.",
+    });
     expect(record.status).toBe("REJECTED");
-    expect(record.note).toBe("مدارک ناقص است.");
+    expect(record.note).toBe("رده وزنی با مسابقه همخوانی ندارد.");
+  });
+
+  it("blocks rejecting before the payment receipt is confirmed", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      transitionRegistrationFromPending: vi.fn().mockResolvedValue({
+        kind: "conflict",
+        reason: "PAYMENT_NOT_CONFIRMED",
+        row: registrationRow,
+      }),
+    });
+    const failure = await failureOf(rejectRegistration(repo, admin, "reg-1", "نامناسب"));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect((failure as AppError).message).toContain("رسید پرداخت");
   });
 });

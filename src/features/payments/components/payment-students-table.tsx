@@ -2,19 +2,10 @@
 
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import type { Registration } from "@/features/registrations";
-import type { Student } from "@/features/students";
 import type { PaymentStudentActions } from "./payment-student-actions";
 import { PaymentStudentRow } from "./payment-student-row";
 
-export function PaymentStudentsTable({
-  registrations,
-  students,
-  actions,
-}: {
-  registrations: Registration[];
-  students: Student[];
-  actions: PaymentStudentActions;
-}) {
+export function PaymentStudentsTable({ registrations, actions }: { registrations: Registration[]; actions: PaymentStudentActions }) {
   return (
     <Table>
       <TableHeader>
@@ -28,7 +19,7 @@ export function PaymentStudentsTable({
       </TableHeader>
       <TableBody>
         {registrations.map((registration) => (
-          <PaymentStudentRow key={registration.id} registration={registration} students={students} actions={actions} />
+          <PaymentStudentRow key={registration.id} registration={registration} actions={actions} />
         ))}
       </TableBody>
     </Table>
