@@ -50,7 +50,7 @@ export function CoachDetailScreen({ coachId }: { coachId: string }) {
         }
       />
 
-      <div className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 shadow-card md:p-6">
+      <div className="flex flex-wrap items-center gap-4 rounded-xl border border-border bg-card p-5 shadow-card md:p-6">
         <Avatar id={coach.id} name={coach.fullName} size="lg" />
         <p className="text-subtle text-muted-foreground">مربی · {toPersianDigits(coach.mobile)}</p>
         <StatusBadge status={coach.isActive ? "ACTIVE" : "INACTIVE"} />

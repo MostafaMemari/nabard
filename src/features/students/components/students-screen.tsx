@@ -13,10 +13,10 @@ import type { Student } from "../types";
 import { StudentDeleteDialog } from "./student-delete-dialog";
 import { StudentsResults } from "./students-results";
 
-export function StudentsScreen({ coachId }: { coachId: string }) {
+export function StudentsScreen() {
   const router = useRouter();
   const search = useSearchParamText("q");
-  const { students, isLoading, error, mutate } = useStudents({ coachId });
+  const { students, isLoading, error, mutate } = useStudents();
   const { belts } = useBelts();
   const [pendingDelete, setPendingDelete] = useState<Student | null>(null);
 

@@ -9,8 +9,8 @@ import { paymentStatusKey, RegistrationTimeline, registrationStatusKey } from "@
 import { formatJalaliDateTime, formatRialsAsToman } from "@/lib/format";
 import { useCoachRegistrationDetail } from "./use-coach-registration-detail";
 
-export function CoachRegistrationDetailScreen({ coachId, registrationId }: { coachId: string; registrationId: string }) {
-  const { row, isLoading, error, retry } = useCoachRegistrationDetail({ coachId, registrationId });
+export function CoachRegistrationDetailScreen({ registrationId }: { registrationId: string }) {
+  const { row, isLoading, error, retry } = useCoachRegistrationDetail({ registrationId });
 
   if (isLoading) {
     return (

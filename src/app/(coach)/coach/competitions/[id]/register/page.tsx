@@ -1,15 +1,14 @@
 import { RegistrationFlow } from "@/components/coach/registration-flow";
 import { CoachShell } from "@/components/layout/coach-shell";
 import { FormContainer } from "@/components/shared";
-import { demoCoach } from "@/lib/demo";
 
 export default async function CoachRegistrationPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
   return (
-    <CoachShell active="competitions" user={demoCoach}>
+    <CoachShell active="competitions">
       <FormContainer variant="standard">
-        <RegistrationFlow competitionId={id} coachId={demoCoach.id} />
+        <RegistrationFlow competitionId={id} />
       </FormContainer>
     </CoachShell>
   );

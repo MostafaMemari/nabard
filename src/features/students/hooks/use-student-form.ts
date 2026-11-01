@@ -11,7 +11,7 @@ import { useStudent } from "../hooks/use-student";
 import { emptyStudentForm, type StudentFormValues, studentSchema } from "../schemas";
 import type { StudentInput } from "../types";
 
-export function useStudentForm({ coachId, studentId }: { coachId: string; studentId?: string }) {
+export function useStudentForm({ studentId }: { studentId?: string }) {
   const router = useRouter();
   const isEdit = studentId !== undefined;
   const { student, isLoading, error } = useStudent(studentId ?? "");
@@ -43,7 +43,6 @@ export function useStudentForm({ coachId, studentId }: { coachId: string; studen
       birthDate: values.birthDate,
       beltId: values.beltId,
       weightKg: values.weightKg === "" ? null : Number(values.weightKg),
-      coachId,
     };
 
     try {

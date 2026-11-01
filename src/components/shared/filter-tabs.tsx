@@ -40,7 +40,7 @@ export function FilterTabs({
           >
             {item.label}
             {counts ? (
-              <span className={cn("tabular-nums", active ? "text-primary/70" : "text-muted-foreground/70")}>
+              <span className={cn("tabular-nums", active ? "text-primary" : "text-muted-foreground")}>
                 {formatNumber(counts[item.id] ?? 0)}
               </span>
             ) : null}

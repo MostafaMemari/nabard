@@ -27,7 +27,7 @@ export function AppSidebar({
 }: {
   items: SidebarNavItem[];
   active: string;
-  user: SidebarUser;
+  user: SidebarUser | null;
   groupLabel: string;
   breakpoint?: "lg" | "@5xl";
 }) {
@@ -55,13 +55,23 @@ export function AppSidebar({
       </nav>
       <div className="h-px bg-sidebar-border" aria-hidden />
       <div className="p-3">
-        <div className="flex items-center gap-2.5 rounded-lg p-2">
-          <Avatar id={user.id} name={user.name} size="md" />
-          <div className="flex min-w-0 flex-col leading-tight">
-            <span className="truncate text-sm font-medium text-sidebar-accent-foreground">{user.name}</span>
-            <span className="truncate text-xs text-sidebar-foreground/80">{user.roleLabel}</span>
+        {user ? (
+          <div className="flex items-center gap-2.5 rounded-lg p-2">
+            <Avatar id={user.id} name={user.name} size="md" />
+            <div className="flex min-w-0 flex-col leading-tight">
+              <span className="truncate text-sm font-medium text-sidebar-accent-foreground">{user.name}</span>
+              <span className="truncate text-xs text-sidebar-foreground/80">{user.roleLabel}</span>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div aria-hidden className="flex items-center gap-2.5 rounded-lg p-2">
+            <span className="size-9 rounded-full bg-sidebar-accent" />
+            <span className="flex flex-col gap-1.5">
+              <span className="h-3 w-20 rounded bg-sidebar-accent" />
+              <span className="h-2.5 w-12 rounded bg-sidebar-accent" />
+            </span>
+          </div>
+        )}
       </div>
     </aside>
   );

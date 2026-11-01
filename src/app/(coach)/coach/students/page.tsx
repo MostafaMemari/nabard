@@ -1,13 +1,12 @@
 import { Suspense } from "react";
 import { CoachShell } from "@/components/layout/coach-shell";
 import { StudentsScreen } from "@/features/students";
-import { demoCoach } from "@/lib/demo";
 
 export default function CoachStudentsPage() {
   return (
-    <CoachShell active="students" user={demoCoach}>
+    <CoachShell active="students">
       <Suspense fallback={null}>
-        <StudentsScreen coachId={demoCoach.id} />
+        <StudentsScreen />
       </Suspense>
     </CoachShell>
   );

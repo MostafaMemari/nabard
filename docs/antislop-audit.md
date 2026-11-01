@@ -98,6 +98,36 @@ Method: rg probes re-run over `src/` (em dash, ZWNJ, emoji, backdrop-blur/glow/p
 - R-39: the strip is `aria-hidden`; navigation stays native `Link` with `aria-current`; no new interactive elements.
 - R-40: summary-card skeletons match final card height after AS-003.
 
+## Audit 003, 2026-11-02 (1405/08/11)
+
+Scope: full re-read of every app screen and shared component outside the frozen `/dev/ui` showcase, after the real-auth and registration backends landed. The live run was not possible in this environment (no reachable `DATABASE_URL`), so every finding is verified by code inspection and contrast math, and the click-through evidence of `docs/ui-audit.md` (54/54) still stands for the untouched flows.
+
+Method: rule probes re-run (`rg` for em dash, ZWNJ, emoji, blur/glow/pulse, `/NN` opacity text, dead code, TODO), WCAG AA contrast computed for every opacity-derived text color, then a full read of both shells, all 18 routes' screens, and the shared component library.
+
+### Findings
+
+| # | Rule | Priority | Where | Finding | Status |
+| --- | --- | --- | --- | --- | --- |
+| AS-007 | R-25 | HIGH | `src/components/shared/filter-tabs.tsx` | Filter tab count numbers used `/70` opacity text: `text-muted-foreground/70` renders 2.77-2.89:1 and `text-primary/70` on the active chip 2.87:1, both below the AA 4.5:1 floor for 13px text. Opacity removed: counts now use full `text-muted-foreground` (4.9:1) and `text-primary` (4.76:1 on `primary-subtle`). | Fixed 2026-11-02 |
+| AS-008 | R-38, C-5 | HIGH | `src/lib/demo.ts`, both shells, 18 page files, coach hooks | The sidebar and mobile top bar showed a hardcoded demo person (`demoAdmin`/`demoCoach` from `lib/demo.ts`) while real authentication is live, so every session displayed someone who is not logged in, and coach screens sent the fake `coach-1` id in query strings and payloads (the server silently overrides it). Shells now resolve the session themselves through a new `useMe()` hook (`/api/v1/auth/me`) and render the real name and role label, with a skeleton block while loading; the fake `coachId` plumbing was deleted from coach screens/hooks and `StudentInput`; `lib/demo.ts` is removed. | Fixed 2026-11-02 |
+| AS-009 | R-40 | MEDIUM | `src/features/payments/components/payment-receipt-card.tsx` | The receipt `<img>` shipped without `width`/`height`, so the review card shifted layout while the private image loaded (the upload preview already reserved space). Added 480x640 intrinsic dimensions (CSS still scales it) and replaced the alt text that was a 20-digit record id with a plain description. | Fixed 2026-11-02 |
+| AS-010 | R-03 | LOW | `src/features/users/components/coach-detail-screen.tsx` | The coach identity row (avatar, mobile, status badge) did not wrap; at narrow widths the badge crowded the mobile number. Added `flex-wrap`. | Fixed 2026-11-02 |
+| AS-011 | R-20 | LOW | `src/components/layout/admin-shell.tsx` | The coach mobile top bar shows the session avatar, the admin one did not, so the same identity element appeared in one shell only. Admin mobile bar now shows the same session avatar (skeleton dot while loading), symmetric with the coach shell. | Fixed 2026-11-02 |
+| AS-012 | `docs/DESIGN.md` (skeletons match the final layout) | LOW | `src/components/coach/coach-competitions-screen.tsx` | Loading skeletons were `h-28` while the real competition cards are about twice that tall, so the list visibly jumped when data arrived. Raised to `h-44`. | Fixed 2026-11-02 |
+
+### Verified clean (delta scan, audit 003)
+
+- R-02, R-04 (emoji), R-07/R-10/R-13 (grid, blur, glow), R-19 (loop): probes return 0 hits; the only `animate-pulse` is the skeleton primitive and the only `animate-spin` a toast loading icon.
+- R-25: every remaining opacity-derived text color computed against its real background passes AA (sidebar labels `/60`, `/70`, `/80` on navy: 5.09-8.10:1; token `muted-foreground` 4.89:1). The `/40` on the selected belt toggle is a border, and selection is carried by background plus text color.
+- R-24, R-26: nav items unchanged and all real; no dead controls introduced by the session-user change (the skeleton block is `aria-hidden`).
+- R-38: the last fabricated identity is gone; every name now rendered comes from the session or a real record.
+- R-39: the receipt image keeps its biome-ignore justification; alt text describes content, not ids.
+
+### Accepted deviations
+
+- `useMe` failures are rendered as the skeleton state rather than an error banner: `proxy.ts` already redirects sessions without a valid cookie to `/login`, so a visible failure state here would only flash during sign-out.
+- `/dev/ui` shell demos now render without a user block (the showcase runs logged out); the frozen showcase keeps its demo data otherwise.
+
 ## Next audit
 
-Continue from AS-007. A new audit session appends an `Audit NNN` section here with the date and its own findings table; numbers never restart and fixed items stay in the table with their fix date.
+Continue from AS-013. A new audit session appends an `Audit NNN` section here with the date and its own findings table; numbers never restart and fixed items stay in the table with their fix date.

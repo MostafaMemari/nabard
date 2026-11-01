@@ -6,9 +6,9 @@ import { DataTable, EmptyState, PageHeader, SkeletonRows } from "@/components/sh
 import { CoachRegistrationCard, coachRegistrationColumns } from "@/features/registrations";
 import { useCoachRegistrationRows } from "./use-coach-registration-rows";
 
-export function CoachRegistrationsScreen({ coachId }: { coachId: string }) {
+export function CoachRegistrationsScreen() {
   const router = useRouter();
-  const { rows, isLoading, error, mutate } = useCoachRegistrationRows(coachId);
+  const { rows, isLoading, error, mutate } = useCoachRegistrationRows();
 
   return (
     <>

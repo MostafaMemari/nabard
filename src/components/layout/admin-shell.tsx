@@ -1,5 +1,9 @@
+"use client";
+
 import { HouseIcon, ReceiptTextIcon, TrophyIcon, UsersIcon } from "lucide-react";
 import type { ReactNode } from "react";
+import { Avatar } from "@/components/shared";
+import { roleLabels, useMe } from "@/features/auth";
 import { APP_NAME } from "@/lib/app";
 import { AppSidebar, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
 import { BrandMark } from "./brand-mark";
@@ -12,7 +16,14 @@ const navItems: SidebarNavItem[] = [
   { id: "coaches", label: "مربیان", href: "/admin/coaches", icon: UsersIcon },
 ];
 
-export function AdminShell({ active, user, children }: { active: string; user: SidebarUser; children: ReactNode }) {
+function useSidebarUser(): SidebarUser | null {
+  const { user } = useMe();
+  return user ? { id: user.id, name: user.fullName, roleLabel: roleLabels[user.role] } : null;
+}
+
+export function AdminShell({ active, children }: { active: string; children: ReactNode }) {
+  const sidebarUser = useSidebarUser();
+
   return (
     <div className="flex min-h-svh bg-background">
       <a
@@ -21,11 +32,18 @@ export function AdminShell({ active, user, children }: { active: string; user: S
       >
         پرش به محتوا
       </a>
-      <AppSidebar items={navItems} active={active} user={user} groupLabel="پنل مدیریت" />
+      <AppSidebar items={navItems} active={active} user={sidebarUser} groupLabel="پنل مدیریت" />
       <div className="flex min-w-0 flex-1 flex-col">
-        <div className="flex h-14 shrink-0 items-center gap-2.5 border-b border-border bg-card px-4 lg:hidden">
-          <BrandMark className="size-7" />
-          <span className="text-sm font-semibold">{APP_NAME}</span>
+        <div className="flex h-14 shrink-0 items-center justify-between gap-2.5 border-b border-border bg-card px-4 lg:hidden">
+          <div className="flex items-center gap-2.5">
+            <BrandMark className="size-7" />
+            <span className="text-sm font-semibold">{APP_NAME}</span>
+          </div>
+          {sidebarUser ? (
+            <Avatar id={sidebarUser.id} name={sidebarUser.name} size="sm" />
+          ) : (
+            <span aria-hidden className="size-7 rounded-full bg-muted" />
+          )}
         </div>
         <main id="admin-main" className="flex-1 pb-20 lg:pb-0">
           <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 lg:p-8">{children}</div>

@@ -7,13 +7,13 @@ import { checkEligibility, type SelectionRow, useRegistrations } from "@/feature
 import { useStudents } from "@/features/students";
 import { toPersianDigits } from "@/lib/format";
 
-export function useRegistrationRows(competitionId: string, coachId: string) {
+export function useRegistrationRows(competitionId: string) {
   const { competition, isLoading: competitionLoading, error, mutate } = useCompetition(competitionId);
-  const { students, isLoading: studentsLoading } = useStudents({ coachId });
+  const { students, isLoading: studentsLoading } = useStudents();
   const { belts } = useBelts();
   const { ageCategories } = useAgeCategories();
   const { weightClasses } = useWeightClasses();
-  const { registrations } = useRegistrations({ competitionId, coachId });
+  const { registrations } = useRegistrations({ competitionId });
 
   const registeredStudentIds = useMemo(() => new Set(registrations.map((registration) => registration.studentId)), [registrations]);
 

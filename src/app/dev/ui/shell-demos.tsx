@@ -7,9 +7,6 @@ import { Avatar, DeadlineChip, StatusBadge, SummaryCard } from "@/components/sha
 import { Button } from "@/components/ui/button";
 import { formatMoney, formatNumber } from "@/lib/format";
 
-const adminUser = { id: "admin-1", name: "حمیدرضا کاظمی", roleLabel: "مدیر استان" };
-const coachUser = { id: "coach-1", name: "رضا محمدی", roleLabel: "مربی" };
-
 const pendingReceipts = [
   { id: "pay-1", coach: "سعید احمدی", competition: "مسابقات قهرمانی استان تهران", students: 6, amount: 21_000_000 },
   { id: "pay-2", coach: "مهدی کریمی", competition: "مسابقات نونهالان پسر", students: 4, amount: 10_000_000 },
@@ -25,7 +22,7 @@ const now = new Date("2026-10-31T12:00:00.000Z");
 
 function AdminShellDemo() {
   return (
-    <AdminShell active="payments" user={adminUser}>
+    <AdminShell active="payments">
       <div className="grid gap-4 sm:grid-cols-3">
         <SummaryCard value={formatNumber(3)} label="رسید در انتظار بررسی" href="#" linkLabel="مشاهده فهرست" />
         <SummaryCard value={formatNumber(2)} label="مسابقه باز" href="#" linkLabel="مشاهده مسابقات" />
@@ -94,7 +91,7 @@ const myStudents = [
 
 function CoachShellDemo() {
   return (
-    <CoachShell active="home" user={coachUser}>
+    <CoachShell active="home">
       <div className="grid gap-4 sm:grid-cols-3">
         <SummaryCard value={formatNumber(2)} label="مسابقه باز" />
         <SummaryCard value={formatNumber(9)} label="ثبت نام من" />

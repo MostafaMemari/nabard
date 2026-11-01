@@ -17,7 +17,7 @@ function isRegistrationOpen(deadline: string, now: Date): boolean {
   return new Date(deadline).getTime() >= now.getTime();
 }
 
-export function CoachHomeScreen({ coachId }: { coachId: string }) {
+export function CoachHomeScreen() {
   const router = useRouter();
   const {
     competitions,
@@ -25,13 +25,8 @@ export function CoachHomeScreen({ coachId }: { coachId: string }) {
     error: competitionsError,
     mutate: retryCompetitions,
   } = useCompetitions({ status: "PUBLISHED" });
-  const {
-    rows,
-    isLoading: registrationsLoading,
-    error: registrationsError,
-    mutate: retryRegistrations,
-  } = useCoachRegistrationRows(coachId);
-  const { payments, isLoading: paymentsLoading } = usePayments({ coachId });
+  const { rows, isLoading: registrationsLoading, error: registrationsError, mutate: retryRegistrations } = useCoachRegistrationRows();
+  const { payments, isLoading: paymentsLoading } = usePayments();
 
   const openCompetitions = useMemo(
     () => competitions.filter((competition) => isRegistrationOpen(competition.registrationDeadline, new Date())),

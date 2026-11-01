@@ -2,7 +2,7 @@
 
 import { ReceiptTextIcon } from "lucide-react";
 import { IconTile } from "@/components/shared";
-import { formatJalaliDateTime, toPersianDigits } from "@/lib/format";
+import { formatJalaliDateTime } from "@/lib/format";
 import { buildApiUrl } from "@/lib/http";
 import type { Payment } from "../types";
 
@@ -27,7 +27,9 @@ export function PaymentReceiptCard({ payment }: { payment: Payment }) {
           {/* biome-ignore lint/performance/noImgElement: private receipt served by an authenticated endpoint */}
           <img
             src={buildApiUrl(`/api/v1/payments/${payment.id}/receipt`)}
-            alt={`رسید پرداخت ${toPersianDigits(payment.id)}`}
+            alt="تصویر رسید پرداخت کارت به کارت"
+            width={480}
+            height={640}
             className="mx-auto h-auto w-full max-w-sm rounded-md"
           />
         </div>

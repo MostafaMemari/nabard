@@ -8,11 +8,11 @@ import { type CoachRegistrationRow, useRegistrations } from "@/features/registra
 import { useStudents } from "@/features/students";
 import { toPersianDigits } from "@/lib/format";
 
-export function useCoachRegistrationRows(coachId: string) {
-  const { registrations, isLoading, error, mutate } = useRegistrations({ coachId });
-  const { students } = useStudents({ coachId });
+export function useCoachRegistrationRows() {
+  const { registrations, isLoading, error, mutate } = useRegistrations();
+  const { students } = useStudents();
   const { competitions } = useCompetitions();
-  const { payments } = usePayments({ coachId });
+  const { payments } = usePayments();
   const { weightClasses } = useWeightClasses();
 
   const rows = useMemo<CoachRegistrationRow[]>(() => {

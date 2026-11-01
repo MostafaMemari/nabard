@@ -9,10 +9,10 @@ import { RegistrationFlowStates } from "./registration-flow-states";
 import { useRegistrationRows } from "./use-registration-rows";
 import { useRegistrationSubmit } from "./use-registration-submit";
 
-export function RegistrationFlow({ competitionId, coachId }: { competitionId: string; coachId: string }) {
+export function RegistrationFlow({ competitionId }: { competitionId: string }) {
   const [step, setStep] = useState<"students" | "payment">("students");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  const { competition, rows, ready, error, retry } = useRegistrationRows(competitionId, coachId);
+  const { competition, rows, ready, error, retry } = useRegistrationRows(competitionId);
 
   const selectedRows = useMemo(
     () => rows.filter((row) => selectedIds.includes(row.student.id) && row.eligibility.eligible && !row.registered),

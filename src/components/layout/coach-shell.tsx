@@ -3,6 +3,7 @@
 import { ClipboardListIcon, HouseIcon, TrophyIcon, UsersIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { Avatar } from "@/components/shared";
+import { roleLabels, useMe } from "@/features/auth";
 import { APP_NAME } from "@/lib/app";
 import { AppSidebar, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
 import { BrandMark } from "./brand-mark";
@@ -15,7 +16,14 @@ export const coachNavItems: SidebarNavItem[] = [
   { id: "registrations", label: "ثبت نام های من", href: "/coach/registrations", icon: ClipboardListIcon },
 ];
 
-export function CoachShell({ active, user, children }: { active: string; user: SidebarUser; children: ReactNode }) {
+function useSidebarUser(): SidebarUser | null {
+  const { user } = useMe();
+  return user ? { id: user.id, name: user.fullName, roleLabel: roleLabels[user.role] } : null;
+}
+
+export function CoachShell({ active, children }: { active: string; children: ReactNode }) {
+  const sidebarUser = useSidebarUser();
+
   return (
     <div className="@container flex min-h-svh bg-background">
       <a
@@ -24,7 +32,7 @@ export function CoachShell({ active, user, children }: { active: string; user: S
       >
         پرش به محتوا
       </a>
-      <AppSidebar items={coachNavItems} active={active} user={user} groupLabel="پنل مربی" breakpoint="@5xl" />
+      <AppSidebar items={coachNavItems} active={active} user={sidebarUser} groupLabel="پنل مربی" breakpoint="@5xl" />
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-20 shrink-0 border-b border-border bg-card @5xl:hidden">
           <div className="flex h-14 items-center justify-between px-4">
@@ -32,7 +40,11 @@ export function CoachShell({ active, user, children }: { active: string; user: S
               <BrandMark className="size-7" />
               <span className="text-sm font-semibold">{APP_NAME}</span>
             </div>
-            <Avatar id={user.id} name={user.name} size="sm" />
+            {sidebarUser ? (
+              <Avatar id={sidebarUser.id} name={sidebarUser.name} size="sm" />
+            ) : (
+              <span aria-hidden className="size-7 rounded-full bg-muted" />
+            )}
           </div>
         </header>
         <main id="coach-main" className="flex-1 pb-20 @5xl:pb-8">

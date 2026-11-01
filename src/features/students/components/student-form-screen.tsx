@@ -8,8 +8,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useStudentForm } from "../hooks/use-student-form";
 import { StudentBeltField, StudentBirthDateField, StudentSelectField, StudentTextField } from "./student-form-fields";
 
-export function StudentFormScreen({ coachId, studentId }: { coachId: string; studentId?: string }) {
-  const { isEdit, form, belts, isLoading, error, student, submit } = useStudentForm({ coachId, studentId });
+export function StudentFormScreen({ studentId }: { studentId?: string }) {
+  const { isEdit, form, belts, isLoading, error, student, submit } = useStudentForm({ studentId });
 
   if (isEdit && isLoading) {
     return (
