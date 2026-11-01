@@ -3,6 +3,7 @@ import type { LucideIcon } from "lucide-react";
 import { Avatar } from "@/components/shared";
 import { APP_NAME, APP_SUBTITLE } from "@/lib/app";
 import { BrandMark } from "./brand-mark";
+import { LogoutButton } from "./logout-button";
 import { SidebarLink } from "./sidebar-link";
 
 export type SidebarNavItem = {
@@ -58,10 +59,11 @@ export function AppSidebar({
         {user ? (
           <div className="flex items-center gap-2.5 rounded-lg p-2">
             <Avatar id={user.id} name={user.name} size="md" />
-            <div className="flex min-w-0 flex-col leading-tight">
+            <div className="flex min-w-0 flex-1 flex-col leading-tight">
               <span className="truncate text-sm font-medium text-sidebar-accent-foreground">{user.name}</span>
               <span className="truncate text-xs text-sidebar-foreground/80">{user.roleLabel}</span>
             </div>
+            <LogoutButton className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" />
           </div>
         ) : (
           <div aria-hidden className="flex items-center gap-2.5 rounded-lg p-2">

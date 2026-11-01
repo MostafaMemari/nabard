@@ -7,6 +7,7 @@ import { roleLabels, useMe } from "@/features/auth";
 import { APP_NAME } from "@/lib/app";
 import { AppSidebar, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
 import { BrandMark } from "./brand-mark";
+import { LogoutButton } from "./logout-button";
 import { MobileBottomNav } from "./mobile-bottom-nav";
 
 const navItems: SidebarNavItem[] = [
@@ -39,11 +40,14 @@ export function AdminShell({ active, children }: { active: string; children: Rea
             <BrandMark className="size-7" />
             <span className="text-sm font-semibold">{APP_NAME}</span>
           </div>
-          {sidebarUser ? (
-            <Avatar id={sidebarUser.id} name={sidebarUser.name} size="sm" />
-          ) : (
-            <span aria-hidden className="size-7 rounded-full bg-muted" />
-          )}
+          <div className="flex items-center gap-1">
+            {sidebarUser ? (
+              <Avatar id={sidebarUser.id} name={sidebarUser.name} size="sm" />
+            ) : (
+              <span aria-hidden className="size-7 rounded-full bg-muted" />
+            )}
+            <LogoutButton />
+          </div>
         </div>
         <main id="admin-main" className="flex-1 pb-20 lg:pb-0">
           <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 lg:p-8">{children}</div>
