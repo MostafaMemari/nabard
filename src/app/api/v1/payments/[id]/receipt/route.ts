@@ -5,7 +5,7 @@ import { postgresStorage, RECEIPT_MAX_BYTES } from "@/lib/storage";
 
 const FORM_MAX_BYTES = RECEIPT_MAX_BYTES + 128 * 1024;
 
-export const GET = route({ roles: ["ADMIN", "COACH"] }, async ({ user, params }) => {
+export const GET = route({ roles: ["ADMIN", "COACH", "SUPER_ADMIN"] }, async ({ user, params }) => {
   const { id } = await params;
   const receipt = await readReceipt(repository, postgresStorage, user, id);
 

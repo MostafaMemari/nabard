@@ -2,12 +2,12 @@ import type { Province } from "@/generated/client";
 import { getPrisma } from "@/lib/prisma";
 import type { RefundReason, RefundStatus } from "../types";
 
-export type UserRole = "ADMIN" | "COACH";
+export type UserRole = "ADMIN" | "COACH" | "SUPER_ADMIN";
 
 export type UserIdentityRecord = {
   id: string;
   role: UserRole;
-  province: Province;
+  province: Province | null;
   isActive: boolean;
 };
 
@@ -28,7 +28,7 @@ export type RefundRecord = {
 };
 
 export type RefundWithScope = RefundRecord & {
-  coachProvince: Province;
+  coachProvince: Province | null;
 };
 
 export type RefundFilters = {
@@ -79,7 +79,7 @@ type RefundRowInput = {
   note: string | null;
   processedAt: Date | null;
   createdAt: Date;
-  coach: { province: Province; fullName: string };
+  coach: { province: Province | null; fullName: string };
   registration: {
     student: { fullName: string };
     competition: { id: string; title: string };

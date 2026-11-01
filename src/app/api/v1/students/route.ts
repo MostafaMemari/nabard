@@ -3,7 +3,7 @@ import * as repository from "@/features/students/server/repository";
 import { createStudent, listStudents } from "@/features/students/server/service";
 import { route } from "@/lib/api";
 
-export const GET = route({ roles: ["ADMIN", "COACH"] }, async ({ request, user }) => {
+export const GET = route({ roles: ["ADMIN", "COACH", "SUPER_ADMIN"] }, async ({ request, user }) => {
   const query = studentListQuerySchema.parse(Object.fromEntries(new URL(request.url).searchParams));
   return listStudents(repository, user, query);
 });

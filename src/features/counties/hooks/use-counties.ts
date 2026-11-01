@@ -4,7 +4,7 @@ import useSWR from "swr";
 import { listCounties } from "../api";
 
 export function useCounties() {
-  const { data, error, isLoading } = useSWR("counties", () => listCounties());
+  const { data, error, isLoading, mutate } = useSWR("counties", () => listCounties());
 
-  return { counties: data ?? [], isLoading, error };
+  return { counties: data ?? [], isLoading, error, mutate };
 }

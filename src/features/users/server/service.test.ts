@@ -334,3 +334,54 @@ describe("resetCoachPassword", () => {
     expect((result as Record<string, unknown>).passwordHash).toBeUndefined();
   });
 });
+
+describe("SUPER_ADMIN", () => {
+  const superAdmin: CurrentUser = { id: "super-1", role: "SUPER_ADMIN" };
+  const superAdminRecord: UserIdentityRecord = { id: "super-1", role: "SUPER_ADMIN", province: null, isActive: true };
+
+  function superRepoWith(overrides: Partial<CoachRepository> = {}): CoachRepository {
+    return repoWith({ findUserById: vi.fn().mockResolvedValue(superAdminRecord), ...overrides });
+  }
+
+  it("lists coaches of every province when no province filter is set", async () => {
+    const repo = superRepoWith({ findCoaches: vi.fn().mockResolvedValue([tehranCoach, farsCoach]) });
+    const result = await listCoaches(repo, superAdmin, {});
+
+    expect(repo.findCoaches).toHaveBeenCalledWith(undefined, { search: undefined, isActive: undefined }, 0, 100);
+    expect(result.data).toEqual([tehranCoach, farsCoach]);
+  });
+
+  it("filters the list by the province query", async () => {
+    const repo = superRepoWith();
+    await listCoaches(repo, superAdmin, { province: "FARS" });
+
+    expect(repo.findCoaches).toHaveBeenCalledWith("FARS", { search: undefined, isActive: undefined }, 0, 100);
+  });
+
+  it("sees a coach of another province", async () => {
+    const repo = superRepoWith({ findCoachById: vi.fn().mockResolvedValue(farsCoach) });
+    const result = await getCoach(repo, superAdmin, "coach-2");
+
+    expect(result).toEqual(farsCoach);
+  });
+
+  it("keeps creating and editing coaches out of reach", async () => {
+    const repo = superRepoWith();
+    const failure = await failureOf(
+      createCoach(repo, superAdmin, {
+        fullName: "سعید احمدی",
+        mobile: "09122220000",
+        nationalCode: "0987654321",
+        initialPassword: "Secret!1234",
+        countyId: "county-tehran",
+      }),
+    );
+
+    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect(repo.createCoach).not.toHaveBeenCalled();
+
+    const updateFailure = await failureOf(updateCoach(repo, superAdmin, "coach-9", { isActive: false }));
+    expect(updateFailure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect(repo.updateCoach).not.toHaveBeenCalled();
+  });
+});

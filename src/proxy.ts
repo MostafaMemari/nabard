@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { SESSION_COOKIE, type SessionRole, verifySessionToken } from "@/lib/session";
 
-const roleHome: Record<SessionRole, string> = { ADMIN: "/admin", COACH: "/coach" };
+const roleHome: Record<SessionRole, string> = { ADMIN: "/admin", COACH: "/coach", SUPER_ADMIN: "/super" };
 
 export async function proxy(request: NextRequest) {
   const token = request.cookies.get(SESSION_COOKIE)?.value;
@@ -18,5 +18,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/admin/:path*", "/coach/:path*"],
+  matcher: ["/", "/admin/:path*", "/coach/:path*", "/super/:path*"],
 };

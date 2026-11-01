@@ -4,6 +4,7 @@ export * from "./components/coach-competition-list";
 export * from "./components/competition-detail-screen";
 export * from "./components/competition-form-screen";
 export * from "./components/competitions-screen";
+export * from "./components/county-chip";
 export * from "./hooks/use-competitions";
 export * from "./labels";
 export * from "./types";

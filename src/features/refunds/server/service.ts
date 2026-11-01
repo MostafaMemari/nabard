@@ -1,3 +1,4 @@
+import type { Province } from "@/generated/client";
 import { AppError } from "@/lib/api";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
@@ -22,9 +23,15 @@ async function requireActiveUser(repo: RefundsRepository, user: CurrentUser): Pr
   return record;
 }
 
+function provinceOf(identity: UserIdentityRecord): Province {
+  if (identity.province === null) throw forbidden();
+
+  return identity.province;
+}
+
 function toFilters(user: CurrentUser, identity: UserIdentityRecord, query: RefundListQuery): RefundFilters {
   if (identity.role === "ADMIN") {
-    return { province: identity.province, status: query.status };
+    return { province: provinceOf(identity), status: query.status };
   }
 
   return { coachId: user.id, status: query.status };

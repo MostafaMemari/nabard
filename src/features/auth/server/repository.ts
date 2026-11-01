@@ -9,7 +9,7 @@ export type UserRecord = {
   passwordHash: string;
   fullName: string;
   role: SessionRole;
-  province: Province;
+  province: Province | null;
   isActive: boolean;
   countyId: string | null;
   countyName: string | null;
@@ -32,7 +32,7 @@ function toRecord(user: {
   passwordHash: string;
   fullName: string;
   role: SessionRole;
-  province: Province;
+  province: Province | null;
   isActive: boolean;
   county: { id: string; name: string } | null;
 }): UserRecord {

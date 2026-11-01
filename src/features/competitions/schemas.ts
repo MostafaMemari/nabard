@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { normalizeDigits } from "@/lib/format";
+import { provinceValues } from "@/lib/provinces";
 
 export const competitionSchema = z
   .object({
@@ -121,6 +122,7 @@ export const extendCompetitionSchema = z.object({
 export const competitionListQuerySchema = z.object({
   status: z.enum(["DRAFT", "PUBLISHED", "CANCELED"]).optional(),
   discipline: z.enum(["KYORUGI", "POOMSAE"]).optional(),
+  province: z.enum(provinceValues).optional(),
   search: z.string().trim().max(150).optional(),
   page: z.coerce.number().int().min(1).optional(),
   pageSize: z.coerce.number().int().min(1).max(100).optional(),

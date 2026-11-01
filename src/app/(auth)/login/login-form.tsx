@@ -27,7 +27,8 @@ export function LoginForm() {
     setError(null);
     try {
       const user = await login(values);
-      router.replace(user.role === "ADMIN" ? "/admin" : "/coach");
+      const home = user.role === "ADMIN" ? "/admin" : user.role === "SUPER_ADMIN" ? "/super" : "/coach";
+      router.replace(home);
     } catch (caught) {
       setError(caught instanceof ApiError ? caught.message : "ورود ناموفق بود. دوباره تلاش کنید.");
     }

@@ -1,4 +1,5 @@
 import type { Belt, BeltName, WeightClass } from "@/features/base-data";
+import type { Province } from "@/generated/client";
 import { AppError } from "@/lib/api";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
@@ -56,6 +57,12 @@ function registrationNotFound(): AppError {
 
 function competitionNotFound(): AppError {
   return new AppError(404, "NOT_FOUND", "مسابقه یافت نشد.");
+}
+
+function provinceOf(identity: UserIdentityRecord): Province {
+  if (identity.province === null) throw forbidden();
+
+  return identity.province;
 }
 
 async function requireActiveUser(repo: RegistrationRepository, user: CurrentUser): Promise<UserIdentityRecord> {
@@ -131,7 +138,11 @@ function toFilters(user: CurrentUser, identity: UserIdentityRecord, query: Regis
   };
 
   if (identity.role === "ADMIN") {
-    return { province: identity.province, coachId: query.coachId, ...shared };
+    return { province: provinceOf(identity), coachId: query.coachId, ...shared };
+  }
+
+  if (identity.role === "SUPER_ADMIN") {
+    return { province: query.province, coachId: query.coachId, ...shared };
   }
 
   return { coachId: user.id, ...shared };
@@ -160,7 +171,8 @@ export async function getRegistration(repo: RegistrationRepository, user: Curren
   const row = await repo.findRegistrationById(id);
   if (!row) throw registrationNotFound();
 
-  const inScope = identity.role === "ADMIN" ? row.coachProvince === identity.province : row.coachId === user.id;
+  const inScope =
+    identity.role === "SUPER_ADMIN" || (identity.role === "ADMIN" ? row.coachProvince === provinceOf(identity) : row.coachId === user.id);
   if (!inScope) throw registrationNotFound();
 
   return toRegistrationRecord(row);
@@ -171,7 +183,9 @@ export async function getRegistrationDetail(repo: RegistrationRepository, user: 
   const row = await repo.findRegistrationDetailById(id);
   if (!row) throw registrationNotFound();
 
-  const inScope = identity.role === "ADMIN" ? row.registration.coachProvince === identity.province : row.registration.coachId === user.id;
+  const inScope =
+    identity.role === "SUPER_ADMIN" ||
+    (identity.role === "ADMIN" ? row.registration.coachProvince === provinceOf(identity) : row.registration.coachId === user.id);
   if (!inScope) throw registrationNotFound();
 
   return row;
@@ -324,10 +338,11 @@ export async function listParticipants(
   competitionId: string,
 ): Promise<ParticipantRecord[]> {
   const identity = await requireActiveUser(repo, user);
-  if (identity.role !== "ADMIN") throw forbidden();
+  if (identity.role === "COACH") throw forbidden();
 
   const competition = await repo.findCompetitionById(competitionId);
-  if (!competition || competition.province !== identity.province) throw competitionNotFound();
+  if (!competition) throw competitionNotFound();
+  if (identity.role !== "SUPER_ADMIN" && competition.province !== provinceOf(identity)) throw competitionNotFound();
 
   const rows = await repo.findApprovedParticipants(competitionId);
 

@@ -1,4 +1,5 @@
 import { hash } from "bcryptjs";
+import type { Province } from "@/generated/client";
 import { AppError } from "@/lib/api";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
@@ -23,6 +24,22 @@ function coachNotFound(): AppError {
   return new AppError(404, "NOT_FOUND", "مربی یافت نشد.");
 }
 
+function provinceOf(identity: UserIdentityRecord): Province {
+  if (identity.province === null) throw forbidden();
+
+  return identity.province;
+}
+
+async function requireActiveUser(repo: CoachRepository, user: CurrentUser): Promise<UserIdentityRecord> {
+  if (user.role === "COACH") throw forbidden();
+
+  const record = await repo.findUserById(user.id);
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record.isActive || record.role !== user.role) throw forbidden();
+
+  return record;
+}
+
 async function requireActiveAdmin(repo: CoachRepository, user: CurrentUser): Promise<UserIdentityRecord> {
   if (user.role !== "ADMIN") throw forbidden();
 
@@ -33,9 +50,10 @@ async function requireActiveAdmin(repo: CoachRepository, user: CurrentUser): Pro
   return admin;
 }
 
-async function coachInScope(repo: CoachRepository, admin: UserIdentityRecord, id: string): Promise<CoachRecord> {
+async function coachInView(repo: CoachRepository, identity: UserIdentityRecord, id: string): Promise<CoachRecord> {
   const coach = await repo.findCoachById(id);
-  if (!coach || coach.role !== "COACH" || coach.province !== admin.province) throw coachNotFound();
+  if (!coach || coach.role !== "COACH") throw coachNotFound();
+  if (identity.role === "ADMIN" && coach.province !== provinceOf(identity)) throw coachNotFound();
 
   return coach;
 }
@@ -57,26 +75,28 @@ function toFilters(query: CoachListQuery): CoachFilters {
 }
 
 export async function listCoaches(repo: CoachRepository, user: CurrentUser, query: CoachListQuery): Promise<ListResult<CoachRecord>> {
-  const admin = await requireActiveAdmin(repo, user);
+  const identity = await requireActiveUser(repo, user);
   const page = query.page ?? 1;
   const pageSize = Math.min(query.pageSize ?? DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
   const filters = toFilters(query);
+  const province = identity.role === "SUPER_ADMIN" ? query.province : provinceOf(identity);
 
   const [total, coaches] = await Promise.all([
-    repo.countCoaches(admin.province, filters),
-    repo.findCoaches(admin.province, filters, (page - 1) * pageSize, pageSize),
+    repo.countCoaches(province, filters),
+    repo.findCoaches(province, filters, (page - 1) * pageSize, pageSize),
   ]);
 
   return { data: coaches, meta: { page, pageSize, total } };
 }
 
 export async function getCoach(repo: CoachRepository, user: CurrentUser, id: string): Promise<CoachRecord> {
-  const admin = await requireActiveAdmin(repo, user);
-  return coachInScope(repo, admin, id);
+  const identity = await requireActiveUser(repo, user);
+  return coachInView(repo, identity, id);
 }
 
 export async function createCoach(repo: CoachRepository, user: CurrentUser, input: CoachInput): Promise<CoachRecord> {
   const admin = await requireActiveAdmin(repo, user);
+  const province = provinceOf(admin);
 
   const mobileOwner = await repo.findMobileOwner(input.mobile);
   if (mobileOwner) throw new AppError(409, "CONFLICT", "این شماره همراه قبلاً ثبت شده است.");
@@ -84,7 +104,7 @@ export async function createCoach(repo: CoachRepository, user: CurrentUser, inpu
   const codeOwner = await repo.findNationalCodeOwner(input.nationalCode);
   if (codeOwner) throw new AppError(409, "CONFLICT", "این کد ملی قبلاً ثبت شده است.");
 
-  await countyInProvince(repo, admin.province, input.countyId);
+  await countyInProvince(repo, province, input.countyId);
 
   const passwordHash = await hash(input.initialPassword, 10);
   const data: NewCoachData = {
@@ -92,7 +112,7 @@ export async function createCoach(repo: CoachRepository, user: CurrentUser, inpu
     fullName: input.fullName,
     nationalCode: input.nationalCode,
     passwordHash,
-    province: admin.province,
+    province,
     countyId: input.countyId,
   };
 
@@ -101,7 +121,8 @@ export async function createCoach(repo: CoachRepository, user: CurrentUser, inpu
 
 export async function updateCoach(repo: CoachRepository, user: CurrentUser, id: string, input: UpdateCoachInput): Promise<CoachRecord> {
   const admin = await requireActiveAdmin(repo, user);
-  await coachInScope(repo, admin, id);
+  const province = provinceOf(admin);
+  await coachInView(repo, admin, id);
 
   if (input.mobile !== undefined) {
     const owner = await repo.findMobileOwner(input.mobile);
@@ -119,7 +140,7 @@ export async function updateCoach(repo: CoachRepository, user: CurrentUser, id: 
   if (input.nationalCode !== undefined) data.nationalCode = input.nationalCode;
   if (input.isActive !== undefined) data.isActive = input.isActive;
   if (input.countyId !== undefined) {
-    await countyInProvince(repo, admin.province, input.countyId);
+    await countyInProvince(repo, province, input.countyId);
     data.countyId = input.countyId;
   }
 
@@ -128,7 +149,7 @@ export async function updateCoach(repo: CoachRepository, user: CurrentUser, id: 
 
 export async function resetCoachPassword(repo: CoachRepository, user: CurrentUser, id: string, password: string): Promise<CoachRecord> {
   const admin = await requireActiveAdmin(repo, user);
-  const coach = await coachInScope(repo, admin, id);
+  const coach = await coachInView(repo, admin, id);
   const passwordHash = await hash(password, 10);
 
   return repo.updateCoachPassword(coach.id, passwordHash);

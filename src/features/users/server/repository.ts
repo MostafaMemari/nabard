@@ -1,12 +1,12 @@
 import type { Province } from "@/generated/client";
 import { getPrisma } from "@/lib/prisma";
 
-export type UserRole = "ADMIN" | "COACH";
+export type UserRole = "ADMIN" | "COACH" | "SUPER_ADMIN";
 
 export type UserIdentityRecord = {
   id: string;
   role: UserRole;
-  province: Province;
+  province: Province | null;
   isActive: boolean;
 };
 
@@ -54,8 +54,8 @@ export type CountyRecord = {
 
 export type CoachRepository = {
   findUserById(id: string): Promise<UserIdentityRecord | null>;
-  countCoaches(province: Province, filters: CoachFilters): Promise<number>;
-  findCoaches(province: Province, filters: CoachFilters, skip: number, take: number): Promise<CoachRecord[]>;
+  countCoaches(province: Province | undefined, filters: CoachFilters): Promise<number>;
+  findCoaches(province: Province | undefined, filters: CoachFilters, skip: number, take: number): Promise<CoachRecord[]>;
   findCoachById(id: string): Promise<CoachRecord | null>;
   findMobileOwner(mobile: string): Promise<{ id: string } | null>;
   findNationalCodeOwner(nationalCode: string): Promise<{ id: string } | null>;
@@ -84,7 +84,7 @@ type CoachRowInput = {
   fullName: string;
   nationalCode: string | null;
   role: UserRole;
-  province: Province;
+  province: Province | null;
   isActive: boolean;
   county: { id: string; name: string } | null;
   createdAt: Date;
@@ -92,6 +92,8 @@ type CoachRowInput = {
 };
 
 function toCoachRecord(row: CoachRowInput): CoachRecord {
+  if (row.province === null) throw new Error("Coach user without province");
+
   return {
     id: row.id,
     mobile: row.mobile,
@@ -107,10 +109,10 @@ function toCoachRecord(row: CoachRowInput): CoachRecord {
   };
 }
 
-function coachWhere(province: Province, filters: CoachFilters) {
+function coachWhere(province: Province | undefined, filters: CoachFilters) {
   return {
     role: "COACH" as const,
-    province,
+    ...(province === undefined ? {} : { province }),
     ...(filters.isActive === undefined ? {} : { isActive: filters.isActive }),
     ...(filters.search === undefined
       ? {}
@@ -127,11 +129,16 @@ export async function findUserById(id: string): Promise<UserIdentityRecord | nul
   });
 }
 
-export async function countCoaches(province: Province, filters: CoachFilters): Promise<number> {
+export async function countCoaches(province: Province | undefined, filters: CoachFilters): Promise<number> {
   return getPrisma().user.count({ where: coachWhere(province, filters) });
 }
 
-export async function findCoaches(province: Province, filters: CoachFilters, skip: number, take: number): Promise<CoachRecord[]> {
+export async function findCoaches(
+  province: Province | undefined,
+  filters: CoachFilters,
+  skip: number,
+  take: number,
+): Promise<CoachRecord[]> {
   const rows = await getPrisma().user.findMany({
     where: coachWhere(province, filters),
     select: coachSelection,

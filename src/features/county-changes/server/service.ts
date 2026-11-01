@@ -1,3 +1,4 @@
+import type { Province } from "@/generated/client";
 import { AppError } from "@/lib/api";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
@@ -9,6 +10,12 @@ const DEFAULT_PAGE_SIZE = 100;
 
 function forbidden(): AppError {
   return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
+}
+
+function provinceOf(identity: UserIdentityRecord): Province {
+  if (identity.province === null) throw forbidden();
+
+  return identity.province;
 }
 
 function requestNotFound(): AppError {
@@ -83,7 +90,7 @@ export async function createCountyChange(
   }
 
   const toCounty: CountyRecord | null = await repo.findCountyById(input.toCountyId);
-  if (!toCounty || toCounty.province !== identity.province) {
+  if (!toCounty || toCounty.province !== provinceOf(identity)) {
     throw new AppError(400, "VALIDATION_ERROR", "شهرستان انتخاب شده معتبر نیست.");
   }
   if (toCounty.id === identity.countyId) {
@@ -109,7 +116,7 @@ export async function listCountyChanges(
 
   const page = query.page ?? 1;
   const pageSize = Math.min(query.pageSize ?? DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
-  const filters = { province: identity.province, status: query.status };
+  const filters = { province: provinceOf(identity), status: query.status };
 
   const [total, rows] = await Promise.all([
     repo.countCountyChanges(filters),
@@ -130,7 +137,7 @@ export async function decideCountyChange(
   if (identity.role !== "ADMIN") throw forbidden();
 
   const current = await repo.findCountyChangeById(id);
-  if (!current || current.coachProvince !== identity.province) throw requestNotFound();
+  if (!current || current.coachProvince !== provinceOf(identity)) throw requestNotFound();
 
   const updated = await repo.decideCountyChangeFromPending(id, {
     status,

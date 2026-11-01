@@ -29,6 +29,7 @@ enum Gender {
 enum Role {
   ADMIN @map("admin") // province admin (province is set on the user)
   COACH @map("coach")
+  SUPER_ADMIN @map("super_admin") // manages admins, counties and base data; has no province
 }
 
 enum Province {
@@ -188,11 +189,11 @@ model User {
   passwordHash String   @map("password_hash")
   fullName     String   @map("full_name") @db.VarChar(80)
   nationalCode String?  @unique @map("national_code") @db.VarChar(10)
-  role         Role     @map("role")
-  province     Province @map("province")
-  isActive     Boolean  @default(true) @map("is_active")
-  countyId     String?  @map("county_id")
-  county       County?  @relation(fields: [countyId], references: [id])
+  role         Role      @map("role")
+  province     Province? @map("province") // required for ADMIN and COACH, null for SUPER_ADMIN (enforced in services)
+  isActive     Boolean   @default(true) @map("is_active")
+  countyId     String?   @map("county_id")
+  county       County?   @relation(fields: [countyId], references: [id])
 
   students             Student[]
   registrations        Registration[]
@@ -203,6 +204,7 @@ model User {
   reviewedProfiles     Student[]           @relation("StudentProfileReviewedBy")
   countyChangeRequests CoachCountyChangeRequest[] @relation("CountyChangeCoach")
   decidedCountyChanges CoachCountyChangeRequest[] @relation("CountyChangeDecidedBy")
+  auditLogs            AuditLog[]                 @relation("AuditLogActor")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -352,6 +354,24 @@ model CoachCountyChangeRequest {
   @@index([coachId])
   @@index([status, createdAt])
   @@map("coach_county_change_requests")
+}
+
+// Who changed what across provinces: admins, counties and age category dates.
+// details holds no personal data (no names, mobiles, national codes).
+model AuditLog {
+  id         String   @id @default(uuid()) @map("id")
+  actorId    String   @map("actor_id")
+  actor      User     @relation("AuditLogActor", fields: [actorId], references: [id])
+  action     String   @map("action") @db.VarChar(60)
+  entityType String   @map("entity_type") @db.VarChar(60)
+  entityId   String?  @map("entity_id")
+  details    Json?    @map("details")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
 }
 
 // Each row is the only allowed change to a competition deadline once

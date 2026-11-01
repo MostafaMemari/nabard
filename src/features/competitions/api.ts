@@ -5,6 +5,7 @@ import type { Competition, CompetitionInput, CompetitionStatus, DeadlineExtensio
 export type CompetitionListParams = ListQuery & {
   status?: CompetitionStatus;
   discipline?: Discipline;
+  province?: string;
   search?: string;
 };
 
@@ -12,6 +13,7 @@ export async function listCompetitions(params: CompetitionListParams = {}): Prom
   const query = new URLSearchParams();
   if (params.status) query.set("status", params.status);
   if (params.discipline) query.set("discipline", params.discipline);
+  if (params.province) query.set("province", params.province);
   if (params.search) query.set("search", params.search);
   if (params.page !== undefined) query.set("page", String(params.page));
   if (params.pageSize !== undefined) query.set("pageSize", String(params.pageSize));

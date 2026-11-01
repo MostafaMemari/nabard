@@ -3,7 +3,7 @@ import * as repository from "@/features/users/server/repository";
 import { createCoach, listCoaches } from "@/features/users/server/service";
 import { route } from "@/lib/api";
 
-export const GET = route({ roles: ["ADMIN"] }, async ({ request, user }) => {
+export const GET = route({ roles: ["ADMIN", "SUPER_ADMIN"] }, async ({ request, user }) => {
   const query = coachListQuerySchema.parse(Object.fromEntries(new URL(request.url).searchParams));
   return listCoaches(repository, user, query);
 });

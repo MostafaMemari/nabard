@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { normalizeDigits } from "@/lib/format";
+import { provinceValues } from "@/lib/provinces";
 
 function normalizeWeight(value: string): string {
   return value
@@ -85,6 +86,7 @@ export const updateStudentSchema = z
 export const studentListQuerySchema = z.object({
   search: z.string().trim().max(80).optional(),
   beltId: z.string().min(1).optional(),
+  province: z.enum(provinceValues).optional(),
   gender: z.enum(["MALE", "FEMALE"]).optional(),
   coachId: z.string().min(1).optional(),
   page: z.coerce.number().int().min(1).optional(),

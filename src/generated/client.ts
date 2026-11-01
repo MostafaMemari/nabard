@@ -82,6 +82,11 @@ export type Competition = Prisma.CompetitionModel
  */
 export type CoachCountyChangeRequest = Prisma.CoachCountyChangeRequestModel
 /**
+ * Model AuditLog
+ * 
+ */
+export type AuditLog = Prisma.AuditLogModel
+/**
  * Model DeadlineExtension
  * 
  */

@@ -2,12 +2,12 @@ import type { Province } from "@/generated/client";
 import { getPrisma } from "@/lib/prisma";
 import type { CountyChangeStatus } from "../types";
 
-export type UserRole = "ADMIN" | "COACH";
+export type UserRole = "ADMIN" | "COACH" | "SUPER_ADMIN";
 
 export type UserIdentityRecord = {
   id: string;
   role: UserRole;
-  province: Province;
+  province: Province | null;
   isActive: boolean;
   countyId: string | null;
 };
@@ -33,7 +33,7 @@ export type CountyChangeRequestRecord = {
 };
 
 export type CountyChangeRequestWithScope = CountyChangeRequestRecord & {
-  coachProvince: Province;
+  coachProvince: Province | null;
 };
 
 export type CountyChangeFilters = {
@@ -84,7 +84,7 @@ type RequestRowInput = {
   note: string | null;
   decidedAt: Date | null;
   createdAt: Date;
-  coach: { fullName: string; province: Province };
+  coach: { fullName: string; province: Province | null };
   fromCounty: { id: string; name: string };
   toCounty: { id: string; name: string };
 };

@@ -3,7 +3,7 @@ import * as repository from "@/features/users/server/repository";
 import { getCoach, updateCoach } from "@/features/users/server/service";
 import { route } from "@/lib/api";
 
-export const GET = route({ roles: ["ADMIN"] }, async ({ user, params }) => {
+export const GET = route({ roles: ["ADMIN", "SUPER_ADMIN"] }, async ({ user, params }) => {
   const { id } = await params;
   return getCoach(repository, user, id);
 });

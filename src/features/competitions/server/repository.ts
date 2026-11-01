@@ -3,12 +3,12 @@ import type { Province } from "@/generated/client";
 import { getPrisma } from "@/lib/prisma";
 import type { CompetitionLevel, CompetitionStatus, Discipline } from "../types";
 
-export type UserRole = "ADMIN" | "COACH";
+export type UserRole = "ADMIN" | "COACH" | "SUPER_ADMIN";
 
 export type UserIdentityRecord = {
   id: string;
   role: UserRole;
-  province: Province;
+  province: Province | null;
   isActive: boolean;
   countyId: string | null;
 };
@@ -53,7 +53,7 @@ export type CompetitionRow = {
 };
 
 export type CompetitionFilters = {
-  province: Province;
+  province?: Province;
   status?: CompetitionStatus;
   discipline?: Discipline;
   search?: string;
@@ -175,7 +175,7 @@ const beltSelection = {
 
 function competitionWhere(filters: CompetitionFilters) {
   return {
-    province: filters.province,
+    ...(filters.province === undefined ? {} : { province: filters.province }),
     ...(filters.status === undefined ? {} : { status: filters.status }),
     ...(filters.discipline === undefined ? {} : { discipline: filters.discipline }),
     ...(filters.search === undefined ? {} : { title: { contains: filters.search, mode: "insensitive" as const } }),

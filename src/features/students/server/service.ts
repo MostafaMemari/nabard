@@ -1,3 +1,4 @@
+import type { Province } from "@/generated/client";
 import { AppError } from "@/lib/api";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
@@ -28,6 +29,12 @@ function forbidden(): AppError {
 
 function studentNotFound(): AppError {
   return new AppError(404, "NOT_FOUND", "هنرجو یافت نشد.");
+}
+
+function provinceOf(identity: UserIdentityRecord): Province {
+  if (identity.province === null) throw forbidden();
+
+  return identity.province;
 }
 
 function duplicateNationalCode(): AppError {
@@ -72,7 +79,11 @@ function toFilters(user: CurrentUser, identity: UserIdentityRecord, query: Stude
   };
 
   if (identity.role === "ADMIN") {
-    return { province: identity.province, coachId: query.coachId, ...shared };
+    return { province: provinceOf(identity), coachId: query.coachId, ...shared };
+  }
+
+  if (identity.role === "SUPER_ADMIN") {
+    return { province: query.province, coachId: query.coachId, ...shared };
   }
 
   return { coachId: user.id, ...shared };
@@ -98,7 +109,9 @@ export async function getStudent(repo: StudentRepository, user: CurrentUser, id:
   const student = await repo.findStudentById(id);
   if (!student) throw studentNotFound();
 
-  const inScope = identity.role === "ADMIN" ? student.coachProvince === identity.province : student.coachId === user.id;
+  const inScope =
+    identity.role === "SUPER_ADMIN" ||
+    (identity.role === "ADMIN" ? student.coachProvince === provinceOf(identity) : student.coachId === user.id);
   if (!inScope) throw studentNotFound();
 
   const documents = await repo.findStudentDocuments(id);
@@ -225,7 +238,9 @@ export async function readStudentDocument(
 
   const student = await repo.findStudentById(studentId);
   const inScope =
-    student !== null && (identity.role === "ADMIN" ? student.coachProvince === identity.province : student.coachId === user.id);
+    student !== null &&
+    (identity.role === "SUPER_ADMIN" ||
+      (identity.role === "ADMIN" ? student.coachProvince === identity.province : student.coachId === user.id));
   if (!inScope) throw studentNotFound();
 
   const document = await repo.findStudentDocument(studentId, type);
@@ -264,7 +279,7 @@ export async function listPendingReviewStudents(
 
   const page = query.page ?? 1;
   const pageSize = Math.min(query.pageSize ?? DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
-  const filters: PendingReviewFilters = { province: identity.province, status: query.status };
+  const filters: PendingReviewFilters = { province: provinceOf(identity), status: query.status };
 
   const [total, students] = await Promise.all([
     repo.countPendingReviewStudents(filters),
@@ -285,7 +300,7 @@ async function reviewProfile(
   if (identity.role !== "ADMIN") throw forbidden();
 
   const student = await repo.findStudentById(id);
-  if (!student || student.coachProvince !== identity.province) throw studentNotFound();
+  if (!student || student.coachProvince !== provinceOf(identity)) throw studentNotFound();
 
   const updated = await repo.updateProfileStatusFromPendingOrRejected(id, { status, note, reviewedById: user.id });
   if (!updated) throw new AppError(409, "CONFLICT", "این پروفایل قبلا بررسی شده است.");

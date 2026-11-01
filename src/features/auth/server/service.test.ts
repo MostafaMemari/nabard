@@ -2,7 +2,7 @@ import { compareSync, hashSync } from "bcryptjs";
 import { describe, expect, it, vi } from "vitest";
 import { AppError } from "@/lib/api";
 import type { UserRecord } from "./repository";
-import { changePassword, login } from "./service";
+import { changePassword, getProfile, login } from "./service";
 
 const password = "Secret!1234";
 
@@ -140,5 +140,38 @@ describe("changePassword", () => {
     ).catch((error: unknown) => error);
 
     expect(failure).toMatchObject({ status: 401, code: "UNAUTHORIZED" });
+  });
+});
+
+describe("getProfile with a nullable province", () => {
+  const superAdminRecord: UserRecord = {
+    id: "super-1",
+    mobile: "09120000000",
+    passwordHash: hashSync(password, 10),
+    fullName: "مدیر کل",
+    role: "SUPER_ADMIN",
+    province: null,
+    isActive: true,
+    countyId: null,
+    countyName: null,
+  };
+
+  it("returns a super admin with a null province and county", async () => {
+    const result = await getProfile(repoWith(superAdminRecord), { id: "super-1", role: "SUPER_ADMIN" });
+
+    expect(result).toEqual({
+      id: "super-1",
+      role: "SUPER_ADMIN",
+      fullName: "مدیر کل",
+      province: null,
+      countyId: null,
+      countyName: null,
+    });
+  });
+
+  it("keeps the province of admins and coaches", async () => {
+    const result = await getProfile(repoWith(activeAdmin), { id: "user-1", role: "ADMIN" });
+
+    expect(result.province).toBe("TEHRAN");
   });
 });

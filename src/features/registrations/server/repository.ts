@@ -5,12 +5,12 @@ import type { Province } from "@/generated/client";
 import { getPrisma } from "@/lib/prisma";
 import type { RegistrationStatus } from "../types";
 
-export type UserRole = "ADMIN" | "COACH";
+export type UserRole = "ADMIN" | "COACH" | "SUPER_ADMIN";
 
 export type UserIdentityRecord = {
   id: string;
   role: UserRole;
-  province: Province;
+  province: Province | null;
   isActive: boolean;
   countyId: string | null;
 };
@@ -37,7 +37,7 @@ export type RegistrationRecord = {
 };
 
 export type RegistrationWithScope = RegistrationRecord & {
-  coachProvince: Province;
+  coachProvince: Province | null;
   paymentStatus: PaymentStatus | null;
 };
 

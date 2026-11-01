@@ -7,7 +7,7 @@ export const SESSION_COOKIE = "nabard_session";
 const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 7;
 const SESSION_KEY_LABEL = "nabard.session.v1";
 
-export type SessionRole = "ADMIN" | "COACH";
+export type SessionRole = "ADMIN" | "COACH" | "SUPER_ADMIN";
 
 export type CurrentUser = {
   id: string;
@@ -34,7 +34,7 @@ export async function verifySessionToken(token: string): Promise<CurrentUser | n
   try {
     const { payload } = await jwtVerify(token, await getSigningKey());
     const role = payload.role;
-    if (typeof payload.sub !== "string" || (role !== "ADMIN" && role !== "COACH")) return null;
+    if (typeof payload.sub !== "string" || (role !== "ADMIN" && role !== "COACH" && role !== "SUPER_ADMIN")) return null;
     return { id: payload.sub, role };
   } catch {
     return null;

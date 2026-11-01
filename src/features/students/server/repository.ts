@@ -2,12 +2,12 @@ import type { Gender } from "@/features/base-data";
 import type { Province } from "@/generated/client";
 import { getPrisma } from "@/lib/prisma";
 
-export type UserRole = "ADMIN" | "COACH";
+export type UserRole = "ADMIN" | "COACH" | "SUPER_ADMIN";
 
 export type UserIdentityRecord = {
   id: string;
   role: UserRole;
-  province: Province;
+  province: Province | null;
   isActive: boolean;
 };
 
@@ -49,7 +49,7 @@ export type PendingReviewStudent = StudentRecord & { coachName: string; document
 
 export type StudentDetail = StudentRecord & { coachName: string; documents: StudentDocumentRecord[] };
 
-export type StudentWithCoach = StudentRecord & { coachProvince: Province; coachName: string };
+export type StudentWithCoach = StudentRecord & { coachProvince: Province | null; coachName: string };
 
 export type StudentFilters = {
   coachId?: string;

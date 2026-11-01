@@ -1,10 +1,12 @@
 import { z } from "zod";
+import { provinceValues } from "@/lib/provinces";
 
 export const registrationStatusSchema = z.enum(["PENDING", "APPROVED", "REJECTED"]);
 
 export const registrationListQuerySchema = z.object({
   competitionId: z.string().min(1).optional(),
   paymentId: z.string().min(1).optional(),
+  province: z.enum(provinceValues).optional(),
   status: registrationStatusSchema.optional(),
   coachId: z.string().min(1).optional(),
   page: z.coerce.number().int().min(1).optional(),

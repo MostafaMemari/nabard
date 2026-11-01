@@ -3,7 +3,7 @@ import * as repository from "@/features/students/server/repository";
 import { deleteStudent, getStudent, updateStudent } from "@/features/students/server/service";
 import { route } from "@/lib/api";
 
-export const GET = route({ roles: ["ADMIN", "COACH"] }, async ({ user, params }) => {
+export const GET = route({ roles: ["ADMIN", "COACH", "SUPER_ADMIN"] }, async ({ user, params }) => {
   const { id } = await params;
   return getStudent(repository, user, id);
 });

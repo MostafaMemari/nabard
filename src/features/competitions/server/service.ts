@@ -1,5 +1,6 @@
 import type { Belt, Gender, WeightClass } from "@/features/base-data";
 import { checkEligibility, type EligibilityCompetition, type EligibilityStudent } from "@/features/registrations/server/eligibility";
+import type { Province } from "@/generated/client";
 import { AppError } from "@/lib/api";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
@@ -52,6 +53,12 @@ function forbidden(): AppError {
 
 function competitionNotFound(): AppError {
   return new AppError(404, "NOT_FOUND", "مسابقه یافت نشد.");
+}
+
+function provinceOf(identity: UserIdentityRecord): Province {
+  if (identity.province === null) throw forbidden();
+
+  return identity.province;
 }
 
 async function requireActiveUser(repo: CompetitionsRepository, user: CurrentUser): Promise<UserIdentityRecord> {
@@ -250,9 +257,26 @@ export async function listCompetitions(
   const pageSize = Math.min(query.pageSize ?? DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
   const search = query.search?.trim() || undefined;
 
+  if (identity.role === "SUPER_ADMIN") {
+    const filters: CompetitionFilters = {
+      province: query.province,
+      status: query.status,
+      discipline: query.discipline,
+      search,
+    };
+
+    const [total, rows, belts] = await Promise.all([
+      repo.countCompetitions(filters),
+      repo.findCompetitions(filters, (page - 1) * pageSize, pageSize, "createdAtDesc"),
+      repo.findAllBelts(),
+    ]);
+
+    return { data: rows.map((row) => toRecord(row, belts)), meta: { page, pageSize, total } };
+  }
+
   if (identity.role === "ADMIN") {
     const filters: CompetitionFilters = {
-      province: identity.province,
+      province: provinceOf(identity),
       status: query.status,
       discipline: query.discipline,
       search,
@@ -268,7 +292,7 @@ export async function listCompetitions(
   }
 
   const filters: CompetitionFilters = {
-    province: identity.province,
+    province: provinceOf(identity),
     status: "PUBLISHED",
     discipline: query.discipline,
     search,
@@ -297,12 +321,14 @@ export async function getCompetition(repo: CompetitionsRepository, user: Current
   if (!row) throw competitionNotFound();
 
   const belts = await repo.findAllBelts();
+  if (identity.role === "SUPER_ADMIN") return toRecord(row, belts);
+
   if (identity.role === "ADMIN") {
-    if (row.province !== identity.province) throw competitionNotFound();
+    if (row.province !== provinceOf(identity)) throw competitionNotFound();
     return toRecord(row, belts);
   }
 
-  if (row.province !== identity.province || row.status === "DRAFT") throw competitionNotFound();
+  if (row.province !== provinceOf(identity) || row.status === "DRAFT") throw competitionNotFound();
   if (row.level === "COUNTY" && row.hostCountyId !== identity.countyId) throw competitionNotFound();
   const decoration = await decorateForCoach(repo, user.id, row, belts);
 
@@ -329,11 +355,11 @@ export async function createCompetition(
   });
 
   const hostCountyId =
-    input.level === "COUNTY" && input.hostCountyId ? (await validateHostCounty(repo, identity.province, input.hostCountyId)).id : null;
+    input.level === "COUNTY" && input.hostCountyId ? (await validateHostCounty(repo, provinceOf(identity), input.hostCountyId)).id : null;
 
   const data: NewCompetitionData = {
     title: input.title,
-    province: identity.province,
+    province: provinceOf(identity),
     level: input.level,
     hostCountyId,
     discipline: input.discipline,
@@ -406,7 +432,7 @@ export async function updateCompetition(
       }
 
       if (input.hostCountyId !== undefined && input.hostCountyId !== row.hostCountyId) {
-        data.hostCountyId = (await validateHostCounty(repo, identity.province, input.hostCountyId)).id;
+        data.hostCountyId = (await validateHostCounty(repo, provinceOf(identity), input.hostCountyId)).id;
       }
       if (input.level !== undefined) data.level = input.level;
     } else {

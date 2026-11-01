@@ -1,3 +1,4 @@
+import type { Province } from "@/generated/client";
 import { AppError } from "@/lib/api";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
@@ -21,6 +22,12 @@ function forbidden(): AppError {
 
 function paymentNotFound(): AppError {
   return new AppError(404, "NOT_FOUND", "پرداخت یافت نشد.");
+}
+
+function provinceOf(identity: UserIdentityRecord): Province {
+  if (identity.province === null) throw forbidden();
+
+  return identity.province;
 }
 
 async function requireActiveUser(repo: PaymentsRepository, user: CurrentUser): Promise<UserIdentityRecord> {
@@ -52,7 +59,11 @@ function toFilters(user: CurrentUser, identity: UserIdentityRecord, query: Payme
   };
 
   if (identity.role === "ADMIN") {
-    return { province: identity.province, coachId: query.coachId, ...shared };
+    return { province: provinceOf(identity), coachId: query.coachId, ...shared };
+  }
+
+  if (identity.role === "SUPER_ADMIN") {
+    return { province: query.province, coachId: query.coachId, ...shared };
   }
 
   return { coachId: user.id, ...shared };
@@ -78,7 +89,8 @@ export async function getPayment(repo: PaymentsRepository, user: CurrentUser, id
   const row = await repo.findPaymentById(id);
   if (!row) throw paymentNotFound();
 
-  const inScope = identity.role === "ADMIN" ? row.coachProvince === identity.province : row.coachId === user.id;
+  const inScope =
+    identity.role === "SUPER_ADMIN" || (identity.role === "ADMIN" ? row.coachProvince === provinceOf(identity) : row.coachId === user.id);
   if (!inScope) throw paymentNotFound();
 
   return toRecord(row);
@@ -135,7 +147,9 @@ export async function readReceipt(
   const identity = await requireActiveUser(repo, user);
   const row = await repo.findPaymentById(id);
 
-  const inScope = row !== null && (identity.role === "ADMIN" ? row.coachProvince === identity.province : row.coachId === user.id);
+  const inScope =
+    row !== null &&
+    (identity.role === "SUPER_ADMIN" || (identity.role === "ADMIN" ? row.coachProvince === provinceOf(identity) : row.coachId === user.id));
   if (!inScope) throw paymentNotFound();
 
   if (row.receiptKey === null) {

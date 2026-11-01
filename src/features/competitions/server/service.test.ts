@@ -801,3 +801,78 @@ describe("listDeadlineExtensions", () => {
     expect(repo.findDeadlineExtensions).not.toHaveBeenCalled();
   });
 });
+
+describe("SUPER_ADMIN", () => {
+  const superAdmin: CurrentUser = { id: "super-1", role: "SUPER_ADMIN" };
+  const superAdminRecord: UserIdentityRecord = { id: "super-1", role: "SUPER_ADMIN", province: null, isActive: true, countyId: null };
+
+  it("lists competitions of every province without county scoping", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(superAdminRecord),
+      findCompetitions: vi.fn().mockResolvedValue([farsRow]),
+    });
+    const result = await listCompetitions(repo, superAdmin, {});
+
+    expect(repo.findCompetitions).toHaveBeenCalledWith(
+      { province: undefined, status: undefined, discipline: undefined, search: undefined },
+      0,
+      100,
+      "createdAtDesc",
+    );
+    expect(result.data).toHaveLength(1);
+    expect(result.data[0]?.eligibleStudentCount).toBeUndefined();
+  });
+
+  it("filters the list by the province query", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(superAdminRecord) });
+    await listCompetitions(repo, superAdmin, { province: "FARS" });
+
+    expect(repo.findCompetitions).toHaveBeenCalledWith(
+      { province: "FARS", status: undefined, discipline: undefined, search: undefined },
+      0,
+      100,
+      "createdAtDesc",
+    );
+  });
+
+  it("sees details of every competition of every province", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(superAdminRecord),
+      findCompetitionById: vi.fn().mockResolvedValue(farsRow),
+    });
+    const result = await getCompetition(repo, superAdmin, "comp-2");
+
+    expect(result.id).toBe("comp-2");
+  });
+
+  it("keeps decision actions out of reach", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(superAdminRecord) });
+    const future = new Date(Date.now() + 3 * DAY_MS);
+
+    await expect(
+      failureOf(
+        createCompetition(repo, superAdmin, {
+          title: "مسابقه آزمایشی",
+          discipline: "KYORUGI",
+          gender: "MALE",
+          ageCategoryId: "senior",
+          beltIds: ["belt-blue"],
+          level: "PROVINCIAL",
+          hostCountyId: "",
+          feePerStudent: "1000000",
+          payeeCardNumber: "6037991111111111",
+          payeeCardHolder: "مدیر سامانه",
+          registrationDeadline: future.toISOString(),
+          eventDate: new Date(future.getTime() + DAY_MS).toISOString(),
+        }),
+      ),
+    ).resolves.toMatchObject({ status: 403, code: "FORBIDDEN" });
+
+    await expect(failureOf(updateCompetition(repo, superAdmin, "comp-1", { title: "تغییر" }))).resolves.toMatchObject({
+      status: 403,
+      code: "FORBIDDEN",
+    });
+    expect(repo.createCompetition).not.toHaveBeenCalled();
+    expect(repo.updateCompetition).not.toHaveBeenCalled();
+  });
+});

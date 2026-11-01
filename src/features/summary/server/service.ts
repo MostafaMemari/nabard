@@ -1,4 +1,5 @@
 import { startOfWeek } from "date-fns-jalali";
+import type { Province } from "@/generated/client";
 import { AppError } from "@/lib/api";
 import type { CurrentUser } from "@/lib/session";
 import type { AdminSummary } from "../types";
@@ -16,6 +17,12 @@ async function requireActiveAdmin(repo: SummaryRepository, user: CurrentUser): P
   return record;
 }
 
+function provinceOf(identity: UserIdentityRecord): Province {
+  if (identity.province === null) throw forbidden();
+
+  return identity.province;
+}
+
 export async function getAdminSummary(repo: SummaryRepository, user: CurrentUser): Promise<AdminSummary> {
   const identity = await requireActiveAdmin(repo, user);
   const weekStart = startOfWeek(new Date(), { weekStartsOn: 6 });
@@ -30,14 +37,14 @@ export async function getAdminSummary(repo: SummaryRepository, user: CurrentUser
     latestPendingPayments,
     upcomingCompetitions,
   ] = await Promise.all([
-    repo.countPayments(identity.province, "PENDING"),
-    repo.countOpenCompetitions(identity.province),
-    repo.countRegistrationsSince(identity.province, weekStart),
-    repo.countRefunds(identity.province, "PENDING"),
-    repo.countPendingProfiles(identity.province),
-    repo.countPendingCountyChanges(identity.province),
-    repo.findLatestPendingPayments(identity.province),
-    repo.findUpcomingCompetitions(identity.province),
+    repo.countPayments(provinceOf(identity), "PENDING"),
+    repo.countOpenCompetitions(provinceOf(identity)),
+    repo.countRegistrationsSince(provinceOf(identity), weekStart),
+    repo.countRefunds(provinceOf(identity), "PENDING"),
+    repo.countPendingProfiles(provinceOf(identity)),
+    repo.countPendingCountyChanges(provinceOf(identity)),
+    repo.findLatestPendingPayments(provinceOf(identity)),
+    repo.findUpcomingCompetitions(provinceOf(identity)),
   ]);
 
   return {

@@ -9,6 +9,7 @@
     "db:migrate": "prisma migrate dev && prisma generate",
     "db:seed": "prisma db seed",
     "db:seed:dev": "tsx prisma/seed.dev.ts",
+    "db:make-super-admin": "tsx prisma/make-super-admin.ts",
     "db:clean-demo": "tsx prisma/clean-demo.ts",
     "check": "biome check",
     "fix": "biome check --write",

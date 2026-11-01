@@ -2,12 +2,12 @@ import type { Province } from "@/generated/client";
 import { getPrisma } from "@/lib/prisma";
 import type { PaymentStatus } from "../types";
 
-export type UserRole = "ADMIN" | "COACH";
+export type UserRole = "ADMIN" | "COACH" | "SUPER_ADMIN";
 
 export type UserIdentityRecord = {
   id: string;
   role: UserRole;
-  province: Province;
+  province: Province | null;
   isActive: boolean;
 };
 
@@ -24,7 +24,7 @@ export type PaymentRecord = {
 };
 
 export type PaymentWithScope = PaymentRecord & {
-  coachProvince: Province;
+  coachProvince: Province | null;
   competitionDeadline: Date;
 };
 
@@ -110,7 +110,7 @@ function toPaymentWithScope(row: {
   note: string | null;
   createdAt: Date;
   updatedAt: Date;
-  coach: { province: Province };
+  coach: { province: Province | null };
   competition: { registrationDeadline: Date };
 }): PaymentWithScope {
   return {

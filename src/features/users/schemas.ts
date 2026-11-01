@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { normalizeDigits } from "@/lib/format";
+import { provinceValues } from "@/lib/provinces";
 
 function digitsField(message: string, pattern: RegExp) {
   return z.string().transform(normalizeDigits).pipe(z.string().regex(pattern, message));
@@ -35,6 +36,7 @@ export const resetCoachPasswordSchema = z.object({
 export const coachListQuerySchema = z.object({
   search: z.string().trim().max(80).optional(),
   status: z.enum(["active", "inactive"]).optional(),
+  province: z.enum(provinceValues).optional(),
   page: z.coerce.number().int().min(1).optional(),
   pageSize: z.coerce.number().int().min(1).max(100).optional(),
 });

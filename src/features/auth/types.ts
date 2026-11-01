@@ -5,7 +5,7 @@ export type AuthUser = {
   id: string;
   role: SessionRole;
   fullName: string;
-  province: Province;
+  province: Province | null;
   countyId: string | null;
   countyName: string | null;
 };

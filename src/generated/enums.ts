@@ -19,7 +19,8 @@ export type Gender = (typeof Gender)[keyof typeof Gender]
 
 export const Role = {
   ADMIN: 'ADMIN',
-  COACH: 'COACH'
+  COACH: 'COACH',
+  SUPER_ADMIN: 'SUPER_ADMIN'
 } as const
 
 export type Role = (typeof Role)[keyof typeof Role]

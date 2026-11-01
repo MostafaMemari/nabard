@@ -6,12 +6,14 @@ import type { User } from "./types";
 export type CoachListParams = ListQuery & {
   search?: string;
   status?: "active" | "inactive";
+  province?: string;
 };
 
 export async function listCoaches(params: CoachListParams = {}): Promise<ListResult<User>> {
   const query = new URLSearchParams();
   if (params.search) query.set("search", params.search);
   if (params.status) query.set("status", params.status);
+  if (params.province) query.set("province", params.province);
   if (params.page !== undefined) query.set("page", String(params.page));
   if (params.pageSize !== undefined) query.set("pageSize", String(params.pageSize));
 

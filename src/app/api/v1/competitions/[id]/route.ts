@@ -3,7 +3,7 @@ import * as repository from "@/features/competitions/server/repository";
 import { getCompetition, updateCompetition } from "@/features/competitions/server/service";
 import { route } from "@/lib/api";
 
-export const GET = route({ roles: ["ADMIN", "COACH"] }, async ({ user, params }) => {
+export const GET = route({ roles: ["ADMIN", "COACH", "SUPER_ADMIN"] }, async ({ user, params }) => {
   const { id } = await params;
   return getCompetition(repository, user, id);
 });
