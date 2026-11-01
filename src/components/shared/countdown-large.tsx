@@ -51,10 +51,10 @@ export function CountdownLarge({ deadline, startedAt, className }: { deadline: s
         <p className="text-subtle font-medium text-muted-foreground">مهلت ثبت نام تمام شد.</p>
       ) : (
         <div className="flex items-stretch gap-2" dir="ltr">
-          <Tile value={values[3]} label="ثانیه" />
-          <Tile value={values[2]} label="دقیقه" />
-          <Tile value={values[1]} label="ساعت" />
           <Tile value={values[0]} label="روز" />
+          <Tile value={values[1]} label="ساعت" />
+          <Tile value={values[2]} label="دقیقه" />
+          <Tile value={values[3]} label="ثانیه" />
         </div>
       )}
       {progress !== null ? (
