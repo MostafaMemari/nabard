@@ -23,16 +23,18 @@ export function AppSidebar({
   active,
   user,
   groupLabel,
-  breakpoint = "md",
+  breakpoint = "lg",
 }: {
   items: SidebarNavItem[];
   active: string;
   user: SidebarUser;
   groupLabel: string;
-  breakpoint?: "md" | "lg";
+  breakpoint?: "lg" | "@5xl";
 }) {
   return (
-    <aside className={cn("hidden w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground", breakpoint === "md" ? "md:flex" : "@lg:flex")}>
+    <aside
+      className={cn("hidden w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground", breakpoint === "lg" ? "lg:flex" : "@5xl:flex")}
+    >
       <div className="flex h-16 items-center gap-2.5 px-5">
         <BrandMark />
         <div className="flex min-w-0 flex-col leading-tight">

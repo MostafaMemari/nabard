@@ -41,16 +41,16 @@ export function AdminShell({ active, user, children }: { active: string; user: S
       </a>
       <AppSidebar items={navItems.slice(1)} active={active} user={user} groupLabel="مدیریت مسابقات" />
       <div className="flex min-w-0 flex-1 flex-col">
-        <div className="flex h-14 shrink-0 items-center gap-2.5 border-b border-border bg-card px-4 md:hidden">
+        <div className="flex h-14 shrink-0 items-center gap-2.5 border-b border-border bg-card px-4 lg:hidden">
           <BrandMark className="size-7" />
           <span className="text-sm font-semibold">{APP_NAME}</span>
         </div>
-        <main id="admin-main" className="flex-1 pb-20 md:pb-0">
-          <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 md:p-8">{children}</div>
+        <main id="admin-main" className="flex-1 pb-20 lg:pb-0">
+          <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 lg:p-8">{children}</div>
         </main>
         <nav
           aria-label="ناوبری مدیریت"
-          className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card md:hidden"
+          className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card lg:hidden"
           style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
         >
           <div className="grid grid-cols-4">

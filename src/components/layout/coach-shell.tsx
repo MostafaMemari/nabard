@@ -42,9 +42,9 @@ export function CoachShell({ active, user, children }: { active: string; user: S
       >
         پرش به محتوا
       </a>
-      <AppSidebar items={coachNavItems} active={active} user={user} groupLabel="پنل مربی" breakpoint="lg" />
+      <AppSidebar items={coachNavItems} active={active} user={user} groupLabel="پنل مربی" breakpoint="@5xl" />
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 shrink-0 border-b border-border bg-card @lg:hidden">
+        <header className="sticky top-0 z-20 shrink-0 border-b border-border bg-card @5xl:hidden">
           <div className="flex h-14 items-center justify-between px-4">
             <div className="flex items-center gap-2.5">
               <BrandMark className="size-7" />
@@ -53,12 +53,12 @@ export function CoachShell({ active, user, children }: { active: string; user: S
             <Avatar id={user.id} name={user.name} size="sm" />
           </div>
         </header>
-        <main id="coach-main" className="flex-1 pb-20 @lg:pb-8">
-          <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 @lg:p-8">{children}</div>
+        <main id="coach-main" className="flex-1 pb-20 @5xl:pb-8">
+          <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 @5xl:p-8">{children}</div>
         </main>
         <nav
           aria-label="ناوبری مربی"
-          className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card @lg:hidden"
+          className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card @5xl:hidden"
           style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
         >
           <div className="grid grid-cols-4">
