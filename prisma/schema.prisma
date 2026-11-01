@@ -257,6 +257,19 @@ model Competition {
 
 // ───────────── Registration and payment ─────────────
 
+// Private uploaded files (payment receipts). Rows live in PostgreSQL because
+// Vercel serverless has no persistent disk; files are served through an
+// authenticated endpoint only.
+model StoredFile {
+  id        String   @id @default(uuid()) @map("id")
+  mime      String   @map("mime") @db.VarChar(100)
+  size      Int      @map("size")
+  data      Bytes    @map("data")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("stored_files")
+}
+
 // One payment (one receipt) can cover several students.
 // Later, a payment gateway can create Payment rows the same way.
 model Payment {

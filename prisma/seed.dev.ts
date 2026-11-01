@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { readFileSync } from "node:fs";
 import { hashSync } from "bcryptjs";
 import { getPrisma } from "../src/lib/prisma";
 import { belts } from "./data/base-data";
@@ -12,6 +13,8 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const devPasswordHash = hashSync("nabard-dev-1404", 10);
+
+const sampleReceipt = readFileSync(new URL("../public/receipts/receipt-sample.png", import.meta.url));
 
 const beltLevelById = new Map(belts.map((belt) => [belt.id, belt.level]));
 
@@ -133,6 +136,20 @@ async function main() {
         updatedAt: new Date(payment.updatedAt),
       },
     });
+  }
+
+  for (const payment of demoPayments) {
+    if (payment.receiptKey === null) {
+      continue;
+    }
+
+    const fileId = `stored-${payment.id}`;
+    await prisma.storedFile.upsert({
+      where: { id: fileId },
+      update: { mime: "image/png", size: sampleReceipt.byteLength, data: sampleReceipt },
+      create: { id: fileId, mime: "image/png", size: sampleReceipt.byteLength, data: sampleReceipt },
+    });
+    await prisma.payment.update({ where: { id: payment.id }, data: { receiptKey: fileId } });
   }
 
   for (const registration of demoRegistrations) {

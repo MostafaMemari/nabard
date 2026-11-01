@@ -1,9 +1,9 @@
 "use client";
 
 import { ReceiptTextIcon } from "lucide-react";
-import Image from "next/image";
 import { IconTile } from "@/components/shared";
 import { formatJalaliDateTime, toPersianDigits } from "@/lib/format";
+import { buildApiUrl } from "@/lib/http";
 import type { Payment } from "../types";
 
 export function PaymentReceiptCard({ payment }: { payment: Payment }) {
@@ -24,11 +24,10 @@ export function PaymentReceiptCard({ payment }: { payment: Payment }) {
         </div>
       ) : (
         <div className="overflow-hidden rounded-lg border border-border bg-muted/30 p-3">
-          <Image
-            src="/receipts/receipt-sample.png"
+          {/* biome-ignore lint/performance/noImgElement: private receipt served by an authenticated endpoint */}
+          <img
+            src={buildApiUrl(`/api/v1/payments/${payment.id}/receipt`)}
             alt={`رسید پرداخت ${toPersianDigits(payment.id)}`}
-            width={640}
-            height={880}
             className="mx-auto h-auto w-full max-w-sm rounded-md"
           />
         </div>

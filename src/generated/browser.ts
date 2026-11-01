@@ -48,6 +48,11 @@ export type WeightClass = Prisma.WeightClassModel
  */
 export type Competition = Prisma.CompetitionModel
 /**
+ * Model StoredFile
+ * 
+ */
+export type StoredFile = Prisma.StoredFileModel
+/**
  * Model Payment
  * 
  */

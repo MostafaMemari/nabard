@@ -6,8 +6,6 @@ import { Button } from "@/components/ui/button";
 import { PaymentInfoSection } from "./payment-info-section";
 import { ReceiptUploadField } from "./receipt-upload-field";
 
-const MAX_RECEIPT_SIZE_BYTES = 5 * 1024 * 1024;
-
 export function PaymentStep({
   payeeCardNumber,
   payeeCardHolder,
@@ -27,21 +25,6 @@ export function PaymentStep({
 }) {
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
-
-  function selectFile(next: File | null) {
-    if (next && !next.type.startsWith("image/")) {
-      setError("فقط تصویر رسید قابل قبول است.");
-      return;
-    }
-
-    if (next && next.size > MAX_RECEIPT_SIZE_BYTES) {
-      setError("حجم تصویر باید کمتر از ۵ مگابایت باشد.");
-      return;
-    }
-
-    setError(null);
-    setFile(next);
-  }
 
   function submit() {
     if (!file) {
@@ -63,7 +46,7 @@ export function PaymentStep({
         />
       </FormSection>
       <FormSection title="رسید پرداخت" description="تصویر رسید کارت به کارت را بارگذاری کنید.">
-        <ReceiptUploadField file={file} onChange={selectFile} />
+        <ReceiptUploadField file={file} onChange={setFile} />
         {error ? <p className="text-subtle text-danger">{error}</p> : null}
       </FormSection>
       <div className="flex items-center justify-end gap-3">

@@ -1,6 +1,6 @@
-import { mockDelay } from "@/lib/mock";
-import { type ListQuery, type ListResult, paginate } from "@/lib/pagination";
-import { registrations } from "./mock/registrations";
+import type { Payment } from "@/features/payments";
+import { api } from "@/lib/http";
+import type { ListQuery, ListResult } from "@/lib/pagination";
 import type { Registration, RegistrationStatus } from "./types";
 
 export type RegistrationListParams = ListQuery & {
@@ -10,73 +10,46 @@ export type RegistrationListParams = ListQuery & {
   status?: RegistrationStatus;
 };
 
+export type RegistrationDecision = "APPROVED" | "REJECTED";
+
 export type CreateRegistrationsInput = {
   competitionId: string;
-  coachId: string;
-  paymentId: string;
-  students: Array<{ studentId: string; weightClassId: string | null }>;
+  studentIds: string[];
+  receipt: File;
 };
 
-let nextId = registrations.length + 1;
-
-export async function createRegistrations(input: CreateRegistrationsInput): Promise<Registration[]> {
-  await mockDelay();
-  const now = new Date().toISOString();
-  const created = input.students.map((student, index) => {
-    const registration: Registration = {
-      id: `reg-new-${nextId + index}`,
-      competitionId: input.competitionId,
-      studentId: student.studentId,
-      coachId: input.coachId,
-      paymentId: input.paymentId,
-      weightClassId: student.weightClassId,
-      status: "PENDING",
-      note: null,
-      createdAt: now,
-      updatedAt: now,
-    };
-
-    return registration;
-  });
-  nextId += created.length;
-  registrations.push(...created);
-
-  return created;
-}
+export type CreateRegistrationsResult = {
+  payment: Payment;
+  registrations: Registration[];
+};
 
 export async function listRegistrations(params: RegistrationListParams = {}): Promise<ListResult<Registration>> {
-  await mockDelay();
-  const filtered = registrations.filter(
-    (registration) =>
-      (params.competitionId === undefined || registration.competitionId === params.competitionId) &&
-      (params.coachId === undefined || registration.coachId === params.coachId) &&
-      (params.paymentId === undefined || registration.paymentId === params.paymentId) &&
-      (params.status === undefined || registration.status === params.status),
-  );
+  const query = new URLSearchParams();
+  if (params.competitionId) query.set("competitionId", params.competitionId);
+  if (params.coachId) query.set("coachId", params.coachId);
+  if (params.paymentId) query.set("paymentId", params.paymentId);
+  if (params.status) query.set("status", params.status);
+  if (params.page !== undefined) query.set("page", String(params.page));
+  if (params.pageSize !== undefined) query.set("pageSize", String(params.pageSize));
 
-  return paginate(filtered, params);
+  const queryString = query.toString();
+  return api<ListResult<Registration>>(`/api/v1/registrations${queryString === "" ? "" : `?${queryString}`}`);
 }
 
-export async function getRegistration(id: string): Promise<Registration> {
-  await mockDelay();
-  const registration = registrations.find((item) => item.id === id);
-
-  if (!registration) {
-    throw new Error("ثبت نام یافت نشد.");
-  }
-
-  return registration;
+export function getRegistration(id: string): Promise<Registration> {
+  return api<Registration>(`/api/v1/registrations/${id}`);
 }
 
-export async function updateRegistrationStatus(id: string, status: RegistrationStatus, note: string | null = null): Promise<Registration> {
-  await mockDelay();
-  const index = registrations.findIndex((item) => item.id === id);
-
-  if (index === -1) {
-    throw new Error("ثبت نام یافت نشد.");
+export function createRegistrations(input: CreateRegistrationsInput): Promise<CreateRegistrationsResult> {
+  const form = new FormData();
+  for (const studentId of input.studentIds) {
+    form.append("studentIds", studentId);
   }
+  form.append("receipt", input.receipt);
 
-  registrations[index] = { ...registrations[index], status, note, updatedAt: new Date().toISOString() };
+  return api<CreateRegistrationsResult>(`/api/v1/competitions/${input.competitionId}/registrations`, { method: "POST", body: form });
+}
 
-  return registrations[index];
+export function updateRegistrationStatus(id: string, status: RegistrationDecision, note: string | null = null): Promise<Registration> {
+  return api<Registration>(`/api/v1/registrations/${id}`, { method: "PATCH", body: { status, ...(note ? { note } : {}) } });
 }

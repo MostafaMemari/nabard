@@ -21,12 +21,7 @@ export function RegistrationFlow({ competitionId, coachId }: { competitionId: st
   const totalRials = selectedRows.length * Number(competition?.feePerStudent ?? 0);
   const { submitting, submit } = useRegistrationSubmit({
     competitionId,
-    coachId,
-    amountRials: String(totalRials),
-    students: selectedRows.map((row) => ({
-      studentId: row.student.id,
-      weightClassId: row.eligibility.eligible ? (row.eligibility.weightClass?.id ?? null) : null,
-    })),
+    studentIds: selectedRows.map((row) => row.student.id),
   });
 
   function toggle(studentId: string) {

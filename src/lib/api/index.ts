@@ -29,6 +29,14 @@ export function fail(error: AppError): Response {
 
 type BodyOf<TSchema> = TSchema extends ZodType ? z.infer<TSchema> : undefined;
 
+export async function readFormData(request: Request): Promise<FormData> {
+  try {
+    return await request.formData();
+  } catch {
+    throw new AppError(400, "INVALID_FORM", "بدنه درخواست معتبر نیست.");
+  }
+}
+
 type RouteContext<TBody, TUser> = {
   request: Request;
   user: TUser;

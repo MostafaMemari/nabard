@@ -3,37 +3,21 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { createPayment } from "@/features/payments";
 import { createRegistrations } from "@/features/registrations";
+import { ApiError } from "@/lib/http";
 
-export function useRegistrationSubmit({
-  competitionId,
-  coachId,
-  amountRials,
-  students,
-}: {
-  competitionId: string;
-  coachId: string;
-  amountRials: string;
-  students: { studentId: string; weightClassId: string | null }[];
-}) {
+export function useRegistrationSubmit({ competitionId, studentIds }: { competitionId: string; studentIds: string[] }) {
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
 
   async function submit(receipt: File) {
     setSubmitting(true);
     try {
-      const payment = await createPayment({
-        competitionId,
-        coachId,
-        amount: amountRials,
-        receiptKey: `receipts/mock-${Date.now()}-${receipt.name}`,
-      });
-      await createRegistrations({ competitionId, coachId, paymentId: payment.id, students });
+      await createRegistrations({ competitionId, studentIds, receipt });
       toast.success("ثبت نام انجام شد و رسید برای بررسی ارسال شد.");
       router.push("/coach/registrations");
-    } catch {
-      toast.error("انجام نشد. دوباره تلاش کنید.");
+    } catch (error) {
+      toast.error(error instanceof ApiError ? error.message : "انجام نشد. دوباره تلاش کنید.");
       setSubmitting(false);
     }
   }
