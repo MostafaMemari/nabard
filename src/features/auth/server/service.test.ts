@@ -1,8 +1,8 @@
-import { hashSync } from "bcryptjs";
+import { compareSync, hashSync } from "bcryptjs";
 import { describe, expect, it, vi } from "vitest";
 import { AppError } from "@/lib/api";
 import type { UserRecord } from "./repository";
-import { login } from "./service";
+import { changePassword, login } from "./service";
 
 const password = "Secret!1234";
 
@@ -19,7 +19,23 @@ const activeAdmin: UserRecord = {
 const inactiveAdmin: UserRecord = { ...activeAdmin, isActive: false };
 
 function repoWith(user: UserRecord | null) {
-  return { findUserByMobile: vi.fn().mockResolvedValue(user), findUserById: vi.fn().mockResolvedValue(user) };
+  return {
+    findUserByMobile: vi.fn().mockResolvedValue(user),
+    findUserById: vi.fn().mockResolvedValue(user),
+    updatePassword: vi.fn().mockResolvedValue(undefined),
+  };
+}
+
+function throttleWith(counts: Record<string, number>) {
+  return {
+    repo: {
+      countLoginFailuresBy: vi.fn().mockResolvedValue(counts),
+      recordLoginFailures: vi.fn().mockResolvedValue(undefined),
+      clearLoginFailures: vi.fn().mockResolvedValue(undefined),
+      pruneLoginFailures: vi.fn().mockResolvedValue(undefined),
+    },
+    keys: ["mobile:09121110000", "ip:abc"],
+  };
 }
 
 describe("login", () => {
@@ -53,5 +69,67 @@ describe("login", () => {
 
     expect(failure).toBeInstanceOf(AppError);
     expect(failure).toMatchObject({ status: 403, code: "USER_INACTIVE" });
+  });
+
+  it("blocks the login with 429 when the throttle reports a lockout", async () => {
+    const throttle = throttleWith({ "mobile:09121110000": 5 });
+    const failure = await login(repoWith(activeAdmin), { mobile: "09121110000", password }, throttle).catch((error: unknown) => error);
+
+    expect(failure).toMatchObject({ status: 429, code: "TOO_MANY_ATTEMPTS" });
+    expect((failure as AppError).message).toContain("ورود موقتا مسدود شده است");
+    expect(throttle.repo.recordLoginFailures).not.toHaveBeenCalled();
+  });
+
+  it("records a failure on wrong password and clears failures on success", async () => {
+    const failing = throttleWith({});
+    await login(repoWith(activeAdmin), { mobile: "09121110000", password: "WrongPass123" }, failing).catch(() => undefined);
+    expect(failing.repo.recordLoginFailures).toHaveBeenCalledWith(failing.keys, expect.any(Date));
+
+    const succeeding = throttleWith({});
+    await login(repoWith(activeAdmin), { mobile: "09121110000", password }, succeeding);
+    expect(succeeding.repo.recordLoginFailures).not.toHaveBeenCalled();
+    expect(succeeding.repo.clearLoginFailures).toHaveBeenCalledWith(succeeding.keys);
+  });
+});
+
+describe("changePassword", () => {
+  it("updates the password when the current one matches", async () => {
+    const repo = repoWith(activeAdmin);
+    await changePassword(repo, { id: "user-1", role: "ADMIN" }, { currentPassword: password, newPassword: "NewPass1234" });
+
+    expect(repo.updatePassword).toHaveBeenCalledWith("user-1", expect.any(String));
+    const newHash = repo.updatePassword.mock.calls[0][1] as string;
+    expect(compareSync("NewPass1234", newHash)).toBe(true);
+  });
+
+  it("rejects a wrong current password with 400 and keeps the old hash", async () => {
+    const repo = repoWith(activeAdmin);
+    const failure = await changePassword(
+      repo,
+      { id: "user-1", role: "ADMIN" },
+      {
+        currentPassword: "WrongPass123",
+        newPassword: "NewPass1234",
+      },
+    ).catch((error: unknown) => error);
+
+    expect(failure).toBeInstanceOf(AppError);
+    expect(failure).toMatchObject({ status: 400, code: "INVALID_PASSWORD" });
+    expect(failure).toMatchObject({ message: "رمز عبور فعلی اشتباه است." });
+    expect(repo.updatePassword).not.toHaveBeenCalled();
+  });
+
+  it("rejects with 401 when the user no longer exists", async () => {
+    const repo = repoWith(null);
+    const failure = await changePassword(
+      repo,
+      { id: "gone", role: "COACH" },
+      {
+        currentPassword: password,
+        newPassword: "NewPass1234",
+      },
+    ).catch((error: unknown) => error);
+
+    expect(failure).toMatchObject({ status: 401, code: "UNAUTHORIZED" });
   });
 });

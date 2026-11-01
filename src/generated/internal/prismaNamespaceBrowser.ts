@@ -59,6 +59,7 @@ export const ModelName = {
   Competition: 'Competition',
   StoredFile: 'StoredFile',
   Payment: 'Payment',
+  LoginFailure: 'LoginFailure',
   Registration: 'Registration'
 } as const
 
@@ -197,6 +198,15 @@ export const PaymentScalarFieldEnum = {
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const LoginFailureScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  createdAt: 'createdAt'
+} as const
+
+export type LoginFailureScalarFieldEnum = (typeof LoginFailureScalarFieldEnum)[keyof typeof LoginFailureScalarFieldEnum]
 
 
 export const RegistrationScalarFieldEnum = {

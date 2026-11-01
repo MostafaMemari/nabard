@@ -405,6 +405,7 @@ export const ModelName = {
   Competition: 'Competition',
   StoredFile: 'StoredFile',
   Payment: 'Payment',
+  LoginFailure: 'LoginFailure',
   Registration: 'Registration'
 } as const
 
@@ -421,7 +422,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "student" | "belt" | "ageCategory" | "weightClass" | "competition" | "storedFile" | "payment" | "registration"
+    modelProps: "user" | "student" | "belt" | "ageCategory" | "weightClass" | "competition" | "storedFile" | "payment" | "loginFailure" | "registration"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1017,6 +1018,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    LoginFailure: {
+      payload: Prisma.$LoginFailurePayload<ExtArgs>
+      fields: Prisma.LoginFailureFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LoginFailureFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginFailurePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LoginFailureFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginFailurePayload>
+        }
+        findFirst: {
+          args: Prisma.LoginFailureFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginFailurePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LoginFailureFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginFailurePayload>
+        }
+        findMany: {
+          args: Prisma.LoginFailureFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginFailurePayload>[]
+        }
+        create: {
+          args: Prisma.LoginFailureCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginFailurePayload>
+        }
+        createMany: {
+          args: Prisma.LoginFailureCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LoginFailureCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginFailurePayload>[]
+        }
+        delete: {
+          args: Prisma.LoginFailureDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginFailurePayload>
+        }
+        update: {
+          args: Prisma.LoginFailureUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginFailurePayload>
+        }
+        deleteMany: {
+          args: Prisma.LoginFailureDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LoginFailureUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LoginFailureUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginFailurePayload>[]
+        }
+        upsert: {
+          args: Prisma.LoginFailureUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LoginFailurePayload>
+        }
+        aggregate: {
+          args: Prisma.LoginFailureAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLoginFailure>
+        }
+        groupBy: {
+          args: Prisma.LoginFailureGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoginFailureGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LoginFailureCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LoginFailureCountAggregateOutputType> | number
+        }
+      }
+    }
     Registration: {
       payload: Prisma.$RegistrationPayload<ExtArgs>
       fields: Prisma.RegistrationFieldRefs
@@ -1249,6 +1324,15 @@ export const PaymentScalarFieldEnum = {
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const LoginFailureScalarFieldEnum = {
+  id: 'id',
+  key: 'key',
+  createdAt: 'createdAt'
+} as const
+
+export type LoginFailureScalarFieldEnum = (typeof LoginFailureScalarFieldEnum)[keyof typeof LoginFailureScalarFieldEnum]
 
 
 export const RegistrationScalarFieldEnum = {
@@ -1700,6 +1784,7 @@ export type GlobalOmitConfig = {
   competition?: Prisma.CompetitionOmit
   storedFile?: Prisma.StoredFileOmit
   payment?: Prisma.PaymentOmit
+  loginFailure?: Prisma.LoginFailureOmit
   registration?: Prisma.RegistrationOmit
 }
 

@@ -82,6 +82,11 @@ export type StoredFile = Prisma.StoredFileModel
  */
 export type Payment = Prisma.PaymentModel
 /**
+ * Model LoginFailure
+ * 
+ */
+export type LoginFailure = Prisma.LoginFailureModel
+/**
  * Model Registration
  * 
  */

@@ -293,6 +293,17 @@ model Payment {
   @@map("payments")
 }
 
+// One row per failed login attempt, keyed by mobile and by hashed IP.
+// Old rows are pruned on every failure; the table stays tiny.
+model LoginFailure {
+  id        String   @id @default(uuid()) @map("id")
+  key       String   @map("key") @db.VarChar(120)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([key, createdAt])
+  @@map("login_failures")
+}
+
 model Registration {
   id            String      @id @default(uuid()) @map("id")
   competitionId String      @map("competition_id")
