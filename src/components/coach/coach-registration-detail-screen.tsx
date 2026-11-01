@@ -31,7 +31,7 @@ export function CoachRegistrationDetailScreen({ coachId, registrationId }: { coa
       <DetailPageHeader
         backHref="/coach/registrations"
         backLabel="ثبت نام های من"
-        title={row.studentName ?? "—"}
+        title={row.studentName ?? "-"}
         description={row.competitionTitle}
         action={<StatusBadge status={registrationStatusKey(row.registration.status)} />}
       />
@@ -53,12 +53,12 @@ export function CoachRegistrationDetailScreen({ coachId, registrationId }: { coa
             </div>
             <DescriptionList
               items={[
-                { term: "رده وزنی", value: row.weightClassLabel ?? "—" },
+                { term: "رده وزنی", value: row.weightClassLabel ?? "-" },
                 { term: "تاریخ ثبت نام", value: formatJalaliDateTime(new Date(row.registration.createdAt)) },
-                { term: "مبلغ", value: row.paymentAmount ? formatRialsAsToman(Number(row.paymentAmount)) : "—" },
+                { term: "مبلغ", value: row.paymentAmount ? formatRialsAsToman(Number(row.paymentAmount)) : "-" },
                 {
                   term: "وضعیت رسید",
-                  value: row.paymentStatus ? <StatusBadge status={paymentStatusKey(row.paymentStatus)} /> : "—",
+                  value: row.paymentStatus ? <StatusBadge status={paymentStatusKey(row.paymentStatus)} /> : "-",
                 },
               ]}
             />
@@ -74,7 +74,7 @@ export function CoachRegistrationDetailScreen({ coachId, registrationId }: { coa
               items={[
                 {
                   term: "مهلت ثبت نام",
-                  value: row.competitionDeadline ? formatJalaliDateTime(new Date(row.competitionDeadline)) : "—",
+                  value: row.competitionDeadline ? formatJalaliDateTime(new Date(row.competitionDeadline)) : "-",
                 },
               ]}
             />

@@ -16,7 +16,7 @@ export function coachRegistrationColumns(): DataTableColumn<CoachRegistrationRow
             <span className="font-medium">{row.studentName}</span>
           </div>
         ) : (
-          "—"
+          "-"
         ),
       sortValue: (row) => row.studentName ?? "",
     },
@@ -24,7 +24,7 @@ export function coachRegistrationColumns(): DataTableColumn<CoachRegistrationRow
     {
       id: "weightClass",
       header: "رده وزنی",
-      cell: (row) => <span className="whitespace-nowrap text-muted-foreground">{row.weightClassLabel ?? "—"}</span>,
+      cell: (row) => <span className="whitespace-nowrap text-muted-foreground">{row.weightClassLabel ?? "-"}</span>,
       minScreen: "lg",
     },
     {
@@ -41,7 +41,7 @@ export function coachRegistrationColumns(): DataTableColumn<CoachRegistrationRow
       id: "payment",
       header: "رسید",
       cell: (row) =>
-        row.paymentStatus ? <StatusBadge status={paymentStatusKey(row.paymentStatus)} /> : <span className="text-muted-foreground">—</span>,
+        row.paymentStatus ? <StatusBadge status={paymentStatusKey(row.paymentStatus)} /> : <span className="text-muted-foreground">-</span>,
     },
   ];
 }

@@ -34,9 +34,9 @@ export function PaymentStudentRow({
           <span className="text-sm font-medium">{name}</span>
         </div>
       </TableCell>
-      <TableCell>{belt ? <BeltChip belt={belt} /> : "—"}</TableCell>
+      <TableCell>{belt ? <BeltChip belt={belt} /> : "-"}</TableCell>
       <TableCell className="text-subtle whitespace-nowrap text-muted-foreground tabular-nums">
-        {student?.weightKg != null ? `${formatNumber(student.weightKg)} کیلوگرم` : "—"}
+        {student?.weightKg != null ? `${formatNumber(student.weightKg)} کیلوگرم` : "-"}
       </TableCell>
       <TableCell>
         <StatusBadge status={paymentBadgeStatus(registration.status)} />

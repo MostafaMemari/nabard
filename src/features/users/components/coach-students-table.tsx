@@ -26,7 +26,7 @@ export function CoachStudentsTable({ students, isLoading }: { students: Student[
       header: "کمربند",
       cell: (row) => {
         const belt = belts.find((item) => item.id === row.beltId);
-        return belt ? <BeltChip belt={belt} /> : "—";
+        return belt ? <BeltChip belt={belt} /> : "-";
       },
       minScreen: "lg",
     },
@@ -35,7 +35,7 @@ export function CoachStudentsTable({ students, isLoading }: { students: Student[
       header: "وزن",
       cell: (row) => (
         <span className="text-subtle whitespace-nowrap text-muted-foreground tabular-nums">
-          {row.weightKg !== null ? `${formatNumber(row.weightKg)} کیلوگرم` : "—"}
+          {row.weightKg !== null ? `${formatNumber(row.weightKg)} کیلوگرم` : "-"}
         </span>
       ),
       align: "end",

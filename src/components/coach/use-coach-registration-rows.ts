@@ -25,7 +25,7 @@ export function useCoachRegistrationRows(coachId: string) {
       return {
         registration,
         studentName: student?.fullName ?? null,
-        competitionTitle: competition?.title ?? "—",
+        competitionTitle: competition?.title ?? "-",
         competitionDeadline: competition?.registrationDeadline ?? null,
         paymentStatus: payment?.status ?? null,
         paymentAmount: payment?.amount ?? null,

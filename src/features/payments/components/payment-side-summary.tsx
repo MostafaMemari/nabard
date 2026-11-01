@@ -40,7 +40,7 @@ export function PaymentSideSummary({
           <Avatar id={payment.coachId} name={coach?.fullName ?? payment.coachId} size="md" />
           <div className="flex flex-col gap-0.5">
             <span className="text-sm font-medium">{coach?.fullName ?? payment.coachId}</span>
-            <span className="text-subtle text-muted-foreground">{coach ? toPersianDigits(coach.mobile) : "—"}</span>
+            <span className="text-subtle text-muted-foreground">{coach ? toPersianDigits(coach.mobile) : "-"}</span>
           </div>
         </div>
         <DescriptionList

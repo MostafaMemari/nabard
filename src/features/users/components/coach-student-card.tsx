@@ -14,7 +14,7 @@ export function CoachStudentCard({ student, belts }: { student: Student; belts: 
       <MobileCardChips>{belt ? <BeltChip belt={belt} /> : null}</MobileCardChips>
       <MobileCardLine
         label="وزن"
-        value={<span className="tabular-nums">{student.weightKg !== null ? `${formatNumber(student.weightKg)} کیلوگرم` : "—"}</span>}
+        value={<span className="tabular-nums">{student.weightKg !== null ? `${formatNumber(student.weightKg)} کیلوگرم` : "-"}</span>}
       />
       <MobileCardLine label="تاریخ تولد" value={formatJalaliDate(new Date(student.birthDate))} />
     </MobileCard>

@@ -18,10 +18,10 @@ export function CompetitionRegistrationCard({ row }: { row: CompetitionRegistrat
     <MobileCard>
       <MobileCardTop
         leading={student ? <Avatar id={student.id} name={student.fullName} size="md" /> : undefined}
-        title={student?.fullName ?? "—"}
+        title={student?.fullName ?? "-"}
         end={<StatusBadge status={registrationBadgeStatus(registration.status)} />}
       />
-      <MobileCardLine label="رده وزنی" value={weightClassLabel ?? "—"} />
+      <MobileCardLine label="رده وزنی" value={weightClassLabel ?? "-"} />
       <MobileCardLine label="تاریخ ثبت نام" value={formatJalaliDateTime(new Date(registration.createdAt))} />
     </MobileCard>
   );

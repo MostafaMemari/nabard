@@ -29,7 +29,7 @@ export function CompetitionRegistrationsRows({ rows }: { rows: RegistrationRow[]
           <TableCell>
             <StudentCell student={student} />
           </TableCell>
-          <TableCell className="text-subtle whitespace-nowrap text-muted-foreground tabular-nums">{weightClassLabel ?? "—"}</TableCell>
+          <TableCell className="text-subtle whitespace-nowrap text-muted-foreground tabular-nums">{weightClassLabel ?? "-"}</TableCell>
           <TableCell className="text-subtle whitespace-nowrap text-muted-foreground">
             {formatJalaliDateTime(new Date(registration.createdAt))}
           </TableCell>
@@ -44,7 +44,7 @@ export function CompetitionRegistrationsRows({ rows }: { rows: RegistrationRow[]
 
 function StudentCell({ student }: { student?: { id: string; fullName: string } }) {
   if (!student) {
-    return <span className="text-subtle text-muted-foreground">—</span>;
+    return <span className="text-subtle text-muted-foreground">-</span>;
   }
   return (
     <div className="flex items-center gap-2.5">

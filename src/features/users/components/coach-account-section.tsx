@@ -11,7 +11,7 @@ export function CoachAccountSection({ coach, studentCount }: { coach: User; stud
       <DescriptionList
         items={[
           { term: "شماره همراه", value: toPersianDigits(coach.mobile) },
-          { term: "کد ملی", value: toPersianDigits(coach.nationalCode ?? "—") },
+          { term: "کد ملی", value: toPersianDigits(coach.nationalCode ?? "-") },
           { term: "تاریخ عضویت", value: formatJalaliDate(new Date(coach.createdAt)) },
           { term: "تعداد هنرجویان", value: `${toPersianDigits(studentCount)} هنرجو` },
         ]}

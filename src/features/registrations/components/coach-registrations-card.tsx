@@ -9,7 +9,7 @@ export function CoachRegistrationCard({ row }: { row: CoachRegistrationRow }) {
     <MobileCardLink href={`/coach/registrations/${row.registration.id}`}>
       <MobileCardTop
         leading={row.studentName ? <Avatar id={row.registration.studentId} name={row.studentName} size="md" /> : undefined}
-        title={row.studentName ?? "—"}
+        title={row.studentName ?? "-"}
         end={<StatusBadge status={registrationStatusKey(row.registration.status)} />}
       />
       <MobileCardLine label="مسابقه" value={row.competitionTitle} />

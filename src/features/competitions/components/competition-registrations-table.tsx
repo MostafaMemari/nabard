@@ -43,7 +43,7 @@ export function CompetitionRegistrationsTable({
             <span className="font-medium">{row.student.fullName}</span>
           </div>
         ) : (
-          <span className="text-subtle text-muted-foreground">—</span>
+          <span className="text-subtle text-muted-foreground">-</span>
         ),
       sortValue: (row) => row.student?.fullName ?? "",
     },
@@ -51,7 +51,7 @@ export function CompetitionRegistrationsTable({
       id: "weightClass",
       header: "رده وزنی",
       cell: (row) => (
-        <span className="text-subtle whitespace-nowrap text-muted-foreground tabular-nums">{row.weightClassLabel ?? "—"}</span>
+        <span className="text-subtle whitespace-nowrap text-muted-foreground tabular-nums">{row.weightClassLabel ?? "-"}</span>
       ),
       minScreen: "lg",
     },

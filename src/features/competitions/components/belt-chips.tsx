@@ -8,7 +8,7 @@ export function BeltChips({ belts, ids }: { belts: Belt[]; ids: string[] }) {
     .sort((left, right) => left.level - right.level);
 
   if (selected.length === 0) {
-    return "—";
+    return "-";
   }
 
   return (

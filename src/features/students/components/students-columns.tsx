@@ -29,13 +29,13 @@ export function studentColumns(options: { belts: Belt[]; onDelete: (student: Stu
       header: "کمربند",
       cell: (row) => {
         const belt = belts.find((item) => item.id === row.beltId);
-        return belt ? <BeltChip belt={belt} /> : "—";
+        return belt ? <BeltChip belt={belt} /> : "-";
       },
     },
     {
       id: "weight",
       header: "وزن",
-      cell: (row) => (row.weightKg !== null ? `${formatNumber(row.weightKg)} کیلوگرم` : "—"),
+      cell: (row) => (row.weightKg !== null ? `${formatNumber(row.weightKg)} کیلوگرم` : "-"),
       align: "end",
       sortValue: (row) => row.weightKg ?? 0,
     },
