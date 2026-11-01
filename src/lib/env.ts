@@ -44,7 +44,7 @@ const clientEnvSchema = z.object({
 
 const serverEnvSchema = z.object({
   DATABASE_URL: postgresUrl,
-  DIRECT_URL: postgresUrl,
+  DIRECT_URL: postgresUrl.optional(),
   ADMIN_MOBILE: z.string().regex(/^09\d{9}$/),
   ADMIN_PASSWORD: z.string().min(8),
   ADMIN_PROVINCE: z.enum(provinces),
