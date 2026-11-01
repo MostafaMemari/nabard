@@ -5,9 +5,33 @@ import { ConfirmDialog, DescriptionList, EmptyState, FormSection, PageHeader } f
 import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { ReceiptLightbox } from "@/features/payments";
 import { CompetitionsDemo } from "./competitions-demo";
 import { ComponentShowcase } from "./component-showcase";
 import { AdminShellDemo, CoachShellDemo } from "./shell-demos";
+
+function ReceiptLightboxDemo() {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label="نمایش بزرگ تصویر رسید"
+        className="group relative block w-44 cursor-zoom-in overflow-hidden rounded-lg border border-border"
+      >
+        {/* biome-ignore lint/performance/noImgElement: static demo asset */}
+        <img
+          src="/receipts/receipt-sample.png"
+          alt="نمونه تصویر رسید"
+          className="h-auto w-full transition-transform duration-200 group-hover:scale-[1.03]"
+        />
+      </button>
+      <ReceiptLightbox open={open} onOpenChange={setOpen} src="/receipts/receipt-sample.png" />
+    </div>
+  );
+}
 
 const detailItems = [
   { term: "عنوان", value: "مسابقات قهرمانی استان تهران" },
@@ -64,6 +88,10 @@ export function DevUiContent() {
               حذف مسابقه
             </Button>
           </div>
+        </FormSection>
+
+        <FormSection title="نمایش بزرگ رسید" description="کلیک روی تصویر، بزرگ نمایی با چرخ ماوس، کشیدن و دو بار کلیک">
+          <ReceiptLightboxDemo />
         </FormSection>
       </div>
 
