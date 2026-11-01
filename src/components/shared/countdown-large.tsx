@@ -3,6 +3,7 @@
 import { cn } from "cn";
 import { toPersianDigits } from "@/lib/format";
 import { useNow } from "@/lib/use-now";
+import { DeadlineProgress } from "./deadline-progress";
 
 const MINUTE_MS = 60_000;
 const HOUR_MS = 3_600_000;
@@ -37,14 +38,6 @@ export function CountdownLarge({ deadline, startedAt, className }: { deadline: s
   const values = remaining === null ? ["۰۰", "۰۰", "۰۰", "۰۰"] : remaining < 0 ? ["۰۰", "۰۰", "۰۰", "۰۰"] : split(remaining);
   const passed = remaining !== null && remaining < 0;
 
-  const startMs = new Date(startedAt).getTime();
-  const progress =
-    now === null || remaining === null || passed
-      ? null
-      : Math.min(100, Math.max(0, ((now.getTime() - startMs) / (deadlineMs - startMs)) * 100));
-  const barTone =
-    remaining !== null && remaining < DAY_MS ? "bg-danger" : remaining !== null && remaining <= 3 * DAY_MS ? "bg-warning" : "bg-primary";
-
   return (
     <div className={cn("flex flex-col gap-3", className)}>
       {passed ? (
@@ -57,14 +50,7 @@ export function CountdownLarge({ deadline, startedAt, className }: { deadline: s
           <Tile value={values[3]} label="ثانیه" />
         </div>
       )}
-      {progress !== null ? (
-        <div aria-hidden className="h-1.5 overflow-hidden rounded-full bg-muted">
-          <div
-            className={cn("h-full rounded-full transition-[width] duration-1000 ease-linear", barTone)}
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-      ) : null}
+      {!passed ? <DeadlineProgress startedAt={startedAt} deadline={deadline} /> : null}
     </div>
   );
 }

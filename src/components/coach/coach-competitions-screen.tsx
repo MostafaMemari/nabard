@@ -24,9 +24,9 @@ export function CoachCompetitionsScreen() {
           </button>
         </div>
       ) : isLoading ? (
-        <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 shadow-card">
+        <div className="flex flex-col gap-3">
           {["c1", "c2", "c3"].map((key) => (
-            <Skeleton key={key} className="h-12 w-full" />
+            <Skeleton key={key} className="h-28 w-full rounded-xl" />
           ))}
         </div>
       ) : openCompetitions.length === 0 ? (

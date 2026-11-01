@@ -8,6 +8,7 @@ export * from "./countdown-large";
 export * from "./data-table";
 export * from "./date-part-select";
 export * from "./deadline-chip";
+export * from "./deadline-progress";
 export * from "./description-list";
 export * from "./detail-page-header";
 export * from "./empty-state";
