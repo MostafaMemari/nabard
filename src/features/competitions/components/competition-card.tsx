@@ -28,8 +28,8 @@ export function CompetitionCard({
       <MobileCardLine label="ثبت نام ها" value={`${formatNumber(registrationCount)} هنرجو`} />
       <MobileCardChips>
         <BeltChips belts={belts} ids={competition.beltIds} />
-        <CountdownChip deadline={competition.registrationDeadline} />
       </MobileCardChips>
+      <CountdownChip deadline={competition.registrationDeadline} className="self-start" />
     </MobileCardLink>
   );
 }
