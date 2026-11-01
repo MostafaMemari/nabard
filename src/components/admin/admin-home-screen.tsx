@@ -1,7 +1,7 @@
 "use client";
 
 import { startOfWeek } from "date-fns-jalali";
-import { ClipboardListIcon, PlusIcon, ReceiptTextIcon, TrophyIcon } from "lucide-react";
+import { PlusIcon, ReceiptTextIcon, TrophyIcon } from "lucide-react";
 import Link from "next/link";
 import { useMemo } from "react";
 import { EmptyState, HomeListSection, PageHeader, SummaryCard } from "@/components/shared";
@@ -42,25 +42,17 @@ export function AdminHomeScreen() {
 
       <div className="grid gap-4 sm:grid-cols-3">
         {isLoading ? (
-          [1, 2, 3].map((key) => <Skeleton key={key} className="h-24 w-full" />)
+          [1, 2, 3].map((key) => <Skeleton key={key} className="h-32 w-full" />)
         ) : (
           <>
             <SummaryCard
-              icon={ReceiptTextIcon}
-              tone="warning"
               value={formatNumber(pendingCount)}
               label="رسیدهای در انتظار بررسی"
               href="/admin/payments?status=pending"
               linkLabel="مشاهده پرداخت ها"
             />
-            <SummaryCard
-              icon={TrophyIcon}
-              value={formatNumber(upcoming.length)}
-              label="مسابقات باز"
-              href="/admin/competitions"
-              linkLabel="مشاهده مسابقات"
-            />
-            <SummaryCard icon={ClipboardListIcon} value={formatNumber(weekCount)} label="ثبت نام های این هفته" />
+            <SummaryCard value={formatNumber(upcoming.length)} label="مسابقات باز" href="/admin/competitions" linkLabel="مشاهده مسابقات" />
+            <SummaryCard value={formatNumber(weekCount)} label="ثبت نام های این هفته" />
           </>
         )}
       </div>

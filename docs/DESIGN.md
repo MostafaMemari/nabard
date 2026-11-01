@@ -2,7 +2,7 @@
 
 Design brief for the taekwondo competition app. Every UI change must follow this file.
 
-Design read: an operator tool for admins and coaches in Tehran taekwondo, calm premium SaaS in a navy/blue language, dial ENERGY 1 / RHYTHM 1 / MOTION 1. Uniform rhythm and near-zero motion are deliberate, not defaults. Identity motif: dark navy sidebar with the brand mark, belt chips as domain color, and the tatami grid pattern on the login brand panel only.
+Design read: an operator tool for admins and coaches in Tehran taekwondo, calm premium SaaS in a navy/blue language, dial ENERGY 1 / RHYTHM 1 / MOTION 1. Uniform rhythm and near-zero motion are deliberate, not defaults. Identity motif: dark navy sidebar with the brand mark, belt chips as domain color, and the tatami grid pattern plus a six-segment belt progression strip (white to dan, the athlete's path) on the login brand panel only.
 
 ## Goal
 
@@ -104,7 +104,7 @@ Below 768px every table is replaced by a list of cards. Never squeeze columns an
 
 ## Screen blueprints
 
-**Login.** Split screen on desktop: the form on the start side (max width 380px, vertically centered, app name, subtitle, mobile and password fields, full-width primary button), and a brand panel on the end side filling the rest: deep navy with a soft gradient from #0f1629 to #1b2a52, a subtle geometric line pattern (tatami grid, drawn in SVG at low opacity), the app name large and the subtitle. No photos, no marketing copy. On mobile only the form shows, with the brand mark above it.
+**Login.** Split screen on desktop: the form on the start side (max width 380px, vertically centered, app name, subtitle, mobile and password fields, full-width primary button), and a brand panel on the end side filling the rest: deep navy with a soft gradient from #0f1629 to #1b2a52, a subtle geometric line pattern (tatami grid, drawn in SVG at low opacity), the app name large, the subtitle, and under it a small six-segment belt strip (white, yellow, green, blue, red, dan) as the domain signature. No photos, no marketing copy. On mobile only the form shows, with the brand mark above it.
 
 **Admin home.** Summary cards: receipts awaiting review, open competitions, registrations this week. Below, two cards side by side: «نیازمند اقدام» (latest pending receipts, each row with coach avatar, amount, time, a review button) and «مسابقات پیش رو» (title, deadline chip, registration count).
 

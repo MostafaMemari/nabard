@@ -25,6 +25,14 @@ export function LoginBrandPanel() {
           <span className="text-4xl font-semibold text-white">{APP_NAME}</span>
         </div>
         <p className="text-sm text-sidebar-foreground">{APP_SUBTITLE}</p>
+        <div aria-hidden className="mt-2 flex w-44 gap-1">
+          <span className="h-1.5 flex-1 rounded-full bg-belt-white" />
+          <span className="h-1.5 flex-1 rounded-full bg-belt-yellow" />
+          <span className="h-1.5 flex-1 rounded-full bg-belt-green" />
+          <span className="h-1.5 flex-1 rounded-full bg-belt-blue" />
+          <span className="h-1.5 flex-1 rounded-full bg-belt-red" />
+          <span className="h-1.5 flex-1 rounded-full bg-belt-dan ring-1 ring-inset ring-white/40" />
+        </div>
       </div>
     </div>
   );

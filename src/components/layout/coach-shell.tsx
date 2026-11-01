@@ -1,13 +1,12 @@
 "use client";
 
-import { cn } from "cn";
 import { ClipboardListIcon, HouseIcon, TrophyIcon, UsersIcon } from "lucide-react";
-import Link from "next/link";
 import type { ReactNode } from "react";
 import { Avatar } from "@/components/shared";
 import { APP_NAME } from "@/lib/app";
 import { AppSidebar, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
 import { BrandMark } from "./brand-mark";
+import { MobileBottomNav } from "./mobile-bottom-nav";
 
 export const coachNavItems: SidebarNavItem[] = [
   { id: "home", label: "خانه", href: "/coach", icon: HouseIcon },
@@ -15,23 +14,6 @@ export const coachNavItems: SidebarNavItem[] = [
   { id: "students", label: "هنرجویان", href: "/coach/students", icon: UsersIcon },
   { id: "registrations", label: "ثبت نام های من", href: "/coach/registrations", icon: ClipboardListIcon },
 ];
-
-function BottomNavItem({ item, active }: { item: SidebarNavItem; active: boolean }) {
-  return (
-    <Link
-      href={item.href}
-      aria-current={active ? "page" : undefined}
-      className={cn(
-        "relative flex min-h-12 flex-col items-center justify-center gap-1 text-xs font-medium transition-colors duration-150",
-        active ? "text-primary" : "text-muted-foreground hover:text-foreground",
-      )}
-    >
-      <item.icon aria-hidden className="size-4.5" strokeWidth={1.75} />
-      {item.label}
-      {active ? <span aria-hidden className="absolute inset-x-6 top-0 h-0.5 rounded-full bg-primary" /> : null}
-    </Link>
-  );
-}
 
 export function CoachShell({ active, user, children }: { active: string; user: SidebarUser; children: ReactNode }) {
   return (
@@ -56,17 +38,7 @@ export function CoachShell({ active, user, children }: { active: string; user: S
         <main id="coach-main" className="flex-1 pb-20 @5xl:pb-8">
           <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 @5xl:p-8">{children}</div>
         </main>
-        <nav
-          aria-label="ناوبری مربی"
-          className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card @5xl:hidden"
-          style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
-        >
-          <div className="grid grid-cols-4">
-            {coachNavItems.map((item) => (
-              <BottomNavItem key={item.id} item={item} active={item.id === active} />
-            ))}
-          </div>
-        </nav>
+        <MobileBottomNav items={coachNavItems} active={active} label="ناوبری مربی" className="@5xl:hidden" />
       </div>
     </div>
   );
