@@ -12,7 +12,7 @@ export function CoachRegistrationsScreen({ coachId }: { coachId: string }) {
 
   return (
     <>
-      <PageHeader title="ثبت‌نام‌های من" description="پیگیری وضعیت ثبت‌نام و پرداخت هنرجویان." />
+      <PageHeader title="ثبت نام های من" description="پیگیری وضعیت ثبت نام و پرداخت هنرجویان." />
       {error ? (
         <div className="flex items-center justify-between gap-3 rounded-xl border border-danger/30 bg-danger-bg px-4 py-3 text-sm text-danger">
           <span>دریافت اطلاعات ناموفق بود.</span>
@@ -26,7 +26,7 @@ export function CoachRegistrationsScreen({ coachId }: { coachId: string }) {
         </div>
       ) : rows.length === 0 ? (
         <div className="rounded-xl border border-border bg-card shadow-card">
-          <EmptyState icon={ClipboardListIcon} title="هنوز ثبت‌نامی انجام نشده است." />
+          <EmptyState icon={ClipboardListIcon} title="هنوز ثبت نامی انجام نشده است." />
         </div>
       ) : (
         <DataTable

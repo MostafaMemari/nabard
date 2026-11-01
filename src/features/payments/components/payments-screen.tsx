@@ -27,7 +27,7 @@ export function PaymentsScreen() {
 
   return (
     <>
-      <PageHeader title="بررسی پرداخت‌ها" description="بررسی و تأیید رسیدهای پرداخت مربیان." />
+      <PageHeader title="بررسی پرداخت ها" description="بررسی و تأیید رسیدهای پرداخت مربیان." />
 
       <DataTable
         columns={columns}

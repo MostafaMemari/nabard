@@ -44,11 +44,11 @@ export function ComponentShowcase() {
 
   return (
     <div className="flex flex-col gap-8">
-      <Section title="کارت‌های خلاصه">
+      <Section title="کارت های خلاصه">
         <div className="grid gap-4 sm:grid-cols-3">
           <SummaryCard value={formatNumber(3)} label="رسید در انتظار بررسی" href="#" linkLabel="مشاهده فهرست" />
           <SummaryCard value={formatNumber(2)} label="مسابقه باز" href="#" linkLabel="مشاهده مسابقات" />
-          <SummaryCard value={formatNumber(12)} label="ثبت‌نام این هفته" />
+          <SummaryCard value={formatNumber(12)} label="ثبت نام این هفته" />
         </div>
       </Section>
 
@@ -76,7 +76,7 @@ export function ComponentShowcase() {
         </div>
       </Section>
 
-      <Section title="وضعیت‌ها">
+      <Section title="وضعیت ها">
         <div className="flex flex-wrap gap-2 rounded-xl border border-border bg-card p-5 shadow-card">
           {statuses.map((status) => (
             <StatusBadge key={status} status={status} />
@@ -92,7 +92,7 @@ export function ComponentShowcase() {
         </div>
       </Section>
 
-      <Section title="دکمه‌ها">
+      <Section title="دکمه ها">
         <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5 shadow-card">
           <div className="flex flex-wrap items-center gap-2">
             <Button type="button">مسابقه جدید</Button>
@@ -117,7 +117,7 @@ export function ComponentShowcase() {
               کوچک
             </Button>
             <Button type="button" size="default">
-              پیش‌فرض
+              پیش فرض
             </Button>
             <Button type="button" size="lg">
               بزرگ

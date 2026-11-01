@@ -29,7 +29,7 @@ export function coachRegistrationColumns(): DataTableColumn<CoachRegistrationRow
     },
     {
       id: "createdAt",
-      header: "تاریخ ثبت‌نام",
+      header: "تاریخ ثبت نام",
       cell: (row) => (
         <span className="whitespace-nowrap text-muted-foreground">{formatJalaliDate(new Date(row.registration.createdAt))}</span>
       ),

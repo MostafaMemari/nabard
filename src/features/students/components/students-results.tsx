@@ -48,7 +48,7 @@ export function StudentsResults({
       <div className="rounded-xl border border-border bg-card shadow-card">
         <EmptyState
           icon={UsersIcon}
-          title={query !== "" ? `نتیجه‌ای برای «${query}» پیدا نشد.` : "هنوز هنرجویی اضافه نکرده‌اید."}
+          title={query !== "" ? `نتیجه ای برای «${query}» پیدا نشد.` : "هنوز هنرجویی اضافه نکرده اید."}
           action={
             query === "" ? (
               <Button size="sm" render={<Link href="/coach/students/new" />}>

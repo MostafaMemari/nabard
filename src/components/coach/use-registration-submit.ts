@@ -30,7 +30,7 @@ export function useRegistrationSubmit({
         receiptKey: `receipts/mock-${Date.now()}-${receipt.name}`,
       });
       await createRegistrations({ competitionId, coachId, paymentId: payment.id, students });
-      toast.success("ثبت‌نام انجام شد و رسید برای بررسی ارسال شد.");
+      toast.success("ثبت نام انجام شد و رسید برای بررسی ارسال شد.");
       router.push("/coach/registrations");
     } catch {
       toast.error("انجام نشد. دوباره تلاش کنید.");

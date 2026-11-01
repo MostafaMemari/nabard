@@ -52,7 +52,9 @@ export function CompetitionFormScreen({ competitionId }: { competitionId?: strin
       <form onSubmit={form.handleSubmit(submit)} className="flex flex-col gap-4" noValidate>
         <PageHeader
           title={isEdit ? "ویرایش مسابقه" : "مسابقه جدید"}
-          description={isEdit ? "اطلاعات مسابقه را ویرایش کنید." : "اطلاعات مسابقه را کامل کنید؛ مسابقه ابتدا به‌صورت پیش‌نویس ذخیره می‌شود."}
+          description={
+            isEdit ? "اطلاعات مسابقه را ویرایش کنید." : "اطلاعات مسابقه را کامل کنید؛ مسابقه ابتدا به صورت پیش نویس ذخیره می شود."
+          }
         />
 
         <BasicInfoSection control={form.control} />

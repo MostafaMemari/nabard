@@ -15,7 +15,7 @@ export function CoachCompetitionsScreen() {
 
   return (
     <>
-      <PageHeader title="مسابقات" description="مسابقات باز برای ثبت‌نام هنرجویان." />
+      <PageHeader title="مسابقات" description="مسابقات باز برای ثبت نام هنرجویان." />
       {error ? (
         <div className="flex items-center justify-between gap-3 rounded-xl border border-danger/30 bg-danger-bg px-4 py-3 text-sm text-danger">
           <span>دریافت اطلاعات ناموفق بود.</span>
@@ -31,7 +31,7 @@ export function CoachCompetitionsScreen() {
         </div>
       ) : openCompetitions.length === 0 ? (
         <div className="rounded-xl border border-border bg-card shadow-card">
-          <EmptyState title="هم‌اکنون مسابقه بازی برای ثبت‌نام وجود ندارد." />
+          <EmptyState title="هم اکنون مسابقه بازی برای ثبت نام وجود ندارد." />
         </div>
       ) : (
         <CoachCompetitionList competitions={openCompetitions} />

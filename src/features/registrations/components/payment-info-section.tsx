@@ -31,7 +31,7 @@ export function PaymentInfoSection({
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between gap-3 rounded-lg bg-primary-subtle px-4 py-3">
         <div className="flex min-w-0 flex-col gap-0.5">
-          <span className="text-subtle text-muted-foreground">مبلغ ثبت‌نام ({formatNumber(selectedCount)} هنرجو)</span>
+          <span className="text-subtle text-muted-foreground">مبلغ ثبت نام ({formatNumber(selectedCount)} هنرجو)</span>
           <span className="text-display font-semibold tabular-nums">{formatRialsAsToman(Number(amountRials))}</span>
         </div>
         <IconTile icon={BanknoteIcon} />

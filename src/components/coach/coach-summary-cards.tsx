@@ -36,11 +36,11 @@ export function CoachSummaryCards({
           <SummaryCard
             icon={ClipboardListIcon}
             value={formatNumber(registrationsCount)}
-            label="ثبت‌نام‌های من"
+            label="ثبت نام های من"
             href="/coach/registrations"
-            linkLabel="مشاهده ثبت‌نام‌ها"
+            linkLabel="مشاهده ثبت نام ها"
           />
-          <SummaryCard icon={HourglassIcon} tone="warning" value={formatNumber(awaitingReview)} label="پرداخت‌های در انتظار بررسی" />
+          <SummaryCard icon={HourglassIcon} tone="warning" value={formatNumber(awaitingReview)} label="پرداخت های در انتظار بررسی" />
         </>
       )}
     </div>

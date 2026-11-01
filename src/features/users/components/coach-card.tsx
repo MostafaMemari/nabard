@@ -30,7 +30,7 @@ export function CoachCard({
           className="h-11 w-full justify-center text-muted-foreground hover:text-foreground"
           onClick={() => onToggleStatus(coach)}
         >
-          {coach.isActive ? "غیرفعال‌سازی" : "فعال‌سازی"}
+          {coach.isActive ? "غیرفعال سازی" : "فعال سازی"}
         </Button>
       </div>
     </MobileCard>

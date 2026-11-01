@@ -29,7 +29,7 @@ function AdminShellDemo() {
       <div className="grid gap-4 sm:grid-cols-3">
         <SummaryCard value={formatNumber(3)} label="رسید در انتظار بررسی" href="#" linkLabel="مشاهده فهرست" />
         <SummaryCard value={formatNumber(2)} label="مسابقه باز" href="#" linkLabel="مشاهده مسابقات" />
-        <SummaryCard value={formatNumber(12)} label="ثبت‌نام این هفته" href="#" linkLabel="مشاهده ثبت‌نام‌ها" />
+        <SummaryCard value={formatNumber(12)} label="ثبت نام این هفته" href="#" linkLabel="مشاهده ثبت نام ها" />
       </div>
       <div className="grid gap-4 lg:grid-cols-2">
         <section className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5 shadow-card">
@@ -62,7 +62,7 @@ function AdminShellDemo() {
           <div className="flex items-center justify-between gap-2">
             <h3 className="flex items-center gap-2 text-base font-semibold">
               <TrophyIcon aria-hidden className="size-4.5 text-muted-foreground" strokeWidth={1.75} />
-              مسابقات پیش‌رو
+              مسابقات پیش رو
             </h3>
           </div>
           <ul className="flex flex-col divide-y divide-border">
@@ -70,7 +70,7 @@ function AdminShellDemo() {
               <li key={competition.id} className="flex items-center gap-3 py-2.5">
                 <div className="flex min-w-0 flex-1 flex-col leading-tight">
                   <span className="truncate text-sm font-medium">{competition.title}</span>
-                  <span className="text-subtle text-muted-foreground">{formatNumber(competition.registrations)} ثبت‌نام</span>
+                  <span className="text-subtle text-muted-foreground">{formatNumber(competition.registrations)} ثبت نام</span>
                 </div>
                 <DeadlineChip deadline={competition.deadline} now={now} />
               </li>
@@ -97,7 +97,7 @@ function CoachShellDemo() {
     <CoachShell active="home" user={coachUser}>
       <div className="grid gap-4 sm:grid-cols-3">
         <SummaryCard value={formatNumber(2)} label="مسابقه باز" />
-        <SummaryCard value={formatNumber(9)} label="ثبت‌نام من" />
+        <SummaryCard value={formatNumber(9)} label="ثبت نام من" />
         <SummaryCard value={formatNumber(1)} label="در انتظار بررسی" />
       </div>
       <section className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5 shadow-card">
@@ -114,14 +114,14 @@ function CoachShellDemo() {
               </div>
               <DeadlineChip deadline={competition.deadline} now={now} />
               <Button type="button" size="sm">
-                ثبت‌نام
+                ثبت نام
               </Button>
             </li>
           ))}
         </ul>
       </section>
       <section className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5 shadow-card">
-        <h3 className="text-base font-semibold">ثبت‌نام‌های من</h3>
+        <h3 className="text-base font-semibold">ثبت نام های من</h3>
         <ul className="flex flex-col divide-y divide-border">
           {myStudents.map((row) => (
             <li key={row.id} className="flex items-center gap-3 py-2.5">

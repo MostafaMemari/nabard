@@ -37,7 +37,7 @@ export function usePaymentDecisions(paymentId: string) {
     setBusyId(registrationId);
     try {
       await updateRegistrationStatus(registrationId, status);
-      toast.success(status === "APPROVED" ? "ثبت‌نام تأیید شد." : "ثبت‌نام رد شد.");
+      toast.success(status === "APPROVED" ? "ثبت نام تأیید شد." : "ثبت نام رد شد.");
       await mutateRegistrations();
     } catch {
       toast.error("انجام نشد. دوباره تلاش کنید.");

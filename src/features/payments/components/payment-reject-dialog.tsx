@@ -43,7 +43,7 @@ export function PaymentRejectDialog({
       <DialogContent showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>رد رسید</DialogTitle>
-          <DialogDescription>دلیل رد برای مربی نمایش داده می‌شود تا بتواند رسید جدیدی بارگذاری کند.</DialogDescription>
+          <DialogDescription>دلیل رد برای مربی نمایش داده می شود تا بتواند رسید جدیدی بارگذاری کند.</DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <Field data-invalid={form.formState.errors.note ? "" : undefined}>

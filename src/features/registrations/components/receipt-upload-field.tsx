@@ -36,7 +36,7 @@ export function ReceiptUploadField({ file, onChange }: { file: File | null; onCh
           {/* biome-ignore lint/performance/noImgElement: preview of a locally selected file blob */}
           <img
             src={previewUrl}
-            alt={`پیش‌نمایش رسید ${file.name}`}
+            alt={`پیش نمایش رسید ${file.name}`}
             width={640}
             height={360}
             className="h-48 w-full rounded-lg object-cover"

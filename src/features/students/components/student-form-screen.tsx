@@ -43,7 +43,7 @@ export function StudentFormScreen({ coachId, studentId }: { coachId: string; stu
       <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
         <PageHeader
           title={isEdit ? "ویرایش هنرجو" : "هنرجوی جدید"}
-          description={isEdit ? "اطلاعات هنرجو را ویرایش کنید." : "اطلاعات هنرجو را وارد کنید تا در ثبت‌نام مسابقات قابل استفاده باشد."}
+          description={isEdit ? "اطلاعات هنرجو را ویرایش کنید." : "اطلاعات هنرجو را وارد کنید تا در ثبت نام مسابقات قابل استفاده باشد."}
         />
 
         <FormSection title="اطلاعات هنرجو" icon={UsersIcon}>

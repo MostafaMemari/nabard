@@ -28,9 +28,9 @@ export function PaymentDetailContent({ decisions }: { decisions: Decisions }) {
     <div className="flex flex-col gap-6">
       <DetailPageHeader
         backHref="/admin/payments"
-        backLabel="بررسی پرداخت‌ها"
+        backLabel="بررسی پرداخت ها"
         title="رسید پرداخت مربی"
-        description="بررسی رسید و تأیید یا رد ثبت‌نام هنرجویان."
+        description="بررسی رسید و تأیید یا رد ثبت نام هنرجویان."
         action={<StatusBadge status={paymentBadgeStatus(payment.status)} />}
       />
 

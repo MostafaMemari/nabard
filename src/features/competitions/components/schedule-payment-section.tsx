@@ -8,9 +8,9 @@ import { FormDateField, FormTextField } from "./form-fields";
 
 export function SchedulePaymentSection({ control }: { control: Control<CompetitionFormValues> }) {
   return (
-    <FormSection title="زمان و پرداخت" description="مهلت ثبت‌نام، تاریخ برگزاری و اطلاعات پرداخت هزینه." icon={BanknoteIcon}>
+    <FormSection title="زمان و پرداخت" description="مهلت ثبت نام، تاریخ برگزاری و اطلاعات پرداخت هزینه." icon={BanknoteIcon}>
       <div className="grid gap-4 sm:grid-cols-2">
-        <FormDateField control={control} name="registrationDeadline" label="مهلت ثبت‌نام" />
+        <FormDateField control={control} name="registrationDeadline" label="مهلت ثبت نام" />
         <FormDateField control={control} name="eventDate" label="تاریخ برگزاری" />
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
@@ -26,7 +26,7 @@ export function SchedulePaymentSection({ control }: { control: Control<Competiti
         <FormTextField
           control={control}
           name="payeeCardNumber"
-          label="شماره کارت دریافت‌کننده"
+          label="شماره کارت دریافت کننده"
           inputMode="numeric"
           dir="ltr"
           autoComplete="off"

@@ -1,7 +1,7 @@
 export const competitionStatusConfig = {
   publish: {
     title: "انتشار مسابقه",
-    description: "با انتشار مسابقه، مربیان می‌توانند هنرجویان خود را ثبت‌نام کنند. اطلاعات مسابقه پس از شروع ثبت‌نام قابل تغییر نیست.",
+    description: "با انتشار مسابقه، مربیان می توانند هنرجویان خود را ثبت نام کنند. اطلاعات مسابقه پس از شروع ثبت نام قابل تغییر نیست.",
     confirmLabel: "انتشار",
     destructive: false,
     status: "PUBLISHED",
@@ -9,7 +9,7 @@ export const competitionStatusConfig = {
   },
   cancel: {
     title: "لغو مسابقه",
-    description: "با لغو مسابقه، از فهرست مسابقات باز مربیان حذف می‌شود و ثبت‌نام جدید ممکن نخواهد بود. این اقدام قابل بازگشت نیست.",
+    description: "با لغو مسابقه، از فهرست مسابقات باز مربیان حذف می شود و ثبت نام جدید ممکن نخواهد بود. این اقدام قابل بازگشت نیست.",
     confirmLabel: "لغو مسابقه",
     destructive: true,
     status: "CANCELED",

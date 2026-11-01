@@ -54,7 +54,7 @@ export function PaymentStep({
 
   return (
     <div className="flex flex-col gap-6">
-      <FormSection title="اطلاعات پرداخت" description="مبلغ را کارت‌به‌کارت واریز کنید و تصویر رسید را بارگذاری کنید.">
+      <FormSection title="اطلاعات پرداخت" description="مبلغ را کارت به کارت واریز کنید و تصویر رسید را بارگذاری کنید.">
         <PaymentInfoSection
           cardNumber={payeeCardNumber}
           cardHolder={payeeCardHolder}
@@ -62,7 +62,7 @@ export function PaymentStep({
           amountRials={amountRials}
         />
       </FormSection>
-      <FormSection title="رسید پرداخت" description="تصویر رسید کارت‌به‌کارت را بارگذاری کنید.">
+      <FormSection title="رسید پرداخت" description="تصویر رسید کارت به کارت را بارگذاری کنید.">
         <ReceiptUploadField file={file} onChange={selectFile} />
         {error ? <p className="text-subtle text-danger">{error}</p> : null}
       </FormSection>

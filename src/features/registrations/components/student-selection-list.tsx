@@ -20,7 +20,7 @@ export function StudentSelectionList({
   if (rows.length === 0) {
     return (
       <div className="rounded-xl border border-border bg-card shadow-card">
-        <p className="px-4 py-10 text-center text-sm text-muted-foreground">هنوز هنرجویی اضافه نکرده‌اید.</p>
+        <p className="px-4 py-10 text-center text-sm text-muted-foreground">هنوز هنرجویی اضافه نکرده اید.</p>
       </div>
     );
   }

@@ -9,7 +9,7 @@ import { BrandMark } from "./brand-mark";
 const navItems: SidebarNavItem[] = [
   { id: "home", label: "خانه", href: "/admin", icon: HouseIcon },
   { id: "competitions", label: "مسابقات", href: "/admin/competitions", icon: TrophyIcon },
-  { id: "payments", label: "بررسی پرداخت‌ها", href: "/admin/payments", icon: ReceiptTextIcon },
+  { id: "payments", label: "بررسی پرداخت ها", href: "/admin/payments", icon: ReceiptTextIcon },
   { id: "coaches", label: "مربیان", href: "/admin/coaches", icon: UsersIcon },
 ];
 

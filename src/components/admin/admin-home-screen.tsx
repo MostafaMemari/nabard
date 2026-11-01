@@ -38,7 +38,7 @@ export function AdminHomeScreen() {
 
   return (
     <>
-      <PageHeader title="خانه" description="نمای کلی مسابقات، پرداخت‌ها و مربیان." />
+      <PageHeader title="خانه" description="نمای کلی مسابقات، پرداخت ها و مربیان." />
 
       <div className="grid gap-4 sm:grid-cols-3">
         {isLoading ? (
@@ -51,7 +51,7 @@ export function AdminHomeScreen() {
               value={formatNumber(pendingCount)}
               label="رسیدهای در انتظار بررسی"
               href="/admin/payments?status=pending"
-              linkLabel="مشاهده پرداخت‌ها"
+              linkLabel="مشاهده پرداخت ها"
             />
             <SummaryCard
               icon={TrophyIcon}
@@ -60,7 +60,7 @@ export function AdminHomeScreen() {
               href="/admin/competitions"
               linkLabel="مشاهده مسابقات"
             />
-            <SummaryCard icon={ClipboardListIcon} value={formatNumber(weekCount)} label="ثبت‌نام‌های این هفته" />
+            <SummaryCard icon={ClipboardListIcon} value={formatNumber(weekCount)} label="ثبت نام های این هفته" />
           </>
         )}
       </div>
@@ -79,7 +79,7 @@ export function AdminHomeScreen() {
         </HomeListSection>
 
         <HomeListSection
-          title="مسابقات پیش‌رو"
+          title="مسابقات پیش رو"
           href="/admin/competitions"
           error={competitionsError}
           onRetry={() => void retryCompetitions()}
@@ -88,7 +88,7 @@ export function AdminHomeScreen() {
           empty={
             <EmptyState
               icon={TrophyIcon}
-              title="هنوز مسابقه‌ای ثبت نشده است."
+              title="هنوز مسابقه ای ثبت نشده است."
               action={
                 <Button size="sm" render={<Link href="/admin/competitions/new" />}>
                   <PlusIcon data-icon="inline-start" />

@@ -23,7 +23,7 @@ export function PaymentDetailScreen({ paymentId }: { paymentId: string }) {
   if (error || !payment) {
     return (
       <div className="flex flex-col gap-4">
-        <DetailPageHeader backHref="/admin/payments" backLabel="بررسی پرداخت‌ها" title="رسید پرداخت مربی" />
+        <DetailPageHeader backHref="/admin/payments" backLabel="بررسی پرداخت ها" title="رسید پرداخت مربی" />
         <ErrorBanner message="پرداخت یافت نشد." onRetry={() => mutate()} />
       </div>
     );

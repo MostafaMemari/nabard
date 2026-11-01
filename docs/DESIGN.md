@@ -104,28 +104,33 @@ Below 768px every table is replaced by a list of cards. Never squeeze columns an
 
 **Login.** Split screen on desktop: the form on the start side (max width 380px, vertically centered, app name, subtitle, mobile and password fields, full-width primary button), and a brand panel on the end side filling the rest: deep navy with a soft gradient from #0f1629 to #1b2a52, a subtle geometric line pattern (tatami grid, drawn in SVG at low opacity), the app name large and the subtitle. No photos, no marketing copy. On mobile only the form shows, with the brand mark above it.
 
-**Admin home.** Summary cards: receipts awaiting review, open competitions, registrations this week. Below, two cards side by side: «نیازمند اقدام» (latest pending receipts, each row with coach avatar, amount, time, a review button) and «مسابقات پیش‌رو» (title, deadline chip, registration count).
+**Admin home.** Summary cards: receipts awaiting review, open competitions, registrations this week. Below, two cards side by side: «نیازمند اقدام» (latest pending receipts, each row with coach avatar, amount, time, a review button) and «مسابقات پیش رو» (title, deadline chip, registration count).
 
-**Admin competitions list.** Header with «مسابقه جدید». Toolbar with search and status tabs with counts (همه، پیش‌نویس، منتشر شده، لغو شده). Table: title with discipline, age category, gender, belt range chips, deadline chip, registrations count, status.
+**Admin competitions list.** Header with «مسابقه جدید». Toolbar with search and status tabs with counts (همه، پیش نویس، منتشر شده، لغو شده). Table: title with discipline, age category, gender, belt range chips, deadline chip, registrations count, status.
 
-**Admin competition form.** Single card sections: «اطلاعات پایه»، «شرکت‌کنندگان» (gender, age category, belt from and to), «زمان و پرداخت» (deadline, event date, fee, payee card number, card holder). For kyorugi, a read-only weight class table appears in «شرکت‌کنندگان». Actions at the end.
+**Admin competition form.** Single card sections: «اطلاعات پایه»، «شرکت کنندگان» (gender, age category, belt from and to), «زمان و پرداخت» (deadline, event date, fee, payee card number, card holder). For kyorugi, a read-only weight class table appears in «شرکت کنندگان». Actions at the end.
 
 **Admin payments review.** List with status tabs and counts; table: coach with avatar, competition, student count, amount, date, status. Detail page: two columns. Main: receipt image card, then student table with per-row approve and reject. Side (sticky): coach, competition, student count, total, confirm and reject receipt buttons. Rejection opens a dialog that requires a note.
 
 **Admin coaches.** List with avatar, name, mobile, student count, status; create in a side sheet; detail page lists the coach's students.
 
-**Coach home.** Summary cards (open competitions, my registrations, awaiting review). «مسابقات باز» as rows with deadline chip, fee and a «ثبت‌نام» button. «ثبت‌نام‌های من» as a table that becomes stacked rows on mobile.
+**Coach home.** Summary cards (open competitions, my registrations, awaiting review). «مسابقات باز» as rows with deadline chip, fee and a «ثبت نام» button. «ثبت نام های من» as a table that becomes stacked rows on mobile.
 
 **Coach registration.** Compact competition summary card. Student list with checkboxes: eligible first, ineligible dimmed below with the reason in muted text. Sticky bottom bar on mobile (summary bar on desktop) with selected count, total and «ادامه». Next view: payee card number with a copy button, amount, receipt upload with preview, submit.
 
 **Coach students.** Same list anatomy; form is one column, max width 560px; belt select, Jalali birth date picker, weight with one decimal.
 
+## Copy rules
+
+- No ZWNJ (نیم‌فاصله) anywhere in UI text. Write compounds with a plain space: «ثبت نام های من»، «مسابقه جدید». The owner rejected ZWNJ styling as it reads machine-generated.
+- Write like a human operator, not a copywriter: short plain sentences, concrete nouns, no filler adjectives, no marketing tone, no over-explaining the obvious. A button says the verb it does; an empty state says what is missing and offers one action.
+
 ## Copy glossary
 
-Navigation: خانه، مسابقات، بررسی پرداخت‌ها، مربیان، هنرجویان، ثبت‌نام‌های من.
-Actions: مسابقه جدید، هنرجوی جدید، ثبت‌نام هنرجویان، آپلود رسید، تأیید رسید، رد رسید، تأیید ثبت‌نام، رد ثبت‌نام، ذخیره، انصراف، حذف.
-Statuses: در انتظار پرداخت (warning)، در انتظار بررسی (pending)، تأیید شده (success)، رد شده (danger)، لغو شده (pending)، پیش‌نویس (pending)، منتشر شده (success).
-Empty states: «هنوز مسابقه‌ای ثبت نشده است.»، «هنوز هنرجویی اضافه نکرده‌اید.»، «پرداختی برای بررسی وجود ندارد.»
+Navigation: خانه، مسابقات، بررسی پرداخت ها، مربیان، هنرجویان، ثبت نام های من.
+Actions: مسابقه جدید، هنرجوی جدید، ثبت نام هنرجویان، آپلود رسید، تأیید رسید، رد رسید، تأیید ثبت نام، رد ثبت نام، ذخیره، انصراف، حذف.
+Statuses: در انتظار پرداخت (warning)، در انتظار بررسی (pending)، تأیید شده (success)، رد شده (danger)، لغو شده (pending)، پیش نویس (pending)، منتشر شده (success).
+Empty states: «هنوز مسابقه ای ثبت نشده است.»، «هنوز هنرجویی اضافه نکرده اید.»، «پرداختی برای بررسی وجود ندارد.»
 Errors say what is wrong and what to do: «کد ملی باید ۱۰ رقم باشد.»
 Persian digits and thousands separators; Jalali dates; money through `lib/format.ts`.
 

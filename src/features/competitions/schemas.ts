@@ -14,11 +14,11 @@ export const competitionSchema = z
       .pipe(z.string().refine((value) => value !== "" && Number(value) > 0, "هزینه هر هنرجو را به ریال وارد کنید.")),
     payeeCardNumber: z.string().transform(normalizeDigits).pipe(z.string().length(16, "شماره کارت باید ۱۶ رقم باشد.")),
     payeeCardHolder: z.string().trim().min(3, "نام صاحب کارت را وارد کنید."),
-    registrationDeadline: z.string().min(1, "مهلت ثبت‌نام را انتخاب کنید."),
+    registrationDeadline: z.string().min(1, "مهلت ثبت نام را انتخاب کنید."),
     eventDate: z.string().min(1, "تاریخ برگزاری را انتخاب کنید."),
   })
   .refine((data) => data.eventDate > data.registrationDeadline, {
-    message: "تاریخ برگزاری باید بعد از مهلت ثبت‌نام باشد.",
+    message: "تاریخ برگزاری باید بعد از مهلت ثبت نام باشد.",
     path: ["eventDate"],
   });
 

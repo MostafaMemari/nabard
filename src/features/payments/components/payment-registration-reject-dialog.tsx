@@ -27,9 +27,9 @@ export function PaymentRegistrationRejectDialog({
           onClose();
         }
       }}
-      title="رد ثبت‌نام"
-      description={`ثبت‌نام «${name}» رد می‌شود و هنرجو در این مسابقه پذیرفته نخواهد شد.`}
-      confirmLabel="رد ثبت‌نام"
+      title="رد ثبت نام"
+      description={`ثبت نام «${name}» رد می شود و هنرجو در این مسابقه پذیرفته نخواهد شد.`}
+      confirmLabel="رد ثبت نام"
       destructive
       loading={loading}
       onConfirm={() => {

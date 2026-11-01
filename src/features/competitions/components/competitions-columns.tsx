@@ -32,13 +32,13 @@ export function competitionsColumns(options: {
     { id: "belts", header: "کمربندها", cell: (row) => <BeltChips belts={belts} ids={row.beltIds} />, minScreen: "xl" },
     {
       id: "deadline",
-      header: "مهلت ثبت‌نام",
+      header: "مهلت ثبت نام",
       cell: (row) => <DeadlineChip deadline={row.registrationDeadline} />,
       sortValue: (row) => row.registrationDeadline,
     },
     {
       id: "registrations",
-      header: "ثبت‌نام‌ها",
+      header: "ثبت نام ها",
       cell: (row) => registrationCount(row.id),
       align: "end",
       minScreen: "lg",

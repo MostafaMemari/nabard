@@ -44,13 +44,13 @@ export function CoachStatusDialog({
           onClose();
         }
       }}
-      title={targetActive ? "فعال‌سازی مربی" : "غیرفعال کردن مربی"}
+      title={targetActive ? "فعال سازی مربی" : "غیرفعال کردن مربی"}
       description={
         targetActive
-          ? `با فعال‌سازی، «${coach?.fullName}» می‌تواند دوباره وارد سامانه شود.`
-          : `با غیرفعال کردن حساب، «${coach?.fullName}» دیگر نمی‌تواند وارد سامانه شود. اطلاعات هنرجویان او حفظ می‌شود.`
+          ? `با فعال سازی، «${coach?.fullName}» می تواند دوباره وارد سامانه شود.`
+          : `با غیرفعال کردن حساب، «${coach?.fullName}» دیگر نمی تواند وارد سامانه شود. اطلاعات هنرجویان او حفظ می شود.`
       }
-      confirmLabel={targetActive ? "فعال‌سازی" : "غیرفعال کردن"}
+      confirmLabel={targetActive ? "فعال سازی" : "غیرفعال کردن"}
       destructive={targetActive === false}
       loading={working}
       onConfirm={() => void confirm()}

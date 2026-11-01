@@ -50,7 +50,7 @@ Viewport audit result: no page-level horizontal overflow anywhere (document scro
 
 | # | Route / file | Issue | Severity |
 | --- | --- | --- | --- |
-| 1 | `/admin` | Admin home is a «به‌زودی» placeholder; DESIGN blueprint (summary cards, «نیازمند اقدام», «مسابقات پیش‌رو») not built. Signature screen. | high |
+| 1 | `/admin` | Admin home is a «به زودی» placeholder; DESIGN blueprint (summary cards, «نیازمند اقدام», «مسابقات پیش رو») not built. Signature screen. | high |
 | 2 | `/admin/competitions` | Table scrolls horizontally inside the card at 768/390 (probe sw 771 vs cw 446/356); belt chips stack vertically at 768. No card mode below 768. | high |
 | 3 | `/admin/payments` | Same: table overflow at 768/390 (sw 763). No card mode. | high |
 | 4 | `/coach/registrations`, `/coach` | Registrations table overflows at 768 (sw 823); table/card switch happens at container 512px so widths 512–1152 get an overflowing table. | high |

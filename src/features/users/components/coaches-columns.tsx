@@ -51,7 +51,7 @@ export function coachColumns(options: { students: Student[]; onToggleStatus: (co
                 onToggleStatus(row);
               }}
             >
-              {row.isActive ? "غیرفعال‌سازی" : "فعال‌سازی"}
+              {row.isActive ? "غیرفعال سازی" : "فعال سازی"}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

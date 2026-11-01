@@ -28,7 +28,7 @@ function buildSteps(registration: Registration, paymentStatus: PaymentStatus | n
       : "upcoming";
 
   return [
-    { title: "ثبت‌نام ارسال شد", hint: formatJalaliDateTime(new Date(registration.createdAt)), state: "done" },
+    { title: "ثبت نام ارسال شد", hint: formatJalaliDateTime(new Date(registration.createdAt)), state: "done" },
     {
       title: "بررسی رسید",
       hint:
@@ -39,7 +39,11 @@ function buildSteps(registration: Registration, paymentStatus: PaymentStatus | n
             : undefined,
       state: receiptState,
     },
-    { title: "بررسی ثبت‌نام", hint: registration.status === "REJECTED" ? (registration.note ?? undefined) : undefined, state: studentState },
+    {
+      title: "بررسی ثبت نام",
+      hint: registration.status === "REJECTED" ? (registration.note ?? undefined) : undefined,
+      state: studentState,
+    },
   ];
 }
 

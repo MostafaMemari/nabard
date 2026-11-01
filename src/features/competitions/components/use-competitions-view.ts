@@ -8,7 +8,7 @@ import { competitionsColumns } from "./competitions-columns";
 
 const statusTabs: { id: string; label: string }[] = [
   { id: "all", label: "همه" },
-  { id: "DRAFT", label: "پیش‌نویس" },
+  { id: "DRAFT", label: "پیش نویس" },
   { id: "PUBLISHED", label: "منتشر شده" },
   { id: "CANCELED", label: "لغو شده" },
 ];

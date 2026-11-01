@@ -45,7 +45,7 @@ export function CoachDetailScreen({ coachId }: { coachId: string }) {
             className={coach.isActive ? "text-danger" : ""}
             onClick={() => setPendingStatus(!coach.isActive)}
           >
-            {coach.isActive ? "غیرفعال کردن" : "فعال‌سازی"}
+            {coach.isActive ? "غیرفعال کردن" : "فعال سازی"}
           </Button>
         }
       />

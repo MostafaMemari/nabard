@@ -13,7 +13,7 @@ export function CompetitionFormLocked({ competitionId }: { competitionId: string
         <EmptyState
           icon={LockIcon}
           tone="warning"
-          title="این مسابقه ثبت‌نام دارد و اطلاعات آن قابل ویرایش نیست."
+          title="این مسابقه ثبت نام دارد و اطلاعات آن قابل ویرایش نیست."
           action={
             <Button render={<Link href={`/admin/competitions/${competitionId}`} />} size="sm" variant="outline">
               بازگشت به جزئیات مسابقه

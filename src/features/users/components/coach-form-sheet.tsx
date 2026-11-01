@@ -47,7 +47,7 @@ export function CoachFormSheet({
       <SheetContent className="gap-0 p-6 sm:max-w-md">
         <SheetHeader className="p-0">
           <SheetTitle>مربی جدید</SheetTitle>
-          <SheetDescription>اطلاعات مربی را وارد کنید؛ حساب به‌صورت فعال ساخته می‌شود.</SheetDescription>
+          <SheetDescription>اطلاعات مربی را وارد کنید؛ حساب به صورت فعال ساخته می شود.</SheetDescription>
         </SheetHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="mt-6 flex flex-col gap-4">
           <CoachTextField control={form.control} name="fullName" label="نام و نام خانوادگی" placeholder="مثلاً رضا محمدی" />

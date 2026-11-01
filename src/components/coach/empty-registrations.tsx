@@ -9,7 +9,7 @@ export function EmptyRegistrations() {
   return (
     <EmptyState
       icon={ClipboardListIcon}
-      title="هنوز ثبت‌نامی انجام نشده است."
+      title="هنوز ثبت نامی انجام نشده است."
       action={
         <Button size="sm" render={<Link href="/coach/competitions" />}>
           مشاهده مسابقات باز

@@ -6,7 +6,7 @@ const statusStyles = {
   APPROVED: { label: "تأیید شده", className: "bg-success-bg text-success" },
   REJECTED: { label: "رد شده", className: "bg-danger-bg text-danger" },
   CANCELED: { label: "لغو شده", className: "bg-pending-bg text-pending" },
-  DRAFT: { label: "پیش‌نویس", className: "bg-pending-bg text-pending" },
+  DRAFT: { label: "پیش نویس", className: "bg-pending-bg text-pending" },
   PUBLISHED: { label: "منتشر شده", className: "bg-success-bg text-success" },
   ACTIVE: { label: "فعال", className: "bg-success-bg text-success" },
   INACTIVE: { label: "غیرفعال", className: "bg-pending-bg text-pending" },

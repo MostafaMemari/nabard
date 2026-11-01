@@ -12,7 +12,7 @@ export function WeightClassHint({ visible, classes, isLoading }: { visible: bool
   return (
     <div className="flex flex-col gap-2 rounded-lg bg-primary-subtle/60 p-3">
       <p className="text-subtle text-muted-foreground">
-        رده‌های وزنی {disciplineLabels.KYORUGI} برای رده سنی و جنسیت انتخاب‌شده به‌صورت خودکار تعیین می‌شود:
+        رده های وزنی {disciplineLabels.KYORUGI} برای رده سنی و جنسیت انتخاب شده به صورت خودکار تعیین می شود:
       </p>
       <WeightClassTable classes={classes} isLoading={isLoading} />
     </div>

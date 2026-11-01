@@ -12,7 +12,7 @@ export const disciplineIcons: Record<Discipline, LucideIcon> = {
 };
 
 export const competitionStatusTabLabels = {
-  DRAFT: "پیش‌نویس",
+  DRAFT: "پیش نویس",
   PUBLISHED: "منتشر شده",
   CANCELED: "لغو شده",
 } as const;

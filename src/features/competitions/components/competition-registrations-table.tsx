@@ -57,7 +57,7 @@ export function CompetitionRegistrationsTable({
     },
     {
       id: "createdAt",
-      header: "تاریخ ثبت‌نام",
+      header: "تاریخ ثبت نام",
       cell: (row) => (
         <span className="text-subtle whitespace-nowrap text-muted-foreground">
           {formatJalaliDateTime(new Date(row.registration.createdAt))}
@@ -70,7 +70,7 @@ export function CompetitionRegistrationsTable({
   ];
 
   if (error) {
-    return <ErrorBanner message="دریافت ثبت‌نام‌ها ناموفق بود." onRetry={() => mutate()} />;
+    return <ErrorBanner message="دریافت ثبت نام ها ناموفق بود." onRetry={() => mutate()} />;
   }
 
   if (isLoading) {
@@ -78,7 +78,7 @@ export function CompetitionRegistrationsTable({
   }
 
   if (rows.length === 0) {
-    return <EmptyState title="هنوز ثبت‌نامی برای این مسابقه انجام نشده است." />;
+    return <EmptyState title="هنوز ثبت نامی برای این مسابقه انجام نشده است." />;
   }
 
   return (

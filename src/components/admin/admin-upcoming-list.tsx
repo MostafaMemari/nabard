@@ -24,7 +24,7 @@ export function AdminUpcomingList({
           <div className="min-w-0 flex-1 leading-tight">
             <p className="truncate text-sm font-medium">{competition.title}</p>
             <p className="text-subtle mt-0.5 text-muted-foreground tabular-nums">
-              {formatNumber(registrationCount(competition.id))} ثبت‌نام
+              {formatNumber(registrationCount(competition.id))} ثبت نام
             </p>
           </div>
           <CountdownChip deadline={competition.registrationDeadline} />

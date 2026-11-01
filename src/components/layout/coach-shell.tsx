@@ -13,7 +13,7 @@ export const coachNavItems: SidebarNavItem[] = [
   { id: "home", label: "خانه", href: "/coach", icon: HouseIcon },
   { id: "competitions", label: "مسابقات", href: "/coach/competitions", icon: TrophyIcon },
   { id: "students", label: "هنرجویان", href: "/coach/students", icon: UsersIcon },
-  { id: "registrations", label: "ثبت‌نام‌های من", href: "/coach/registrations", icon: ClipboardListIcon },
+  { id: "registrations", label: "ثبت نام های من", href: "/coach/registrations", icon: ClipboardListIcon },
 ];
 
 function BottomNavItem({ item, active }: { item: SidebarNavItem; active: boolean }) {

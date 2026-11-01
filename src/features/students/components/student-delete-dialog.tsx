@@ -43,7 +43,7 @@ export function StudentDeleteDialog({
         }
       }}
       title="حذف هنرجو"
-      description={`«${student?.fullName}» از فهرست هنرجویان شما حذف می‌شود و در ثبت‌نام‌های بعدی قابل انتخاب نیست. این کار قابل بازگشت نیست.`}
+      description={`«${student?.fullName}» از فهرست هنرجویان شما حذف می شود و در ثبت نام های بعدی قابل انتخاب نیست. این کار قابل بازگشت نیست.`}
       confirmLabel="حذف"
       destructive
       loading={working}

@@ -54,7 +54,7 @@ export function CoachesScreen() {
         )}
         emptyIcon={UserRoundIcon}
         emptyTitle={
-          filters.search.value.trim() !== "" ? `نتیجه‌ای برای «${filters.search.value.trim()}» پیدا نشد.` : "هنوز مربی‌ای اضافه نشده است."
+          filters.search.value.trim() !== "" ? `نتیجه ای برای «${filters.search.value.trim()}» پیدا نشد.` : "هنوز مربی ای اضافه نشده است."
         }
         emptyAction={
           <Button size="sm" onClick={() => setSheetOpen(true)}>

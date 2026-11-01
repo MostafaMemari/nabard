@@ -19,13 +19,13 @@ export function CompetitionInfoSections({
 }) {
   return (
     <div className="grid items-start gap-4 lg:grid-cols-2">
-      <FormSection title="شرکت‌کنندگان" icon={UsersRoundIcon}>
+      <FormSection title="شرکت کنندگان" icon={UsersRoundIcon}>
         <DescriptionList
           items={[
             { term: "رشته", value: disciplineLabels[competition.discipline] },
             { term: "جنسیت", value: genderLabels[competition.gender] },
             { term: "رده سنی", value: ageCategoryLabel(competition.ageCategoryId) },
-            { term: "رده‌های وزنی", value: `${toPersianDigits(weightClassCount)} رده` },
+            { term: "رده های وزنی", value: `${toPersianDigits(weightClassCount)} رده` },
             { term: "کمربندها", value: <BeltChips belts={belts} ids={competition.beltIds} /> },
           ]}
         />
@@ -34,7 +34,7 @@ export function CompetitionInfoSections({
       <FormSection title="زمان و پرداخت" icon={BanknoteIcon}>
         <DescriptionList
           items={[
-            { term: "مهلت ثبت‌نام", value: formatJalaliDate(new Date(competition.registrationDeadline)) },
+            { term: "مهلت ثبت نام", value: formatJalaliDate(new Date(competition.registrationDeadline)) },
             { term: "تاریخ برگزاری", value: formatJalaliDate(new Date(competition.eventDate)) },
             { term: "هزینه هر هنرجو", value: formatRialsAsToman(Number(competition.feePerStudent)) },
             { term: "شماره کارت", value: formatCardNumber(competition.payeeCardNumber) },

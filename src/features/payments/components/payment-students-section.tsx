@@ -39,20 +39,20 @@ export function PaymentStudentsSection({
   return (
     <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-card md:p-6">
       <div className="flex items-center justify-between gap-3">
-        <h2 className="text-base font-semibold">هنرجویان ثبت‌نام‌شده</h2>
+        <h2 className="text-base font-semibold">هنرجویان ثبت نام شده</h2>
         <span className="text-subtle text-muted-foreground">{toPersianDigits(registrations.length)} هنرجو</span>
       </div>
 
       {!canApprove ? (
         <p className="rounded-lg border border-border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
-          تأیید ثبت‌نام‌ها پس از تأیید رسید فعال می‌شود؛ رد کردن هر ثبت‌نام همیشه امکان‌پذیر است.
+          تأیید ثبت نام ها پس از تأیید رسید فعال می شود؛ رد کردن هر ثبت نام همیشه امکان پذیر است.
         </p>
       ) : null}
 
       {isLoading ? (
         <SkeletonRows rows={3} />
       ) : registrations.length === 0 ? (
-        <p className="text-subtle text-muted-foreground">برای این رسید ثبت‌نامی وجود ندارد.</p>
+        <p className="text-subtle text-muted-foreground">برای این رسید ثبت نامی وجود ندارد.</p>
       ) : (
         <>
           <div className="hidden md:block">

@@ -28,7 +28,7 @@ export function SelectionItem({ row, selected, onToggle }: { row: SelectionRow; 
           <span className="truncate text-sm font-medium">{row.student.fullName}</span>
           {row.registered ? (
             <span className="inline-flex h-6 items-center rounded-full bg-pending-bg px-2.5 text-subtle font-medium text-pending">
-              ثبت‌نام شده
+              ثبت نام شده
             </span>
           ) : null}
         </span>

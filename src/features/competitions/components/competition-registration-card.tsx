@@ -22,7 +22,7 @@ export function CompetitionRegistrationCard({ row }: { row: CompetitionRegistrat
         end={<StatusBadge status={registrationBadgeStatus(registration.status)} />}
       />
       <MobileCardLine label="رده وزنی" value={weightClassLabel ?? "—"} />
-      <MobileCardLine label="تاریخ ثبت‌نام" value={formatJalaliDateTime(new Date(registration.createdAt))} />
+      <MobileCardLine label="تاریخ ثبت نام" value={formatJalaliDateTime(new Date(registration.createdAt))} />
     </MobileCard>
   );
 }

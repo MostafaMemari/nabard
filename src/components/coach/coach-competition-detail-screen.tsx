@@ -39,7 +39,7 @@ export function CoachCompetitionDetailScreen({ competitionId }: { competitionId:
         action={
           open ? (
             <Button render={<Link href={`/coach/competitions/${competitionId}/register`} />}>
-              ثبت‌نام هنرجویان
+              ثبت نام هنرجویان
               <ArrowLeftIcon data-icon="inline-end" />
             </Button>
           ) : null
@@ -50,7 +50,7 @@ export function CoachCompetitionDetailScreen({ competitionId }: { competitionId:
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <IconTile icon={TimerIcon} />
-            <h2 className="text-base font-semibold">مهلت ثبت‌نام</h2>
+            <h2 className="text-base font-semibold">مهلت ثبت نام</h2>
           </div>
           <StatusBadge status={competition.status} />
         </div>

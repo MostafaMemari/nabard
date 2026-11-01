@@ -25,7 +25,7 @@ export function CompetitionCard({
         end={<StatusBadge status={competition.status} />}
       />
       <MobileCardLine label="رده سنی" value={`${ageCategoryLabel(competition.ageCategoryId)} · ${genderLabels[competition.gender]}`} />
-      <MobileCardLine label="ثبت‌نام‌ها" value={`${formatNumber(registrationCount)} هنرجو`} />
+      <MobileCardLine label="ثبت نام ها" value={`${formatNumber(registrationCount)} هنرجو`} />
       <MobileCardChips>
         <BeltChips belts={belts} ids={competition.beltIds} />
         <CountdownChip deadline={competition.registrationDeadline} />

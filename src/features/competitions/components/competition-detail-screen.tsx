@@ -64,7 +64,7 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
             <CountdownChip deadline={competition.registrationDeadline} />
           </div>
         </div>
-        {hasRegistrations ? <p className="text-subtle text-muted-foreground">به دلیل وجود ثبت‌نام، ویرایش این مسابقه ممکن نیست.</p> : null}
+        {hasRegistrations ? <p className="text-subtle text-muted-foreground">به دلیل وجود ثبت نام، ویرایش این مسابقه ممکن نیست.</p> : null}
       </div>
 
       <CompetitionInfoSections competition={competition} belts={belts} weightClassCount={weightClasses.length} />

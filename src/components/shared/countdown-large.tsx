@@ -48,7 +48,7 @@ export function CountdownLarge({ deadline, startedAt, className }: { deadline: s
   return (
     <div className={cn("flex flex-col gap-3", className)}>
       {passed ? (
-        <p className="text-subtle font-medium text-muted-foreground">مهلت ثبت‌نام تمام شد.</p>
+        <p className="text-subtle font-medium text-muted-foreground">مهلت ثبت نام تمام شد.</p>
       ) : (
         <div className="flex items-stretch gap-2" dir="ltr">
           <Tile value={values[3]} label="ثانیه" />

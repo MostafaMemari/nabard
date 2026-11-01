@@ -21,14 +21,14 @@ export function CoachRegistrationDetailScreen({ coachId, registrationId }: { coa
   }
 
   if (error || !row) {
-    return <ErrorBanner message="ثبت‌نام یافت نشد." onRetry={() => void retry()} />;
+    return <ErrorBanner message="ثبت نام یافت نشد." onRetry={() => void retry()} />;
   }
 
   return (
     <div className="flex flex-col gap-6">
       <DetailPageHeader
         backHref="/coach/registrations"
-        backLabel="ثبت‌نام‌های من"
+        backLabel="ثبت نام های من"
         title={row.studentName ?? "—"}
         description={row.competitionTitle}
         action={<StatusBadge status={registrationStatusKey(row.registration.status)} />}
@@ -37,7 +37,7 @@ export function CoachRegistrationDetailScreen({ coachId, registrationId }: { coa
       <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-card md:p-6">
         <div className="flex items-center gap-3">
           <IconTile icon={ClipboardListIcon} />
-          <h2 className="text-base font-semibold">وضعیت ثبت‌نام</h2>
+          <h2 className="text-base font-semibold">وضعیت ثبت نام</h2>
         </div>
         <RegistrationTimeline registration={row.registration} paymentStatus={row.paymentStatus} />
       </section>
@@ -45,12 +45,12 @@ export function CoachRegistrationDetailScreen({ coachId, registrationId }: { coa
       <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-card md:p-6">
         <div className="flex items-center gap-3">
           <IconTile icon={ReceiptTextIcon} />
-          <h2 className="text-base font-semibold">اطلاعات ثبت‌نام</h2>
+          <h2 className="text-base font-semibold">اطلاعات ثبت نام</h2>
         </div>
         <DescriptionList
           items={[
             { term: "رده وزنی", value: row.weightClassLabel ?? "—" },
-            { term: "تاریخ ثبت‌نام", value: formatJalaliDateTime(new Date(row.registration.createdAt)) },
+            { term: "تاریخ ثبت نام", value: formatJalaliDateTime(new Date(row.registration.createdAt)) },
             {
               term: "وضعیت رسید",
               value: row.paymentStatus ? <StatusBadge status={paymentStatusKey(row.paymentStatus)} /> : "—",
