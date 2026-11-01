@@ -34,11 +34,14 @@ Source documents live in `docs/`: the requirements document, `schema.prisma` and
 - Every new or changed endpoint is added to `docs/api.md` in the same step.
 - Summarize what changed in a few lines when done. Do not paste whole files into the summary.
 
-## Current phase: UI first (no backend code)
+## Current phase: database ready, API not built yet
 
-The backend is built later. Until the owner says otherwise:
+Prisma 7 is set up against Neon PostgreSQL. Until the owner opens the next step:
 
-- Do not write backend code: no route handlers, no Prisma, no auth or session logic, no database env vars. The existing `lib/api` and `lib/http.ts` stay as they are and unused.
+- The schema lives in `prisma/schema.prisma` (source document: `docs/schema.prisma`, keep them in sync). The datasource block has no url: the CLI and migrations read `DIRECT_URL` from `prisma.config.ts`, and the runtime client connects through the Neon driver adapter with `DATABASE_URL` (see `lib/prisma.ts`).
+- Read environment variables only through `lib/env.ts`: `env` is safe on the client, server-only variables (both database URLs and the admin account) come from `getServerEnv()`. Never print, log or commit connection strings. `.env` is gitignored; `.env.example` lists the variable names only.
+- `pnpm db:migrate` creates and applies migrations, `pnpm db:seed` loads base data (belts, age categories, weight classes) plus the admin account from env vars, `pnpm db:seed:dev` loads realistic Persian demo data. `prisma/seed.dev.ts` refuses to run when `NODE_ENV` is production.
+- Do not call Prisma from features, components or route handlers yet, and do not touch `features/*/api.ts`. Route handlers under `src/app/api/v1` come in a later step; repositories will hold the Prisma queries.
 - Each feature has `api.ts` exporting async functions that return mock data after a short delay (about 300ms) and keep mutations in an in-memory store. Their signatures and return shapes must match the future REST responses, so replacing the body with a `lib/http.ts` call is the only change later.
 - Mock data lives in `features/<feature>/mock/` and must be realistic Persian data: real-sounding names, Tehran only, valid-looking national codes, birth dates fitting the age categories, several statuses.
 - Types live in `features/<feature>/types.ts` and mirror `docs/schema.prisma` (BigInt as string, dates as ISO strings).
@@ -47,7 +50,7 @@ The backend is built later. Until the owner says otherwise:
 - A login form may navigate to the right area without checking anything. In development only, show a small link to enter as a coach. Mark it clearly so it is removed when auth is built.
 - Use the app name constant `APP_NAME` from `lib/app.ts` for every place the name appears.
 
-Definition of done for every step: `pnpm check`, `pnpm typecheck`, `pnpm test` and `pnpm build` pass; new screens are reviewed against the checklist in `docs/DESIGN.md` at 1440px and 390px when the app can be run; the summary is a few lines.
+Definition of done for every step: `pnpm check`, `pnpm typecheck`, `pnpm test` and `pnpm build` pass; steps that touch the schema or seed data also require `pnpm db:migrate`, `pnpm db:seed` and `pnpm db:seed:dev` to run cleanly against the database; new screens are reviewed against the checklist in `docs/DESIGN.md` at 1440px and 390px when the app can be run; the summary is a few lines.
 
 ## Code style
 
