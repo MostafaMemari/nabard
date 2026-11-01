@@ -10,6 +10,7 @@ import { useRegistrations } from "@/features/registrations";
 import { useCompetition } from "../hooks/use-competitions";
 import { disciplineIcons, disciplineLabels } from "../labels";
 import { CompetitionInfoSections } from "./competition-info-sections";
+import { CompetitionParticipants } from "./competition-participants";
 import { CompetitionRegistrations } from "./competition-registrations";
 import { CompetitionStatusActions } from "./competition-status-actions";
 
@@ -46,7 +47,7 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
         title={competition.title}
         description={`${disciplineLabels[competition.discipline]} · ${ageCategoryLabel(competition.ageCategoryId)} · ${genderLabels[competition.gender]}`}
         action={
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 print:hidden">
             <Button variant="outline" disabled={hasRegistrations} render={<Link href={`/admin/competitions/${competitionId}/edit`} />}>
               <PencilIcon data-icon="inline-start" />
               ویرایش
@@ -56,7 +57,7 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
         }
       />
 
-      <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5 shadow-card md:flex-row md:items-center md:justify-between md:p-6">
+      <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5 shadow-card md:flex-row md:items-center md:justify-between md:p-6 print:hidden">
         <div className="flex flex-wrap items-center gap-3">
           <IconTile icon={disciplineIcons[competition.discipline]} />
           <div className="flex flex-wrap items-center gap-2">
@@ -70,6 +71,8 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
       <CompetitionInfoSections competition={competition} belts={belts} weightClassCount={weightClasses.length} />
 
       <CompetitionRegistrations competitionId={competitionId} ageCategoryId={competition.ageCategoryId} gender={competition.gender} />
+
+      <CompetitionParticipants competitionId={competitionId} />
     </div>
   );
 }

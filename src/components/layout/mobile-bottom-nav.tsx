@@ -33,7 +33,7 @@ export function MobileBottomNav({
   return (
     <nav
       aria-label={label}
-      className={cn("fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card", className)}
+      className={cn("fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card print:hidden", className)}
       style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
     >
       <div className="grid grid-cols-4">

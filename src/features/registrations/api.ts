@@ -1,7 +1,7 @@
 import type { Payment } from "@/features/payments";
 import { api } from "@/lib/http";
 import type { ListQuery, ListResult } from "@/lib/pagination";
-import type { Registration, RegistrationDetail, RegistrationStatus } from "./types";
+import type { Participant, Registration, RegistrationDetail, RegistrationStatus } from "./types";
 
 export type RegistrationListParams = ListQuery & {
   competitionId?: string;
@@ -54,4 +54,8 @@ export function approveRegistration(id: string): Promise<Registration> {
 
 export function rejectRegistration(id: string, note: string): Promise<Registration> {
   return api<Registration>(`/api/v1/registrations/${id}/reject`, { method: "POST", body: { note } });
+}
+
+export function listParticipants(competitionId: string): Promise<Participant[]> {
+  return api<Participant[]>(`/api/v1/competitions/${competitionId}/participants`);
 }

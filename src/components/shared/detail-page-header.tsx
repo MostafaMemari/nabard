@@ -23,7 +23,7 @@ export function DetailPageHeader({
       <Button
         variant="ghost"
         size="sm"
-        className="-ms-2 w-fit text-muted-foreground"
+        className="-ms-2 w-fit text-muted-foreground print:hidden"
         render={
           <Link href={backHref}>
             <ArrowRightIcon data-icon="inline-start" />

@@ -35,7 +35,10 @@ export function AppSidebar({
 }) {
   return (
     <aside
-      className={cn("hidden w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground", breakpoint === "lg" ? "lg:flex" : "@5xl:flex")}
+      className={cn(
+        "hidden w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground print:hidden",
+        breakpoint === "lg" ? "lg:flex" : "@5xl:flex",
+      )}
     >
       <div className="flex h-16 items-center gap-2.5 px-5">
         <BrandMark />

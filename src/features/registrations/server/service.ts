@@ -1,4 +1,4 @@
-import type { Belt, WeightClass } from "@/features/base-data";
+import type { Belt, BeltName, WeightClass } from "@/features/base-data";
 import { AppError } from "@/lib/api";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
@@ -9,6 +9,7 @@ import { checkEligibility, type EligibilityCompetition, type EligibilityStudent 
 import type {
   AgeCategoryRow,
   CompetitionRegistrationRow,
+  ParticipantRow,
   RegistrationBundle,
   RegistrationDetailRow,
   RegistrationFilters,
@@ -29,6 +30,17 @@ export type RegistrationProblem = {
   studentId: string;
   fullName: string;
   reason: string;
+};
+
+export type ParticipantRecord = {
+  registrationId: string;
+  studentId: string;
+  fullName: string;
+  nationalCode: string;
+  birthDate: Date;
+  beltName: BeltName;
+  weightClassLabel: string | null;
+  coachName: string;
 };
 
 const DEFAULT_PAGE_SIZE = 100;
@@ -252,6 +264,43 @@ export async function createRegistrations(
     receiptKey: stored.id,
     students: studentsToRegister,
   });
+}
+
+function compareParticipantRows(a: ParticipantRow, b: ParticipantRow): number {
+  const orderA = a.weightClass?.order ?? Number.POSITIVE_INFINITY;
+  const orderB = b.weightClass?.order ?? Number.POSITIVE_INFINITY;
+  if (orderA !== orderB) return orderA - orderB;
+
+  return a.student.fullName.localeCompare(b.student.fullName, "fa");
+}
+
+function toParticipantRecord(row: ParticipantRow): ParticipantRecord {
+  return {
+    registrationId: row.id,
+    studentId: row.student.id,
+    fullName: row.student.fullName,
+    nationalCode: row.student.nationalCode,
+    birthDate: row.student.birthDate,
+    beltName: row.student.beltName,
+    weightClassLabel: row.weightClass?.label ?? null,
+    coachName: row.coachName,
+  };
+}
+
+export async function listParticipants(
+  repo: RegistrationRepository,
+  user: CurrentUser,
+  competitionId: string,
+): Promise<ParticipantRecord[]> {
+  const identity = await requireActiveUser(repo, user);
+  if (identity.role !== "ADMIN") throw forbidden();
+
+  const competition = await repo.findCompetitionById(competitionId);
+  if (!competition || competition.province !== identity.province) throw competitionNotFound();
+
+  const rows = await repo.findApprovedParticipants(competitionId);
+
+  return [...rows].sort(compareParticipantRows).map(toParticipantRecord);
 }
 
 async function transitionRegistration(

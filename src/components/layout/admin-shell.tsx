@@ -35,7 +35,7 @@ export function AdminShell({ active, children }: { active: string; children: Rea
       </a>
       <AppSidebar items={navItems} active={active} user={sidebarUser} groupLabel="پنل مدیریت" />
       <div className="flex min-w-0 flex-1 flex-col">
-        <div className="flex h-14 shrink-0 items-center justify-between gap-2.5 border-b border-border bg-card px-4 lg:hidden">
+        <div className="flex h-14 shrink-0 items-center justify-between gap-2.5 border-b border-border bg-card px-4 lg:hidden print:hidden">
           <div className="flex items-center gap-2.5">
             <BrandMark className="size-7" />
             <span className="text-sm font-semibold">{APP_NAME}</span>
@@ -51,7 +51,7 @@ export function AdminShell({ active, children }: { active: string; children: Rea
           </div>
         </div>
         <main id="admin-main" className="flex-1 pb-20 lg:pb-0">
-          <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 lg:p-8">{children}</div>
+          <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 lg:p-8 print:p-0">{children}</div>
         </main>
         <MobileBottomNav items={navItems} active={active} label="ناوبری مدیریت" className="lg:hidden" />
       </div>

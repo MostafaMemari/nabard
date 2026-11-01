@@ -18,7 +18,7 @@ export function CompetitionInfoSections({
   weightClassCount: number;
 }) {
   return (
-    <div className="grid items-start gap-4 lg:grid-cols-2">
+    <div className="grid items-start gap-4 lg:grid-cols-2 print:hidden">
       <FormSection title="شرکت کنندگان" icon={UsersRoundIcon}>
         <DescriptionList
           items={[

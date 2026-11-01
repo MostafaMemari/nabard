@@ -1,4 +1,4 @@
-import type { AgeCategoryName, Belt, Gender, WeightClass } from "@/features/base-data";
+import type { AgeCategoryName, Belt, BeltName, Gender, WeightClass } from "@/features/base-data";
 import type { CompetitionStatus, Discipline } from "@/features/competitions";
 import type { PaymentStatus } from "@/features/payments";
 import type { Province } from "@/generated/client";
@@ -132,8 +132,17 @@ export type RegistrationDetailRow = {
   bundle: RegistrationBundleRow[];
 };
 
+export type ParticipantRow = {
+  id: string;
+  student: { id: string; fullName: string; nationalCode: string; birthDate: Date; beltName: BeltName };
+  coachName: string;
+  weightClass: { label: string; order: number } | null;
+};
+
 export type RegistrationRepository = {
   findUserById(id: string): Promise<UserIdentityRecord | null>;
+  findCompetitionTitleById(id: string): Promise<string | null>;
+  findApprovedParticipants(competitionId: string): Promise<ParticipantRow[]>;
   findCompetitionById(id: string): Promise<CompetitionRegistrationRow | null>;
   findAgeCategoryById(id: string): Promise<AgeCategoryRow | null>;
   findCoachStudentsByIds(coachId: string, studentIds: string[]): Promise<RegistrationStudentRow[]>;
@@ -212,6 +221,38 @@ export async function findUserById(id: string): Promise<UserIdentityRecord | nul
     where: { id },
     select: { id: true, role: true, province: true, isActive: true },
   });
+}
+
+export async function findCompetitionTitleById(id: string): Promise<string | null> {
+  const row = await getPrisma().competition.findUnique({ where: { id }, select: { title: true } });
+  return row?.title ?? null;
+}
+
+export async function findApprovedParticipants(competitionId: string): Promise<ParticipantRow[]> {
+  const rows = await getPrisma().registration.findMany({
+    where: { competitionId, status: "APPROVED" },
+    select: {
+      id: true,
+      student: {
+        select: { id: true, fullName: true, nationalCode: true, birthDate: true, belt: { select: { name: true } } },
+      },
+      coach: { select: { fullName: true } },
+      weightClass: { select: { label: true, order: true } },
+    },
+  });
+
+  return rows.map((row) => ({
+    id: row.id,
+    student: {
+      id: row.student.id,
+      fullName: row.student.fullName,
+      nationalCode: row.student.nationalCode,
+      birthDate: row.student.birthDate,
+      beltName: row.student.belt.name,
+    },
+    coachName: row.coach.fullName,
+    weightClass: row.weightClass === null ? null : { label: row.weightClass.label, order: row.weightClass.order },
+  }));
 }
 
 export async function findCompetitionById(id: string): Promise<CompetitionRegistrationRow | null> {

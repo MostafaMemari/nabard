@@ -3,12 +3,19 @@ import type { Belt, WeightClass } from "@/features/base-data";
 import type { AppError } from "@/lib/api";
 import type { CurrentUser } from "@/lib/session";
 import type { Storage } from "@/lib/storage/types";
-import type { RegistrationRepository, RegistrationStudentRow, RegistrationTransitionInput, RegistrationWithScope } from "./repository";
+import type {
+  ParticipantRow,
+  RegistrationRepository,
+  RegistrationStudentRow,
+  RegistrationTransitionInput,
+  RegistrationWithScope,
+} from "./repository";
 import {
   approveRegistration,
   createRegistrations,
   getRegistration,
   getRegistrationDetail,
+  listParticipants,
   listRegistrations,
   rejectRegistration,
 } from "./service";
@@ -124,6 +131,8 @@ function repoWith(overrides: Partial<RegistrationRepository> = {}): Registration
   return {
     findUserById: vi.fn().mockResolvedValue(coachRecord),
     findCompetitionById: vi.fn().mockResolvedValue(competition),
+    findCompetitionTitleById: vi.fn().mockResolvedValue("مسابقات قهرمانی استان"),
+    findApprovedParticipants: vi.fn().mockResolvedValue([]),
     findAgeCategoryById: vi.fn().mockResolvedValue(ageCategoryRow),
     findCoachStudentsByIds: vi.fn().mockResolvedValue([studentRow, secondStudent]),
     findAllBelts: vi.fn().mockResolvedValue(belts),
@@ -529,5 +538,104 @@ describe("rejectRegistration", () => {
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
     expect((failure as AppError).message).toContain("رسید پرداخت");
+  });
+});
+
+const adminRecordOtherProvince = { id: "admin-2", role: "ADMIN" as const, province: "FARS" as const, isActive: true };
+
+function participantRow(overrides: Partial<ParticipantRow> = {}): ParticipantRow {
+  return {
+    id: "reg-p1",
+    student: {
+      id: "student-1",
+      fullName: "علی محمدی",
+      nationalCode: "0012345678",
+      birthDate: new Date("2013-05-10T00:00:00.000Z"),
+      beltName: "GREEN",
+    },
+    coachName: "رضا کریمی",
+    weightClass: { label: "۳۳", order: 2 },
+    ...overrides,
+  };
+}
+
+describe("listParticipants", () => {
+  it("returns approved participants sorted by weight class order then Persian name", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findApprovedParticipants: vi.fn().mockResolvedValue([
+        participantRow({
+          id: "reg-3",
+          weightClass: { label: "۳۷", order: 3 },
+          student: { ...participantRow().student, fullName: "اکبر احمدی" },
+        }),
+        participantRow({
+          id: "reg-1",
+          weightClass: { label: "۳۳", order: 2 },
+          student: { ...participantRow().student, fullName: "مهدی کریمی" },
+        }),
+        participantRow({
+          id: "reg-2",
+          weightClass: { label: "۳۳", order: 2 },
+          student: { ...participantRow().student, fullName: "علی رضایی" },
+        }),
+        participantRow({ id: "reg-4", weightClass: null, student: { ...participantRow().student, fullName: "سینا مرادی" } }),
+      ]),
+    });
+
+    const participants = await listParticipants(repo, admin, "comp-1");
+
+    expect(participants.map((participant) => participant.registrationId)).toEqual(["reg-2", "reg-1", "reg-3", "reg-4"]);
+    expect(participants[0]).toMatchObject({
+      registrationId: "reg-2",
+      fullName: "علی رضایی",
+      nationalCode: "0012345678",
+      beltName: "GREEN",
+      weightClassLabel: "۳۳",
+      coachName: "رضا کریمی",
+    });
+  });
+
+  it("rejects a coach with 403", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(coachRecord) });
+    const failure = await failureOf(listParticipants(repo, coach, "comp-1"));
+
+    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect(repo.findApprovedParticipants).not.toHaveBeenCalled();
+  });
+
+  it("rejects an inactive admin with 403", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue({ ...adminRecord, isActive: false }) });
+    const failure = await failureOf(listParticipants(repo, admin, "comp-1"));
+
+    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+  });
+
+  it("hides competitions of another province behind 404", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecordOtherProvince),
+      findCompetitionById: vi.fn().mockResolvedValue(competition),
+    });
+    const failure = await failureOf(listParticipants(repo, { id: "admin-2", role: "ADMIN" }, "comp-1"));
+
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+    expect(repo.findApprovedParticipants).not.toHaveBeenCalled();
+  });
+
+  it("returns 404 for a missing competition", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findCompetitionById: vi.fn().mockResolvedValue(null),
+    });
+    const failure = await failureOf(listParticipants(repo, admin, "missing"));
+
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+  });
+
+  it("returns an empty list when no registration is approved", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
+    const participants = await listParticipants(repo, admin, "comp-1");
+
+    expect(participants).toEqual([]);
   });
 });

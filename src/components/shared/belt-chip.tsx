@@ -1,14 +1,8 @@
 import { cn } from "cn";
 import type { Belt } from "@/features/base-data";
-import { toPersianDigits } from "@/lib/format";
+import { beltLabel } from "@/features/base-data/labels";
 
-const colorBeltLabels: Partial<Record<Belt["name"], string>> = {
-  WHITE: "سفید",
-  YELLOW: "زرد",
-  GREEN: "سبز",
-  BLUE: "آبی",
-  RED: "قرمز",
-};
+export { beltLabel };
 
 const colorBeltDots: Partial<Record<Belt["name"], string>> = {
   WHITE: "bg-belt-white border border-border",
@@ -24,16 +18,6 @@ function dotClass(name: Belt["name"]): string {
     return colorDot;
   }
   return name.startsWith("POOM") ? "bg-belt-poom" : "bg-belt-dan";
-}
-
-export function beltLabel(name: Belt["name"]): string {
-  const colorLabel = colorBeltLabels[name];
-  if (colorLabel) {
-    return colorLabel;
-  }
-  const [rank, level] = name.split("_");
-  const rankLabel = rank === "POOM" ? "پوم" : "دان";
-  return `${rankLabel} ${toPersianDigits(Number(level))}`;
 }
 
 export function BeltDot({ name }: { name: Belt["name"] }) {

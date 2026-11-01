@@ -117,6 +117,13 @@ Admin-only management with province scoping; coaches get a read-only view. The p
 - `POST /api/v1/competitions/:id/publish` (admin only) moves a `DRAFT` to `PUBLISHED`. It fails with `409` when the competition is already published or canceled (a canceled competition is never republished) and with `400` when any field is invalid or the registration deadline is already past.
 - `POST /api/v1/competitions/:id/cancel` (admin only) with `{ reason }` (required, 3 to 500 characters) moves a `PUBLISHED` competition to `CANCELED` and stores the reason as `cancelReason`. Canceling a draft or an already canceled competition returns `409`.
 
+### Participants export
+
+Read-only export of the approved participants of one competition; no schema change behind it.
+
+- `GET /api/v1/competitions/:id/participants` (admin only, own province) returns `{ data: Participant[] }` — every `APPROVED` registration of the competition with `{ registrationId, studentId, fullName, nationalCode, birthDate (ISO), beltName, weightClassLabel, coachName }`, sorted by weight class order first and then by the student's Persian name (no weight class, e.g. poomsae, sorts last). A `COACH` session gets `403 FORBIDDEN`; a competition outside the admin's province or an unknown id returns `404 NOT_FOUND`.
+- `GET /api/v1/competitions/:id/participants.csv` (admin only, same scoping) returns the same list as a CSV download. The body is `text/csv; charset=utf-8` with a UTF-8 BOM (so Excel renders Persian correctly), CRLF rows, a Persian header row (`نام و نام خانوادگی, کد ملی, تاریخ تولد, کمربند, رده وزنی, نام مربی`) and Jalali birth dates. `Content-Disposition: attachment` carries a safe ASCII filename plus an RFC 5987 `filename*=UTF-8''` name derived from the competition title (control characters, quotes and path separators are stripped). Every cell that starts with `=`, `+`, `-` or `@` is prefixed with a single quote to neutralize CSV injection, and cells containing commas, quotes or newlines are quoted per RFC 4180. The response is `Cache-Control: private, no-store` because it carries national codes.
+
 ## Registrations
 
 Coach-only creation with server-side enforcement; both roles can read.

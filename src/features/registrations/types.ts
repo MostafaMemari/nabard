@@ -1,3 +1,4 @@
+import type { BeltName } from "@/features/base-data";
 import type { PaymentStatus } from "@/features/payments";
 
 export type RegistrationStatus = "PENDING" | "APPROVED" | "REJECTED";
@@ -36,4 +37,15 @@ export type RegistrationDetail = {
   weightClassLabel: string | null;
   payment: { id: string; status: PaymentStatus; amount: string; createdAt: string } | null;
   bundle: RegistrationBundleStudent[];
+};
+
+export type Participant = {
+  registrationId: string;
+  studentId: string;
+  fullName: string;
+  nationalCode: string;
+  birthDate: string;
+  beltName: BeltName;
+  weightClassLabel: string | null;
+  coachName: string;
 };
