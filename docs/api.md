@@ -43,13 +43,17 @@ All API routes live under `src/app/api/**/route.ts` and return the same JSON env
 | 400    | `INVALID_FILE`     | The uploaded receipt file is empty              |
 | 400    | `INVALID_FILE_TYPE` | The uploaded file signature is not a JPEG/PNG/WebP image |
 | 400    | `FILE_TOO_LARGE`   | The uploaded receipt is over 2MB                |
+| 400    | `INVALID_PASSWORD` | Password change with a wrong current password   |
 | 401    | `UNAUTHORIZED`     | No current user on a protected route            |
 | 401    | `INVALID_CREDENTIALS` | Login with a wrong mobile or password        |
 | 403    | `FORBIDDEN`        | The user may not perform this action            |
 | 403    | `USER_INACTIVE`    | The account is inactive and cannot be used      |
 | 404    | `NOT_FOUND`        | The record does not exist                       |
 | 409    | `CONFLICT`         | Duplicate or state conflict                     |
+| 413    | `PAYLOAD_TOO_LARGE` | The request body is larger than the declared upload limit |
+| 429    | `TOO_MANY_ATTEMPTS` | Login is temporarily locked after repeated failures |
 | 500    | `INTERNAL_ERROR`   | Unexpected failure; details are logged, not sent |
+| 503    | `SERVICE_UNAVAILABLE` | Health check failed; the database is slow or unreachable |
 
 Domain routes throw `AppError` and let the wrapper map it:
 
@@ -64,10 +68,23 @@ throw new AppError(404, "NOT_FOUND", "مسابقه پیدا نشد.");
 - `POST /api/v1/auth/login` with `{ mobile, password }` returns `{ id, role, fullName, province }` and sets the session cookie. Wrong credentials return `401 INVALID_CREDENTIALS`; an inactive account returns `403 USER_INACTIVE`.
 - `POST /api/v1/auth/logout` clears the session cookie.
 - `GET /api/v1/auth/me` returns the current user's profile and returns `401` when the cookie is missing or invalid.
+- `POST /api/v1/auth/password` with `{ currentPassword, newPassword }` lets any logged-in user change their own password. A wrong current password returns `400 INVALID_PASSWORD`; a successful change returns `{ data: null }`.
+
+### Login rate limiting
+
+Failed login attempts are stored in the database (the `login_failures` table), so the limit works on serverless where memory does not survive between requests. Every failure is recorded twice: once under the normalized mobile and once under the SHA-256 hash of the client IP (peppered with `SESSION_SECRET` or `DATABASE_URL`; the plain IP is never stored). When either key reaches 5 failures inside a sliding 15 minute window, every login for that mobile or that IP returns `429 TOO_MANY_ATTEMPTS` with the Persian message «به دلیل تلاش های ناموفق مکرر، ورود موقتا مسدود شده است. ۱۵ دقیقه دیگر دوباره تلاش کنید.» even with correct credentials. A successful login clears the failures of its own keys and every failure prunes rows older than the window, so the table stays tiny.
 
 The session is a signed JWT (jose, HS256) in an HttpOnly cookie named `nabard_session`, `Secure` and `SameSite=Lax` in production. The signing key is `SESSION_SECRET` when set, otherwise it is derived from `DATABASE_URL`. The current user comes only from `getCurrentUser(request)` in `lib/session.ts`; identity headers from the client such as `x-user-id` are never trusted. Use `requireUser(request, ...roles)` for guards outside the wrapper.
 
 The proxy (`src/proxy.ts`) redirects a visitor without a valid session to `/login` and sends each role to its own section (`/admin` or `/coach`). It is an optimistic redirect; the routes and services still enforce authorization themselves.
+
+## Health
+
+- `GET /api/v1/health` needs no session. It runs `SELECT 1` on the database with a 3 second timeout and returns `{ status: "ok", database: "up" }` on success or `503 SERVICE_UNAVAILABLE` with a Persian message when the database is slow or unreachable. It is safe for uptime monitors and leaks nothing about the infrastructure.
+
+## Security headers
+
+Every response (pages and API) carries `Content-Security-Policy` (`default-src 'self'`, inline styles allowed for Next.js, `frame-ancestors 'none'`), `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `X-Frame-Options: DENY` and a minimal `Permissions-Policy`. The receipt endpoint additionally serves its image with `Content-Disposition: inline` and `nosniff`.
 
 ## Coaches
 
@@ -77,6 +94,7 @@ Admin-only. An admin sees and manages coaches of their own province only; a `COA
 - `POST /api/v1/coaches` with `{ fullName, mobile, nationalCode, initialPassword }` creates an active coach in the admin's province. The initial password is hashed with bcryptjs; password hashes are never returned or logged. A duplicate mobile or national code returns `409 CONFLICT`.
 - `GET /api/v1/coaches/:id` returns one coach. A coach of another province returns `404 NOT_FOUND`.
 - `PATCH /api/v1/coaches/:id` accepts any subset of `{ fullName, mobile, nationalCode, isActive }` and returns the updated coach. An empty body is a validation error.
+- `POST /api/v1/coaches/:id/reset-password` (admin only, own province) with `{ password }` (at least 8 characters) sets a new password for the coach. The password is hashed with bcryptjs and never returned; the plain value is never logged. A coach of another province or an admin account returns `404 NOT_FOUND`.
 
 ## Students
 
@@ -108,7 +126,7 @@ Coach-only creation with server-side enforcement; both roles can read.
   - The competition must be `PUBLISHED` and inside its registration window (opening until the deadline); otherwise `409 CONFLICT`.
   - Eligibility is re-checked on the server for every student with the shared eligibility function (gender, age category, belt range, and the kyorugi weight class resolved from the declared weight). One ineligible student rejects the whole request with `400 VALIDATION_ERROR` and `details: [{ studentId, fullName, reason }]` with Persian reasons.
   - Any existing registration for a student in the same competition blocks the request with `409 CONFLICT` and the same per-student `details` shape (a rejected registration can be re-created only after the reopen flow, which is not built yet).
-  - The receipt must be a real JPEG, PNG or WebP image up to 2MB, verified by file signature and not only by the declared type; otherwise `400 INVALID_FILE_TYPE`, `400 FILE_TOO_LARGE` or `400 INVALID_FILE`.
+  - The receipt must be a real JPEG, PNG or WebP image up to 2MB, verified by file signature and not only by the declared type; otherwise `400 INVALID_FILE_TYPE`, `400 FILE_TOO_LARGE` or `400 INVALID_FILE`. A multipart body whose declared `Content-Length` is over 2MB + 128KB returns `413 PAYLOAD_TOO_LARGE` before parsing.
   - A malformed multipart body returns `400 INVALID_FORM`, a missing `receipt` field `400 VALIDATION_ERROR`.
 - `GET /api/v1/registrations?competitionId=&paymentId=&status=PENDING|APPROVED|REJECTED&coachId=&page=&pageSize=` returns `{ data, meta }`. A `COACH` session always lists only its own registrations and `coachId` is ignored; an `ADMIN` session lists the registrations of the coaches of their own province, optionally filtered by `coachId`. Sorted by newest first. Every row embeds `student: { id, fullName, beltId, weightKg }` so clients do not need a separate student lookup.
 - `GET /api/v1/registrations/:id` returns the registration detail for the owning coach or a same-province admin; anything outside the caller scope is `404 NOT_FOUND`. The response carries `{ registration, competition: { id, title, registrationDeadline }, weightClassLabel, payment: { id, status, amount, createdAt }, bundle }` where `bundle` lists every registration of the same payment with `{ id, studentName, status, note }` — the payment status, each student's review status and the rejection notes.
@@ -124,7 +142,7 @@ One payment covers the students of one registration batch. Receipts are private 
 - `POST /api/v1/payments/:id/confirm` (admin only, own province) confirms a `PENDING` payment and clears the note. Each call runs one conditional update inside a transaction (`WHERE status = 'PENDING'`), so concurrent or double requests apply the transition at most once. A confirmed payment cannot be confirmed again («این پرداخت قبلا تایید شده است.») and a rejected payment cannot be confirmed until the coach uploads a new receipt («این پرداخت رد شده است؛ پس از بارگذاری رسید جدید قابل تایید است.»), both `409 CONFLICT`.
 - `POST /api/v1/payments/:id/reject` (admin only, own province) with `{ note }` (required, 3 to 500 characters) rejects a `PENDING` payment and stores the note shown to the coach. The registrations of a rejected payment stay `PENDING` so the coach can upload a new receipt. Rejecting a confirmed payment returns `409` with «این پرداخت تایید شده و قابل رد کردن نیست.»; rejecting twice returns `409` with «این پرداخت قبلا رد شده است.»
 - `GET /api/v1/payments/:id/receipt` returns the receipt image bytes (`image/jpeg`, `image/png` or `image/webp`) only to the owning coach or an admin of the same province; anyone else gets `404 NOT_FOUND`. The response carries `Cache-Control: private, no-cache`. A payment without a receipt (or with a missing file) returns `404 NOT_FOUND`.
-- `PUT /api/v1/payments/:id/receipt` (coach only, owner) with `multipart/form-data` and one `receipt` image re-uploads the receipt of a `REJECTED` payment before the competition deadline; the payment returns to `PENDING` and its rejection note is cleared. The same file rules as registration apply (`400 INVALID_FILE_TYPE` / `400 FILE_TOO_LARGE` / `400 INVALID_FILE`), and a non-rejected payment or a closed deadline returns `409 CONFLICT`.
+- `PUT /api/v1/payments/:id/receipt` (coach only, owner) with `multipart/form-data` and one `receipt` image re-uploads the receipt of a `REJECTED` payment before the competition deadline; the payment returns to `PENDING` and its rejection note is cleared. The same file rules as registration apply (`400 INVALID_FILE_TYPE` / `400 FILE_TOO_LARGE` / `400 INVALID_FILE`, and `413 PAYLOAD_TOO_LARGE` for an oversized request body), and a non-rejected payment or a closed deadline returns `409 CONFLICT`.
 
 ## Base data
 
