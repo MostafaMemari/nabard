@@ -57,7 +57,10 @@ export function ReceiptUploadField({ file, onChange }: { file: File | null; onCh
           className="flex h-32 w-full flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border text-sm text-muted-foreground transition-colors duration-150 hover:border-primary hover:text-primary"
         >
           <IconTile icon={UploadIcon} />
-          انتخاب تصویر رسید
+          <span className="flex flex-col items-center gap-1">
+            <span>انتخاب تصویر رسید</span>
+            <span className="text-subtle text-xs text-muted-foreground">تصویر با حجم کمتر از ۵ مگابایت</span>
+          </span>
         </button>
       )}
     </div>

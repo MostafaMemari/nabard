@@ -42,7 +42,7 @@ export function CoachHomeScreen({ coachId }: { coachId: string }) {
 
   return (
     <>
-      <PageHeader title="خانه" description="نمای کلی مسابقات باز و ثبت نام های من." />
+      <PageHeader title="خانه" description="مسابقات باز و آخرین ثبت نام ها." />
 
       <CoachSummaryCards
         openCompetitions={openCompetitions.length}
@@ -61,7 +61,7 @@ export function CoachHomeScreen({ coachId }: { coachId: string }) {
         empty={
           <EmptyState
             icon={TrophyIcon}
-            title="هم اکنون مسابقه ای برای ثبت نام وجود ندارد."
+            title="مسابقه بازی برای ثبت نام وجود ندارد."
             action={
               <Button size="sm" variant="outline" render={<Link href="/coach/competitions" />}>
                 مشاهده همه مسابقات

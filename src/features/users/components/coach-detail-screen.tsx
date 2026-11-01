@@ -56,18 +56,22 @@ export function CoachDetailScreen({ coachId }: { coachId: string }) {
         <StatusBadge status={coach.isActive ? "ACTIVE" : "INACTIVE"} />
       </div>
 
-      <CoachAccountSection coach={coach} studentCount={coachStudents.length} />
-
-      <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-card md:p-6">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <IconTile icon={UsersIcon} />
-            <h2 className="text-base font-semibold">هنرجویان</h2>
+      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+        <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-card md:p-6">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <IconTile icon={UsersIcon} />
+              <h2 className="text-base font-semibold">هنرجویان</h2>
+            </div>
+            <span className="text-subtle text-muted-foreground">{toPersianDigits(coachStudents.length)} هنرجو</span>
           </div>
-          <span className="text-subtle text-muted-foreground">{toPersianDigits(coachStudents.length)} هنرجو</span>
-        </div>
-        <CoachStudentsTable students={coachStudents} isLoading={studentsLoading} />
-      </section>
+          <CoachStudentsTable students={coachStudents} isLoading={studentsLoading} />
+        </section>
+
+        <aside className="flex flex-col gap-6 lg:sticky lg:top-8">
+          <CoachAccountSection coach={coach} studentCount={coachStudents.length} />
+        </aside>
+      </div>
 
       <CoachStatusDialog coach={coach} targetActive={pendingStatus} onDone={mutate} onClose={() => setPendingStatus(null)} />
     </div>

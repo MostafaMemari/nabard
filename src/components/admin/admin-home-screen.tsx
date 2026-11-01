@@ -38,7 +38,7 @@ export function AdminHomeScreen() {
 
   return (
     <>
-      <PageHeader title="خانه" description="نمای کلی مسابقات، پرداخت ها و مربیان." />
+      <PageHeader title="خانه" description="رسیدهای در انتظار بررسی و مسابقات پیش رو." />
 
       <div className="grid gap-4 sm:grid-cols-3">
         {isLoading ? (

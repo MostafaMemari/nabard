@@ -28,7 +28,7 @@ export function CoachesScreen() {
     <>
       <PageHeader
         title="مربیان"
-        description="فهرست مربیان و هنرجویان هر مربی."
+        description="مربیان استان و هنرجویان هر مربی."
         action={
           <Button onClick={() => setSheetOpen(true)}>
             <PlusIcon data-icon="inline-start" />

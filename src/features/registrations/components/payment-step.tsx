@@ -54,7 +54,7 @@ export function PaymentStep({
 
   return (
     <div className="flex flex-col gap-6">
-      <FormSection title="اطلاعات پرداخت" description="مبلغ را کارت به کارت واریز کنید و تصویر رسید را بارگذاری کنید.">
+      <FormSection title="اطلاعات پرداخت" description="مبلغ را به شماره کارت زیر واریز کنید.">
         <PaymentInfoSection
           cardNumber={payeeCardNumber}
           cardHolder={payeeCardHolder}
