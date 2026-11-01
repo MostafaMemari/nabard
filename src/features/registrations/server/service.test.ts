@@ -562,7 +562,7 @@ describe("approveRegistration", () => {
     });
     const record = await approveRegistration(repo, admin, "reg-1");
 
-    expect(repo.transitionRegistrationFromPending).toHaveBeenCalledWith("reg-1", { status: "APPROVED", note: null });
+    expect(repo.transitionRegistrationFromPending).toHaveBeenCalledWith("reg-1", { status: "APPROVED", note: null, createRefund: false });
     expect(record.status).toBe("APPROVED");
   });
 
@@ -626,6 +626,7 @@ describe("rejectRegistration", () => {
   it("rejects a registration with a note after the payment is confirmed", async () => {
     const repo = repoWith({
       findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findRegistrationById: vi.fn().mockResolvedValue({ ...registrationRow, paymentStatus: "CONFIRMED" }),
       transitionRegistrationFromPending: vi.fn().mockResolvedValue({
         kind: "updated",
         row: { ...registrationRow, status: "REJECTED", note: "رده وزنی با مسابقه همخوانی ندارد.", paymentStatus: "CONFIRMED" },
@@ -636,6 +637,7 @@ describe("rejectRegistration", () => {
     expect(repo.transitionRegistrationFromPending).toHaveBeenCalledWith("reg-1", {
       status: "REJECTED",
       note: "رده وزنی با مسابقه همخوانی ندارد.",
+      createRefund: true,
     });
     expect(record.status).toBe("REJECTED");
     expect(record.note).toBe("رده وزنی با مسابقه همخوانی ندارد.");
@@ -654,6 +656,11 @@ describe("rejectRegistration", () => {
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
     expect((failure as AppError).message).toContain("رسید پرداخت");
+    expect(repo.transitionRegistrationFromPending).toHaveBeenCalledWith("reg-1", {
+      status: "REJECTED",
+      note: "نامناسب",
+      createRefund: false,
+    });
   });
 });
 

@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { useWeightClasses } from "@/features/base-data";
 import { useCompetitions } from "@/features/competitions";
 import { usePayments } from "@/features/payments";
+import { useRefunds } from "@/features/refunds";
 import { type CoachRegistrationRow, useRegistrations } from "@/features/registrations";
 import { useStudents } from "@/features/students";
 import { toPersianDigits } from "@/lib/format";
@@ -13,6 +14,7 @@ export function useCoachRegistrationRows() {
   const { students } = useStudents();
   const { competitions } = useCompetitions();
   const { payments } = usePayments();
+  const { refunds } = useRefunds();
   const { weightClasses } = useWeightClasses();
 
   const rows = useMemo<CoachRegistrationRow[]>(() => {
@@ -20,6 +22,7 @@ export function useCoachRegistrationRows() {
       const student = students.find((item) => item.id === registration.studentId);
       const competition = competitions.find((item) => item.id === registration.competitionId);
       const payment = payments.find((item) => item.id === registration.paymentId);
+      const refund = refunds.find((item) => item.registrationId === registration.id);
       const weightClass = weightClasses.find((item) => item.id === registration.weightClassId);
 
       return {
@@ -30,11 +33,12 @@ export function useCoachRegistrationRows() {
         paymentStatus: payment?.status ?? null,
         paymentAmount: payment?.amount ?? null,
         weightClassLabel: weightClass ? `${toPersianDigits(weightClass.label)} کیلوگرم` : null,
+        refundStatus: refund?.status ?? null,
       };
     });
 
     return joined.sort((left, right) => right.registration.createdAt.localeCompare(left.registration.createdAt));
-  }, [registrations, students, competitions, payments, weightClasses]);
+  }, [registrations, students, competitions, payments, refunds, weightClasses]);
 
   return { rows, isLoading, error, mutate };
 }

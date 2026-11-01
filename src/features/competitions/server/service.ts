@@ -426,9 +426,15 @@ export async function cancelCompetition(
   }
 
   const belts = await repo.findAllBelts();
-  const updated = await repo.updateCompetition(id, { status: "CANCELED", cancelReason: reason });
+  const updated = await repo.cancelCompetitionWithRefunds(id, reason);
+  if (updated) return toRecord(updated, belts);
 
-  return toRecord(updated, belts);
+  const current = await repo.findCompetitionById(id);
+  if (current?.status === "CANCELED") {
+    throw new AppError(409, "CONFLICT", "این مسابقه قبلاً لغو شده است.");
+  }
+
+  throw new AppError(409, "CONFLICT", "فقط مسابقه منتشر شده قابل لغو است.");
 }
 
 export async function extendCompetition(

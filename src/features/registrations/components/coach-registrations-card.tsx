@@ -1,6 +1,7 @@
 "use client";
 
 import { Avatar, MobileCardChips, MobileCardLine, MobileCardLink, MobileCardTop, StatusBadge } from "@/components/shared";
+import { refundStatusKey } from "@/features/refunds";
 import { formatJalaliDate } from "@/lib/format";
 import { type CoachRegistrationRow, paymentStatusKey, registrationStatusKey } from "./coach-registration-row";
 
@@ -16,6 +17,7 @@ export function CoachRegistrationCard({ row }: { row: CoachRegistrationRow }) {
       {row.weightClassLabel ? <MobileCardLine label="رده وزنی" value={row.weightClassLabel} /> : null}
       <MobileCardChips>
         {row.paymentStatus ? <StatusBadge status={paymentStatusKey(row.paymentStatus)} /> : null}
+        {row.refundStatus ? <StatusBadge status={refundStatusKey(row.refundStatus)} /> : null}
         <span className="text-subtle text-muted-foreground">{formatJalaliDate(new Date(row.registration.createdAt))}</span>
       </MobileCardChips>
     </MobileCardLink>

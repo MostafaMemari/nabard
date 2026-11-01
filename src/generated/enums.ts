@@ -142,3 +142,19 @@ export const RegistrationStatus = {
 } as const
 
 export type RegistrationStatus = (typeof RegistrationStatus)[keyof typeof RegistrationStatus]
+
+
+export const RefundReason = {
+  REGISTRATION_REJECTED: 'REGISTRATION_REJECTED',
+  COMPETITION_CANCELED: 'COMPETITION_CANCELED'
+} as const
+
+export type RefundReason = (typeof RefundReason)[keyof typeof RefundReason]
+
+
+export const RefundStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED'
+} as const
+
+export type RefundStatus = (typeof RefundStatus)[keyof typeof RefundStatus]

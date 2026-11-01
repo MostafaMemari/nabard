@@ -72,3 +72,8 @@ export type LoginFailure = Prisma.LoginFailureModel
  * 
  */
 export type Registration = Prisma.RegistrationModel
+/**
+ * Model Refund
+ * 
+ */
+export type Refund = Prisma.RefundModel

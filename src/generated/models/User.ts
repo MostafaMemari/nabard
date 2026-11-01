@@ -226,6 +226,8 @@ export type UserWhereInput = {
   registrations?: Prisma.RegistrationListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
   deadlineExtensions?: Prisma.DeadlineExtensionListRelationFilter
+  refunds?: Prisma.RefundListRelationFilter
+  processedRefunds?: Prisma.RefundListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -243,6 +245,8 @@ export type UserOrderByWithRelationInput = {
   registrations?: Prisma.RegistrationOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
   deadlineExtensions?: Prisma.DeadlineExtensionOrderByRelationAggregateInput
+  refunds?: Prisma.RefundOrderByRelationAggregateInput
+  processedRefunds?: Prisma.RefundOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -263,6 +267,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   registrations?: Prisma.RegistrationListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
   deadlineExtensions?: Prisma.DeadlineExtensionListRelationFilter
+  refunds?: Prisma.RefundListRelationFilter
+  processedRefunds?: Prisma.RefundListRelationFilter
 }, "id" | "mobile" | "nationalCode">
 
 export type UserOrderByWithAggregationInput = {
@@ -312,6 +318,8 @@ export type UserCreateInput = {
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -329,6 +337,8 @@ export type UserUncheckedCreateInput = {
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCoachInput
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
 }
 
 export type UserUpdateInput = {
@@ -346,6 +356,8 @@ export type UserUpdateInput = {
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -363,6 +375,8 @@ export type UserUncheckedUpdateInput = {
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutCoachNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -448,6 +462,11 @@ export type UserScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput
 }
 
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -528,6 +547,36 @@ export type UserUpdateOneRequiredWithoutRegistrationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRegistrationsInput, Prisma.UserUpdateWithoutRegistrationsInput>, Prisma.UserUncheckedUpdateWithoutRegistrationsInput>
 }
 
+export type UserCreateNestedOneWithoutRefundsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRefundsInput, Prisma.UserUncheckedCreateWithoutRefundsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRefundsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutProcessedRefundsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProcessedRefundsInput, Prisma.UserUncheckedCreateWithoutProcessedRefundsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProcessedRefundsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutRefundsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutRefundsInput, Prisma.UserUncheckedCreateWithoutRefundsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutRefundsInput
+  upsert?: Prisma.UserUpsertWithoutRefundsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRefundsInput, Prisma.UserUpdateWithoutRefundsInput>, Prisma.UserUncheckedUpdateWithoutRefundsInput>
+}
+
+export type UserUpdateOneWithoutProcessedRefundsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProcessedRefundsInput, Prisma.UserUncheckedCreateWithoutProcessedRefundsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProcessedRefundsInput
+  upsert?: Prisma.UserUpsertWithoutProcessedRefundsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProcessedRefundsInput, Prisma.UserUpdateWithoutProcessedRefundsInput>, Prisma.UserUncheckedUpdateWithoutProcessedRefundsInput>
+}
+
 export type UserCreateWithoutStudentsInput = {
   id?: string
   mobile: string
@@ -542,6 +591,8 @@ export type UserCreateWithoutStudentsInput = {
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
 }
 
 export type UserUncheckedCreateWithoutStudentsInput = {
@@ -558,6 +609,8 @@ export type UserUncheckedCreateWithoutStudentsInput = {
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCoachInput
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
 }
 
 export type UserCreateOrConnectWithoutStudentsInput = {
@@ -590,6 +643,8 @@ export type UserUpdateWithoutStudentsInput = {
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStudentsInput = {
@@ -606,6 +661,8 @@ export type UserUncheckedUpdateWithoutStudentsInput = {
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutCoachNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
 }
 
 export type UserCreateWithoutDeadlineExtensionsInput = {
@@ -622,6 +679,8 @@ export type UserCreateWithoutDeadlineExtensionsInput = {
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
+  refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
 }
 
 export type UserUncheckedCreateWithoutDeadlineExtensionsInput = {
@@ -638,6 +697,8 @@ export type UserUncheckedCreateWithoutDeadlineExtensionsInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCoachInput
+  refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
 }
 
 export type UserCreateOrConnectWithoutDeadlineExtensionsInput = {
@@ -670,6 +731,8 @@ export type UserUpdateWithoutDeadlineExtensionsInput = {
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
+  refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDeadlineExtensionsInput = {
@@ -686,6 +749,8 @@ export type UserUncheckedUpdateWithoutDeadlineExtensionsInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutCoachNestedInput
+  refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
 }
 
 export type UserCreateWithoutPaymentsInput = {
@@ -702,6 +767,8 @@ export type UserCreateWithoutPaymentsInput = {
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
 }
 
 export type UserUncheckedCreateWithoutPaymentsInput = {
@@ -718,6 +785,8 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCoachInput
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
 }
 
 export type UserCreateOrConnectWithoutPaymentsInput = {
@@ -750,6 +819,8 @@ export type UserUpdateWithoutPaymentsInput = {
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentsInput = {
@@ -766,6 +837,8 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCoachNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
 }
 
 export type UserCreateWithoutRegistrationsInput = {
@@ -782,6 +855,8 @@ export type UserCreateWithoutRegistrationsInput = {
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
 }
 
 export type UserUncheckedCreateWithoutRegistrationsInput = {
@@ -798,6 +873,8 @@ export type UserUncheckedCreateWithoutRegistrationsInput = {
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCoachInput
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
 }
 
 export type UserCreateOrConnectWithoutRegistrationsInput = {
@@ -830,6 +907,8 @@ export type UserUpdateWithoutRegistrationsInput = {
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRegistrationsInput = {
@@ -846,6 +925,184 @@ export type UserUncheckedUpdateWithoutRegistrationsInput = {
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutCoachNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
+}
+
+export type UserCreateWithoutRefundsInput = {
+  id?: string
+  mobile: string
+  passwordHash: string
+  fullName: string
+  nationalCode?: string | null
+  role: $Enums.Role
+  province: $Enums.Province
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  students?: Prisma.StudentCreateNestedManyWithoutCoachInput
+  registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
+  processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
+}
+
+export type UserUncheckedCreateWithoutRefundsInput = {
+  id?: string
+  mobile: string
+  passwordHash: string
+  fullName: string
+  nationalCode?: string | null
+  role: $Enums.Role
+  province: $Enums.Province
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
+  registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCoachInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCoachInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCreatedByInput
+  processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
+}
+
+export type UserCreateOrConnectWithoutRefundsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutRefundsInput, Prisma.UserUncheckedCreateWithoutRefundsInput>
+}
+
+export type UserCreateWithoutProcessedRefundsInput = {
+  id?: string
+  mobile: string
+  passwordHash: string
+  fullName: string
+  nationalCode?: string | null
+  role: $Enums.Role
+  province: $Enums.Province
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  students?: Prisma.StudentCreateNestedManyWithoutCoachInput
+  registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
+}
+
+export type UserUncheckedCreateWithoutProcessedRefundsInput = {
+  id?: string
+  mobile: string
+  passwordHash: string
+  fullName: string
+  nationalCode?: string | null
+  role: $Enums.Role
+  province: $Enums.Province
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
+  registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCoachInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCoachInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
+}
+
+export type UserCreateOrConnectWithoutProcessedRefundsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutProcessedRefundsInput, Prisma.UserUncheckedCreateWithoutProcessedRefundsInput>
+}
+
+export type UserUpsertWithoutRefundsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutRefundsInput, Prisma.UserUncheckedUpdateWithoutRefundsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutRefundsInput, Prisma.UserUncheckedCreateWithoutRefundsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutRefundsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutRefundsInput, Prisma.UserUncheckedUpdateWithoutRefundsInput>
+}
+
+export type UserUpdateWithoutRefundsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mobile?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
+  registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
+  processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutRefundsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mobile?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
+  registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCoachNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutCoachNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCreatedByNestedInput
+  processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
+}
+
+export type UserUpsertWithoutProcessedRefundsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProcessedRefundsInput, Prisma.UserUncheckedUpdateWithoutProcessedRefundsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProcessedRefundsInput, Prisma.UserUncheckedCreateWithoutProcessedRefundsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutProcessedRefundsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProcessedRefundsInput, Prisma.UserUncheckedUpdateWithoutProcessedRefundsInput>
+}
+
+export type UserUpdateWithoutProcessedRefundsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mobile?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
+  registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
+}
+
+export type UserUncheckedUpdateWithoutProcessedRefundsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mobile?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
+  registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCoachNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutCoachNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
 }
 
 
@@ -858,6 +1115,8 @@ export type UserCountOutputType = {
   registrations: number
   payments: number
   deadlineExtensions: number
+  refunds: number
+  processedRefunds: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -865,6 +1124,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   registrations?: boolean | UserCountOutputTypeCountRegistrationsArgs
   payments?: boolean | UserCountOutputTypeCountPaymentsArgs
   deadlineExtensions?: boolean | UserCountOutputTypeCountDeadlineExtensionsArgs
+  refunds?: boolean | UserCountOutputTypeCountRefundsArgs
+  processedRefunds?: boolean | UserCountOutputTypeCountProcessedRefundsArgs
 }
 
 /**
@@ -905,6 +1166,20 @@ export type UserCountOutputTypeCountDeadlineExtensionsArgs<ExtArgs extends runti
   where?: Prisma.DeadlineExtensionWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountRefundsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RefundWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountProcessedRefundsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RefundWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -921,6 +1196,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   registrations?: boolean | Prisma.User$registrationsArgs<ExtArgs>
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
   deadlineExtensions?: boolean | Prisma.User$deadlineExtensionsArgs<ExtArgs>
+  refunds?: boolean | Prisma.User$refundsArgs<ExtArgs>
+  processedRefunds?: boolean | Prisma.User$processedRefundsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -969,6 +1246,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   registrations?: boolean | Prisma.User$registrationsArgs<ExtArgs>
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
   deadlineExtensions?: boolean | Prisma.User$deadlineExtensionsArgs<ExtArgs>
+  refunds?: boolean | Prisma.User$refundsArgs<ExtArgs>
+  processedRefunds?: boolean | Prisma.User$processedRefundsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -981,6 +1260,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     registrations: Prisma.$RegistrationPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
     deadlineExtensions: Prisma.$DeadlineExtensionPayload<ExtArgs>[]
+    refunds: Prisma.$RefundPayload<ExtArgs>[]
+    processedRefunds: Prisma.$RefundPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1391,6 +1672,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   registrations<T extends Prisma.User$registrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$registrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.User$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   deadlineExtensions<T extends Prisma.User$deadlineExtensionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$deadlineExtensionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DeadlineExtensionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  refunds<T extends Prisma.User$refundsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$refundsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  processedRefunds<T extends Prisma.User$processedRefundsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$processedRefundsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1916,6 +2199,54 @@ export type User$deadlineExtensionsArgs<ExtArgs extends runtime.Types.Extensions
   take?: number
   skip?: number
   distinct?: Prisma.DeadlineExtensionScalarFieldEnum | Prisma.DeadlineExtensionScalarFieldEnum[]
+}
+
+/**
+ * User.refunds
+ */
+export type User$refundsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Refund
+   */
+  select?: Prisma.RefundSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Refund
+   */
+  omit?: Prisma.RefundOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RefundInclude<ExtArgs> | null
+  where?: Prisma.RefundWhereInput
+  orderBy?: Prisma.RefundOrderByWithRelationInput | Prisma.RefundOrderByWithRelationInput[]
+  cursor?: Prisma.RefundWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RefundScalarFieldEnum | Prisma.RefundScalarFieldEnum[]
+}
+
+/**
+ * User.processedRefunds
+ */
+export type User$processedRefundsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Refund
+   */
+  select?: Prisma.RefundSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Refund
+   */
+  omit?: Prisma.RefundOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RefundInclude<ExtArgs> | null
+  where?: Prisma.RefundWhereInput
+  orderBy?: Prisma.RefundOrderByWithRelationInput | Prisma.RefundOrderByWithRelationInput[]
+  cursor?: Prisma.RefundWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RefundScalarFieldEnum | Prisma.RefundScalarFieldEnum[]
 }
 
 /**

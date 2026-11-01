@@ -1,6 +1,7 @@
 "use client";
 
 import { Avatar, type DataTableColumn, StatusBadge } from "@/components/shared";
+import { refundStatusKey } from "@/features/refunds";
 import { formatJalaliDate } from "@/lib/format";
 import { type CoachRegistrationRow, paymentStatusKey, registrationStatusKey } from "./coach-registration-row";
 
@@ -42,6 +43,12 @@ export function coachRegistrationColumns(): DataTableColumn<CoachRegistrationRow
       header: "رسید",
       cell: (row) =>
         row.paymentStatus ? <StatusBadge status={paymentStatusKey(row.paymentStatus)} /> : <span className="text-muted-foreground">-</span>,
+    },
+    {
+      id: "refund",
+      header: "بازپرداخت",
+      cell: (row) =>
+        row.refundStatus ? <StatusBadge status={refundStatusKey(row.refundStatus)} /> : <span className="text-muted-foreground">-</span>,
     },
   ];
 }

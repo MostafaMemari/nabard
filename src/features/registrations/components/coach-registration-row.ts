@@ -1,5 +1,6 @@
 import type { StatusKey } from "@/components/shared";
 import type { PaymentStatus } from "@/features/payments";
+import type { RefundStatus } from "@/features/refunds";
 import type { Registration, RegistrationStatus } from "../types";
 
 export type CoachRegistrationRow = {
@@ -10,6 +11,7 @@ export type CoachRegistrationRow = {
   paymentStatus: PaymentStatus | null;
   paymentAmount: string | null;
   weightClassLabel: string | null;
+  refundStatus: RefundStatus | null;
 };
 
 export function registrationStatusKey(status: RegistrationStatus): StatusKey {

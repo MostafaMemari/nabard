@@ -1,5 +1,6 @@
 import type { Discipline } from "@/features/competitions";
 import type { PaymentStatus } from "@/features/payments";
+import type { RefundStatus } from "@/features/refunds";
 import type { Province } from "@/generated/client";
 import { getPrisma } from "@/lib/prisma";
 import type { SummaryPendingPayment, SummaryUpcomingCompetition } from "../types";
@@ -18,6 +19,7 @@ export type SummaryRepository = {
   countPayments(province: Province, status: PaymentStatus): Promise<number>;
   countOpenCompetitions(province: Province): Promise<number>;
   countRegistrationsSince(province: Province, since: Date): Promise<number>;
+  countRefunds(province: Province, status: RefundStatus): Promise<number>;
   findLatestPendingPayments(province: Province, take?: number): Promise<SummaryPendingPayment[]>;
   findUpcomingCompetitions(province: Province, take?: number): Promise<SummaryUpcomingCompetition[]>;
 };
@@ -42,6 +44,10 @@ export async function countOpenCompetitions(province: Province): Promise<number>
 
 export async function countRegistrationsSince(province: Province, since: Date): Promise<number> {
   return getPrisma().registration.count({ where: { createdAt: { gte: since }, coach: { province } } });
+}
+
+export async function countRefunds(province: Province, status: RefundStatus): Promise<number> {
+  return getPrisma().refund.count({ where: { status, coach: { province } } });
 }
 
 export async function findLatestPendingPayments(

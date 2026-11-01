@@ -4,6 +4,7 @@ import { ClipboardListIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { DataTable, EmptyState, PageHeader, SkeletonRows } from "@/components/shared";
 import { CoachRegistrationCard, coachRegistrationColumns } from "@/features/registrations";
+import { CoachRefundsList } from "./coach-refunds-list";
 import { useCoachRegistrationRows } from "./use-coach-registration-rows";
 
 export function CoachRegistrationsScreen() {
@@ -37,6 +38,7 @@ export function CoachRegistrationsScreen() {
           renderCard={(row) => <CoachRegistrationCard row={row} />}
         />
       )}
+      <CoachRefundsList />
     </>
   );
 }

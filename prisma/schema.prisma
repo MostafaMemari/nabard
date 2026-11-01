@@ -126,6 +126,16 @@ enum RegistrationStatus {
   REJECTED @map("rejected")
 }
 
+enum RefundReason {
+  REGISTRATION_REJECTED @map("registration_rejected")
+  COMPETITION_CANCELED  @map("competition_canceled")
+}
+
+enum RefundStatus {
+  PENDING   @map("pending")
+  COMPLETED @map("completed")
+}
+
 // ───────────── Users ─────────────
 
 // Accounts are created by an admin. Coaches belong to a province.
@@ -143,6 +153,8 @@ model User {
   registrations       Registration[]
   payments            Payment[]
   deadlineExtensions  DeadlineExtension[] @relation("DeadlineExtensionCreatedBy")
+  refunds             Refund[] @relation("RefundCoach")
+  processedRefunds    Refund[] @relation("RefundProcessedBy")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -343,6 +355,8 @@ model Registration {
   status RegistrationStatus @default(PENDING) @map("status")
   note   String?            @map("note") @db.VarChar(500) // admin note on rejection
 
+  refund Refund?
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -352,4 +366,29 @@ model Registration {
   @@index([competitionId, status])
   @@index([coachId])
   @@map("registrations")
+}
+
+// Manual refunds recorded by an admin: one row per registration, created when
+// a confirmed-payment registration is rejected or the competition is canceled.
+// The money always goes back to the paying coach, never the student.
+model Refund {
+  id             String       @id @default(uuid()) @map("id")
+  registrationId String       @unique @map("registration_id")
+  registration   Registration @relation(fields: [registrationId], references: [id])
+  coachId        String       @map("coach_id")
+  coach          User         @relation("RefundCoach", fields: [coachId], references: [id])
+  amount         BigInt       @map("amount") // rials, equals the competition fee per student
+  reason         RefundReason @map("reason")
+  status         RefundStatus @default(PENDING) @map("status")
+  processedById  String?      @map("processed_by_id")
+  processedBy    User?        @relation("RefundProcessedBy", fields: [processedById], references: [id])
+  processedAt    DateTime?    @map("processed_at")
+  note           String?      @map("note") @db.VarChar(500)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([status, createdAt])
+  @@index([coachId])
+  @@map("refunds")
 }

@@ -20,6 +20,7 @@ export type AdminSummary = {
   pendingPaymentsCount: number;
   openCompetitionsCount: number;
   weeklyRegistrationsCount: number;
+  pendingRefundsCount: number;
   latestPendingPayments: SummaryPendingPayment[];
   upcomingCompetitions: SummaryUpcomingCompetition[];
 };

@@ -18,7 +18,6 @@ import type {
   RegistrationRejectionRow,
   RegistrationRepository,
   RegistrationStudentRow,
-  RegistrationTransitionInput,
   RegistrationWithScope,
   UserIdentityRecord,
 } from "./repository";
@@ -334,7 +333,7 @@ async function transitionRegistration(
   repo: RegistrationRepository,
   user: CurrentUser,
   id: string,
-  input: RegistrationTransitionInput,
+  input: { status: "APPROVED" | "REJECTED"; note: string | null },
 ): Promise<RegistrationRecord> {
   const identity = await requireActiveUser(repo, user);
   if (identity.role !== "ADMIN") throw forbidden();
@@ -342,7 +341,11 @@ async function transitionRegistration(
   const current = await repo.findRegistrationById(id);
   if (!current || current.coachProvince !== identity.province) throw registrationNotFound();
 
-  const result = await repo.transitionRegistrationFromPending(id, input);
+  const result = await repo.transitionRegistrationFromPending(id, {
+    status: input.status,
+    note: input.note,
+    createRefund: input.status === "REJECTED" && current.paymentStatus === "CONFIRMED",
+  });
   if (result === null) throw registrationNotFound();
   if (result.kind === "updated") return toRegistrationRecord(result.row);
   if (result.reason === "REVIEWED") {

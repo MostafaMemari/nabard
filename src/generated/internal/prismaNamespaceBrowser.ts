@@ -61,7 +61,8 @@ export const ModelName = {
   StoredFile: 'StoredFile',
   Payment: 'Payment',
   LoginFailure: 'LoginFailure',
-  Registration: 'Registration'
+  Registration: 'Registration',
+  Refund: 'Refund'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -238,6 +239,23 @@ export const RegistrationScalarFieldEnum = {
 } as const
 
 export type RegistrationScalarFieldEnum = (typeof RegistrationScalarFieldEnum)[keyof typeof RegistrationScalarFieldEnum]
+
+
+export const RefundScalarFieldEnum = {
+  id: 'id',
+  registrationId: 'registrationId',
+  coachId: 'coachId',
+  amount: 'amount',
+  reason: 'reason',
+  status: 'status',
+  processedById: 'processedById',
+  processedAt: 'processedAt',
+  note: 'note',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RefundScalarFieldEnum = (typeof RefundScalarFieldEnum)[keyof typeof RefundScalarFieldEnum]
 
 
 export const SortOrder = {

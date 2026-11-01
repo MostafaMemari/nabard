@@ -115,6 +115,7 @@ export type CompetitionsRepository = {
   countRegistrations(competitionId: string): Promise<number>;
   createCompetition(data: NewCompetitionData): Promise<CompetitionRow>;
   updateCompetition(id: string, data: CompetitionUpdateData): Promise<CompetitionRow>;
+  cancelCompetitionWithRefunds(id: string, reason: string): Promise<CompetitionRow | null>;
   extendDeadline(input: DeadlineExtensionInput): Promise<CompetitionRow>;
   findDeadlineExtensions(competitionId: string): Promise<DeadlineExtensionRow[]>;
   findAllBelts(): Promise<BeltRow[]>;
@@ -219,6 +220,35 @@ export async function createCompetition(data: NewCompetitionData): Promise<Compe
 
 export async function updateCompetition(id: string, data: CompetitionUpdateData): Promise<CompetitionRow> {
   return getPrisma().competition.update({ where: { id }, data, select: competitionSelection });
+}
+
+export async function cancelCompetitionWithRefunds(id: string, reason: string): Promise<CompetitionRow | null> {
+  return getPrisma().$transaction(async (tx) => {
+    const applied = await tx.competition.updateMany({
+      where: { id, status: "PUBLISHED" },
+      data: { status: "CANCELED", cancelReason: reason },
+    });
+    if (applied.count === 0) return null;
+
+    const rows = await tx.registration.findMany({
+      where: { competitionId: id, payment: { status: "CONFIRMED" }, refund: { is: null } },
+      select: { id: true, coachId: true, competition: { select: { feePerStudent: true } } },
+    });
+
+    for (const row of rows) {
+      await tx.refund.create({
+        data: {
+          registrationId: row.id,
+          coachId: row.coachId,
+          amount: row.competition.feePerStudent,
+          reason: "COMPETITION_CANCELED",
+          status: "PENDING",
+        },
+      });
+    }
+
+    return tx.competition.findUnique({ where: { id }, select: competitionSelection });
+  });
 }
 
 export async function extendDeadline(input: DeadlineExtensionInput): Promise<CompetitionRow> {

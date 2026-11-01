@@ -104,6 +104,7 @@ export type RegistrationBundle = {
 export type RegistrationTransitionInput = {
   status: "APPROVED" | "REJECTED";
   note: string | null;
+  createRefund: boolean;
 };
 
 export type RegistrationTransitionResult =
@@ -500,9 +501,26 @@ export async function transitionRegistrationFromPending(
 
     const row = await tx.registration.findUnique({
       where: { id },
-      select: { ...registrationSelection, coach: { select: { province: true } }, payment: { select: { status: true } } },
+      select: {
+        ...registrationSelection,
+        coach: { select: { province: true } },
+        payment: { select: { status: true } },
+        competition: { select: { feePerStudent: true } },
+      },
     });
     if (row === null) return null;
+
+    if (applied.count > 0 && input.createRefund) {
+      await tx.refund.create({
+        data: {
+          registrationId: id,
+          coachId: row.coachId,
+          amount: row.competition.feePerStudent,
+          reason: "REGISTRATION_REJECTED",
+          status: "PENDING",
+        },
+      });
+    }
 
     const withScope = {
       ...toRegistrationRecord(row),

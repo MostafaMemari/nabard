@@ -10,6 +10,8 @@ const statusStyles = {
   PUBLISHED: { label: "منتشر شده", className: "bg-success-bg text-success" },
   ACTIVE: { label: "فعال", className: "bg-success-bg text-success" },
   INACTIVE: { label: "غیرفعال", className: "bg-pending-bg text-pending" },
+  REFUND_PENDING: { label: "در انتظار بازپرداخت", className: "bg-warning-bg text-warning" },
+  REFUND_COMPLETED: { label: "بازپرداخت شده", className: "bg-success-bg text-success" },
 } as const;
 
 export type StatusKey = keyof typeof statusStyles;

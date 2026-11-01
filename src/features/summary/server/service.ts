@@ -20,19 +20,27 @@ export async function getAdminSummary(repo: SummaryRepository, user: CurrentUser
   const identity = await requireActiveAdmin(repo, user);
   const weekStart = startOfWeek(new Date(), { weekStartsOn: 6 });
 
-  const [pendingPaymentsCount, openCompetitionsCount, weeklyRegistrationsCount, latestPendingPayments, upcomingCompetitions] =
-    await Promise.all([
-      repo.countPayments(identity.province, "PENDING"),
-      repo.countOpenCompetitions(identity.province),
-      repo.countRegistrationsSince(identity.province, weekStart),
-      repo.findLatestPendingPayments(identity.province),
-      repo.findUpcomingCompetitions(identity.province),
-    ]);
+  const [
+    pendingPaymentsCount,
+    openCompetitionsCount,
+    weeklyRegistrationsCount,
+    pendingRefundsCount,
+    latestPendingPayments,
+    upcomingCompetitions,
+  ] = await Promise.all([
+    repo.countPayments(identity.province, "PENDING"),
+    repo.countOpenCompetitions(identity.province),
+    repo.countRegistrationsSince(identity.province, weekStart),
+    repo.countRefunds(identity.province, "PENDING"),
+    repo.findLatestPendingPayments(identity.province),
+    repo.findUpcomingCompetitions(identity.province),
+  ]);
 
   return {
     pendingPaymentsCount,
     openCompetitionsCount,
     weeklyRegistrationsCount,
+    pendingRefundsCount,
     latestPendingPayments,
     upcomingCompetitions,
   };

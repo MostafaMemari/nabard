@@ -227,6 +227,7 @@ export type RegistrationWhereInput = {
   coach?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
   weightClass?: Prisma.XOR<Prisma.WeightClassNullableScalarRelationFilter, Prisma.WeightClassWhereInput> | null
+  refund?: Prisma.XOR<Prisma.RefundNullableScalarRelationFilter, Prisma.RefundWhereInput> | null
 }
 
 export type RegistrationOrderByWithRelationInput = {
@@ -245,6 +246,7 @@ export type RegistrationOrderByWithRelationInput = {
   coach?: Prisma.UserOrderByWithRelationInput
   payment?: Prisma.PaymentOrderByWithRelationInput
   weightClass?: Prisma.WeightClassOrderByWithRelationInput
+  refund?: Prisma.RefundOrderByWithRelationInput
 }
 
 export type RegistrationWhereUniqueInput = Prisma.AtLeast<{
@@ -266,6 +268,7 @@ export type RegistrationWhereUniqueInput = Prisma.AtLeast<{
   coach?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
   weightClass?: Prisma.XOR<Prisma.WeightClassNullableScalarRelationFilter, Prisma.WeightClassWhereInput> | null
+  refund?: Prisma.XOR<Prisma.RefundNullableScalarRelationFilter, Prisma.RefundWhereInput> | null
 }, "id">
 
 export type RegistrationOrderByWithAggregationInput = {
@@ -311,6 +314,7 @@ export type RegistrationCreateInput = {
   coach: Prisma.UserCreateNestedOneWithoutRegistrationsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutRegistrationsInput
   weightClass?: Prisma.WeightClassCreateNestedOneWithoutRegistrationsInput
+  refund?: Prisma.RefundCreateNestedOneWithoutRegistrationInput
 }
 
 export type RegistrationUncheckedCreateInput = {
@@ -324,6 +328,7 @@ export type RegistrationUncheckedCreateInput = {
   note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutRegistrationInput
 }
 
 export type RegistrationUpdateInput = {
@@ -337,6 +342,7 @@ export type RegistrationUpdateInput = {
   coach?: Prisma.UserUpdateOneRequiredWithoutRegistrationsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutRegistrationsNestedInput
   weightClass?: Prisma.WeightClassUpdateOneWithoutRegistrationsNestedInput
+  refund?: Prisma.RefundUpdateOneWithoutRegistrationNestedInput
 }
 
 export type RegistrationUncheckedUpdateInput = {
@@ -350,6 +356,7 @@ export type RegistrationUncheckedUpdateInput = {
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refund?: Prisma.RefundUncheckedUpdateOneWithoutRegistrationNestedInput
 }
 
 export type RegistrationCreateManyInput = {
@@ -433,6 +440,11 @@ export type RegistrationMinOrderByAggregateInput = {
   note?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+}
+
+export type RegistrationScalarRelationFilter = {
+  is?: Prisma.RegistrationWhereInput
+  isNot?: Prisma.RegistrationWhereInput
 }
 
 export type RegistrationCreateNestedManyWithoutCoachInput = {
@@ -649,6 +661,20 @@ export type EnumRegistrationStatusFieldUpdateOperationsInput = {
   set?: $Enums.RegistrationStatus
 }
 
+export type RegistrationCreateNestedOneWithoutRefundInput = {
+  create?: Prisma.XOR<Prisma.RegistrationCreateWithoutRefundInput, Prisma.RegistrationUncheckedCreateWithoutRefundInput>
+  connectOrCreate?: Prisma.RegistrationCreateOrConnectWithoutRefundInput
+  connect?: Prisma.RegistrationWhereUniqueInput
+}
+
+export type RegistrationUpdateOneRequiredWithoutRefundNestedInput = {
+  create?: Prisma.XOR<Prisma.RegistrationCreateWithoutRefundInput, Prisma.RegistrationUncheckedCreateWithoutRefundInput>
+  connectOrCreate?: Prisma.RegistrationCreateOrConnectWithoutRefundInput
+  upsert?: Prisma.RegistrationUpsertWithoutRefundInput
+  connect?: Prisma.RegistrationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RegistrationUpdateToOneWithWhereWithoutRefundInput, Prisma.RegistrationUpdateWithoutRefundInput>, Prisma.RegistrationUncheckedUpdateWithoutRefundInput>
+}
+
 export type RegistrationCreateWithoutCoachInput = {
   id?: string
   status?: $Enums.RegistrationStatus
@@ -659,6 +685,7 @@ export type RegistrationCreateWithoutCoachInput = {
   student: Prisma.StudentCreateNestedOneWithoutRegistrationsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutRegistrationsInput
   weightClass?: Prisma.WeightClassCreateNestedOneWithoutRegistrationsInput
+  refund?: Prisma.RefundCreateNestedOneWithoutRegistrationInput
 }
 
 export type RegistrationUncheckedCreateWithoutCoachInput = {
@@ -671,6 +698,7 @@ export type RegistrationUncheckedCreateWithoutCoachInput = {
   note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutRegistrationInput
 }
 
 export type RegistrationCreateOrConnectWithoutCoachInput = {
@@ -725,6 +753,7 @@ export type RegistrationCreateWithoutStudentInput = {
   coach: Prisma.UserCreateNestedOneWithoutRegistrationsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutRegistrationsInput
   weightClass?: Prisma.WeightClassCreateNestedOneWithoutRegistrationsInput
+  refund?: Prisma.RefundCreateNestedOneWithoutRegistrationInput
 }
 
 export type RegistrationUncheckedCreateWithoutStudentInput = {
@@ -737,6 +766,7 @@ export type RegistrationUncheckedCreateWithoutStudentInput = {
   note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutRegistrationInput
 }
 
 export type RegistrationCreateOrConnectWithoutStudentInput = {
@@ -775,6 +805,7 @@ export type RegistrationCreateWithoutWeightClassInput = {
   student: Prisma.StudentCreateNestedOneWithoutRegistrationsInput
   coach: Prisma.UserCreateNestedOneWithoutRegistrationsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutRegistrationsInput
+  refund?: Prisma.RefundCreateNestedOneWithoutRegistrationInput
 }
 
 export type RegistrationUncheckedCreateWithoutWeightClassInput = {
@@ -787,6 +818,7 @@ export type RegistrationUncheckedCreateWithoutWeightClassInput = {
   note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutRegistrationInput
 }
 
 export type RegistrationCreateOrConnectWithoutWeightClassInput = {
@@ -825,6 +857,7 @@ export type RegistrationCreateWithoutCompetitionInput = {
   coach: Prisma.UserCreateNestedOneWithoutRegistrationsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutRegistrationsInput
   weightClass?: Prisma.WeightClassCreateNestedOneWithoutRegistrationsInput
+  refund?: Prisma.RefundCreateNestedOneWithoutRegistrationInput
 }
 
 export type RegistrationUncheckedCreateWithoutCompetitionInput = {
@@ -837,6 +870,7 @@ export type RegistrationUncheckedCreateWithoutCompetitionInput = {
   note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutRegistrationInput
 }
 
 export type RegistrationCreateOrConnectWithoutCompetitionInput = {
@@ -875,6 +909,7 @@ export type RegistrationCreateWithoutPaymentInput = {
   student: Prisma.StudentCreateNestedOneWithoutRegistrationsInput
   coach: Prisma.UserCreateNestedOneWithoutRegistrationsInput
   weightClass?: Prisma.WeightClassCreateNestedOneWithoutRegistrationsInput
+  refund?: Prisma.RefundCreateNestedOneWithoutRegistrationInput
 }
 
 export type RegistrationUncheckedCreateWithoutPaymentInput = {
@@ -887,6 +922,7 @@ export type RegistrationUncheckedCreateWithoutPaymentInput = {
   note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutRegistrationInput
 }
 
 export type RegistrationCreateOrConnectWithoutPaymentInput = {
@@ -915,6 +951,74 @@ export type RegistrationUpdateManyWithWhereWithoutPaymentInput = {
   data: Prisma.XOR<Prisma.RegistrationUpdateManyMutationInput, Prisma.RegistrationUncheckedUpdateManyWithoutPaymentInput>
 }
 
+export type RegistrationCreateWithoutRefundInput = {
+  id?: string
+  status?: $Enums.RegistrationStatus
+  note?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  competition: Prisma.CompetitionCreateNestedOneWithoutRegistrationsInput
+  student: Prisma.StudentCreateNestedOneWithoutRegistrationsInput
+  coach: Prisma.UserCreateNestedOneWithoutRegistrationsInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutRegistrationsInput
+  weightClass?: Prisma.WeightClassCreateNestedOneWithoutRegistrationsInput
+}
+
+export type RegistrationUncheckedCreateWithoutRefundInput = {
+  id?: string
+  competitionId: string
+  studentId: string
+  coachId: string
+  paymentId?: string | null
+  weightClassId?: string | null
+  status?: $Enums.RegistrationStatus
+  note?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type RegistrationCreateOrConnectWithoutRefundInput = {
+  where: Prisma.RegistrationWhereUniqueInput
+  create: Prisma.XOR<Prisma.RegistrationCreateWithoutRefundInput, Prisma.RegistrationUncheckedCreateWithoutRefundInput>
+}
+
+export type RegistrationUpsertWithoutRefundInput = {
+  update: Prisma.XOR<Prisma.RegistrationUpdateWithoutRefundInput, Prisma.RegistrationUncheckedUpdateWithoutRefundInput>
+  create: Prisma.XOR<Prisma.RegistrationCreateWithoutRefundInput, Prisma.RegistrationUncheckedCreateWithoutRefundInput>
+  where?: Prisma.RegistrationWhereInput
+}
+
+export type RegistrationUpdateToOneWithWhereWithoutRefundInput = {
+  where?: Prisma.RegistrationWhereInput
+  data: Prisma.XOR<Prisma.RegistrationUpdateWithoutRefundInput, Prisma.RegistrationUncheckedUpdateWithoutRefundInput>
+}
+
+export type RegistrationUpdateWithoutRefundInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  competition?: Prisma.CompetitionUpdateOneRequiredWithoutRegistrationsNestedInput
+  student?: Prisma.StudentUpdateOneRequiredWithoutRegistrationsNestedInput
+  coach?: Prisma.UserUpdateOneRequiredWithoutRegistrationsNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutRegistrationsNestedInput
+  weightClass?: Prisma.WeightClassUpdateOneWithoutRegistrationsNestedInput
+}
+
+export type RegistrationUncheckedUpdateWithoutRefundInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  competitionId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  coachId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weightClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type RegistrationCreateManyCoachInput = {
   id?: string
   competitionId: string
@@ -937,6 +1041,7 @@ export type RegistrationUpdateWithoutCoachInput = {
   student?: Prisma.StudentUpdateOneRequiredWithoutRegistrationsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutRegistrationsNestedInput
   weightClass?: Prisma.WeightClassUpdateOneWithoutRegistrationsNestedInput
+  refund?: Prisma.RefundUpdateOneWithoutRegistrationNestedInput
 }
 
 export type RegistrationUncheckedUpdateWithoutCoachInput = {
@@ -949,6 +1054,7 @@ export type RegistrationUncheckedUpdateWithoutCoachInput = {
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refund?: Prisma.RefundUncheckedUpdateOneWithoutRegistrationNestedInput
 }
 
 export type RegistrationUncheckedUpdateManyWithoutCoachInput = {
@@ -985,6 +1091,7 @@ export type RegistrationUpdateWithoutStudentInput = {
   coach?: Prisma.UserUpdateOneRequiredWithoutRegistrationsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutRegistrationsNestedInput
   weightClass?: Prisma.WeightClassUpdateOneWithoutRegistrationsNestedInput
+  refund?: Prisma.RefundUpdateOneWithoutRegistrationNestedInput
 }
 
 export type RegistrationUncheckedUpdateWithoutStudentInput = {
@@ -997,6 +1104,7 @@ export type RegistrationUncheckedUpdateWithoutStudentInput = {
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refund?: Prisma.RefundUncheckedUpdateOneWithoutRegistrationNestedInput
 }
 
 export type RegistrationUncheckedUpdateManyWithoutStudentInput = {
@@ -1033,6 +1141,7 @@ export type RegistrationUpdateWithoutWeightClassInput = {
   student?: Prisma.StudentUpdateOneRequiredWithoutRegistrationsNestedInput
   coach?: Prisma.UserUpdateOneRequiredWithoutRegistrationsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutRegistrationsNestedInput
+  refund?: Prisma.RefundUpdateOneWithoutRegistrationNestedInput
 }
 
 export type RegistrationUncheckedUpdateWithoutWeightClassInput = {
@@ -1045,6 +1154,7 @@ export type RegistrationUncheckedUpdateWithoutWeightClassInput = {
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refund?: Prisma.RefundUncheckedUpdateOneWithoutRegistrationNestedInput
 }
 
 export type RegistrationUncheckedUpdateManyWithoutWeightClassInput = {
@@ -1081,6 +1191,7 @@ export type RegistrationUpdateWithoutCompetitionInput = {
   coach?: Prisma.UserUpdateOneRequiredWithoutRegistrationsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutRegistrationsNestedInput
   weightClass?: Prisma.WeightClassUpdateOneWithoutRegistrationsNestedInput
+  refund?: Prisma.RefundUpdateOneWithoutRegistrationNestedInput
 }
 
 export type RegistrationUncheckedUpdateWithoutCompetitionInput = {
@@ -1093,6 +1204,7 @@ export type RegistrationUncheckedUpdateWithoutCompetitionInput = {
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refund?: Prisma.RefundUncheckedUpdateOneWithoutRegistrationNestedInput
 }
 
 export type RegistrationUncheckedUpdateManyWithoutCompetitionInput = {
@@ -1129,6 +1241,7 @@ export type RegistrationUpdateWithoutPaymentInput = {
   student?: Prisma.StudentUpdateOneRequiredWithoutRegistrationsNestedInput
   coach?: Prisma.UserUpdateOneRequiredWithoutRegistrationsNestedInput
   weightClass?: Prisma.WeightClassUpdateOneWithoutRegistrationsNestedInput
+  refund?: Prisma.RefundUpdateOneWithoutRegistrationNestedInput
 }
 
 export type RegistrationUncheckedUpdateWithoutPaymentInput = {
@@ -1141,6 +1254,7 @@ export type RegistrationUncheckedUpdateWithoutPaymentInput = {
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refund?: Prisma.RefundUncheckedUpdateOneWithoutRegistrationNestedInput
 }
 
 export type RegistrationUncheckedUpdateManyWithoutPaymentInput = {
@@ -1173,6 +1287,7 @@ export type RegistrationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   coach?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   payment?: boolean | Prisma.Registration$paymentArgs<ExtArgs>
   weightClass?: boolean | Prisma.Registration$weightClassArgs<ExtArgs>
+  refund?: boolean | Prisma.Registration$refundArgs<ExtArgs>
 }, ExtArgs["result"]["registration"]>
 
 export type RegistrationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1231,6 +1346,7 @@ export type RegistrationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   coach?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   payment?: boolean | Prisma.Registration$paymentArgs<ExtArgs>
   weightClass?: boolean | Prisma.Registration$weightClassArgs<ExtArgs>
+  refund?: boolean | Prisma.Registration$refundArgs<ExtArgs>
 }
 export type RegistrationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   competition?: boolean | Prisma.CompetitionDefaultArgs<ExtArgs>
@@ -1255,6 +1371,7 @@ export type $RegistrationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     coach: Prisma.$UserPayload<ExtArgs>
     payment: Prisma.$PaymentPayload<ExtArgs> | null
     weightClass: Prisma.$WeightClassPayload<ExtArgs> | null
+    refund: Prisma.$RefundPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1666,6 +1783,7 @@ export interface Prisma__RegistrationClient<T, Null = never, ExtArgs extends run
   coach<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   payment<T extends Prisma.Registration$paymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Registration$paymentArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   weightClass<T extends Prisma.Registration$weightClassArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Registration$weightClassArgs<ExtArgs>>): Prisma.Prisma__WeightClassClient<runtime.Types.Result.GetResult<Prisma.$WeightClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  refund<T extends Prisma.Registration$refundArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Registration$refundArgs<ExtArgs>>): Prisma.Prisma__RefundClient<runtime.Types.Result.GetResult<Prisma.$RefundPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2141,6 +2259,25 @@ export type Registration$weightClassArgs<ExtArgs extends runtime.Types.Extension
    */
   include?: Prisma.WeightClassInclude<ExtArgs> | null
   where?: Prisma.WeightClassWhereInput
+}
+
+/**
+ * Registration.refund
+ */
+export type Registration$refundArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Refund
+   */
+  select?: Prisma.RefundSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Refund
+   */
+  omit?: Prisma.RefundOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RefundInclude<ExtArgs> | null
+  where?: Prisma.RefundWhereInput
 }
 
 /**

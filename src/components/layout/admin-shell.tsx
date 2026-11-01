@@ -1,6 +1,6 @@
 "use client";
 
-import { HouseIcon, ReceiptTextIcon, TrophyIcon, UsersIcon } from "lucide-react";
+import { HouseIcon, ReceiptTextIcon, TrophyIcon, Undo2Icon, UsersIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { Avatar } from "@/components/shared";
 import { ChangePasswordButton, roleLabels, useMe } from "@/features/auth";
@@ -14,6 +14,7 @@ const navItems: SidebarNavItem[] = [
   { id: "home", label: "خانه", href: "/admin", icon: HouseIcon },
   { id: "competitions", label: "مسابقات", href: "/admin/competitions", icon: TrophyIcon },
   { id: "payments", label: "بررسی پرداخت ها", href: "/admin/payments", icon: ReceiptTextIcon },
+  { id: "refunds", label: "بازپرداخت ها", href: "/admin/refunds", icon: Undo2Icon },
   { id: "coaches", label: "مربیان", href: "/admin/coaches", icon: UsersIcon },
 ];
 

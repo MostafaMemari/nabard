@@ -131,6 +131,7 @@ function repoWith(overrides: Partial<CompetitionsRepository> = {}): Competitions
     countRegistrations: vi.fn().mockResolvedValue(0),
     createCompetition: vi.fn().mockResolvedValue(draftRow),
     updateCompetition: vi.fn().mockImplementation(async (_id: string, data: Record<string, unknown>) => ({ ...draftRow, ...data })),
+    cancelCompetitionWithRefunds: vi.fn().mockResolvedValue(null),
     extendDeadline: vi.fn().mockImplementation(async (input: { competitionId: string; newDeadline: Date }) => ({
       ...draftRow,
       id: input.competitionId,
@@ -473,15 +474,19 @@ describe("publishCompetition", () => {
 });
 
 describe("cancelCompetition", () => {
-  it("cancels a published competition with the reason", async () => {
+  it("cancels a published competition and creates refunds in the same transaction", async () => {
+    const canceledRow = rowWith({ id: "comp-1", status: "CANCELED", cancelReason: "سالن مسابقه در دسترس نیست." });
     const repo = repoWith({
       findUserById: vi.fn().mockResolvedValue(adminRecord),
       findCompetitionById: vi.fn().mockResolvedValue(publishedOpenRow),
+      cancelCompetitionWithRefunds: vi.fn().mockResolvedValue(canceledRow),
     });
     const result = await cancelCompetition(repo, admin, "comp-1", "سالن مسابقه در دسترس نیست.");
 
-    expect(repo.updateCompetition).toHaveBeenCalledWith("comp-1", { status: "CANCELED", cancelReason: "سالن مسابقه در دسترس نیست." });
+    expect(repo.cancelCompetitionWithRefunds).toHaveBeenCalledWith("comp-1", "سالن مسابقه در دسترس نیست.");
+    expect(repo.updateCompetition).not.toHaveBeenCalled();
     expect(result.status).toBe("CANCELED");
+    expect(result.cancelReason).toBe("سالن مسابقه در دسترس نیست.");
   });
 
   it("rejects canceling a draft with 409", async () => {
@@ -489,7 +494,7 @@ describe("cancelCompetition", () => {
     const failure = await failureOf(cancelCompetition(repo, admin, "comp-9", "دلیل لغو"));
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
-    expect(repo.updateCompetition).not.toHaveBeenCalled();
+    expect(repo.cancelCompetitionWithRefunds).not.toHaveBeenCalled();
   });
 
   it("rejects canceling an already canceled competition with 409", async () => {
@@ -503,12 +508,25 @@ describe("cancelCompetition", () => {
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
   });
 
+  it("reports a canceled competition when the conditional update loses a race", async () => {
+    const canceledRow = rowWith({ id: "comp-1", status: "CANCELED", cancelReason: "دلیل" });
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findCompetitionById: vi.fn().mockResolvedValueOnce(publishedOpenRow).mockResolvedValue(canceledRow),
+      cancelCompetitionWithRefunds: vi.fn().mockResolvedValue(null),
+    });
+    const failure = await failureOf(cancelCompetition(repo, admin, "comp-1", "دلیل لغو"));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect((failure as AppError).message).toContain("قبلاً لغو شده");
+  });
+
   it("rejects a coach with 403", async () => {
     const repo = repoWith({ findCompetitionById: vi.fn().mockResolvedValue(publishedOpenRow) });
     const failure = await failureOf(cancelCompetition(repo, coach, "comp-1", "دلیل لغو"));
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
-    expect(repo.updateCompetition).not.toHaveBeenCalled();
+    expect(repo.cancelCompetitionWithRefunds).not.toHaveBeenCalled();
   });
 });
 
