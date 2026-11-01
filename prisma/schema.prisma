@@ -136,6 +136,19 @@ enum RefundStatus {
   COMPLETED @map("completed")
 }
 
+enum ProfileStatus {
+  PENDING  @map("pending")
+  APPROVED @map("approved")
+  REJECTED @map("rejected")
+}
+
+enum StudentDocumentType {
+  PHOTO                            @map("photo")
+  NATIONAL_ID_OR_BIRTH_CERTIFICATE @map("national_id_or_birth_certificate")
+  INSURANCE                        @map("insurance")
+  BELT_CERTIFICATE                 @map("belt_certificate")
+}
+
 // ───────────── Users ─────────────
 
 // Accounts are created by an admin. Coaches belong to a province.
@@ -149,12 +162,13 @@ model User {
   province     Province @map("province")
   isActive     Boolean  @default(true) @map("is_active")
 
-  students            Student[]
-  registrations       Registration[]
-  payments            Payment[]
-  deadlineExtensions  DeadlineExtension[] @relation("DeadlineExtensionCreatedBy")
-  refunds             Refund[] @relation("RefundCoach")
-  processedRefunds    Refund[] @relation("RefundProcessedBy")
+  students           Student[]
+  registrations      Registration[]
+  payments           Payment[]
+  deadlineExtensions DeadlineExtension[] @relation("DeadlineExtensionCreatedBy")
+  refunds            Refund[]            @relation("RefundCoach")
+  processedRefunds   Refund[]            @relation("RefundProcessedBy")
+  reviewedProfiles   Student[]           @relation("StudentProfileReviewedBy")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -174,6 +188,14 @@ model Student {
   belt    Belt   @relation(fields: [beltId], references: [id])
   coachId String @map("coach_id")
   coach   User   @relation(fields: [coachId], references: [id])
+
+  profileStatus ProfileStatus @default(PENDING) @map("profile_status")
+  profileNote   String?       @map("profile_note") @db.VarChar(500) // admin note on profile rejection
+  approvedById  String?       @map("approved_by_id")
+  approvedBy    User?         @relation("StudentProfileReviewedBy", fields: [approvedById], references: [id])
+  approvedAt    DateTime?     @map("approved_at")
+
+  documents StudentDocument[]
 
   registrations Registration[]
 
@@ -250,17 +272,17 @@ model Competition {
   maxBeltId     String      @map("max_belt_id")
   maxBelt       Belt        @relation("CompetitionMaxBelt", fields: [maxBeltId], references: [id])
 
-  feePerStudent        BigInt   @map("fee_per_student") // rials
-  payeeCardNumber      String   @map("payee_card_number") @db.VarChar(16)
-  payeeCardHolder      String   @map("payee_card_holder") @db.VarChar(80)
-  registrationDeadline DateTime @map("registration_deadline")
-  eventDate            DateTime @map("event_date")
+  feePerStudent        BigInt            @map("fee_per_student") // rials
+  payeeCardNumber      String            @map("payee_card_number") @db.VarChar(16)
+  payeeCardHolder      String            @map("payee_card_holder") @db.VarChar(80)
+  registrationDeadline DateTime          @map("registration_deadline")
+  eventDate            DateTime          @map("event_date")
   status               CompetitionStatus @default(DRAFT) @map("status")
-  cancelReason         String?  @map("cancel_reason") @db.VarChar(500) // admin note on cancel
+  cancelReason         String?           @map("cancel_reason") @db.VarChar(500) // admin note on cancel
 
-  registrations       Registration[]
-  deadlineExtensions  DeadlineExtension[]
-  payments            Payment[]
+  registrations      Registration[]
+  deadlineExtensions DeadlineExtension[]
+  payments           Payment[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -300,17 +322,36 @@ model StoredFile {
   data      Bytes    @map("data")
   createdAt DateTime @default(now()) @map("created_at")
 
+  studentDocuments StudentDocument[]
+
   @@map("stored_files")
+}
+
+// Private profile documents of a student; one document per type, replaced by upload.
+model StudentDocument {
+  id        String              @id @default(uuid()) @map("id")
+  studentId String              @map("student_id")
+  student   Student             @relation(fields: [studentId], references: [id])
+  type      StudentDocumentType @map("type")
+  fileId    String              @map("file_id")
+  file      StoredFile          @relation(fields: [fileId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([studentId, type])
+  @@index([studentId])
+  @@map("student_documents")
 }
 
 // One payment (one receipt) can cover several students.
 // Later, a payment gateway can create Payment rows the same way.
 model Payment {
-  id            String        @id @default(uuid()) @map("id")
-  competitionId String        @map("competition_id")
-  competition   Competition   @relation(fields: [competitionId], references: [id])
-  coachId       String        @map("coach_id")
-  coach         User          @relation(fields: [coachId], references: [id])
+  id            String      @id @default(uuid()) @map("id")
+  competitionId String      @map("competition_id")
+  competition   Competition @relation(fields: [competitionId], references: [id])
+  coachId       String      @map("coach_id")
+  coach         User        @relation(fields: [coachId], references: [id])
 
   amount     BigInt        @map("amount")
   receiptKey String?       @map("receipt_key") // uploaded card-to-card receipt

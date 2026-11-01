@@ -91,10 +91,24 @@ export const studentListQuerySchema = z.object({
   pageSize: z.coerce.number().int().min(1).max(100).optional(),
 });
 
+export const pendingReviewQuerySchema = z.object({
+  status: z.enum(["PENDING", "REJECTED"]).optional(),
+  page: z.coerce.number().int().min(1).optional(),
+  pageSize: z.coerce.number().int().min(1).max(100).optional(),
+});
+
+export const rejectProfileSchema = z.object({
+  note: z.string().trim().min(3, "دلیل رد پروفایل را بنویسید.").max(500, "یادداشت حداکثر ۵۰۰ نویسه است."),
+});
+
+export const studentDocumentTypeSchema = z.enum(["PHOTO", "NATIONAL_ID_OR_BIRTH_CERTIFICATE", "INSURANCE", "BELT_CERTIFICATE"]);
+
 export type StudentFormValues = z.input<typeof studentSchema>;
 export type CreateStudentInput = z.output<typeof createStudentSchema>;
 export type UpdateStudentInput = z.output<typeof updateStudentSchema>;
 export type StudentListQuery = z.output<typeof studentListQuerySchema>;
+export type PendingReviewQuery = z.output<typeof pendingReviewQuerySchema>;
+export type RejectProfileInput = z.output<typeof rejectProfileSchema>;
 
 export const emptyStudentForm: StudentFormValues = {
   fullName: "",

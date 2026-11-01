@@ -58,6 +58,11 @@ export type DeadlineExtension = Prisma.DeadlineExtensionModel
  */
 export type StoredFile = Prisma.StoredFileModel
 /**
+ * Model StudentDocument
+ * 
+ */
+export type StudentDocument = Prisma.StudentDocumentModel
+/**
  * Model Payment
  * 
  */

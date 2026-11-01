@@ -78,6 +78,7 @@ const coachStudents = [
     birthDate: new Date("2000-05-10T00:00:00.000Z"),
     beltId: "belt-blue",
     weightKg: 60,
+    profileStatus: "APPROVED" as const,
   },
   {
     id: "student-2",
@@ -86,6 +87,7 @@ const coachStudents = [
     birthDate: new Date("2000-05-10T00:00:00.000Z"),
     beltId: "belt-blue",
     weightKg: 55,
+    profileStatus: "APPROVED" as const,
   },
 ];
 

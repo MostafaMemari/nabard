@@ -626,10 +626,6 @@ export type EnumRefundStatusFieldUpdateOperationsInput = {
   set?: $Enums.RefundStatus
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type RefundCreateWithoutCoachInput = {
   id?: string
   amount: bigint | number

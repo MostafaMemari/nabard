@@ -76,6 +76,7 @@ export type RegistrationStudentRow = {
   birthDate: Date;
   beltId: string;
   weightKg: number | null;
+  profileStatus: "PENDING" | "APPROVED" | "REJECTED";
 };
 
 export type RegistrationBundleInput = {
@@ -297,7 +298,7 @@ export async function findAgeCategoryById(id: string): Promise<AgeCategoryRow | 
 export async function findCoachStudentsByIds(coachId: string, studentIds: string[]): Promise<RegistrationStudentRow[]> {
   const rows = await getPrisma().student.findMany({
     where: { coachId, id: { in: studentIds } },
-    select: { id: true, fullName: true, gender: true, birthDate: true, beltId: true, weightKg: true },
+    select: { id: true, fullName: true, gender: true, birthDate: true, beltId: true, weightKg: true, profileStatus: true },
   });
 
   return rows.map((row) => ({ ...row, weightKg: row.weightKg === null ? null : Number(row.weightKg) }));

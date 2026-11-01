@@ -43,6 +43,10 @@ export type StudentMinAggregateOutputType = {
   weightKg: runtime.Decimal | null
   beltId: string | null
   coachId: string | null
+  profileStatus: $Enums.ProfileStatus | null
+  profileNote: string | null
+  approvedById: string | null
+  approvedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +60,10 @@ export type StudentMaxAggregateOutputType = {
   weightKg: runtime.Decimal | null
   beltId: string | null
   coachId: string | null
+  profileStatus: $Enums.ProfileStatus | null
+  profileNote: string | null
+  approvedById: string | null
+  approvedAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -69,6 +77,10 @@ export type StudentCountAggregateOutputType = {
   weightKg: number
   beltId: number
   coachId: number
+  profileStatus: number
+  profileNote: number
+  approvedById: number
+  approvedAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -92,6 +104,10 @@ export type StudentMinAggregateInputType = {
   weightKg?: true
   beltId?: true
   coachId?: true
+  profileStatus?: true
+  profileNote?: true
+  approvedById?: true
+  approvedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -105,6 +121,10 @@ export type StudentMaxAggregateInputType = {
   weightKg?: true
   beltId?: true
   coachId?: true
+  profileStatus?: true
+  profileNote?: true
+  approvedById?: true
+  approvedAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -118,6 +138,10 @@ export type StudentCountAggregateInputType = {
   weightKg?: true
   beltId?: true
   coachId?: true
+  profileStatus?: true
+  profileNote?: true
+  approvedById?: true
+  approvedAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -218,6 +242,10 @@ export type StudentGroupByOutputType = {
   weightKg: runtime.Decimal | null
   beltId: string
   coachId: string
+  profileStatus: $Enums.ProfileStatus
+  profileNote: string | null
+  approvedById: string | null
+  approvedAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: StudentCountAggregateOutputType | null
@@ -254,10 +282,16 @@ export type StudentWhereInput = {
   weightKg?: Prisma.DecimalNullableFilter<"Student"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   beltId?: Prisma.StringFilter<"Student"> | string
   coachId?: Prisma.StringFilter<"Student"> | string
+  profileStatus?: Prisma.EnumProfileStatusFilter<"Student"> | $Enums.ProfileStatus
+  profileNote?: Prisma.StringNullableFilter<"Student"> | string | null
+  approvedById?: Prisma.StringNullableFilter<"Student"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   belt?: Prisma.XOR<Prisma.BeltScalarRelationFilter, Prisma.BeltWhereInput>
   coach?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  approvedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  documents?: Prisma.StudentDocumentListRelationFilter
   registrations?: Prisma.RegistrationListRelationFilter
 }
 
@@ -270,10 +304,16 @@ export type StudentOrderByWithRelationInput = {
   weightKg?: Prisma.SortOrderInput | Prisma.SortOrder
   beltId?: Prisma.SortOrder
   coachId?: Prisma.SortOrder
+  profileStatus?: Prisma.SortOrder
+  profileNote?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   belt?: Prisma.BeltOrderByWithRelationInput
   coach?: Prisma.UserOrderByWithRelationInput
+  approvedBy?: Prisma.UserOrderByWithRelationInput
+  documents?: Prisma.StudentDocumentOrderByRelationAggregateInput
   registrations?: Prisma.RegistrationOrderByRelationAggregateInput
 }
 
@@ -289,10 +329,16 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   weightKg?: Prisma.DecimalNullableFilter<"Student"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   beltId?: Prisma.StringFilter<"Student"> | string
   coachId?: Prisma.StringFilter<"Student"> | string
+  profileStatus?: Prisma.EnumProfileStatusFilter<"Student"> | $Enums.ProfileStatus
+  profileNote?: Prisma.StringNullableFilter<"Student"> | string | null
+  approvedById?: Prisma.StringNullableFilter<"Student"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   belt?: Prisma.XOR<Prisma.BeltScalarRelationFilter, Prisma.BeltWhereInput>
   coach?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  approvedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  documents?: Prisma.StudentDocumentListRelationFilter
   registrations?: Prisma.RegistrationListRelationFilter
 }, "id" | "nationalCode">
 
@@ -305,6 +351,10 @@ export type StudentOrderByWithAggregationInput = {
   weightKg?: Prisma.SortOrderInput | Prisma.SortOrder
   beltId?: Prisma.SortOrder
   coachId?: Prisma.SortOrder
+  profileStatus?: Prisma.SortOrder
+  profileNote?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedById?: Prisma.SortOrderInput | Prisma.SortOrder
+  approvedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.StudentCountOrderByAggregateInput
@@ -326,6 +376,10 @@ export type StudentScalarWhereWithAggregatesInput = {
   weightKg?: Prisma.DecimalNullableWithAggregatesFilter<"Student"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   beltId?: Prisma.StringWithAggregatesFilter<"Student"> | string
   coachId?: Prisma.StringWithAggregatesFilter<"Student"> | string
+  profileStatus?: Prisma.EnumProfileStatusWithAggregatesFilter<"Student"> | $Enums.ProfileStatus
+  profileNote?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
+  approvedById?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
+  approvedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Student"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Student"> | Date | string
 }
@@ -337,10 +391,15 @@ export type StudentCreateInput = {
   nationalCode: string
   birthDate: Date | string
   weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   belt: Prisma.BeltCreateNestedOneWithoutStudentsInput
   coach: Prisma.UserCreateNestedOneWithoutStudentsInput
+  approvedBy?: Prisma.UserCreateNestedOneWithoutReviewedProfilesInput
+  documents?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutStudentInput
 }
 
@@ -353,8 +412,13 @@ export type StudentUncheckedCreateInput = {
   weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   beltId: string
   coachId: string
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedById?: string | null
+  approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  documents?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutStudentInput
 }
 
@@ -365,10 +429,15 @@ export type StudentUpdateInput = {
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   belt?: Prisma.BeltUpdateOneRequiredWithoutStudentsNestedInput
   coach?: Prisma.UserUpdateOneRequiredWithoutStudentsNestedInput
+  approvedBy?: Prisma.UserUpdateOneWithoutReviewedProfilesNestedInput
+  documents?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutStudentNestedInput
 }
 
@@ -381,8 +450,13 @@ export type StudentUncheckedUpdateInput = {
   weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documents?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutStudentNestedInput
 }
 
@@ -395,6 +469,10 @@ export type StudentCreateManyInput = {
   weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   beltId: string
   coachId: string
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedById?: string | null
+  approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -406,6 +484,9 @@ export type StudentUpdateManyMutationInput = {
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -419,6 +500,10 @@ export type StudentUncheckedUpdateManyInput = {
   weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -442,6 +527,10 @@ export type StudentCountOrderByAggregateInput = {
   weightKg?: Prisma.SortOrder
   beltId?: Prisma.SortOrder
   coachId?: Prisma.SortOrder
+  profileStatus?: Prisma.SortOrder
+  profileNote?: Prisma.SortOrder
+  approvedById?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -459,6 +548,10 @@ export type StudentMaxOrderByAggregateInput = {
   weightKg?: Prisma.SortOrder
   beltId?: Prisma.SortOrder
   coachId?: Prisma.SortOrder
+  profileStatus?: Prisma.SortOrder
+  profileNote?: Prisma.SortOrder
+  approvedById?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -472,6 +565,10 @@ export type StudentMinOrderByAggregateInput = {
   weightKg?: Prisma.SortOrder
   beltId?: Prisma.SortOrder
   coachId?: Prisma.SortOrder
+  profileStatus?: Prisma.SortOrder
+  profileNote?: Prisma.SortOrder
+  approvedById?: Prisma.SortOrder
+  approvedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -492,10 +589,24 @@ export type StudentCreateNestedManyWithoutCoachInput = {
   connect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
 }
 
+export type StudentCreateNestedManyWithoutApprovedByInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutApprovedByInput, Prisma.StudentUncheckedCreateWithoutApprovedByInput> | Prisma.StudentCreateWithoutApprovedByInput[] | Prisma.StudentUncheckedCreateWithoutApprovedByInput[]
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutApprovedByInput | Prisma.StudentCreateOrConnectWithoutApprovedByInput[]
+  createMany?: Prisma.StudentCreateManyApprovedByInputEnvelope
+  connect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+}
+
 export type StudentUncheckedCreateNestedManyWithoutCoachInput = {
   create?: Prisma.XOR<Prisma.StudentCreateWithoutCoachInput, Prisma.StudentUncheckedCreateWithoutCoachInput> | Prisma.StudentCreateWithoutCoachInput[] | Prisma.StudentUncheckedCreateWithoutCoachInput[]
   connectOrCreate?: Prisma.StudentCreateOrConnectWithoutCoachInput | Prisma.StudentCreateOrConnectWithoutCoachInput[]
   createMany?: Prisma.StudentCreateManyCoachInputEnvelope
+  connect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+}
+
+export type StudentUncheckedCreateNestedManyWithoutApprovedByInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutApprovedByInput, Prisma.StudentUncheckedCreateWithoutApprovedByInput> | Prisma.StudentCreateWithoutApprovedByInput[] | Prisma.StudentUncheckedCreateWithoutApprovedByInput[]
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutApprovedByInput | Prisma.StudentCreateOrConnectWithoutApprovedByInput[]
+  createMany?: Prisma.StudentCreateManyApprovedByInputEnvelope
   connect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
 }
 
@@ -513,6 +624,20 @@ export type StudentUpdateManyWithoutCoachNestedInput = {
   deleteMany?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
 }
 
+export type StudentUpdateManyWithoutApprovedByNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutApprovedByInput, Prisma.StudentUncheckedCreateWithoutApprovedByInput> | Prisma.StudentCreateWithoutApprovedByInput[] | Prisma.StudentUncheckedCreateWithoutApprovedByInput[]
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutApprovedByInput | Prisma.StudentCreateOrConnectWithoutApprovedByInput[]
+  upsert?: Prisma.StudentUpsertWithWhereUniqueWithoutApprovedByInput | Prisma.StudentUpsertWithWhereUniqueWithoutApprovedByInput[]
+  createMany?: Prisma.StudentCreateManyApprovedByInputEnvelope
+  set?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  disconnect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  delete?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  connect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  update?: Prisma.StudentUpdateWithWhereUniqueWithoutApprovedByInput | Prisma.StudentUpdateWithWhereUniqueWithoutApprovedByInput[]
+  updateMany?: Prisma.StudentUpdateManyWithWhereWithoutApprovedByInput | Prisma.StudentUpdateManyWithWhereWithoutApprovedByInput[]
+  deleteMany?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
+}
+
 export type StudentUncheckedUpdateManyWithoutCoachNestedInput = {
   create?: Prisma.XOR<Prisma.StudentCreateWithoutCoachInput, Prisma.StudentUncheckedCreateWithoutCoachInput> | Prisma.StudentCreateWithoutCoachInput[] | Prisma.StudentUncheckedCreateWithoutCoachInput[]
   connectOrCreate?: Prisma.StudentCreateOrConnectWithoutCoachInput | Prisma.StudentCreateOrConnectWithoutCoachInput[]
@@ -527,6 +652,20 @@ export type StudentUncheckedUpdateManyWithoutCoachNestedInput = {
   deleteMany?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
 }
 
+export type StudentUncheckedUpdateManyWithoutApprovedByNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutApprovedByInput, Prisma.StudentUncheckedCreateWithoutApprovedByInput> | Prisma.StudentCreateWithoutApprovedByInput[] | Prisma.StudentUncheckedCreateWithoutApprovedByInput[]
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutApprovedByInput | Prisma.StudentCreateOrConnectWithoutApprovedByInput[]
+  upsert?: Prisma.StudentUpsertWithWhereUniqueWithoutApprovedByInput | Prisma.StudentUpsertWithWhereUniqueWithoutApprovedByInput[]
+  createMany?: Prisma.StudentCreateManyApprovedByInputEnvelope
+  set?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  disconnect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  delete?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  connect?: Prisma.StudentWhereUniqueInput | Prisma.StudentWhereUniqueInput[]
+  update?: Prisma.StudentUpdateWithWhereUniqueWithoutApprovedByInput | Prisma.StudentUpdateWithWhereUniqueWithoutApprovedByInput[]
+  updateMany?: Prisma.StudentUpdateManyWithWhereWithoutApprovedByInput | Prisma.StudentUpdateManyWithWhereWithoutApprovedByInput[]
+  deleteMany?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
+}
+
 export type EnumGenderFieldUpdateOperationsInput = {
   set?: $Enums.Gender
 }
@@ -537,6 +676,14 @@ export type NullableDecimalFieldUpdateOperationsInput = {
   decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
   multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
+export type EnumProfileStatusFieldUpdateOperationsInput = {
+  set?: $Enums.ProfileStatus
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type StudentCreateNestedManyWithoutBeltInput = {
@@ -581,6 +728,20 @@ export type StudentUncheckedUpdateManyWithoutBeltNestedInput = {
   deleteMany?: Prisma.StudentScalarWhereInput | Prisma.StudentScalarWhereInput[]
 }
 
+export type StudentCreateNestedOneWithoutDocumentsInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutDocumentsInput, Prisma.StudentUncheckedCreateWithoutDocumentsInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutDocumentsInput
+  connect?: Prisma.StudentWhereUniqueInput
+}
+
+export type StudentUpdateOneRequiredWithoutDocumentsNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutDocumentsInput, Prisma.StudentUncheckedCreateWithoutDocumentsInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutDocumentsInput
+  upsert?: Prisma.StudentUpsertWithoutDocumentsInput
+  connect?: Prisma.StudentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutDocumentsInput, Prisma.StudentUpdateWithoutDocumentsInput>, Prisma.StudentUncheckedUpdateWithoutDocumentsInput>
+}
+
 export type StudentCreateNestedOneWithoutRegistrationsInput = {
   create?: Prisma.XOR<Prisma.StudentCreateWithoutRegistrationsInput, Prisma.StudentUncheckedCreateWithoutRegistrationsInput>
   connectOrCreate?: Prisma.StudentCreateOrConnectWithoutRegistrationsInput
@@ -602,9 +763,14 @@ export type StudentCreateWithoutCoachInput = {
   nationalCode: string
   birthDate: Date | string
   weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   belt: Prisma.BeltCreateNestedOneWithoutStudentsInput
+  approvedBy?: Prisma.UserCreateNestedOneWithoutReviewedProfilesInput
+  documents?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutStudentInput
 }
 
@@ -616,8 +782,13 @@ export type StudentUncheckedCreateWithoutCoachInput = {
   birthDate: Date | string
   weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   beltId: string
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedById?: string | null
+  approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  documents?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutStudentInput
 }
 
@@ -628,6 +799,52 @@ export type StudentCreateOrConnectWithoutCoachInput = {
 
 export type StudentCreateManyCoachInputEnvelope = {
   data: Prisma.StudentCreateManyCoachInput | Prisma.StudentCreateManyCoachInput[]
+  skipDuplicates?: boolean
+}
+
+export type StudentCreateWithoutApprovedByInput = {
+  id?: string
+  fullName: string
+  gender: $Enums.Gender
+  nationalCode: string
+  birthDate: Date | string
+  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  belt: Prisma.BeltCreateNestedOneWithoutStudentsInput
+  coach: Prisma.UserCreateNestedOneWithoutStudentsInput
+  documents?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
+  registrations?: Prisma.RegistrationCreateNestedManyWithoutStudentInput
+}
+
+export type StudentUncheckedCreateWithoutApprovedByInput = {
+  id?: string
+  fullName: string
+  gender: $Enums.Gender
+  nationalCode: string
+  birthDate: Date | string
+  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  beltId: string
+  coachId: string
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  documents?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
+  registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type StudentCreateOrConnectWithoutApprovedByInput = {
+  where: Prisma.StudentWhereUniqueInput
+  create: Prisma.XOR<Prisma.StudentCreateWithoutApprovedByInput, Prisma.StudentUncheckedCreateWithoutApprovedByInput>
+}
+
+export type StudentCreateManyApprovedByInputEnvelope = {
+  data: Prisma.StudentCreateManyApprovedByInput | Prisma.StudentCreateManyApprovedByInput[]
   skipDuplicates?: boolean
 }
 
@@ -659,8 +876,28 @@ export type StudentScalarWhereInput = {
   weightKg?: Prisma.DecimalNullableFilter<"Student"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   beltId?: Prisma.StringFilter<"Student"> | string
   coachId?: Prisma.StringFilter<"Student"> | string
+  profileStatus?: Prisma.EnumProfileStatusFilter<"Student"> | $Enums.ProfileStatus
+  profileNote?: Prisma.StringNullableFilter<"Student"> | string | null
+  approvedById?: Prisma.StringNullableFilter<"Student"> | string | null
+  approvedAt?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Student"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Student"> | Date | string
+}
+
+export type StudentUpsertWithWhereUniqueWithoutApprovedByInput = {
+  where: Prisma.StudentWhereUniqueInput
+  update: Prisma.XOR<Prisma.StudentUpdateWithoutApprovedByInput, Prisma.StudentUncheckedUpdateWithoutApprovedByInput>
+  create: Prisma.XOR<Prisma.StudentCreateWithoutApprovedByInput, Prisma.StudentUncheckedCreateWithoutApprovedByInput>
+}
+
+export type StudentUpdateWithWhereUniqueWithoutApprovedByInput = {
+  where: Prisma.StudentWhereUniqueInput
+  data: Prisma.XOR<Prisma.StudentUpdateWithoutApprovedByInput, Prisma.StudentUncheckedUpdateWithoutApprovedByInput>
+}
+
+export type StudentUpdateManyWithWhereWithoutApprovedByInput = {
+  where: Prisma.StudentScalarWhereInput
+  data: Prisma.XOR<Prisma.StudentUpdateManyMutationInput, Prisma.StudentUncheckedUpdateManyWithoutApprovedByInput>
 }
 
 export type StudentCreateWithoutBeltInput = {
@@ -670,9 +907,14 @@ export type StudentCreateWithoutBeltInput = {
   nationalCode: string
   birthDate: Date | string
   weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   coach: Prisma.UserCreateNestedOneWithoutStudentsInput
+  approvedBy?: Prisma.UserCreateNestedOneWithoutReviewedProfilesInput
+  documents?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutStudentInput
 }
 
@@ -684,8 +926,13 @@ export type StudentUncheckedCreateWithoutBeltInput = {
   birthDate: Date | string
   weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   coachId: string
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedById?: string | null
+  approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  documents?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutStudentInput
 }
 
@@ -715,6 +962,94 @@ export type StudentUpdateManyWithWhereWithoutBeltInput = {
   data: Prisma.XOR<Prisma.StudentUpdateManyMutationInput, Prisma.StudentUncheckedUpdateManyWithoutBeltInput>
 }
 
+export type StudentCreateWithoutDocumentsInput = {
+  id?: string
+  fullName: string
+  gender: $Enums.Gender
+  nationalCode: string
+  birthDate: Date | string
+  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  belt: Prisma.BeltCreateNestedOneWithoutStudentsInput
+  coach: Prisma.UserCreateNestedOneWithoutStudentsInput
+  approvedBy?: Prisma.UserCreateNestedOneWithoutReviewedProfilesInput
+  registrations?: Prisma.RegistrationCreateNestedManyWithoutStudentInput
+}
+
+export type StudentUncheckedCreateWithoutDocumentsInput = {
+  id?: string
+  fullName: string
+  gender: $Enums.Gender
+  nationalCode: string
+  birthDate: Date | string
+  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  beltId: string
+  coachId: string
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type StudentCreateOrConnectWithoutDocumentsInput = {
+  where: Prisma.StudentWhereUniqueInput
+  create: Prisma.XOR<Prisma.StudentCreateWithoutDocumentsInput, Prisma.StudentUncheckedCreateWithoutDocumentsInput>
+}
+
+export type StudentUpsertWithoutDocumentsInput = {
+  update: Prisma.XOR<Prisma.StudentUpdateWithoutDocumentsInput, Prisma.StudentUncheckedUpdateWithoutDocumentsInput>
+  create: Prisma.XOR<Prisma.StudentCreateWithoutDocumentsInput, Prisma.StudentUncheckedCreateWithoutDocumentsInput>
+  where?: Prisma.StudentWhereInput
+}
+
+export type StudentUpdateToOneWithWhereWithoutDocumentsInput = {
+  where?: Prisma.StudentWhereInput
+  data: Prisma.XOR<Prisma.StudentUpdateWithoutDocumentsInput, Prisma.StudentUncheckedUpdateWithoutDocumentsInput>
+}
+
+export type StudentUpdateWithoutDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
+  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  belt?: Prisma.BeltUpdateOneRequiredWithoutStudentsNestedInput
+  coach?: Prisma.UserUpdateOneRequiredWithoutStudentsNestedInput
+  approvedBy?: Prisma.UserUpdateOneWithoutReviewedProfilesNestedInput
+  registrations?: Prisma.RegistrationUpdateManyWithoutStudentNestedInput
+}
+
+export type StudentUncheckedUpdateWithoutDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
+  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  beltId?: Prisma.StringFieldUpdateOperationsInput | string
+  coachId?: Prisma.StringFieldUpdateOperationsInput | string
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutStudentNestedInput
+}
+
 export type StudentCreateWithoutRegistrationsInput = {
   id?: string
   fullName: string
@@ -722,10 +1057,15 @@ export type StudentCreateWithoutRegistrationsInput = {
   nationalCode: string
   birthDate: Date | string
   weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   belt: Prisma.BeltCreateNestedOneWithoutStudentsInput
   coach: Prisma.UserCreateNestedOneWithoutStudentsInput
+  approvedBy?: Prisma.UserCreateNestedOneWithoutReviewedProfilesInput
+  documents?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutRegistrationsInput = {
@@ -737,8 +1077,13 @@ export type StudentUncheckedCreateWithoutRegistrationsInput = {
   weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   beltId: string
   coachId: string
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedById?: string | null
+  approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  documents?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutRegistrationsInput = {
@@ -764,10 +1109,15 @@ export type StudentUpdateWithoutRegistrationsInput = {
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   belt?: Prisma.BeltUpdateOneRequiredWithoutStudentsNestedInput
   coach?: Prisma.UserUpdateOneRequiredWithoutStudentsNestedInput
+  approvedBy?: Prisma.UserUpdateOneWithoutReviewedProfilesNestedInput
+  documents?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutRegistrationsInput = {
@@ -779,8 +1129,13 @@ export type StudentUncheckedUpdateWithoutRegistrationsInput = {
   weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documents?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateManyCoachInput = {
@@ -791,6 +1146,26 @@ export type StudentCreateManyCoachInput = {
   birthDate: Date | string
   weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   beltId: string
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type StudentCreateManyApprovedByInput = {
+  id?: string
+  fullName: string
+  gender: $Enums.Gender
+  nationalCode: string
+  birthDate: Date | string
+  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  beltId: string
+  coachId: string
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -802,9 +1177,14 @@ export type StudentUpdateWithoutCoachInput = {
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   belt?: Prisma.BeltUpdateOneRequiredWithoutStudentsNestedInput
+  approvedBy?: Prisma.UserUpdateOneWithoutReviewedProfilesNestedInput
+  documents?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutStudentNestedInput
 }
 
@@ -816,8 +1196,13 @@ export type StudentUncheckedUpdateWithoutCoachInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documents?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutStudentNestedInput
 }
 
@@ -829,6 +1214,62 @@ export type StudentUncheckedUpdateManyWithoutCoachInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StudentUpdateWithoutApprovedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
+  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  belt?: Prisma.BeltUpdateOneRequiredWithoutStudentsNestedInput
+  coach?: Prisma.UserUpdateOneRequiredWithoutStudentsNestedInput
+  documents?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
+  registrations?: Prisma.RegistrationUpdateManyWithoutStudentNestedInput
+}
+
+export type StudentUncheckedUpdateWithoutApprovedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
+  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  beltId?: Prisma.StringFieldUpdateOperationsInput | string
+  coachId?: Prisma.StringFieldUpdateOperationsInput | string
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documents?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
+  registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type StudentUncheckedUpdateManyWithoutApprovedByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
+  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  beltId?: Prisma.StringFieldUpdateOperationsInput | string
+  coachId?: Prisma.StringFieldUpdateOperationsInput | string
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -841,6 +1282,10 @@ export type StudentCreateManyBeltInput = {
   birthDate: Date | string
   weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   coachId: string
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedById?: string | null
+  approvedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -852,9 +1297,14 @@ export type StudentUpdateWithoutBeltInput = {
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coach?: Prisma.UserUpdateOneRequiredWithoutStudentsNestedInput
+  approvedBy?: Prisma.UserUpdateOneWithoutReviewedProfilesNestedInput
+  documents?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutStudentNestedInput
 }
 
@@ -866,8 +1316,13 @@ export type StudentUncheckedUpdateWithoutBeltInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documents?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutStudentNestedInput
 }
 
@@ -879,6 +1334,10 @@ export type StudentUncheckedUpdateManyWithoutBeltInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -889,10 +1348,12 @@ export type StudentUncheckedUpdateManyWithoutBeltInput = {
  */
 
 export type StudentCountOutputType = {
+  documents: number
   registrations: number
 }
 
 export type StudentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  documents?: boolean | StudentCountOutputTypeCountDocumentsArgs
   registrations?: boolean | StudentCountOutputTypeCountRegistrationsArgs
 }
 
@@ -904,6 +1365,13 @@ export type StudentCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
    * Select specific fields to fetch from the StudentCountOutputType
    */
   select?: Prisma.StudentCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * StudentCountOutputType without action
+ */
+export type StudentCountOutputTypeCountDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StudentDocumentWhereInput
 }
 
 /**
@@ -923,10 +1391,16 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   weightKg?: boolean
   beltId?: boolean
   coachId?: boolean
+  profileStatus?: boolean
+  profileNote?: boolean
+  approvedById?: boolean
+  approvedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   belt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
   coach?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  approvedBy?: boolean | Prisma.Student$approvedByArgs<ExtArgs>
+  documents?: boolean | Prisma.Student$documentsArgs<ExtArgs>
   registrations?: boolean | Prisma.Student$registrationsArgs<ExtArgs>
   _count?: boolean | Prisma.StudentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["student"]>
@@ -940,10 +1414,15 @@ export type StudentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   weightKg?: boolean
   beltId?: boolean
   coachId?: boolean
+  profileStatus?: boolean
+  profileNote?: boolean
+  approvedById?: boolean
+  approvedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   belt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
   coach?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  approvedBy?: boolean | Prisma.Student$approvedByArgs<ExtArgs>
 }, ExtArgs["result"]["student"]>
 
 export type StudentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -955,10 +1434,15 @@ export type StudentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   weightKg?: boolean
   beltId?: boolean
   coachId?: boolean
+  profileStatus?: boolean
+  profileNote?: boolean
+  approvedById?: boolean
+  approvedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   belt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
   coach?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  approvedBy?: boolean | Prisma.Student$approvedByArgs<ExtArgs>
 }, ExtArgs["result"]["student"]>
 
 export type StudentSelectScalar = {
@@ -970,24 +1454,32 @@ export type StudentSelectScalar = {
   weightKg?: boolean
   beltId?: boolean
   coachId?: boolean
+  profileStatus?: boolean
+  profileNote?: boolean
+  approvedById?: boolean
+  approvedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "gender" | "nationalCode" | "birthDate" | "weightKg" | "beltId" | "coachId" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
+export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "gender" | "nationalCode" | "birthDate" | "weightKg" | "beltId" | "coachId" | "profileStatus" | "profileNote" | "approvedById" | "approvedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
 export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   belt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
   coach?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  approvedBy?: boolean | Prisma.Student$approvedByArgs<ExtArgs>
+  documents?: boolean | Prisma.Student$documentsArgs<ExtArgs>
   registrations?: boolean | Prisma.Student$registrationsArgs<ExtArgs>
   _count?: boolean | Prisma.StudentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StudentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   belt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
   coach?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  approvedBy?: boolean | Prisma.Student$approvedByArgs<ExtArgs>
 }
 export type StudentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   belt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
   coach?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  approvedBy?: boolean | Prisma.Student$approvedByArgs<ExtArgs>
 }
 
 export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -995,6 +1487,8 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
   objects: {
     belt: Prisma.$BeltPayload<ExtArgs>
     coach: Prisma.$UserPayload<ExtArgs>
+    approvedBy: Prisma.$UserPayload<ExtArgs> | null
+    documents: Prisma.$StudentDocumentPayload<ExtArgs>[]
     registrations: Prisma.$RegistrationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1006,6 +1500,10 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     weightKg: runtime.Decimal | null
     beltId: string
     coachId: string
+    profileStatus: $Enums.ProfileStatus
+    profileNote: string | null
+    approvedById: string | null
+    approvedAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["student"]>
@@ -1404,6 +1902,8 @@ export interface Prisma__StudentClient<T, Null = never, ExtArgs extends runtime.
   readonly [Symbol.toStringTag]: "PrismaPromise"
   belt<T extends Prisma.BeltDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BeltDefaultArgs<ExtArgs>>): Prisma.Prisma__BeltClient<runtime.Types.Result.GetResult<Prisma.$BeltPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   coach<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  approvedBy<T extends Prisma.Student$approvedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$approvedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  documents<T extends Prisma.Student$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   registrations<T extends Prisma.Student$registrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$registrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1442,6 +1942,10 @@ export interface StudentFieldRefs {
   readonly weightKg: Prisma.FieldRef<"Student", 'Decimal'>
   readonly beltId: Prisma.FieldRef<"Student", 'String'>
   readonly coachId: Prisma.FieldRef<"Student", 'String'>
+  readonly profileStatus: Prisma.FieldRef<"Student", 'ProfileStatus'>
+  readonly profileNote: Prisma.FieldRef<"Student", 'String'>
+  readonly approvedById: Prisma.FieldRef<"Student", 'String'>
+  readonly approvedAt: Prisma.FieldRef<"Student", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Student", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Student", 'DateTime'>
 }
@@ -1842,6 +2346,49 @@ export type StudentDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Students to delete.
    */
   limit?: number
+}
+
+/**
+ * Student.approvedBy
+ */
+export type Student$approvedByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+}
+
+/**
+ * Student.documents
+ */
+export type Student$documentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudentDocument
+   */
+  select?: Prisma.StudentDocumentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudentDocument
+   */
+  omit?: Prisma.StudentDocumentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentDocumentInclude<ExtArgs> | null
+  where?: Prisma.StudentDocumentWhereInput
+  orderBy?: Prisma.StudentDocumentOrderByWithRelationInput | Prisma.StudentDocumentOrderByWithRelationInput[]
+  cursor?: Prisma.StudentDocumentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StudentDocumentScalarFieldEnum | Prisma.StudentDocumentScalarFieldEnum[]
 }
 
 /**

@@ -81,6 +81,7 @@ const studentRow: RegistrationStudentRow = {
   birthDate: new Date("2013-05-10T00:00:00.000Z"),
   beltId: "belt-green",
   weightKg: 35,
+  profileStatus: "APPROVED",
 };
 
 const secondStudent: RegistrationStudentRow = { ...studentRow, id: "student-2", fullName: "سینا مرادی" };

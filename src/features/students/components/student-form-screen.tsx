@@ -1,15 +1,20 @@
 "use client";
-import { UsersIcon } from "lucide-react";
+import { ImageIcon, UsersIcon } from "lucide-react";
 
 import Link from "next/link";
 import { EmptyState, FormActions, FormContainer, FormSection, PageHeader } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useStudentDocuments } from "../hooks/use-student-documents";
 import { useStudentForm } from "../hooks/use-student-form";
+import { studentDocumentTypes } from "../labels";
+import { DocumentUploadCard } from "./document-upload-card";
 import { StudentBeltField, StudentBirthDateField, StudentSelectField, StudentTextField } from "./student-form-fields";
+import { StudentProfileStatus } from "./student-profile-status";
 
 export function StudentFormScreen({ studentId }: { studentId?: string }) {
-  const { isEdit, form, belts, isLoading, error, student, submit } = useStudentForm({ studentId });
+  const { isEdit, form, belts, isLoading, error, student, submit, mutateStudent } = useStudentForm({ studentId });
+  const documents = useStudentDocuments(studentId ?? "", mutateStudent);
 
   if (isEdit && isLoading) {
     return (
@@ -44,6 +49,7 @@ export function StudentFormScreen({ studentId }: { studentId?: string }) {
         <PageHeader
           title={isEdit ? "ویرایش هنرجو" : "هنرجوی جدید"}
           description={isEdit ? "اطلاعات هنرجو را ویرایش کنید." : "اطلاعات هنرجو را وارد کنید تا در ثبت نام مسابقات قابل استفاده باشد."}
+          action={isEdit && student ? <StudentProfileStatus status={student.profileStatus} note={student.profileNote} /> : undefined}
         />
 
         <FormSection title="اطلاعات هنرجو" icon={UsersIcon}>
@@ -77,6 +83,24 @@ export function StudentFormScreen({ studentId }: { studentId?: string }) {
             autoComplete="off"
           />
         </FormSection>
+
+        {isEdit && student ? (
+          <FormSection title="مدارک هنرجو" icon={ImageIcon} description="عکس پرسنلی و کارت ملی برای بررسی پروفایل الزامی است.">
+            <div className="grid gap-3 sm:grid-cols-2">
+              {studentDocumentTypes.map((type) => (
+                <DocumentUploadCard
+                  key={type}
+                  studentId={student.id}
+                  type={type}
+                  uploaded={student.documents.some((document) => document.type === type)}
+                  working={documents.workingType === type}
+                  onUpload={documents.upload}
+                  onDelete={documents.remove}
+                />
+              ))}
+            </div>
+          </FormSection>
+        ) : null}
 
         <FormActions cancelHref="/coach/students" submitLabel="ذخیره" submitting={form.formState.isSubmitting} />
       </form>

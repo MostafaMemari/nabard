@@ -57,6 +57,7 @@ async function main() {
         weightKg: student.weightKg,
         beltId: student.beltId,
         coachId: student.coachId,
+        profileStatus: "APPROVED",
       },
       create: {
         id: student.id,
@@ -67,6 +68,7 @@ async function main() {
         weightKg: student.weightKg,
         beltId: student.beltId,
         coachId: student.coachId,
+        profileStatus: "APPROVED",
         createdAt: new Date(student.createdAt),
       },
     });

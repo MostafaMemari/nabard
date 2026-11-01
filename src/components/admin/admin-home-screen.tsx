@@ -17,9 +17,9 @@ export function AdminHomeScreen() {
     <>
       <PageHeader title="خانه" description="رسیدهای در انتظار بررسی و مسابقات پیش رو." />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
         {isLoading || !summary ? (
-          [1, 2, 3, 4].map((key) => <Skeleton key={key} className="h-32 w-full" />)
+          [1, 2, 3, 4, 5].map((key) => <Skeleton key={key} className="h-32 w-full" />)
         ) : (
           <>
             <SummaryCard
@@ -27,6 +27,12 @@ export function AdminHomeScreen() {
               label="رسیدهای در انتظار بررسی"
               href="/admin/payments?status=pending"
               linkLabel="مشاهده پرداخت ها"
+            />
+            <SummaryCard
+              value={formatNumber(summary.pendingProfilesCount)}
+              label="پروفایل های در انتظار تایید"
+              href="/admin/profiles"
+              linkLabel="بررسی پروفایل ها"
             />
             <SummaryCard
               value={formatNumber(summary.pendingRefundsCount)}

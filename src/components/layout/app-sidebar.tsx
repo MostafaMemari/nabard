@@ -10,6 +10,7 @@ import { SidebarLink } from "./sidebar-link";
 export type SidebarNavItem = {
   id: string;
   label: string;
+  shortLabel?: string;
   href: string;
   icon: LucideIcon;
 };

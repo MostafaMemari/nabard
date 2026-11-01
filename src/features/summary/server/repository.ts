@@ -20,6 +20,7 @@ export type SummaryRepository = {
   countOpenCompetitions(province: Province): Promise<number>;
   countRegistrationsSince(province: Province, since: Date): Promise<number>;
   countRefunds(province: Province, status: RefundStatus): Promise<number>;
+  countPendingProfiles(province: Province): Promise<number>;
   findLatestPendingPayments(province: Province, take?: number): Promise<SummaryPendingPayment[]>;
   findUpcomingCompetitions(province: Province, take?: number): Promise<SummaryUpcomingCompetition[]>;
 };
@@ -48,6 +49,10 @@ export async function countRegistrationsSince(province: Province, since: Date): 
 
 export async function countRefunds(province: Province, status: RefundStatus): Promise<number> {
   return getPrisma().refund.count({ where: { status, coach: { province } } });
+}
+
+export async function countPendingProfiles(province: Province): Promise<number> {
+  return getPrisma().student.count({ where: { profileStatus: "PENDING", coach: { province } } });
 }
 
 export async function findLatestPendingPayments(

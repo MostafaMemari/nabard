@@ -1,6 +1,8 @@
 import type { AgeCategory, Belt, Gender, WeightClass } from "@/features/base-data";
 import type { Discipline } from "@/features/competitions";
 
+export type ProfileStatus = "PENDING" | "APPROVED" | "REJECTED";
+
 export type EligibilityStudent = {
   id: string;
   fullName: string;
@@ -8,6 +10,7 @@ export type EligibilityStudent = {
   birthDate: string;
   beltId: string;
   weightKg: number | null;
+  profileStatus: ProfileStatus;
 };
 
 export type EligibilityCompetition = {
@@ -21,6 +24,7 @@ export type EligibilityCompetition = {
 export type EligibilityResult = { eligible: true; weightClass: WeightClass | null } | { eligible: false; reason: string };
 
 const REASONS = {
+  profile: "پروفایل هنرجو هنوز تایید نشده است",
   gender: "جنسیت هنرجو با جنسیت مسابقه همخوانی ندارد.",
   birthDate: "تاریخ تولد هنرجو در بازه سنی این مسابقه نیست.",
   belt: "کمربند هنرجو در بازه کمربندهای مجاز این مسابقه نیست.",
@@ -44,6 +48,10 @@ function isWeightInClass(weight: number, weightClass: WeightClass): boolean {
 }
 
 export function checkEligibility(student: EligibilityStudent, competition: EligibilityCompetition, belts: Belt[]): EligibilityResult {
+  if (student.profileStatus !== "APPROVED") {
+    return { eligible: false, reason: REASONS.profile };
+  }
+
   if (student.gender !== competition.gender) {
     return { eligible: false, reason: REASONS.gender };
   }

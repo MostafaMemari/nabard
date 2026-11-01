@@ -159,6 +159,7 @@ function toEligibilityStudent(row: {
   birthDate: Date;
   beltId: string;
   weightKg: number | null;
+  profileStatus: EligibilityStudent["profileStatus"];
 }): EligibilityStudent {
   return {
     id: row.id,
@@ -167,6 +168,7 @@ function toEligibilityStudent(row: {
     birthDate: row.birthDate.toISOString(),
     beltId: row.beltId,
     weightKg: row.weightKg,
+    profileStatus: row.profileStatus,
   };
 }
 

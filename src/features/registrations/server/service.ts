@@ -81,6 +81,7 @@ function toEligibilityStudent(row: RegistrationStudentRow): EligibilityStudent {
     birthDate: row.birthDate.toISOString(),
     beltId: row.beltId,
     weightKg: row.weightKg,
+    profileStatus: row.profileStatus,
   };
 }
 

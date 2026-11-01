@@ -3,6 +3,7 @@ export * from "./components/coach-registration-row";
 export * from "./components/coach-registrations-card";
 export * from "./components/coach-registrations-columns";
 export * from "./components/competition-summary-card";
+export * from "./components/compress-receipt";
 export * from "./components/payment-step";
 export * from "./components/receipt-upload-field";
 export * from "./components/registration-timeline";

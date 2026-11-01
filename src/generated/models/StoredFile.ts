@@ -216,6 +216,7 @@ export type StoredFileWhereInput = {
   size?: Prisma.IntFilter<"StoredFile"> | number
   data?: Prisma.BytesFilter<"StoredFile"> | runtime.Bytes
   createdAt?: Prisma.DateTimeFilter<"StoredFile"> | Date | string
+  studentDocuments?: Prisma.StudentDocumentListRelationFilter
 }
 
 export type StoredFileOrderByWithRelationInput = {
@@ -224,6 +225,7 @@ export type StoredFileOrderByWithRelationInput = {
   size?: Prisma.SortOrder
   data?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  studentDocuments?: Prisma.StudentDocumentOrderByRelationAggregateInput
 }
 
 export type StoredFileWhereUniqueInput = Prisma.AtLeast<{
@@ -235,6 +237,7 @@ export type StoredFileWhereUniqueInput = Prisma.AtLeast<{
   size?: Prisma.IntFilter<"StoredFile"> | number
   data?: Prisma.BytesFilter<"StoredFile"> | runtime.Bytes
   createdAt?: Prisma.DateTimeFilter<"StoredFile"> | Date | string
+  studentDocuments?: Prisma.StudentDocumentListRelationFilter
 }, "id">
 
 export type StoredFileOrderByWithAggregationInput = {
@@ -267,6 +270,7 @@ export type StoredFileCreateInput = {
   size: number
   data: runtime.Bytes
   createdAt?: Date | string
+  studentDocuments?: Prisma.StudentDocumentCreateNestedManyWithoutFileInput
 }
 
 export type StoredFileUncheckedCreateInput = {
@@ -275,6 +279,7 @@ export type StoredFileUncheckedCreateInput = {
   size: number
   data: runtime.Bytes
   createdAt?: Date | string
+  studentDocuments?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutFileInput
 }
 
 export type StoredFileUpdateInput = {
@@ -283,6 +288,7 @@ export type StoredFileUpdateInput = {
   size?: Prisma.IntFieldUpdateOperationsInput | number
   data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentDocuments?: Prisma.StudentDocumentUpdateManyWithoutFileNestedInput
 }
 
 export type StoredFileUncheckedUpdateInput = {
@@ -291,6 +297,7 @@ export type StoredFileUncheckedUpdateInput = {
   size?: Prisma.IntFieldUpdateOperationsInput | number
   data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentDocuments?: Prisma.StudentDocumentUncheckedUpdateManyWithoutFileNestedInput
 }
 
 export type StoredFileCreateManyInput = {
@@ -349,10 +356,106 @@ export type StoredFileSumOrderByAggregateInput = {
   size?: Prisma.SortOrder
 }
 
+export type StoredFileScalarRelationFilter = {
+  is?: Prisma.StoredFileWhereInput
+  isNot?: Prisma.StoredFileWhereInput
+}
+
 export type BytesFieldUpdateOperationsInput = {
   set?: runtime.Bytes
 }
 
+export type StoredFileCreateNestedOneWithoutStudentDocumentsInput = {
+  create?: Prisma.XOR<Prisma.StoredFileCreateWithoutStudentDocumentsInput, Prisma.StoredFileUncheckedCreateWithoutStudentDocumentsInput>
+  connectOrCreate?: Prisma.StoredFileCreateOrConnectWithoutStudentDocumentsInput
+  connect?: Prisma.StoredFileWhereUniqueInput
+}
+
+export type StoredFileUpdateOneRequiredWithoutStudentDocumentsNestedInput = {
+  create?: Prisma.XOR<Prisma.StoredFileCreateWithoutStudentDocumentsInput, Prisma.StoredFileUncheckedCreateWithoutStudentDocumentsInput>
+  connectOrCreate?: Prisma.StoredFileCreateOrConnectWithoutStudentDocumentsInput
+  upsert?: Prisma.StoredFileUpsertWithoutStudentDocumentsInput
+  connect?: Prisma.StoredFileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StoredFileUpdateToOneWithWhereWithoutStudentDocumentsInput, Prisma.StoredFileUpdateWithoutStudentDocumentsInput>, Prisma.StoredFileUncheckedUpdateWithoutStudentDocumentsInput>
+}
+
+export type StoredFileCreateWithoutStudentDocumentsInput = {
+  id?: string
+  mime: string
+  size: number
+  data: runtime.Bytes
+  createdAt?: Date | string
+}
+
+export type StoredFileUncheckedCreateWithoutStudentDocumentsInput = {
+  id?: string
+  mime: string
+  size: number
+  data: runtime.Bytes
+  createdAt?: Date | string
+}
+
+export type StoredFileCreateOrConnectWithoutStudentDocumentsInput = {
+  where: Prisma.StoredFileWhereUniqueInput
+  create: Prisma.XOR<Prisma.StoredFileCreateWithoutStudentDocumentsInput, Prisma.StoredFileUncheckedCreateWithoutStudentDocumentsInput>
+}
+
+export type StoredFileUpsertWithoutStudentDocumentsInput = {
+  update: Prisma.XOR<Prisma.StoredFileUpdateWithoutStudentDocumentsInput, Prisma.StoredFileUncheckedUpdateWithoutStudentDocumentsInput>
+  create: Prisma.XOR<Prisma.StoredFileCreateWithoutStudentDocumentsInput, Prisma.StoredFileUncheckedCreateWithoutStudentDocumentsInput>
+  where?: Prisma.StoredFileWhereInput
+}
+
+export type StoredFileUpdateToOneWithWhereWithoutStudentDocumentsInput = {
+  where?: Prisma.StoredFileWhereInput
+  data: Prisma.XOR<Prisma.StoredFileUpdateWithoutStudentDocumentsInput, Prisma.StoredFileUncheckedUpdateWithoutStudentDocumentsInput>
+}
+
+export type StoredFileUpdateWithoutStudentDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mime?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.IntFieldUpdateOperationsInput | number
+  data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StoredFileUncheckedUpdateWithoutStudentDocumentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mime?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.IntFieldUpdateOperationsInput | number
+  data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+
+/**
+ * Count Type StoredFileCountOutputType
+ */
+
+export type StoredFileCountOutputType = {
+  studentDocuments: number
+}
+
+export type StoredFileCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  studentDocuments?: boolean | StoredFileCountOutputTypeCountStudentDocumentsArgs
+}
+
+/**
+ * StoredFileCountOutputType without action
+ */
+export type StoredFileCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StoredFileCountOutputType
+   */
+  select?: Prisma.StoredFileCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * StoredFileCountOutputType without action
+ */
+export type StoredFileCountOutputTypeCountStudentDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StudentDocumentWhereInput
+}
 
 
 export type StoredFileSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -361,6 +464,8 @@ export type StoredFileSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   size?: boolean
   data?: boolean
   createdAt?: boolean
+  studentDocuments?: boolean | Prisma.StoredFile$studentDocumentsArgs<ExtArgs>
+  _count?: boolean | Prisma.StoredFileCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["storedFile"]>
 
 export type StoredFileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -388,10 +493,18 @@ export type StoredFileSelectScalar = {
 }
 
 export type StoredFileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "mime" | "size" | "data" | "createdAt", ExtArgs["result"]["storedFile"]>
+export type StoredFileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  studentDocuments?: boolean | Prisma.StoredFile$studentDocumentsArgs<ExtArgs>
+  _count?: boolean | Prisma.StoredFileCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type StoredFileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type StoredFileIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $StoredFilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "StoredFile"
-  objects: {}
+  objects: {
+    studentDocuments: Prisma.$StudentDocumentPayload<ExtArgs>[]
+  }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     mime: string
@@ -792,6 +905,7 @@ readonly fields: StoredFileFieldRefs;
  */
 export interface Prisma__StoredFileClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  studentDocuments<T extends Prisma.StoredFile$studentDocumentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StoredFile$studentDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -843,6 +957,10 @@ export type StoredFileFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.In
    */
   omit?: Prisma.StoredFileOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoredFileInclude<ExtArgs> | null
+  /**
    * Filter, which StoredFile to fetch.
    */
   where: Prisma.StoredFileWhereUniqueInput
@@ -861,6 +979,10 @@ export type StoredFileFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extens
    */
   omit?: Prisma.StoredFileOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoredFileInclude<ExtArgs> | null
+  /**
    * Filter, which StoredFile to fetch.
    */
   where: Prisma.StoredFileWhereUniqueInput
@@ -878,6 +1000,10 @@ export type StoredFileFindFirstArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Omit specific fields from the StoredFile
    */
   omit?: Prisma.StoredFileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoredFileInclude<ExtArgs> | null
   /**
    * Filter, which StoredFile to fetch.
    */
@@ -927,6 +1053,10 @@ export type StoredFileFindFirstOrThrowArgs<ExtArgs extends runtime.Types.Extensi
    */
   omit?: Prisma.StoredFileOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoredFileInclude<ExtArgs> | null
+  /**
    * Filter, which StoredFile to fetch.
    */
   where?: Prisma.StoredFileWhereInput
@@ -974,6 +1104,10 @@ export type StoredFileFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Omit specific fields from the StoredFile
    */
   omit?: Prisma.StoredFileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoredFileInclude<ExtArgs> | null
   /**
    * Filter, which StoredFiles to fetch.
    */
@@ -1023,6 +1157,10 @@ export type StoredFileCreateArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   omit?: Prisma.StoredFileOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoredFileInclude<ExtArgs> | null
+  /**
    * The data needed to create a StoredFile.
    */
   data: Prisma.XOR<Prisma.StoredFileCreateInput, Prisma.StoredFileUncheckedCreateInput>
@@ -1070,6 +1208,10 @@ export type StoredFileUpdateArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Omit specific fields from the StoredFile
    */
   omit?: Prisma.StoredFileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoredFileInclude<ExtArgs> | null
   /**
    * The data needed to update a StoredFile.
    */
@@ -1137,6 +1279,10 @@ export type StoredFileUpsertArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   omit?: Prisma.StoredFileOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoredFileInclude<ExtArgs> | null
+  /**
    * The filter to search for the StoredFile to update in case it exists.
    */
   where: Prisma.StoredFileWhereUniqueInput
@@ -1163,6 +1309,10 @@ export type StoredFileDeleteArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   omit?: Prisma.StoredFileOmit<ExtArgs> | null
   /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoredFileInclude<ExtArgs> | null
+  /**
    * Filter which StoredFile to delete.
    */
   where: Prisma.StoredFileWhereUniqueInput
@@ -1183,6 +1333,30 @@ export type StoredFileDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
 }
 
 /**
+ * StoredFile.studentDocuments
+ */
+export type StoredFile$studentDocumentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudentDocument
+   */
+  select?: Prisma.StudentDocumentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudentDocument
+   */
+  omit?: Prisma.StudentDocumentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentDocumentInclude<ExtArgs> | null
+  where?: Prisma.StudentDocumentWhereInput
+  orderBy?: Prisma.StudentDocumentOrderByWithRelationInput | Prisma.StudentDocumentOrderByWithRelationInput[]
+  cursor?: Prisma.StudentDocumentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StudentDocumentScalarFieldEnum | Prisma.StudentDocumentScalarFieldEnum[]
+}
+
+/**
  * StoredFile without action
  */
 export type StoredFileDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1194,4 +1368,8 @@ export type StoredFileDefaultArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Omit specific fields from the StoredFile
    */
   omit?: Prisma.StoredFileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoredFileInclude<ExtArgs> | null
 }

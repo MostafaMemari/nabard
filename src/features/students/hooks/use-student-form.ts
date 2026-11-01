@@ -14,7 +14,7 @@ import type { StudentInput } from "../types";
 export function useStudentForm({ studentId }: { studentId?: string }) {
   const router = useRouter();
   const isEdit = studentId !== undefined;
-  const { student, isLoading, error } = useStudent(studentId ?? "");
+  const { student, isLoading, error, mutate } = useStudent(studentId ?? "");
   const { belts } = useBelts();
 
   const form = useForm<StudentFormValues, unknown, StudentFormValues>({
@@ -58,5 +58,5 @@ export function useStudentForm({ studentId }: { studentId?: string }) {
     }
   }
 
-  return { isEdit, form, belts, isLoading, error, student, submit };
+  return { isEdit, form, belts, isLoading, error, student, submit, mutateStudent: mutate };
 }

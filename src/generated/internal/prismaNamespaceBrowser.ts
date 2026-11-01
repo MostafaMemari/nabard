@@ -59,6 +59,7 @@ export const ModelName = {
   Competition: 'Competition',
   DeadlineExtension: 'DeadlineExtension',
   StoredFile: 'StoredFile',
+  StudentDocument: 'StudentDocument',
   Payment: 'Payment',
   LoginFailure: 'LoginFailure',
   Registration: 'Registration',
@@ -106,6 +107,10 @@ export const StudentScalarFieldEnum = {
   weightKg: 'weightKg',
   beltId: 'beltId',
   coachId: 'coachId',
+  profileStatus: 'profileStatus',
+  profileNote: 'profileNote',
+  approvedById: 'approvedById',
+  approvedAt: 'approvedAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -199,6 +204,18 @@ export const StoredFileScalarFieldEnum = {
 } as const
 
 export type StoredFileScalarFieldEnum = (typeof StoredFileScalarFieldEnum)[keyof typeof StoredFileScalarFieldEnum]
+
+
+export const StudentDocumentScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  type: 'type',
+  fileId: 'fileId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentDocumentScalarFieldEnum = (typeof StudentDocumentScalarFieldEnum)[keyof typeof StudentDocumentScalarFieldEnum]
 
 
 export const PaymentScalarFieldEnum = {

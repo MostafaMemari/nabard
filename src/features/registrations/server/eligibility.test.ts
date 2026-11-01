@@ -56,11 +56,23 @@ function student(overrides: Partial<EligibilityStudent> = {}): EligibilityStuden
     birthDate: "2013-05-10T00:00:00.000Z",
     beltId: "b-green",
     weightKg: 35,
+    profileStatus: "APPROVED",
     ...overrides,
   };
 }
 
 describe("checkEligibility", () => {
+  it("rejects a student whose profile is not approved, before any other rule", () => {
+    const pending = checkEligibility(student({ profileStatus: "PENDING" }), competition, belts);
+    const rejected = checkEligibility(student({ profileStatus: "REJECTED" }), competition, belts);
+
+    expect(pending.eligible).toBe(false);
+    expect(rejected.eligible).toBe(false);
+    if (!pending.eligible) {
+      expect(pending.reason).toBe("پروفایل هنرجو هنوز تایید نشده است");
+    }
+  });
+
   it("resolves the weight class for an eligible kyorugi student", () => {
     const result = checkEligibility(student(), competition, belts);
 

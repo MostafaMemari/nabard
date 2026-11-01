@@ -158,3 +158,22 @@ export const RefundStatus = {
 } as const
 
 export type RefundStatus = (typeof RefundStatus)[keyof typeof RefundStatus]
+
+
+export const ProfileStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type ProfileStatus = (typeof ProfileStatus)[keyof typeof ProfileStatus]
+
+
+export const StudentDocumentType = {
+  PHOTO: 'PHOTO',
+  NATIONAL_ID_OR_BIRTH_CERTIFICATE: 'NATIONAL_ID_OR_BIRTH_CERTIFICATE',
+  INSURANCE: 'INSURANCE',
+  BELT_CERTIFICATE: 'BELT_CERTIFICATE'
+} as const
+
+export type StudentDocumentType = (typeof StudentDocumentType)[keyof typeof StudentDocumentType]
