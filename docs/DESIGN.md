@@ -2,6 +2,8 @@
 
 Design brief for the taekwondo competition app. Every UI change must follow this file.
 
+Design read: an operator tool for admins and coaches in Tehran taekwondo, calm premium SaaS in a navy/blue language, dial ENERGY 1 / RHYTHM 1 / MOTION 1. Uniform rhythm and near-zero motion are deliberate, not defaults. Identity motif: dark navy sidebar with the brand mark, belt chips as domain color, and the tatami grid pattern on the login brand panel only.
+
 ## Goal
 
 A modern, polished, premium-feeling admin product for Tehran taekwondo competitions. It should feel like a well-funded SaaS product: calm, spacious, crisp, with a clear identity. Admins review many rows; coaches, often on phones, register students and upload a receipt.
@@ -26,7 +28,7 @@ Define once in `globals.css` using the shadcn CSS variable system, converting he
 | card / surface | #ffffff |
 | border | #e6e8ee |
 | text | #0f172a |
-| text-muted | #64748b |
+| text-muted | #5d6d82 |
 | sidebar background | #0f1629 |
 | sidebar text | #cbd5e1 |
 | sidebar active background | rgba(255,255,255,0.08), text #ffffff |
@@ -35,7 +37,7 @@ Define once in `globals.css` using the shadcn CSS variable system, converting he
 | primary-subtle (selected row, active chip) | #eaf0ff |
 | success | text #15803d on #e8f7ee |
 | warning | text #b45309 on #fff4e0 |
-| danger | text #dc2626 on #fdecec |
+| danger | text #cd1d1d on #fdecec |
 | pending | text #475569 on #eef0f4 |
 
 Belt chip dot colors: white #ffffff with border, yellow #facc15, green #22c55e, blue #3b82f6, red #ef4444, poom #7f1d1d, dan #111827.
