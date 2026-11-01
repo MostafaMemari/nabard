@@ -1,5 +1,5 @@
 import type { AgeCategoryName, Belt, BeltName, Gender, WeightClass } from "@/features/base-data";
-import type { CompetitionStatus, Discipline } from "@/features/competitions";
+import type { CompetitionLevel, CompetitionStatus, Discipline } from "@/features/competitions";
 import type { PaymentStatus } from "@/features/payments";
 import type { Province } from "@/generated/client";
 import { getPrisma } from "@/lib/prisma";
@@ -12,6 +12,7 @@ export type UserIdentityRecord = {
   role: UserRole;
   province: Province;
   isActive: boolean;
+  countyId: string | null;
 };
 
 export type RegistrationStudentInfo = {
@@ -51,6 +52,8 @@ export type RegistrationFilters = {
 export type CompetitionRegistrationRow = {
   id: string;
   province: Province;
+  level: CompetitionLevel;
+  hostCountyId: string | null;
   status: CompetitionStatus;
   discipline: Discipline;
   gender: Gender;
@@ -233,7 +236,7 @@ function registrationWhere(filters: RegistrationFilters) {
 export async function findUserById(id: string): Promise<UserIdentityRecord | null> {
   return getPrisma().user.findUnique({
     where: { id },
-    select: { id: true, role: true, province: true, isActive: true },
+    select: { id: true, role: true, province: true, isActive: true, countyId: true },
   });
 }
 
@@ -275,6 +278,8 @@ export async function findCompetitionById(id: string): Promise<CompetitionRegist
     select: {
       id: true,
       province: true,
+      level: true,
+      hostCountyId: true,
       status: true,
       discipline: true,
       gender: true,

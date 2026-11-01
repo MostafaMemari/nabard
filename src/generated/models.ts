@@ -8,12 +8,14 @@
  *
  * 🟢 You can import this file directly.
  */
+export type * from './models/County'
 export type * from './models/User'
 export type * from './models/Student'
 export type * from './models/Belt'
 export type * from './models/AgeCategory'
 export type * from './models/WeightClass'
 export type * from './models/Competition'
+export type * from './models/CoachCountyChangeRequest'
 export type * from './models/DeadlineExtension'
 export type * from './models/StoredFile'
 export type * from './models/StudentDocument'

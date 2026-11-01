@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { hashSync } from "bcryptjs";
 import { getPrisma } from "../src/lib/prisma";
 import { belts } from "./data/base-data";
-import { demoCompetitions, demoPayments, demoRegistrations, demoStudents, demoUsers } from "./data/demo";
+import { demoCompetitions, demoCountyChangeRequests, demoPayments, demoRegistrations, demoStudents, demoUsers } from "./data/demo";
 
 const prisma = getPrisma();
 
@@ -31,7 +31,19 @@ async function main() {
     throw new Error("داده های پایه یافت نشد. ابتدا pnpm db:seed را اجرا کنید.");
   }
 
+  const counties = await prisma.county.findMany({ where: { province: "TEHRAN" } });
+  const countyIdByName = new Map(counties.map((county) => [county.name, county.id]));
+
+  function countyId(name: string): string {
+    const id = countyIdByName.get(name);
+    if (!id) throw new Error(`شهرستان «${name}» در داده های پایه یافت نشد. ابتدا pnpm db:seed را اجرا کنید.`);
+
+    return id;
+  }
+
   for (const user of demoUsers) {
+    const coachCountyId = user.countyName === null ? null : countyId(user.countyName);
+
     await prisma.user.upsert({
       where: { id: user.id },
       update: {
@@ -41,8 +53,20 @@ async function main() {
         role: user.role,
         province: user.province,
         isActive: user.isActive,
+        countyId: coachCountyId,
       },
-      create: { ...user, passwordHash: devPasswordHash },
+      create: {
+        id: user.id,
+        mobile: user.mobile,
+        fullName: user.fullName,
+        nationalCode: user.nationalCode,
+        role: user.role,
+        province: user.province,
+        isActive: user.isActive,
+        countyId: coachCountyId,
+        passwordHash: devPasswordHash,
+        createdAt: new Date(user.createdAt),
+      },
     });
   }
 
@@ -76,12 +100,16 @@ async function main() {
 
   for (const competition of demoCompetitions) {
     const range = beltRange(competition.beltIds);
+    const level = competition.level;
+    const hostCountyId = competition.hostCountyName === null ? null : countyId(competition.hostCountyName);
 
     await prisma.competition.upsert({
       where: { id: competition.id },
       update: {
         title: competition.title,
         province: competition.province,
+        level,
+        hostCountyId,
         discipline: competition.discipline,
         gender: competition.gender,
         ageCategoryId: competition.ageCategoryId,
@@ -98,6 +126,8 @@ async function main() {
         id: competition.id,
         title: competition.title,
         province: competition.province,
+        level,
+        hostCountyId,
         discipline: competition.discipline,
         gender: competition.gender,
         ageCategoryId: competition.ageCategoryId,
@@ -180,8 +210,36 @@ async function main() {
     });
   }
 
+  for (const request of demoCountyChangeRequests) {
+    const admin = demoUsers.find((user) => user.role === "ADMIN" && user.isActive);
+
+    await prisma.coachCountyChangeRequest.upsert({
+      where: { id: request.id },
+      update: {
+        coachId: request.coachId,
+        fromCountyId: countyId(request.fromCountyName),
+        toCountyId: countyId(request.toCountyName),
+        status: request.status,
+        note: request.note,
+        decidedById: request.decided ? (admin?.id ?? null) : null,
+        decidedAt: request.decided ? new Date(request.createdAt) : null,
+      },
+      create: {
+        id: request.id,
+        coachId: request.coachId,
+        fromCountyId: countyId(request.fromCountyName),
+        toCountyId: countyId(request.toCountyName),
+        status: request.status,
+        note: request.note,
+        decidedById: request.decided ? (admin?.id ?? null) : null,
+        decidedAt: request.decided ? new Date(request.createdAt) : null,
+        createdAt: new Date(request.createdAt),
+      },
+    });
+  }
+
   console.log(
-    `داده های نمونه ساخته شدند: ${demoUsers.length} کاربر، ${demoStudents.length} هنرجو، ${demoCompetitions.length} مسابقه، ${demoPayments.length} پرداخت و ${demoRegistrations.length} ثبت نام.`,
+    `داده های نمونه ساخته شدند: ${demoUsers.length} کاربر، ${demoStudents.length} هنرجو، ${demoCompetitions.length} مسابقه، ${demoPayments.length} پرداخت، ${demoRegistrations.length} ثبت نام و ${demoCountyChangeRequests.length} درخواست تغییر شهرستان.`,
   );
 }
 

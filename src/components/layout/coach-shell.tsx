@@ -4,6 +4,7 @@ import { ClipboardListIcon, HouseIcon, TrophyIcon, UsersIcon } from "lucide-reac
 import type { ReactNode } from "react";
 import { Avatar } from "@/components/shared";
 import { ChangePasswordButton, roleLabels, useMe } from "@/features/auth";
+import { CoachProfileButton } from "@/features/county-changes";
 import { APP_NAME } from "@/lib/app";
 import { AppSidebar, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
 import { BrandMark } from "./brand-mark";
@@ -24,6 +25,7 @@ function useSidebarUser(): SidebarUser | null {
 
 export function CoachShell({ active, children }: { active: string; children: ReactNode }) {
   const sidebarUser = useSidebarUser();
+  const profileButton = <CoachProfileButton />;
 
   return (
     <div className="@container flex min-h-svh bg-background">
@@ -33,7 +35,14 @@ export function CoachShell({ active, children }: { active: string; children: Rea
       >
         پرش به محتوا
       </a>
-      <AppSidebar items={coachNavItems} active={active} user={sidebarUser} groupLabel="پنل مربی" breakpoint="@5xl" />
+      <AppSidebar
+        items={coachNavItems}
+        active={active}
+        user={sidebarUser}
+        groupLabel="پنل مربی"
+        userMenuExtra={profileButton}
+        breakpoint="@5xl"
+      />
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-20 shrink-0 border-b border-border bg-card @5xl:hidden">
           <div className="flex h-14 items-center justify-between px-4">
@@ -48,6 +57,7 @@ export function CoachShell({ active, children }: { active: string; children: Rea
                 <span aria-hidden className="size-7 rounded-full bg-muted" />
               )}
               <ChangePasswordButton />
+              {profileButton}
               <LogoutButton />
             </div>
           </div>

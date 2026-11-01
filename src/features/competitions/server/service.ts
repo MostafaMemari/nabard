@@ -4,7 +4,7 @@ import { AppError } from "@/lib/api";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
 import type { CompetitionListQuery, CreateCompetitionInput, UpdateCompetitionInput } from "../schemas";
-import type { CompetitionRegistrationState, Discipline, ExtendCompetitionInput } from "../types";
+import type { CompetitionLevel, CompetitionRegistrationState, Discipline, ExtendCompetitionInput } from "../types";
 import type {
   AgeCategoryRow,
   CompetitionFilters,
@@ -21,6 +21,9 @@ export type CompetitionRecord = {
   id: string;
   title: string;
   province: string;
+  level: CompetitionLevel;
+  hostCountyId: string | null;
+  hostCountyName: string | null;
   discipline: Discipline;
   gender: Gender;
   ageCategoryId: string;
@@ -78,6 +81,9 @@ function toRecord(row: CompetitionRow, belts: Belt[]): CompetitionRecord {
     id: row.id,
     title: row.title,
     province: row.province,
+    level: row.level,
+    hostCountyId: row.hostCountyId,
+    hostCountyName: row.hostCountyName,
     discipline: row.discipline,
     gender: row.gender,
     ageCategoryId: row.ageCategoryId,
@@ -125,6 +131,19 @@ async function resolveBeltRange(
   const maxBelt = belts.find((belt) => belt.level === maxLevel);
 
   return { belts, minBeltId: minBelt?.id ?? "", maxBeltId: maxBelt?.id ?? "" };
+}
+
+async function validateHostCounty(
+  repo: CompetitionsRepository,
+  province: string,
+  hostCountyId: string,
+): Promise<{ id: string; province: string; name: string }> {
+  const county = await repo.findCountyById(hostCountyId);
+  if (!county || county.province !== province) {
+    throw new AppError(400, "VALIDATION_ERROR", "شهرستان میزبان انتخاب شده معتبر نیست.");
+  }
+
+  return county;
 }
 
 async function validateCompetitionData(
@@ -253,6 +272,7 @@ export async function listCompetitions(
     status: "PUBLISHED",
     discipline: query.discipline,
     search,
+    coachCountyId: identity.countyId ?? "none",
   };
 
   const [total, rows, belts] = await Promise.all([
@@ -283,6 +303,7 @@ export async function getCompetition(repo: CompetitionsRepository, user: Current
   }
 
   if (row.province !== identity.province || row.status === "DRAFT") throw competitionNotFound();
+  if (row.level === "COUNTY" && row.hostCountyId !== identity.countyId) throw competitionNotFound();
   const decoration = await decorateForCoach(repo, user.id, row, belts);
 
   return { ...toRecord(row, belts), ...decoration };
@@ -307,9 +328,14 @@ export async function createCompetition(
     eventDate,
   });
 
+  const hostCountyId =
+    input.level === "COUNTY" && input.hostCountyId ? (await validateHostCounty(repo, identity.province, input.hostCountyId)).id : null;
+
   const data: NewCompetitionData = {
     title: input.title,
     province: identity.province,
+    level: input.level,
+    hostCountyId,
     discipline: input.discipline,
     gender: input.gender,
     ageCategoryId: input.ageCategoryId,
@@ -369,6 +395,25 @@ export async function updateCompetition(
   if (input.payeeCardHolder !== undefined) data.payeeCardHolder = input.payeeCardHolder;
   if (input.registrationDeadline !== undefined) data.registrationDeadline = new Date(input.registrationDeadline);
   if (input.eventDate !== undefined) data.eventDate = new Date(input.eventDate);
+
+  if (input.level !== undefined || input.hostCountyId !== undefined) {
+    const mergedLevel = input.level ?? row.level;
+    const mergedHostCountyId = input.hostCountyId !== undefined ? input.hostCountyId : row.hostCountyId;
+
+    if (mergedLevel === "COUNTY") {
+      if (mergedHostCountyId === null || mergedHostCountyId === "") {
+        throw new AppError(400, "VALIDATION_ERROR", "شهرستان میزبان را انتخاب کنید.");
+      }
+
+      if (input.hostCountyId !== undefined && input.hostCountyId !== row.hostCountyId) {
+        data.hostCountyId = (await validateHostCounty(repo, identity.province, input.hostCountyId)).id;
+      }
+      if (input.level !== undefined) data.level = input.level;
+    } else {
+      if (input.level !== undefined) data.level = "PROVINCIAL";
+      data.hostCountyId = null;
+    }
+  }
 
   const updated = await repo.updateCompetition(id, data);
 

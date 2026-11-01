@@ -38,6 +38,8 @@ export type CompetitionMinAggregateOutputType = {
   id: string | null
   title: string | null
   province: $Enums.Province | null
+  level: $Enums.CompetitionLevel | null
+  hostCountyId: string | null
   discipline: $Enums.Discipline | null
   gender: $Enums.Gender | null
   ageCategoryId: string | null
@@ -58,6 +60,8 @@ export type CompetitionMaxAggregateOutputType = {
   id: string | null
   title: string | null
   province: $Enums.Province | null
+  level: $Enums.CompetitionLevel | null
+  hostCountyId: string | null
   discipline: $Enums.Discipline | null
   gender: $Enums.Gender | null
   ageCategoryId: string | null
@@ -78,6 +82,8 @@ export type CompetitionCountAggregateOutputType = {
   id: number
   title: number
   province: number
+  level: number
+  hostCountyId: number
   discipline: number
   gender: number
   ageCategoryId: number
@@ -108,6 +114,8 @@ export type CompetitionMinAggregateInputType = {
   id?: true
   title?: true
   province?: true
+  level?: true
+  hostCountyId?: true
   discipline?: true
   gender?: true
   ageCategoryId?: true
@@ -128,6 +136,8 @@ export type CompetitionMaxAggregateInputType = {
   id?: true
   title?: true
   province?: true
+  level?: true
+  hostCountyId?: true
   discipline?: true
   gender?: true
   ageCategoryId?: true
@@ -148,6 +158,8 @@ export type CompetitionCountAggregateInputType = {
   id?: true
   title?: true
   province?: true
+  level?: true
+  hostCountyId?: true
   discipline?: true
   gender?: true
   ageCategoryId?: true
@@ -255,6 +267,8 @@ export type CompetitionGroupByOutputType = {
   id: string
   title: string
   province: $Enums.Province
+  level: $Enums.CompetitionLevel
+  hostCountyId: string | null
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   ageCategoryId: string
@@ -298,6 +312,8 @@ export type CompetitionWhereInput = {
   id?: Prisma.StringFilter<"Competition"> | string
   title?: Prisma.StringFilter<"Competition"> | string
   province?: Prisma.EnumProvinceFilter<"Competition"> | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFilter<"Competition"> | $Enums.CompetitionLevel
+  hostCountyId?: Prisma.StringNullableFilter<"Competition"> | string | null
   discipline?: Prisma.EnumDisciplineFilter<"Competition"> | $Enums.Discipline
   gender?: Prisma.EnumGenderFilter<"Competition"> | $Enums.Gender
   ageCategoryId?: Prisma.StringFilter<"Competition"> | string
@@ -312,6 +328,7 @@ export type CompetitionWhereInput = {
   cancelReason?: Prisma.StringNullableFilter<"Competition"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
+  hostCounty?: Prisma.XOR<Prisma.CountyNullableScalarRelationFilter, Prisma.CountyWhereInput> | null
   ageCategory?: Prisma.XOR<Prisma.AgeCategoryScalarRelationFilter, Prisma.AgeCategoryWhereInput>
   minBelt?: Prisma.XOR<Prisma.BeltScalarRelationFilter, Prisma.BeltWhereInput>
   maxBelt?: Prisma.XOR<Prisma.BeltScalarRelationFilter, Prisma.BeltWhereInput>
@@ -324,6 +341,8 @@ export type CompetitionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   province?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  hostCountyId?: Prisma.SortOrderInput | Prisma.SortOrder
   discipline?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   ageCategoryId?: Prisma.SortOrder
@@ -338,6 +357,7 @@ export type CompetitionOrderByWithRelationInput = {
   cancelReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  hostCounty?: Prisma.CountyOrderByWithRelationInput
   ageCategory?: Prisma.AgeCategoryOrderByWithRelationInput
   minBelt?: Prisma.BeltOrderByWithRelationInput
   maxBelt?: Prisma.BeltOrderByWithRelationInput
@@ -353,6 +373,8 @@ export type CompetitionWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.CompetitionWhereInput | Prisma.CompetitionWhereInput[]
   title?: Prisma.StringFilter<"Competition"> | string
   province?: Prisma.EnumProvinceFilter<"Competition"> | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFilter<"Competition"> | $Enums.CompetitionLevel
+  hostCountyId?: Prisma.StringNullableFilter<"Competition"> | string | null
   discipline?: Prisma.EnumDisciplineFilter<"Competition"> | $Enums.Discipline
   gender?: Prisma.EnumGenderFilter<"Competition"> | $Enums.Gender
   ageCategoryId?: Prisma.StringFilter<"Competition"> | string
@@ -367,6 +389,7 @@ export type CompetitionWhereUniqueInput = Prisma.AtLeast<{
   cancelReason?: Prisma.StringNullableFilter<"Competition"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
+  hostCounty?: Prisma.XOR<Prisma.CountyNullableScalarRelationFilter, Prisma.CountyWhereInput> | null
   ageCategory?: Prisma.XOR<Prisma.AgeCategoryScalarRelationFilter, Prisma.AgeCategoryWhereInput>
   minBelt?: Prisma.XOR<Prisma.BeltScalarRelationFilter, Prisma.BeltWhereInput>
   maxBelt?: Prisma.XOR<Prisma.BeltScalarRelationFilter, Prisma.BeltWhereInput>
@@ -379,6 +402,8 @@ export type CompetitionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   province?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  hostCountyId?: Prisma.SortOrderInput | Prisma.SortOrder
   discipline?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   ageCategoryId?: Prisma.SortOrder
@@ -407,6 +432,8 @@ export type CompetitionScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Competition"> | string
   title?: Prisma.StringWithAggregatesFilter<"Competition"> | string
   province?: Prisma.EnumProvinceWithAggregatesFilter<"Competition"> | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelWithAggregatesFilter<"Competition"> | $Enums.CompetitionLevel
+  hostCountyId?: Prisma.StringNullableWithAggregatesFilter<"Competition"> | string | null
   discipline?: Prisma.EnumDisciplineWithAggregatesFilter<"Competition"> | $Enums.Discipline
   gender?: Prisma.EnumGenderWithAggregatesFilter<"Competition"> | $Enums.Gender
   ageCategoryId?: Prisma.StringWithAggregatesFilter<"Competition"> | string
@@ -427,6 +454,7 @@ export type CompetitionCreateInput = {
   id?: string
   title: string
   province: $Enums.Province
+  level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   feePerStudent: bigint | number
@@ -438,6 +466,7 @@ export type CompetitionCreateInput = {
   cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  hostCounty?: Prisma.CountyCreateNestedOneWithoutHostedCompetitionsInput
   ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutCompetitionsInput
   minBelt: Prisma.BeltCreateNestedOneWithoutMinForInput
   maxBelt: Prisma.BeltCreateNestedOneWithoutMaxForInput
@@ -450,6 +479,8 @@ export type CompetitionUncheckedCreateInput = {
   id?: string
   title: string
   province: $Enums.Province
+  level?: $Enums.CompetitionLevel
+  hostCountyId?: string | null
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   ageCategoryId: string
@@ -473,6 +504,7 @@ export type CompetitionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   feePerStudent?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -484,6 +516,7 @@ export type CompetitionUpdateInput = {
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hostCounty?: Prisma.CountyUpdateOneWithoutHostedCompetitionsNestedInput
   ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutCompetitionsNestedInput
   minBelt?: Prisma.BeltUpdateOneRequiredWithoutMinForNestedInput
   maxBelt?: Prisma.BeltUpdateOneRequiredWithoutMaxForNestedInput
@@ -496,6 +529,8 @@ export type CompetitionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
+  hostCountyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   ageCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -519,6 +554,8 @@ export type CompetitionCreateManyInput = {
   id?: string
   title: string
   province: $Enums.Province
+  level?: $Enums.CompetitionLevel
+  hostCountyId?: string | null
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   ageCategoryId: string
@@ -539,6 +576,7 @@ export type CompetitionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   feePerStudent?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -556,6 +594,8 @@ export type CompetitionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
+  hostCountyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   ageCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -586,6 +626,8 @@ export type CompetitionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   province?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  hostCountyId?: Prisma.SortOrder
   discipline?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   ageCategoryId?: Prisma.SortOrder
@@ -610,6 +652,8 @@ export type CompetitionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   province?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  hostCountyId?: Prisma.SortOrder
   discipline?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   ageCategoryId?: Prisma.SortOrder
@@ -630,6 +674,8 @@ export type CompetitionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   province?: Prisma.SortOrder
+  level?: Prisma.SortOrder
+  hostCountyId?: Prisma.SortOrder
   discipline?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   ageCategoryId?: Prisma.SortOrder
@@ -653,6 +699,48 @@ export type CompetitionSumOrderByAggregateInput = {
 export type CompetitionScalarRelationFilter = {
   is?: Prisma.CompetitionWhereInput
   isNot?: Prisma.CompetitionWhereInput
+}
+
+export type CompetitionCreateNestedManyWithoutHostCountyInput = {
+  create?: Prisma.XOR<Prisma.CompetitionCreateWithoutHostCountyInput, Prisma.CompetitionUncheckedCreateWithoutHostCountyInput> | Prisma.CompetitionCreateWithoutHostCountyInput[] | Prisma.CompetitionUncheckedCreateWithoutHostCountyInput[]
+  connectOrCreate?: Prisma.CompetitionCreateOrConnectWithoutHostCountyInput | Prisma.CompetitionCreateOrConnectWithoutHostCountyInput[]
+  createMany?: Prisma.CompetitionCreateManyHostCountyInputEnvelope
+  connect?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+}
+
+export type CompetitionUncheckedCreateNestedManyWithoutHostCountyInput = {
+  create?: Prisma.XOR<Prisma.CompetitionCreateWithoutHostCountyInput, Prisma.CompetitionUncheckedCreateWithoutHostCountyInput> | Prisma.CompetitionCreateWithoutHostCountyInput[] | Prisma.CompetitionUncheckedCreateWithoutHostCountyInput[]
+  connectOrCreate?: Prisma.CompetitionCreateOrConnectWithoutHostCountyInput | Prisma.CompetitionCreateOrConnectWithoutHostCountyInput[]
+  createMany?: Prisma.CompetitionCreateManyHostCountyInputEnvelope
+  connect?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+}
+
+export type CompetitionUpdateManyWithoutHostCountyNestedInput = {
+  create?: Prisma.XOR<Prisma.CompetitionCreateWithoutHostCountyInput, Prisma.CompetitionUncheckedCreateWithoutHostCountyInput> | Prisma.CompetitionCreateWithoutHostCountyInput[] | Prisma.CompetitionUncheckedCreateWithoutHostCountyInput[]
+  connectOrCreate?: Prisma.CompetitionCreateOrConnectWithoutHostCountyInput | Prisma.CompetitionCreateOrConnectWithoutHostCountyInput[]
+  upsert?: Prisma.CompetitionUpsertWithWhereUniqueWithoutHostCountyInput | Prisma.CompetitionUpsertWithWhereUniqueWithoutHostCountyInput[]
+  createMany?: Prisma.CompetitionCreateManyHostCountyInputEnvelope
+  set?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+  disconnect?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+  delete?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+  connect?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+  update?: Prisma.CompetitionUpdateWithWhereUniqueWithoutHostCountyInput | Prisma.CompetitionUpdateWithWhereUniqueWithoutHostCountyInput[]
+  updateMany?: Prisma.CompetitionUpdateManyWithWhereWithoutHostCountyInput | Prisma.CompetitionUpdateManyWithWhereWithoutHostCountyInput[]
+  deleteMany?: Prisma.CompetitionScalarWhereInput | Prisma.CompetitionScalarWhereInput[]
+}
+
+export type CompetitionUncheckedUpdateManyWithoutHostCountyNestedInput = {
+  create?: Prisma.XOR<Prisma.CompetitionCreateWithoutHostCountyInput, Prisma.CompetitionUncheckedCreateWithoutHostCountyInput> | Prisma.CompetitionCreateWithoutHostCountyInput[] | Prisma.CompetitionUncheckedCreateWithoutHostCountyInput[]
+  connectOrCreate?: Prisma.CompetitionCreateOrConnectWithoutHostCountyInput | Prisma.CompetitionCreateOrConnectWithoutHostCountyInput[]
+  upsert?: Prisma.CompetitionUpsertWithWhereUniqueWithoutHostCountyInput | Prisma.CompetitionUpsertWithWhereUniqueWithoutHostCountyInput[]
+  createMany?: Prisma.CompetitionCreateManyHostCountyInputEnvelope
+  set?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+  disconnect?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+  delete?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+  connect?: Prisma.CompetitionWhereUniqueInput | Prisma.CompetitionWhereUniqueInput[]
+  update?: Prisma.CompetitionUpdateWithWhereUniqueWithoutHostCountyInput | Prisma.CompetitionUpdateWithWhereUniqueWithoutHostCountyInput[]
+  updateMany?: Prisma.CompetitionUpdateManyWithWhereWithoutHostCountyInput | Prisma.CompetitionUpdateManyWithWhereWithoutHostCountyInput[]
+  deleteMany?: Prisma.CompetitionScalarWhereInput | Prisma.CompetitionScalarWhereInput[]
 }
 
 export type CompetitionCreateNestedManyWithoutMinBeltInput = {
@@ -781,6 +869,10 @@ export type CompetitionUncheckedUpdateManyWithoutAgeCategoryNestedInput = {
   deleteMany?: Prisma.CompetitionScalarWhereInput | Prisma.CompetitionScalarWhereInput[]
 }
 
+export type EnumCompetitionLevelFieldUpdateOperationsInput = {
+  set?: $Enums.CompetitionLevel
+}
+
 export type EnumDisciplineFieldUpdateOperationsInput = {
   set?: $Enums.Discipline
 }
@@ -839,10 +931,11 @@ export type CompetitionUpdateOneRequiredWithoutRegistrationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CompetitionUpdateToOneWithWhereWithoutRegistrationsInput, Prisma.CompetitionUpdateWithoutRegistrationsInput>, Prisma.CompetitionUncheckedUpdateWithoutRegistrationsInput>
 }
 
-export type CompetitionCreateWithoutMinBeltInput = {
+export type CompetitionCreateWithoutHostCountyInput = {
   id?: string
   title: string
   province: $Enums.Province
+  level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   feePerStudent: bigint | number
@@ -855,6 +948,106 @@ export type CompetitionCreateWithoutMinBeltInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutCompetitionsInput
+  minBelt: Prisma.BeltCreateNestedOneWithoutMinForInput
+  maxBelt: Prisma.BeltCreateNestedOneWithoutMaxForInput
+  registrations?: Prisma.RegistrationCreateNestedManyWithoutCompetitionInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCompetitionInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutCompetitionInput
+}
+
+export type CompetitionUncheckedCreateWithoutHostCountyInput = {
+  id?: string
+  title: string
+  province: $Enums.Province
+  level?: $Enums.CompetitionLevel
+  discipline: $Enums.Discipline
+  gender: $Enums.Gender
+  ageCategoryId: string
+  minBeltId: string
+  maxBeltId: string
+  feePerStudent: bigint | number
+  payeeCardNumber: string
+  payeeCardHolder: string
+  registrationDeadline: Date | string
+  eventDate: Date | string
+  status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCompetitionInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCompetitionInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCompetitionInput
+}
+
+export type CompetitionCreateOrConnectWithoutHostCountyInput = {
+  where: Prisma.CompetitionWhereUniqueInput
+  create: Prisma.XOR<Prisma.CompetitionCreateWithoutHostCountyInput, Prisma.CompetitionUncheckedCreateWithoutHostCountyInput>
+}
+
+export type CompetitionCreateManyHostCountyInputEnvelope = {
+  data: Prisma.CompetitionCreateManyHostCountyInput | Prisma.CompetitionCreateManyHostCountyInput[]
+  skipDuplicates?: boolean
+}
+
+export type CompetitionUpsertWithWhereUniqueWithoutHostCountyInput = {
+  where: Prisma.CompetitionWhereUniqueInput
+  update: Prisma.XOR<Prisma.CompetitionUpdateWithoutHostCountyInput, Prisma.CompetitionUncheckedUpdateWithoutHostCountyInput>
+  create: Prisma.XOR<Prisma.CompetitionCreateWithoutHostCountyInput, Prisma.CompetitionUncheckedCreateWithoutHostCountyInput>
+}
+
+export type CompetitionUpdateWithWhereUniqueWithoutHostCountyInput = {
+  where: Prisma.CompetitionWhereUniqueInput
+  data: Prisma.XOR<Prisma.CompetitionUpdateWithoutHostCountyInput, Prisma.CompetitionUncheckedUpdateWithoutHostCountyInput>
+}
+
+export type CompetitionUpdateManyWithWhereWithoutHostCountyInput = {
+  where: Prisma.CompetitionScalarWhereInput
+  data: Prisma.XOR<Prisma.CompetitionUpdateManyMutationInput, Prisma.CompetitionUncheckedUpdateManyWithoutHostCountyInput>
+}
+
+export type CompetitionScalarWhereInput = {
+  AND?: Prisma.CompetitionScalarWhereInput | Prisma.CompetitionScalarWhereInput[]
+  OR?: Prisma.CompetitionScalarWhereInput[]
+  NOT?: Prisma.CompetitionScalarWhereInput | Prisma.CompetitionScalarWhereInput[]
+  id?: Prisma.StringFilter<"Competition"> | string
+  title?: Prisma.StringFilter<"Competition"> | string
+  province?: Prisma.EnumProvinceFilter<"Competition"> | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFilter<"Competition"> | $Enums.CompetitionLevel
+  hostCountyId?: Prisma.StringNullableFilter<"Competition"> | string | null
+  discipline?: Prisma.EnumDisciplineFilter<"Competition"> | $Enums.Discipline
+  gender?: Prisma.EnumGenderFilter<"Competition"> | $Enums.Gender
+  ageCategoryId?: Prisma.StringFilter<"Competition"> | string
+  minBeltId?: Prisma.StringFilter<"Competition"> | string
+  maxBeltId?: Prisma.StringFilter<"Competition"> | string
+  feePerStudent?: Prisma.BigIntFilter<"Competition"> | bigint | number
+  payeeCardNumber?: Prisma.StringFilter<"Competition"> | string
+  payeeCardHolder?: Prisma.StringFilter<"Competition"> | string
+  registrationDeadline?: Prisma.DateTimeFilter<"Competition"> | Date | string
+  eventDate?: Prisma.DateTimeFilter<"Competition"> | Date | string
+  status?: Prisma.EnumCompetitionStatusFilter<"Competition"> | $Enums.CompetitionStatus
+  cancelReason?: Prisma.StringNullableFilter<"Competition"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
+}
+
+export type CompetitionCreateWithoutMinBeltInput = {
+  id?: string
+  title: string
+  province: $Enums.Province
+  level?: $Enums.CompetitionLevel
+  discipline: $Enums.Discipline
+  gender: $Enums.Gender
+  feePerStudent: bigint | number
+  payeeCardNumber: string
+  payeeCardHolder: string
+  registrationDeadline: Date | string
+  eventDate: Date | string
+  status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  hostCounty?: Prisma.CountyCreateNestedOneWithoutHostedCompetitionsInput
+  ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutCompetitionsInput
   maxBelt: Prisma.BeltCreateNestedOneWithoutMaxForInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCompetitionInput
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCompetitionInput
@@ -865,6 +1058,8 @@ export type CompetitionUncheckedCreateWithoutMinBeltInput = {
   id?: string
   title: string
   province: $Enums.Province
+  level?: $Enums.CompetitionLevel
+  hostCountyId?: string | null
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   ageCategoryId: string
@@ -897,6 +1092,7 @@ export type CompetitionCreateWithoutMaxBeltInput = {
   id?: string
   title: string
   province: $Enums.Province
+  level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   feePerStudent: bigint | number
@@ -908,6 +1104,7 @@ export type CompetitionCreateWithoutMaxBeltInput = {
   cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  hostCounty?: Prisma.CountyCreateNestedOneWithoutHostedCompetitionsInput
   ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutCompetitionsInput
   minBelt: Prisma.BeltCreateNestedOneWithoutMinForInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCompetitionInput
@@ -919,6 +1116,8 @@ export type CompetitionUncheckedCreateWithoutMaxBeltInput = {
   id?: string
   title: string
   province: $Enums.Province
+  level?: $Enums.CompetitionLevel
+  hostCountyId?: string | null
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   ageCategoryId: string
@@ -963,29 +1162,6 @@ export type CompetitionUpdateManyWithWhereWithoutMinBeltInput = {
   data: Prisma.XOR<Prisma.CompetitionUpdateManyMutationInput, Prisma.CompetitionUncheckedUpdateManyWithoutMinBeltInput>
 }
 
-export type CompetitionScalarWhereInput = {
-  AND?: Prisma.CompetitionScalarWhereInput | Prisma.CompetitionScalarWhereInput[]
-  OR?: Prisma.CompetitionScalarWhereInput[]
-  NOT?: Prisma.CompetitionScalarWhereInput | Prisma.CompetitionScalarWhereInput[]
-  id?: Prisma.StringFilter<"Competition"> | string
-  title?: Prisma.StringFilter<"Competition"> | string
-  province?: Prisma.EnumProvinceFilter<"Competition"> | $Enums.Province
-  discipline?: Prisma.EnumDisciplineFilter<"Competition"> | $Enums.Discipline
-  gender?: Prisma.EnumGenderFilter<"Competition"> | $Enums.Gender
-  ageCategoryId?: Prisma.StringFilter<"Competition"> | string
-  minBeltId?: Prisma.StringFilter<"Competition"> | string
-  maxBeltId?: Prisma.StringFilter<"Competition"> | string
-  feePerStudent?: Prisma.BigIntFilter<"Competition"> | bigint | number
-  payeeCardNumber?: Prisma.StringFilter<"Competition"> | string
-  payeeCardHolder?: Prisma.StringFilter<"Competition"> | string
-  registrationDeadline?: Prisma.DateTimeFilter<"Competition"> | Date | string
-  eventDate?: Prisma.DateTimeFilter<"Competition"> | Date | string
-  status?: Prisma.EnumCompetitionStatusFilter<"Competition"> | $Enums.CompetitionStatus
-  cancelReason?: Prisma.StringNullableFilter<"Competition"> | string | null
-  createdAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
-  updatedAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
-}
-
 export type CompetitionUpsertWithWhereUniqueWithoutMaxBeltInput = {
   where: Prisma.CompetitionWhereUniqueInput
   update: Prisma.XOR<Prisma.CompetitionUpdateWithoutMaxBeltInput, Prisma.CompetitionUncheckedUpdateWithoutMaxBeltInput>
@@ -1006,6 +1182,7 @@ export type CompetitionCreateWithoutAgeCategoryInput = {
   id?: string
   title: string
   province: $Enums.Province
+  level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   feePerStudent: bigint | number
@@ -1017,6 +1194,7 @@ export type CompetitionCreateWithoutAgeCategoryInput = {
   cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  hostCounty?: Prisma.CountyCreateNestedOneWithoutHostedCompetitionsInput
   minBelt: Prisma.BeltCreateNestedOneWithoutMinForInput
   maxBelt: Prisma.BeltCreateNestedOneWithoutMaxForInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCompetitionInput
@@ -1028,6 +1206,8 @@ export type CompetitionUncheckedCreateWithoutAgeCategoryInput = {
   id?: string
   title: string
   province: $Enums.Province
+  level?: $Enums.CompetitionLevel
+  hostCountyId?: string | null
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   minBeltId: string
@@ -1076,6 +1256,7 @@ export type CompetitionCreateWithoutDeadlineExtensionsInput = {
   id?: string
   title: string
   province: $Enums.Province
+  level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   feePerStudent: bigint | number
@@ -1087,6 +1268,7 @@ export type CompetitionCreateWithoutDeadlineExtensionsInput = {
   cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  hostCounty?: Prisma.CountyCreateNestedOneWithoutHostedCompetitionsInput
   ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutCompetitionsInput
   minBelt: Prisma.BeltCreateNestedOneWithoutMinForInput
   maxBelt: Prisma.BeltCreateNestedOneWithoutMaxForInput
@@ -1098,6 +1280,8 @@ export type CompetitionUncheckedCreateWithoutDeadlineExtensionsInput = {
   id?: string
   title: string
   province: $Enums.Province
+  level?: $Enums.CompetitionLevel
+  hostCountyId?: string | null
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   ageCategoryId: string
@@ -1136,6 +1320,7 @@ export type CompetitionUpdateWithoutDeadlineExtensionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   feePerStudent?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -1147,6 +1332,7 @@ export type CompetitionUpdateWithoutDeadlineExtensionsInput = {
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hostCounty?: Prisma.CountyUpdateOneWithoutHostedCompetitionsNestedInput
   ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutCompetitionsNestedInput
   minBelt?: Prisma.BeltUpdateOneRequiredWithoutMinForNestedInput
   maxBelt?: Prisma.BeltUpdateOneRequiredWithoutMaxForNestedInput
@@ -1158,6 +1344,8 @@ export type CompetitionUncheckedUpdateWithoutDeadlineExtensionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
+  hostCountyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   ageCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1180,6 +1368,7 @@ export type CompetitionCreateWithoutPaymentsInput = {
   id?: string
   title: string
   province: $Enums.Province
+  level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   feePerStudent: bigint | number
@@ -1191,6 +1380,7 @@ export type CompetitionCreateWithoutPaymentsInput = {
   cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  hostCounty?: Prisma.CountyCreateNestedOneWithoutHostedCompetitionsInput
   ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutCompetitionsInput
   minBelt: Prisma.BeltCreateNestedOneWithoutMinForInput
   maxBelt: Prisma.BeltCreateNestedOneWithoutMaxForInput
@@ -1202,6 +1392,8 @@ export type CompetitionUncheckedCreateWithoutPaymentsInput = {
   id?: string
   title: string
   province: $Enums.Province
+  level?: $Enums.CompetitionLevel
+  hostCountyId?: string | null
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   ageCategoryId: string
@@ -1240,6 +1432,7 @@ export type CompetitionUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   feePerStudent?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -1251,6 +1444,7 @@ export type CompetitionUpdateWithoutPaymentsInput = {
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hostCounty?: Prisma.CountyUpdateOneWithoutHostedCompetitionsNestedInput
   ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutCompetitionsNestedInput
   minBelt?: Prisma.BeltUpdateOneRequiredWithoutMinForNestedInput
   maxBelt?: Prisma.BeltUpdateOneRequiredWithoutMaxForNestedInput
@@ -1262,6 +1456,8 @@ export type CompetitionUncheckedUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
+  hostCountyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   ageCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1284,6 +1480,7 @@ export type CompetitionCreateWithoutRegistrationsInput = {
   id?: string
   title: string
   province: $Enums.Province
+  level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   feePerStudent: bigint | number
@@ -1295,6 +1492,7 @@ export type CompetitionCreateWithoutRegistrationsInput = {
   cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  hostCounty?: Prisma.CountyCreateNestedOneWithoutHostedCompetitionsInput
   ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutCompetitionsInput
   minBelt: Prisma.BeltCreateNestedOneWithoutMinForInput
   maxBelt: Prisma.BeltCreateNestedOneWithoutMaxForInput
@@ -1306,6 +1504,8 @@ export type CompetitionUncheckedCreateWithoutRegistrationsInput = {
   id?: string
   title: string
   province: $Enums.Province
+  level?: $Enums.CompetitionLevel
+  hostCountyId?: string | null
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   ageCategoryId: string
@@ -1344,6 +1544,7 @@ export type CompetitionUpdateWithoutRegistrationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   feePerStudent?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -1355,6 +1556,7 @@ export type CompetitionUpdateWithoutRegistrationsInput = {
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hostCounty?: Prisma.CountyUpdateOneWithoutHostedCompetitionsNestedInput
   ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutCompetitionsNestedInput
   minBelt?: Prisma.BeltUpdateOneRequiredWithoutMinForNestedInput
   maxBelt?: Prisma.BeltUpdateOneRequiredWithoutMaxForNestedInput
@@ -1366,6 +1568,8 @@ export type CompetitionUncheckedUpdateWithoutRegistrationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
+  hostCountyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   ageCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1384,10 +1588,102 @@ export type CompetitionUncheckedUpdateWithoutRegistrationsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutCompetitionNestedInput
 }
 
+export type CompetitionCreateManyHostCountyInput = {
+  id?: string
+  title: string
+  province: $Enums.Province
+  level?: $Enums.CompetitionLevel
+  discipline: $Enums.Discipline
+  gender: $Enums.Gender
+  ageCategoryId: string
+  minBeltId: string
+  maxBeltId: string
+  feePerStudent: bigint | number
+  payeeCardNumber: string
+  payeeCardHolder: string
+  registrationDeadline: Date | string
+  eventDate: Date | string
+  status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type CompetitionUpdateWithoutHostCountyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
+  discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  feePerStudent?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  payeeCardNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  payeeCardHolder?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutCompetitionsNestedInput
+  minBelt?: Prisma.BeltUpdateOneRequiredWithoutMinForNestedInput
+  maxBelt?: Prisma.BeltUpdateOneRequiredWithoutMaxForNestedInput
+  registrations?: Prisma.RegistrationUpdateManyWithoutCompetitionNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCompetitionNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutCompetitionNestedInput
+}
+
+export type CompetitionUncheckedUpdateWithoutHostCountyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
+  discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  ageCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  minBeltId?: Prisma.StringFieldUpdateOperationsInput | string
+  maxBeltId?: Prisma.StringFieldUpdateOperationsInput | string
+  feePerStudent?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  payeeCardNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  payeeCardHolder?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCompetitionNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCompetitionNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutCompetitionNestedInput
+}
+
+export type CompetitionUncheckedUpdateManyWithoutHostCountyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
+  discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  ageCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  minBeltId?: Prisma.StringFieldUpdateOperationsInput | string
+  maxBeltId?: Prisma.StringFieldUpdateOperationsInput | string
+  feePerStudent?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  payeeCardNumber?: Prisma.StringFieldUpdateOperationsInput | string
+  payeeCardHolder?: Prisma.StringFieldUpdateOperationsInput | string
+  registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type CompetitionCreateManyMinBeltInput = {
   id?: string
   title: string
   province: $Enums.Province
+  level?: $Enums.CompetitionLevel
+  hostCountyId?: string | null
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   ageCategoryId: string
@@ -1407,6 +1703,8 @@ export type CompetitionCreateManyMaxBeltInput = {
   id?: string
   title: string
   province: $Enums.Province
+  level?: $Enums.CompetitionLevel
+  hostCountyId?: string | null
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   ageCategoryId: string
@@ -1426,6 +1724,7 @@ export type CompetitionUpdateWithoutMinBeltInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   feePerStudent?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -1437,6 +1736,7 @@ export type CompetitionUpdateWithoutMinBeltInput = {
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hostCounty?: Prisma.CountyUpdateOneWithoutHostedCompetitionsNestedInput
   ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutCompetitionsNestedInput
   maxBelt?: Prisma.BeltUpdateOneRequiredWithoutMaxForNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCompetitionNestedInput
@@ -1448,6 +1748,8 @@ export type CompetitionUncheckedUpdateWithoutMinBeltInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
+  hostCountyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   ageCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1470,6 +1772,8 @@ export type CompetitionUncheckedUpdateManyWithoutMinBeltInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
+  hostCountyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   ageCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1489,6 +1793,7 @@ export type CompetitionUpdateWithoutMaxBeltInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   feePerStudent?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -1500,6 +1805,7 @@ export type CompetitionUpdateWithoutMaxBeltInput = {
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hostCounty?: Prisma.CountyUpdateOneWithoutHostedCompetitionsNestedInput
   ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutCompetitionsNestedInput
   minBelt?: Prisma.BeltUpdateOneRequiredWithoutMinForNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCompetitionNestedInput
@@ -1511,6 +1817,8 @@ export type CompetitionUncheckedUpdateWithoutMaxBeltInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
+  hostCountyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   ageCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1533,6 +1841,8 @@ export type CompetitionUncheckedUpdateManyWithoutMaxBeltInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
+  hostCountyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   ageCategoryId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1552,6 +1862,8 @@ export type CompetitionCreateManyAgeCategoryInput = {
   id?: string
   title: string
   province: $Enums.Province
+  level?: $Enums.CompetitionLevel
+  hostCountyId?: string | null
   discipline: $Enums.Discipline
   gender: $Enums.Gender
   minBeltId: string
@@ -1571,6 +1883,7 @@ export type CompetitionUpdateWithoutAgeCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   feePerStudent?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
@@ -1582,6 +1895,7 @@ export type CompetitionUpdateWithoutAgeCategoryInput = {
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hostCounty?: Prisma.CountyUpdateOneWithoutHostedCompetitionsNestedInput
   minBelt?: Prisma.BeltUpdateOneRequiredWithoutMinForNestedInput
   maxBelt?: Prisma.BeltUpdateOneRequiredWithoutMaxForNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCompetitionNestedInput
@@ -1593,6 +1907,8 @@ export type CompetitionUncheckedUpdateWithoutAgeCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
+  hostCountyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   minBeltId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1615,6 +1931,8 @@ export type CompetitionUncheckedUpdateManyWithoutAgeCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
+  hostCountyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   minBeltId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1683,6 +2001,8 @@ export type CompetitionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   id?: boolean
   title?: boolean
   province?: boolean
+  level?: boolean
+  hostCountyId?: boolean
   discipline?: boolean
   gender?: boolean
   ageCategoryId?: boolean
@@ -1697,6 +2017,7 @@ export type CompetitionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   cancelReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  hostCounty?: boolean | Prisma.Competition$hostCountyArgs<ExtArgs>
   ageCategory?: boolean | Prisma.AgeCategoryDefaultArgs<ExtArgs>
   minBelt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
   maxBelt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
@@ -1710,6 +2031,8 @@ export type CompetitionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   title?: boolean
   province?: boolean
+  level?: boolean
+  hostCountyId?: boolean
   discipline?: boolean
   gender?: boolean
   ageCategoryId?: boolean
@@ -1724,6 +2047,7 @@ export type CompetitionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   cancelReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  hostCounty?: boolean | Prisma.Competition$hostCountyArgs<ExtArgs>
   ageCategory?: boolean | Prisma.AgeCategoryDefaultArgs<ExtArgs>
   minBelt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
   maxBelt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
@@ -1733,6 +2057,8 @@ export type CompetitionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   id?: boolean
   title?: boolean
   province?: boolean
+  level?: boolean
+  hostCountyId?: boolean
   discipline?: boolean
   gender?: boolean
   ageCategoryId?: boolean
@@ -1747,6 +2073,7 @@ export type CompetitionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   cancelReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  hostCounty?: boolean | Prisma.Competition$hostCountyArgs<ExtArgs>
   ageCategory?: boolean | Prisma.AgeCategoryDefaultArgs<ExtArgs>
   minBelt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
   maxBelt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
@@ -1756,6 +2083,8 @@ export type CompetitionSelectScalar = {
   id?: boolean
   title?: boolean
   province?: boolean
+  level?: boolean
+  hostCountyId?: boolean
   discipline?: boolean
   gender?: boolean
   ageCategoryId?: boolean
@@ -1772,8 +2101,9 @@ export type CompetitionSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CompetitionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "province" | "discipline" | "gender" | "ageCategoryId" | "minBeltId" | "maxBeltId" | "feePerStudent" | "payeeCardNumber" | "payeeCardHolder" | "registrationDeadline" | "eventDate" | "status" | "cancelReason" | "createdAt" | "updatedAt", ExtArgs["result"]["competition"]>
+export type CompetitionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "province" | "level" | "hostCountyId" | "discipline" | "gender" | "ageCategoryId" | "minBeltId" | "maxBeltId" | "feePerStudent" | "payeeCardNumber" | "payeeCardHolder" | "registrationDeadline" | "eventDate" | "status" | "cancelReason" | "createdAt" | "updatedAt", ExtArgs["result"]["competition"]>
 export type CompetitionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  hostCounty?: boolean | Prisma.Competition$hostCountyArgs<ExtArgs>
   ageCategory?: boolean | Prisma.AgeCategoryDefaultArgs<ExtArgs>
   minBelt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
   maxBelt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
@@ -1783,11 +2113,13 @@ export type CompetitionInclude<ExtArgs extends runtime.Types.Extensions.Internal
   _count?: boolean | Prisma.CompetitionCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type CompetitionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  hostCounty?: boolean | Prisma.Competition$hostCountyArgs<ExtArgs>
   ageCategory?: boolean | Prisma.AgeCategoryDefaultArgs<ExtArgs>
   minBelt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
   maxBelt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
 }
 export type CompetitionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  hostCounty?: boolean | Prisma.Competition$hostCountyArgs<ExtArgs>
   ageCategory?: boolean | Prisma.AgeCategoryDefaultArgs<ExtArgs>
   minBelt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
   maxBelt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
@@ -1796,6 +2128,7 @@ export type CompetitionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.
 export type $CompetitionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Competition"
   objects: {
+    hostCounty: Prisma.$CountyPayload<ExtArgs> | null
     ageCategory: Prisma.$AgeCategoryPayload<ExtArgs>
     minBelt: Prisma.$BeltPayload<ExtArgs>
     maxBelt: Prisma.$BeltPayload<ExtArgs>
@@ -1807,6 +2140,8 @@ export type $CompetitionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     id: string
     title: string
     province: $Enums.Province
+    level: $Enums.CompetitionLevel
+    hostCountyId: string | null
     discipline: $Enums.Discipline
     gender: $Enums.Gender
     ageCategoryId: string
@@ -2215,6 +2550,7 @@ readonly fields: CompetitionFieldRefs;
  */
 export interface Prisma__CompetitionClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  hostCounty<T extends Prisma.Competition$hostCountyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Competition$hostCountyArgs<ExtArgs>>): Prisma.Prisma__CountyClient<runtime.Types.Result.GetResult<Prisma.$CountyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   ageCategory<T extends Prisma.AgeCategoryDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.AgeCategoryDefaultArgs<ExtArgs>>): Prisma.Prisma__AgeCategoryClient<runtime.Types.Result.GetResult<Prisma.$AgeCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   minBelt<T extends Prisma.BeltDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BeltDefaultArgs<ExtArgs>>): Prisma.Prisma__BeltClient<runtime.Types.Result.GetResult<Prisma.$BeltPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   maxBelt<T extends Prisma.BeltDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.BeltDefaultArgs<ExtArgs>>): Prisma.Prisma__BeltClient<runtime.Types.Result.GetResult<Prisma.$BeltPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
@@ -2253,6 +2589,8 @@ export interface CompetitionFieldRefs {
   readonly id: Prisma.FieldRef<"Competition", 'String'>
   readonly title: Prisma.FieldRef<"Competition", 'String'>
   readonly province: Prisma.FieldRef<"Competition", 'Province'>
+  readonly level: Prisma.FieldRef<"Competition", 'CompetitionLevel'>
+  readonly hostCountyId: Prisma.FieldRef<"Competition", 'String'>
   readonly discipline: Prisma.FieldRef<"Competition", 'Discipline'>
   readonly gender: Prisma.FieldRef<"Competition", 'Gender'>
   readonly ageCategoryId: Prisma.FieldRef<"Competition", 'String'>
@@ -2665,6 +3003,25 @@ export type CompetitionDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many Competitions to delete.
    */
   limit?: number
+}
+
+/**
+ * Competition.hostCounty
+ */
+export type Competition$hostCountyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the County
+   */
+  select?: Prisma.CountySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the County
+   */
+  omit?: Prisma.CountyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CountyInclude<ExtArgs> | null
+  where?: Prisma.CountyWhereInput
 }
 
 /**

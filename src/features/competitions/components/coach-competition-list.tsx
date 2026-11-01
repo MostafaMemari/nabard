@@ -8,6 +8,7 @@ import { ageCategoryLabel, genderLabels } from "@/features/base-data";
 import { formatJalaliDate, formatRialsAsToman } from "@/lib/format";
 import { disciplineIcons, disciplineLabels } from "../labels";
 import type { Competition } from "../types";
+import { CountyChip } from "./county-chip";
 
 export function CoachCompetitionList({ competitions }: { competitions: Competition[] }) {
   return (
@@ -27,6 +28,11 @@ export function CoachCompetitionList({ competitions }: { competitions: Competiti
                 {disciplineLabels[competition.discipline]} · {ageCategoryLabel(competition.ageCategoryId)} ·{" "}
                 {genderLabels[competition.gender]}
               </p>
+              {competition.level === "COUNTY" && competition.hostCountyName ? (
+                <span className="mt-1.5 w-fit">
+                  <CountyChip name={competition.hostCountyName} />
+                </span>
+              ) : null}
             </div>
           </div>
 

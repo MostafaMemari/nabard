@@ -1,7 +1,7 @@
 import type { AgeCategory, Belt, Gender, WeightClass } from "@/features/base-data";
 import type { Province } from "@/generated/client";
 import { getPrisma } from "@/lib/prisma";
-import type { CompetitionStatus, Discipline } from "../types";
+import type { CompetitionLevel, CompetitionStatus, Discipline } from "../types";
 
 export type UserRole = "ADMIN" | "COACH";
 
@@ -10,6 +10,7 @@ export type UserIdentityRecord = {
   role: UserRole;
   province: Province;
   isActive: boolean;
+  countyId: string | null;
 };
 
 export type BeltRow = Belt;
@@ -32,6 +33,9 @@ export type CompetitionRow = {
   id: string;
   title: string;
   province: Province;
+  level: CompetitionLevel;
+  hostCountyId: string | null;
+  hostCountyName: string | null;
   discipline: Discipline;
   gender: Gender;
   ageCategoryId: string;
@@ -53,6 +57,7 @@ export type CompetitionFilters = {
   status?: CompetitionStatus;
   discipline?: Discipline;
   search?: string;
+  coachCountyId?: string;
 };
 
 export type CompetitionOrder = "createdAtDesc" | "deadlineAsc";
@@ -60,6 +65,8 @@ export type CompetitionOrder = "createdAtDesc" | "deadlineAsc";
 export type NewCompetitionData = {
   title: string;
   province: Province;
+  level: CompetitionLevel;
+  hostCountyId: string | null;
   discipline: Discipline;
   gender: Gender;
   ageCategoryId: string;
@@ -75,6 +82,8 @@ export type NewCompetitionData = {
 
 export type CompetitionUpdateData = {
   title?: string;
+  level?: CompetitionLevel;
+  hostCountyId?: string | null;
   discipline?: Discipline;
   gender?: Gender;
   ageCategoryId?: string;
@@ -110,6 +119,7 @@ export type DeadlineExtensionRow = {
 
 export type CompetitionsRepository = {
   findUserById(id: string): Promise<UserIdentityRecord | null>;
+  findCountyById(id: string): Promise<{ id: string; province: Province; name: string } | null>;
   countCompetitions(filters: CompetitionFilters): Promise<number>;
   findCompetitions(filters: CompetitionFilters, skip: number, take: number, order: CompetitionOrder): Promise<CompetitionRow[]>;
   findCompetitionById(id: string): Promise<CompetitionRow | null>;
@@ -129,6 +139,8 @@ const competitionSelection = {
   id: true,
   title: true,
   province: true,
+  level: true,
+  hostCounty: { select: { id: true, name: true } },
   discipline: true,
   gender: true,
   ageCategoryId: true,
@@ -144,6 +156,12 @@ const competitionSelection = {
   createdAt: true,
   updatedAt: true,
 } as const;
+
+type CompetitionRowInput = Omit<CompetitionRow, "hostCountyId" | "hostCountyName"> & { hostCounty: { id: string; name: string } | null };
+
+function toCompetitionRow(row: CompetitionRowInput): CompetitionRow {
+  return { ...row, hostCountyId: row.hostCounty?.id ?? null, hostCountyName: row.hostCounty?.name ?? null };
+}
 
 const beltSelection = {
   id: true,
@@ -161,14 +179,23 @@ function competitionWhere(filters: CompetitionFilters) {
     ...(filters.status === undefined ? {} : { status: filters.status }),
     ...(filters.discipline === undefined ? {} : { discipline: filters.discipline }),
     ...(filters.search === undefined ? {} : { title: { contains: filters.search, mode: "insensitive" as const } }),
+    ...(filters.coachCountyId === undefined
+      ? {}
+      : {
+          OR: [{ level: "PROVINCIAL" as const }, { level: "COUNTY" as const, hostCountyId: filters.coachCountyId }],
+        }),
   };
 }
 
 export async function findUserById(id: string): Promise<UserIdentityRecord | null> {
   return getPrisma().user.findUnique({
     where: { id },
-    select: { id: true, role: true, province: true, isActive: true },
+    select: { id: true, role: true, province: true, isActive: true, countyId: true },
   });
+}
+
+export async function findCountyById(id: string): Promise<{ id: string; province: Province; name: string } | null> {
+  return getPrisma().county.findUnique({ where: { id }, select: { id: true, province: true, name: true } });
 }
 
 export async function countCompetitions(filters: CompetitionFilters): Promise<number> {
@@ -181,17 +208,21 @@ export async function findCompetitions(
   take: number,
   order: CompetitionOrder,
 ): Promise<CompetitionRow[]> {
-  return getPrisma().competition.findMany({
+  const rows = await getPrisma().competition.findMany({
     where: competitionWhere(filters),
     select: competitionSelection,
     orderBy: order === "deadlineAsc" ? [{ registrationDeadline: "asc" }, { createdAt: "asc" }] : { createdAt: "desc" },
     skip,
     take,
   });
+
+  return rows.map(toCompetitionRow);
 }
 
 export async function findCompetitionById(id: string): Promise<CompetitionRow | null> {
-  return getPrisma().competition.findUnique({ where: { id }, select: competitionSelection });
+  const row = await getPrisma().competition.findUnique({ where: { id }, select: competitionSelection });
+
+  return row === null ? null : toCompetitionRow(row);
 }
 
 export async function countRegistrations(competitionId: string): Promise<number> {
@@ -199,10 +230,12 @@ export async function countRegistrations(competitionId: string): Promise<number>
 }
 
 export async function createCompetition(data: NewCompetitionData): Promise<CompetitionRow> {
-  return getPrisma().competition.create({
+  const row = await getPrisma().competition.create({
     data: {
       title: data.title,
       province: data.province,
+      level: data.level,
+      hostCountyId: data.hostCountyId,
       discipline: data.discipline,
       gender: data.gender,
       ageCategoryId: data.ageCategoryId,
@@ -217,10 +250,14 @@ export async function createCompetition(data: NewCompetitionData): Promise<Compe
     },
     select: competitionSelection,
   });
+
+  return toCompetitionRow(row);
 }
 
 export async function updateCompetition(id: string, data: CompetitionUpdateData): Promise<CompetitionRow> {
-  return getPrisma().competition.update({ where: { id }, data, select: competitionSelection });
+  const row = await getPrisma().competition.update({ where: { id }, data, select: competitionSelection });
+
+  return toCompetitionRow(row);
 }
 
 export const UNREVIEWED_PAYMENT_REFUND_NOTE = "پرداخت بررسی نشده بود؛ قبل از بازپرداخت دریافت وجه را تأیید کنید.";
@@ -256,7 +293,9 @@ export async function cancelCompetitionWithRefunds(id: string, reason: string): 
       });
     }
 
-    return tx.competition.findUnique({ where: { id }, select: competitionSelection });
+    return tx.competition
+      .findUnique({ where: { id }, select: competitionSelection })
+      .then((row) => (row === null ? null : toCompetitionRow(row)));
   });
 }
 
@@ -273,11 +312,13 @@ export async function extendDeadline(input: DeadlineExtensionInput): Promise<Com
       },
     });
 
-    return tx.competition.update({
-      where: { id: input.competitionId },
-      data: { registrationDeadline: input.newDeadline },
-      select: competitionSelection,
-    });
+    return tx.competition
+      .update({
+        where: { id: input.competitionId },
+        data: { registrationDeadline: input.newDeadline },
+        select: competitionSelection,
+      })
+      .then(toCompetitionRow);
   });
 }
 

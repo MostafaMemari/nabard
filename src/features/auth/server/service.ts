@@ -20,7 +20,14 @@ function invalidCredentials(): AppError {
 }
 
 function toAuthUser(user: UserRecord): AuthUser {
-  return { id: user.id, role: user.role, fullName: user.fullName, province: user.province };
+  return {
+    id: user.id,
+    role: user.role,
+    fullName: user.fullName,
+    province: user.province,
+    countyId: user.countyId,
+    countyName: user.countyName,
+  };
 }
 
 export async function login(

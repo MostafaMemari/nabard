@@ -41,6 +41,8 @@ export type User = {
   role: Role;
   province: Province;
   isActive: boolean;
+  countyId: string | null;
+  countyName: string | null;
   createdAt: string;
   updatedAt: string;
 };

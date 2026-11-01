@@ -6,6 +6,7 @@ import { formatNumber } from "@/lib/format";
 import { disciplineIcons, disciplineLabels } from "../labels";
 import type { Competition } from "../types";
 import { BeltChips } from "./belt-chips";
+import { CountyChip } from "./county-chip";
 
 export function CompetitionCard({
   competition,
@@ -28,6 +29,7 @@ export function CompetitionCard({
       <MobileCardLine label="ثبت نام ها" value={`${formatNumber(registrationCount)} هنرجو`} />
       <MobileCardChips>
         <BeltChips belts={belts} ids={competition.beltIds} />
+        {competition.level === "COUNTY" && competition.hostCountyName ? <CountyChip name={competition.hostCountyName} /> : null}
       </MobileCardChips>
       <CountdownChip deadline={competition.registrationDeadline} className="self-start" />
     </MobileCardLink>

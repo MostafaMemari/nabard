@@ -5,6 +5,7 @@ import { ageCategoryLabel, type Belt, genderLabels } from "@/features/base-data"
 import { disciplineIcons, disciplineLabels } from "../labels";
 import type { Competition } from "../types";
 import { BeltChips } from "./belt-chips";
+import { CountyChip } from "./county-chip";
 
 export function competitionsColumns(options: {
   belts: Belt[];
@@ -22,6 +23,11 @@ export function competitionsColumns(options: {
           <div className="flex min-w-36 flex-col leading-tight">
             <span className="font-medium">{row.title}</span>
             <span className="text-subtle text-muted-foreground">{disciplineLabels[row.discipline]}</span>
+            {row.level === "COUNTY" && row.hostCountyName ? (
+              <span className="mt-1 w-fit">
+                <CountyChip name={row.hostCountyName} />
+              </span>
+            ) : null}
           </div>
         </div>
       ),

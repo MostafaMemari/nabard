@@ -18,6 +18,11 @@ export { Prisma }
 export * as $Enums from './enums'
 export * from './enums';
 /**
+ * Model County
+ * 
+ */
+export type County = Prisma.CountyModel
+/**
  * Model User
  * 
  */
@@ -47,6 +52,11 @@ export type WeightClass = Prisma.WeightClassModel
  * 
  */
 export type Competition = Prisma.CompetitionModel
+/**
+ * Model CoachCountyChangeRequest
+ * 
+ */
+export type CoachCountyChangeRequest = Prisma.CoachCountyChangeRequestModel
 /**
  * Model DeadlineExtension
  * 

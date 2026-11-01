@@ -3,7 +3,15 @@ import { AppError } from "@/lib/api";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
 import type { CoachInput, CoachListQuery, UpdateCoachInput } from "../schemas";
-import type { CoachFilters, CoachRecord, CoachRepository, CoachUpdateData, NewCoachData, UserIdentityRecord } from "./repository";
+import type {
+  CoachFilters,
+  CoachRecord,
+  CoachRepository,
+  CoachUpdateData,
+  CountyRecord,
+  NewCoachData,
+  UserIdentityRecord,
+} from "./repository";
 
 const DEFAULT_PAGE_SIZE = 100;
 
@@ -30,6 +38,15 @@ async function coachInScope(repo: CoachRepository, admin: UserIdentityRecord, id
   if (!coach || coach.role !== "COACH" || coach.province !== admin.province) throw coachNotFound();
 
   return coach;
+}
+
+async function countyInProvince(repo: CoachRepository, province: UserIdentityRecord["province"], countyId: string): Promise<CountyRecord> {
+  const county = await repo.findCountyById(countyId);
+  if (!county || county.province !== province) {
+    throw new AppError(400, "VALIDATION_ERROR", "شهرستان انتخاب شده معتبر نیست.");
+  }
+
+  return county;
 }
 
 function toFilters(query: CoachListQuery): CoachFilters {
@@ -67,6 +84,8 @@ export async function createCoach(repo: CoachRepository, user: CurrentUser, inpu
   const codeOwner = await repo.findNationalCodeOwner(input.nationalCode);
   if (codeOwner) throw new AppError(409, "CONFLICT", "این کد ملی قبلاً ثبت شده است.");
 
+  await countyInProvince(repo, admin.province, input.countyId);
+
   const passwordHash = await hash(input.initialPassword, 10);
   const data: NewCoachData = {
     mobile: input.mobile,
@@ -74,6 +93,7 @@ export async function createCoach(repo: CoachRepository, user: CurrentUser, inpu
     nationalCode: input.nationalCode,
     passwordHash,
     province: admin.province,
+    countyId: input.countyId,
   };
 
   return repo.createCoach(data);
@@ -98,6 +118,10 @@ export async function updateCoach(repo: CoachRepository, user: CurrentUser, id: 
   if (input.mobile !== undefined) data.mobile = input.mobile;
   if (input.nationalCode !== undefined) data.nationalCode = input.nationalCode;
   if (input.isActive !== undefined) data.isActive = input.isActive;
+  if (input.countyId !== undefined) {
+    await countyInProvince(repo, admin.province, input.countyId);
+    data.countyId = input.countyId;
+  }
 
   return repo.updateCoach(id, data);
 }

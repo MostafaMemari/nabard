@@ -23,8 +23,20 @@ import {
 const admin: CurrentUser = { id: "admin-1", role: "ADMIN" };
 const coach: CurrentUser = { id: "coach-1", role: "COACH" };
 
-const coachRecord = { id: "coach-1", role: "COACH" as const, province: "TEHRAN" as const, isActive: true };
-const adminRecord = { id: "admin-1", role: "ADMIN" as const, province: "TEHRAN" as const, isActive: true };
+const coachRecord = {
+  id: "coach-1",
+  role: "COACH" as const,
+  province: "TEHRAN" as const,
+  isActive: true,
+  countyId: "county-tehran",
+};
+const adminRecord = {
+  id: "admin-1",
+  role: "ADMIN" as const,
+  province: "TEHRAN" as const,
+  isActive: true,
+  countyId: null,
+};
 const inactiveRecord = { ...coachRecord, isActive: false };
 
 const belts: Belt[] = [
@@ -61,6 +73,8 @@ const ageCategoryRow = {
 const competition = {
   id: "comp-1",
   province: "TEHRAN" as const,
+  level: "PROVINCIAL" as const,
+  hostCountyId: null,
   status: "PUBLISHED" as const,
   discipline: "KYORUGI" as const,
   gender: "MALE" as const,
@@ -276,6 +290,43 @@ describe("createRegistrations", () => {
     );
 
     expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+  });
+
+  it("blocks a coach from another county with 403 on a county competition", async () => {
+    const repo = repoWith({
+      findCompetitionById: vi.fn().mockResolvedValue({ ...competition, level: "COUNTY", hostCountyId: "county-ray" }),
+    });
+    const failure = await failureOf(
+      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+    );
+
+    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect((failure as AppError).message).toContain("شهرستان میزبان");
+    expect(repo.createRegistrationBundle).not.toHaveBeenCalled();
+  });
+
+  it("allows a coach of the host county to register in a county competition", async () => {
+    const repo = repoWith({
+      findCompetitionById: vi.fn().mockResolvedValue({ ...competition, level: "COUNTY", hostCountyId: "county-tehran" }),
+    });
+    await createRegistrations(repo, storageWith(), coach, "comp-1", {
+      studentIds: ["student-1", "student-2"],
+      receipt: receiptFile(),
+    });
+
+    expect(repo.createRegistrationBundle).toHaveBeenCalledTimes(1);
+  });
+
+  it("blocks a coach without a county from a county competition with 403", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue({ ...coachRecord, countyId: null }),
+      findCompetitionById: vi.fn().mockResolvedValue({ ...competition, level: "COUNTY", hostCountyId: "county-ray" }),
+    });
+    const failure = await failureOf(
+      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+    );
+
+    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
   });
 
   it("blocks a draft competition", async () => {

@@ -14,6 +14,8 @@ const activeAdmin: UserRecord = {
   role: "ADMIN",
   province: "TEHRAN",
   isActive: true,
+  countyId: null,
+  countyName: null,
 };
 
 const inactiveAdmin: UserRecord = { ...activeAdmin, isActive: false };
@@ -42,7 +44,14 @@ describe("login", () => {
   it("returns the auth user for valid credentials", async () => {
     const result = await login(repoWith(activeAdmin), { mobile: "09121110000", password });
 
-    expect(result).toEqual({ id: "user-1", role: "ADMIN", fullName: "مدیر سامانه", province: "TEHRAN" });
+    expect(result).toEqual({
+      id: "user-1",
+      role: "ADMIN",
+      fullName: "مدیر سامانه",
+      province: "TEHRAN",
+      countyId: null,
+      countyName: null,
+    });
   });
 
   it("rejects a wrong password with 401", async () => {

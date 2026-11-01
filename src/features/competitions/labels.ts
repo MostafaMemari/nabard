@@ -1,5 +1,5 @@
 import { type LucideIcon, PersonStandingIcon, SwordsIcon } from "lucide-react";
-import type { Discipline } from "./types";
+import type { CompetitionLevel, Discipline } from "./types";
 
 export const disciplineLabels: Record<Discipline, string> = {
   KYORUGI: "کیوروگی",
@@ -9,6 +9,11 @@ export const disciplineLabels: Record<Discipline, string> = {
 export const disciplineIcons: Record<Discipline, LucideIcon> = {
   KYORUGI: SwordsIcon,
   POOMSAE: PersonStandingIcon,
+};
+
+export const competitionLevelLabels: Record<CompetitionLevel, string> = {
+  PROVINCIAL: "استانی",
+  COUNTY: "شهرستانی",
 };
 
 export const competitionStatusTabLabels = {

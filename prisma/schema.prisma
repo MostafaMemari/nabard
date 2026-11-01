@@ -136,6 +136,17 @@ enum RefundStatus {
   COMPLETED @map("completed")
 }
 
+enum CompetitionLevel {
+  PROVINCIAL @map("provincial")
+  COUNTY     @map("county")
+}
+
+enum CountyChangeStatus {
+  PENDING  @map("pending")
+  APPROVED @map("approved")
+  REJECTED @map("rejected")
+}
+
 enum ProfileStatus {
   PENDING  @map("pending")
   APPROVED @map("approved")
@@ -151,7 +162,26 @@ enum StudentDocumentType {
 
 // ───────────── Users ─────────────
 
-// Accounts are created by an admin. Coaches belong to a province.
+// Counties (شهرستان) live inside a province. Coaches belong to one county of
+// their province; admins have none.
+model County {
+  id       String   @id @default(uuid()) @map("id")
+  province Province @map("province")
+  name     String   @map("name") @db.VarChar(80)
+
+  coaches            User[]
+  hostedCompetitions Competition[]          @relation("CompetitionHostCounty")
+  changeRequestsFrom CoachCountyChangeRequest[] @relation("CountyChangeFrom")
+  changeRequestsTo   CoachCountyChangeRequest[] @relation("CountyChangeTo")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([province, name])
+  @@map("counties")
+}
+
+// Accounts are created by an admin. Coaches belong to a province and a county.
 model User {
   id           String   @id @default(uuid()) @map("id")
   mobile       String   @unique @map("mobile") @db.VarChar(11)
@@ -161,14 +191,18 @@ model User {
   role         Role     @map("role")
   province     Province @map("province")
   isActive     Boolean  @default(true) @map("is_active")
+  countyId     String?  @map("county_id")
+  county       County?  @relation(fields: [countyId], references: [id])
 
-  students           Student[]
-  registrations      Registration[]
-  payments           Payment[]
-  deadlineExtensions DeadlineExtension[] @relation("DeadlineExtensionCreatedBy")
-  refunds            Refund[]            @relation("RefundCoach")
-  processedRefunds   Refund[]            @relation("RefundProcessedBy")
-  reviewedProfiles   Student[]           @relation("StudentProfileReviewedBy")
+  students             Student[]
+  registrations        Registration[]
+  payments             Payment[]
+  deadlineExtensions   DeadlineExtension[] @relation("DeadlineExtensionCreatedBy")
+  refunds              Refund[]            @relation("RefundCoach")
+  processedRefunds     Refund[]            @relation("RefundProcessedBy")
+  reviewedProfiles     Student[]           @relation("StudentProfileReviewedBy")
+  countyChangeRequests CoachCountyChangeRequest[] @relation("CountyChangeCoach")
+  decidedCountyChanges CoachCountyChangeRequest[] @relation("CountyChangeDecidedBy")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -263,6 +297,10 @@ model Competition {
   title    String   @map("title") @db.VarChar(150)
   province Province @map("province")
 
+  level        CompetitionLevel @default(PROVINCIAL) @map("level")
+  hostCountyId String?          @map("host_county_id") // set when level is COUNTY, belongs to the competition province
+  hostCounty   County?          @relation("CompetitionHostCounty", fields: [hostCountyId], references: [id])
+
   discipline    Discipline  @map("discipline")
   gender        Gender      @map("gender")
   ageCategoryId String      @map("age_category_id")
@@ -288,7 +326,32 @@ model Competition {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([province, status])
+  @@index([hostCountyId])
   @@map("competitions")
+}
+
+// A coach asks to move to another county of the same province. The admin
+// approves or rejects it; approval changes only the coach county.
+model CoachCountyChangeRequest {
+  id           String             @id @default(uuid()) @map("id")
+  coachId      String             @map("coach_id")
+  coach        User               @relation("CountyChangeCoach", fields: [coachId], references: [id])
+  fromCountyId String             @map("from_county_id")
+  fromCounty   County             @relation("CountyChangeFrom", fields: [fromCountyId], references: [id])
+  toCountyId   String             @map("to_county_id")
+  toCounty     County             @relation("CountyChangeTo", fields: [toCountyId], references: [id])
+  status       CountyChangeStatus @default(PENDING) @map("status")
+  note         String?            @map("note") @db.VarChar(500) // admin note on rejection
+  decidedById  String?            @map("decided_by_id")
+  decidedBy    User?              @relation("CountyChangeDecidedBy", fields: [decidedById], references: [id])
+  decidedAt    DateTime?          @map("decided_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([coachId])
+  @@index([status, createdAt])
+  @@map("coach_county_change_requests")
 }
 
 // Each row is the only allowed change to a competition deadline once

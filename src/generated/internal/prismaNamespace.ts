@@ -397,12 +397,14 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
+  County: 'County',
   User: 'User',
   Student: 'Student',
   Belt: 'Belt',
   AgeCategory: 'AgeCategory',
   WeightClass: 'WeightClass',
   Competition: 'Competition',
+  CoachCountyChangeRequest: 'CoachCountyChangeRequest',
   DeadlineExtension: 'DeadlineExtension',
   StoredFile: 'StoredFile',
   StudentDocument: 'StudentDocument',
@@ -425,10 +427,84 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "student" | "belt" | "ageCategory" | "weightClass" | "competition" | "deadlineExtension" | "storedFile" | "studentDocument" | "payment" | "loginFailure" | "registration" | "refund"
+    modelProps: "county" | "user" | "student" | "belt" | "ageCategory" | "weightClass" | "competition" | "coachCountyChangeRequest" | "deadlineExtension" | "storedFile" | "studentDocument" | "payment" | "loginFailure" | "registration" | "refund"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
+    County: {
+      payload: Prisma.$CountyPayload<ExtArgs>
+      fields: Prisma.CountyFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CountyFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CountyPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CountyFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CountyPayload>
+        }
+        findFirst: {
+          args: Prisma.CountyFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CountyPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CountyFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CountyPayload>
+        }
+        findMany: {
+          args: Prisma.CountyFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CountyPayload>[]
+        }
+        create: {
+          args: Prisma.CountyCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CountyPayload>
+        }
+        createMany: {
+          args: Prisma.CountyCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CountyCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CountyPayload>[]
+        }
+        delete: {
+          args: Prisma.CountyDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CountyPayload>
+        }
+        update: {
+          args: Prisma.CountyUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CountyPayload>
+        }
+        deleteMany: {
+          args: Prisma.CountyDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CountyUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CountyUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CountyPayload>[]
+        }
+        upsert: {
+          args: Prisma.CountyUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CountyPayload>
+        }
+        aggregate: {
+          args: Prisma.CountyAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCounty>
+        }
+        groupBy: {
+          args: Prisma.CountyGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CountyGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CountyCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CountyCountAggregateOutputType> | number
+        }
+      }
+    }
     User: {
       payload: Prisma.$UserPayload<ExtArgs>
       fields: Prisma.UserFieldRefs
@@ -870,6 +946,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CompetitionCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CompetitionCountAggregateOutputType> | number
+        }
+      }
+    }
+    CoachCountyChangeRequest: {
+      payload: Prisma.$CoachCountyChangeRequestPayload<ExtArgs>
+      fields: Prisma.CoachCountyChangeRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CoachCountyChangeRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachCountyChangeRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CoachCountyChangeRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachCountyChangeRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.CoachCountyChangeRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachCountyChangeRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CoachCountyChangeRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachCountyChangeRequestPayload>
+        }
+        findMany: {
+          args: Prisma.CoachCountyChangeRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachCountyChangeRequestPayload>[]
+        }
+        create: {
+          args: Prisma.CoachCountyChangeRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachCountyChangeRequestPayload>
+        }
+        createMany: {
+          args: Prisma.CoachCountyChangeRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CoachCountyChangeRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachCountyChangeRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.CoachCountyChangeRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachCountyChangeRequestPayload>
+        }
+        update: {
+          args: Prisma.CoachCountyChangeRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachCountyChangeRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.CoachCountyChangeRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CoachCountyChangeRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CoachCountyChangeRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachCountyChangeRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.CoachCountyChangeRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CoachCountyChangeRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.CoachCountyChangeRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCoachCountyChangeRequest>
+        }
+        groupBy: {
+          args: Prisma.CoachCountyChangeRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CoachCountyChangeRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CoachCountyChangeRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CoachCountyChangeRequestCountAggregateOutputType> | number
         }
       }
     }
@@ -1430,6 +1580,17 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const CountyScalarFieldEnum = {
+  id: 'id',
+  province: 'province',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CountyScalarFieldEnum = (typeof CountyScalarFieldEnum)[keyof typeof CountyScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   mobile: 'mobile',
@@ -1439,6 +1600,7 @@ export const UserScalarFieldEnum = {
   role: 'role',
   province: 'province',
   isActive: 'isActive',
+  countyId: 'countyId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1510,6 +1672,8 @@ export const CompetitionScalarFieldEnum = {
   id: 'id',
   title: 'title',
   province: 'province',
+  level: 'level',
+  hostCountyId: 'hostCountyId',
   discipline: 'discipline',
   gender: 'gender',
   ageCategoryId: 'ageCategoryId',
@@ -1527,6 +1691,22 @@ export const CompetitionScalarFieldEnum = {
 } as const
 
 export type CompetitionScalarFieldEnum = (typeof CompetitionScalarFieldEnum)[keyof typeof CompetitionScalarFieldEnum]
+
+
+export const CoachCountyChangeRequestScalarFieldEnum = {
+  id: 'id',
+  coachId: 'coachId',
+  fromCountyId: 'fromCountyId',
+  toCountyId: 'toCountyId',
+  status: 'status',
+  note: 'note',
+  decidedById: 'decidedById',
+  decidedAt: 'decidedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CoachCountyChangeRequestScalarFieldEnum = (typeof CoachCountyChangeRequestScalarFieldEnum)[keyof typeof CoachCountyChangeRequestScalarFieldEnum]
 
 
 export const DeadlineExtensionScalarFieldEnum = {
@@ -1668,20 +1848,6 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
- * Reference to a field of type 'Role'
- */
-export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
-    
-
-
-/**
- * Reference to a field of type 'Role[]'
- */
-export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
-    
-
-
-/**
  * Reference to a field of type 'Province'
  */
 export type EnumProvinceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Province'>
@@ -1696,13 +1862,6 @@ export type ListEnumProvinceFieldRefInput<$PrismaModel> = FieldRefInputType<$Pri
 
 
 /**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -1713,6 +1872,27 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Role'
+ */
+export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
+    
+
+
+/**
+ * Reference to a field of type 'Role[]'
+ */
+export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -1815,6 +1995,20 @@ export type ListEnumAgeCategoryNameFieldRefInput<$PrismaModel> = FieldRefInputTy
 
 
 /**
+ * Reference to a field of type 'CompetitionLevel'
+ */
+export type EnumCompetitionLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CompetitionLevel'>
+    
+
+
+/**
+ * Reference to a field of type 'CompetitionLevel[]'
+ */
+export type ListEnumCompetitionLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CompetitionLevel[]'>
+    
+
+
+/**
  * Reference to a field of type 'Discipline'
  */
 export type EnumDisciplineFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Discipline'>
@@ -1853,6 +2047,20 @@ export type EnumCompetitionStatusFieldRefInput<$PrismaModel> = FieldRefInputType
  * Reference to a field of type 'CompetitionStatus[]'
  */
 export type ListEnumCompetitionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CompetitionStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'CountyChangeStatus'
+ */
+export type EnumCountyChangeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CountyChangeStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'CountyChangeStatus[]'
+ */
+export type ListEnumCountyChangeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CountyChangeStatus[]'>
     
 
 
@@ -2104,12 +2312,14 @@ export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions 
  */
 export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaClientOptionsWithAdapter
 export type GlobalOmitConfig = {
+  county?: Prisma.CountyOmit
   user?: Prisma.UserOmit
   student?: Prisma.StudentOmit
   belt?: Prisma.BeltOmit
   ageCategory?: Prisma.AgeCategoryOmit
   weightClass?: Prisma.WeightClassOmit
   competition?: Prisma.CompetitionOmit
+  coachCountyChangeRequest?: Prisma.CoachCountyChangeRequestOmit
   deadlineExtension?: Prisma.DeadlineExtensionOmit
   storedFile?: Prisma.StoredFileOmit
   studentDocument?: Prisma.StudentDocumentOmit

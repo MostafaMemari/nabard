@@ -14,6 +14,9 @@ const coachIdentityRecord: UserIdentityRecord = { id: "admin-1", role: "COACH", 
 
 const createdAt = new Date("2026-07-15T08:30:00.000Z");
 
+const tehranCountyRecord = { id: "county-tehran", province: "TEHRAN" as const, name: "تهران" };
+const farsCountyRecord = { id: "county-shiraz", province: "FARS" as const, name: "شیراز" };
+
 const tehranCoach: CoachRecord = {
   id: "coach-9",
   mobile: "09121110000",
@@ -22,6 +25,8 @@ const tehranCoach: CoachRecord = {
   role: "COACH",
   province: "TEHRAN",
   isActive: true,
+  countyId: "county-tehran",
+  countyName: "تهران",
   createdAt,
   updatedAt: createdAt,
 };
@@ -37,6 +42,11 @@ function repoWith(overrides: Partial<CoachRepository> = {}): CoachRepository {
     findCoachById: vi.fn().mockResolvedValue(tehranCoach),
     findMobileOwner: vi.fn().mockResolvedValue(null),
     findNationalCodeOwner: vi.fn().mockResolvedValue(null),
+    findCountyById: vi
+      .fn()
+      .mockImplementation(async (id: string) =>
+        id === tehranCountyRecord.id ? tehranCountyRecord : id === farsCountyRecord.id ? farsCountyRecord : null,
+      ),
     createCoach: vi.fn().mockResolvedValue(tehranCoach),
     updateCoach: vi.fn().mockResolvedValue(tehranCoach),
     updateCoachPassword: vi.fn().mockResolvedValue(tehranCoach),
@@ -137,7 +147,13 @@ describe("getCoach", () => {
 });
 
 describe("createCoach", () => {
-  const input = { fullName: "سعید احمدی", mobile: "09122220000", nationalCode: "0987654321", initialPassword: "Secret!1234" };
+  const input = {
+    fullName: "سعید احمدی",
+    mobile: "09122220000",
+    nationalCode: "0987654321",
+    initialPassword: "Secret!1234",
+    countyId: "county-tehran",
+  };
 
   it("creates an active coach in the admin province with a bcrypt hash", async () => {
     const repo = repoWith();
@@ -150,6 +166,7 @@ describe("createCoach", () => {
       fullName: "سعید احمدی",
       nationalCode: "0987654321",
       province: "TEHRAN",
+      countyId: "county-tehran",
     });
     expect(compareSync("Secret!1234", data.passwordHash)).toBe(true);
     expect(compareSync("WrongPass123", data.passwordHash)).toBe(false);
@@ -184,6 +201,22 @@ describe("createCoach", () => {
     const failure = await failureOf(createCoach(repo, coach, input));
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect(repo.createCoach).not.toHaveBeenCalled();
+  });
+
+  it("rejects a county of another province with 400", async () => {
+    const repo = repoWith();
+    const failure = await failureOf(createCoach(repo, admin, { ...input, countyId: "county-shiraz" }));
+
+    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
+    expect(repo.createCoach).not.toHaveBeenCalled();
+  });
+
+  it("rejects an unknown county with 400", async () => {
+    const repo = repoWith({ findCountyById: vi.fn().mockResolvedValue(null) });
+    const failure = await failureOf(createCoach(repo, admin, { ...input, countyId: "county-nope" }));
+
+    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
     expect(repo.createCoach).not.toHaveBeenCalled();
   });
 });
@@ -239,6 +272,21 @@ describe("updateCoach", () => {
     const failure = await failureOf(updateCoach(repo, coach, "coach-9", { isActive: true }));
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect(repo.updateCoach).not.toHaveBeenCalled();
+  });
+
+  it("updates the county of a coach with a county of the admin province", async () => {
+    const repo = repoWith();
+    await updateCoach(repo, admin, "coach-9", { countyId: "county-tehran" });
+
+    expect(repo.updateCoach).toHaveBeenCalledWith("coach-9", { countyId: "county-tehran" });
+  });
+
+  it("rejects a county of another province on update with 400", async () => {
+    const repo = repoWith();
+    const failure = await failureOf(updateCoach(repo, admin, "coach-9", { countyId: "county-shiraz" }));
+
+    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
     expect(repo.updateCoach).not.toHaveBeenCalled();
   });
 });

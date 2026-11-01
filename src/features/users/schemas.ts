@@ -15,6 +15,7 @@ export const createCoachSchema = z.object({
   mobile: mobileField,
   nationalCode: nationalCodeField,
   initialPassword: passwordField,
+  countyId: z.string().min(1, "شهرستان مربی را انتخاب کنید."),
 });
 
 export const updateCoachSchema = z
@@ -23,6 +24,7 @@ export const updateCoachSchema = z
     mobile: mobileField.optional(),
     nationalCode: nationalCodeField.optional(),
     isActive: z.boolean().optional(),
+    countyId: z.string().min(1, "شهرستان مربی را انتخاب کنید.").optional(),
   })
   .refine((value) => Object.keys(value).length > 0, { message: "اطلاعاتی برای تغییر ارسال نشده است." });
 

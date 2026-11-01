@@ -8,6 +8,8 @@ export const competitionSchema = z
     gender: z.string().min(1, "جنسیت را انتخاب کنید."),
     ageCategoryId: z.string().min(1, "رده سنی را انتخاب کنید."),
     beltIds: z.array(z.string()).min(1, "حداقل یک کمربند را انتخاب کنید."),
+    level: z.string().min(1, "سطح مسابقه را انتخاب کنید."),
+    hostCountyId: z.string(),
     feePerStudent: z
       .string()
       .transform(normalizeDigits)
@@ -20,6 +22,10 @@ export const competitionSchema = z
   .refine((data) => data.eventDate > data.registrationDeadline, {
     message: "تاریخ برگزاری باید بعد از مهلت ثبت نام باشد.",
     path: ["eventDate"],
+  })
+  .refine((data) => data.level !== "COUNTY" || (data.hostCountyId !== undefined && data.hostCountyId !== ""), {
+    message: "شهرستان میزبان را انتخاب کنید.",
+    path: ["hostCountyId"],
   });
 
 export type CompetitionFormValues = {
@@ -28,6 +34,8 @@ export type CompetitionFormValues = {
   gender: string;
   ageCategoryId: string;
   beltIds: string[];
+  level: string;
+  hostCountyId: string;
   feePerStudent: string;
   payeeCardNumber: string;
   payeeCardHolder: string;
@@ -60,19 +68,28 @@ const payeeCardNumberField = z
 const payeeCardHolderField = z.string().trim().min(3, "نام صاحب کارت را وارد کنید.");
 const registrationDeadlineField = z.string().min(1, "مهلت ثبت نام را انتخاب کنید.").refine(isIsoDate, "مهلت ثبت نام معتبر نیست.");
 const eventDateField = z.string().min(1, "تاریخ برگزاری را انتخاب کنید.").refine(isIsoDate, "تاریخ برگزاری معتبر نیست.");
+const levelField = z.enum(["PROVINCIAL", "COUNTY"], { message: "سطح مسابقه را انتخاب کنید." });
+const hostCountyIdField = z.string();
 
-export const createCompetitionSchema = z.object({
-  title: titleField,
-  discipline: disciplineField,
-  gender: genderField,
-  ageCategoryId: ageCategoryField,
-  beltIds: beltIdsField,
-  feePerStudent: feeField,
-  payeeCardNumber: payeeCardNumberField,
-  payeeCardHolder: payeeCardHolderField,
-  registrationDeadline: registrationDeadlineField,
-  eventDate: eventDateField,
-});
+export const createCompetitionSchema = z
+  .object({
+    title: titleField,
+    discipline: disciplineField,
+    gender: genderField,
+    ageCategoryId: ageCategoryField,
+    beltIds: beltIdsField,
+    level: levelField,
+    hostCountyId: hostCountyIdField.optional(),
+    feePerStudent: feeField,
+    payeeCardNumber: payeeCardNumberField,
+    payeeCardHolder: payeeCardHolderField,
+    registrationDeadline: registrationDeadlineField,
+    eventDate: eventDateField,
+  })
+  .refine((value) => value.level !== "COUNTY" || (value.hostCountyId !== undefined && value.hostCountyId !== ""), {
+    message: "شهرستان میزبان را انتخاب کنید.",
+    path: ["hostCountyId"],
+  });
 
 export const updateCompetitionSchema = z
   .object({
@@ -81,6 +98,8 @@ export const updateCompetitionSchema = z
     gender: genderField.optional(),
     ageCategoryId: ageCategoryField.optional(),
     beltIds: beltIdsField.optional(),
+    level: levelField.optional(),
+    hostCountyId: hostCountyIdField.optional(),
     feePerStudent: feeField.optional(),
     payeeCardNumber: payeeCardNumberField.optional(),
     payeeCardHolder: payeeCardHolderField.optional(),
@@ -117,6 +136,8 @@ export const emptyCompetitionForm: CompetitionFormValues = {
   gender: "",
   ageCategoryId: "",
   beltIds: [],
+  level: "PROVINCIAL",
+  hostCountyId: "",
   feePerStudent: "",
   payeeCardNumber: "",
   payeeCardHolder: "",

@@ -51,12 +51,14 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
+  County: 'County',
   User: 'User',
   Student: 'Student',
   Belt: 'Belt',
   AgeCategory: 'AgeCategory',
   WeightClass: 'WeightClass',
   Competition: 'Competition',
+  CoachCountyChangeRequest: 'CoachCountyChangeRequest',
   DeadlineExtension: 'DeadlineExtension',
   StoredFile: 'StoredFile',
   StudentDocument: 'StudentDocument',
@@ -82,6 +84,17 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
+export const CountyScalarFieldEnum = {
+  id: 'id',
+  province: 'province',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CountyScalarFieldEnum = (typeof CountyScalarFieldEnum)[keyof typeof CountyScalarFieldEnum]
+
+
 export const UserScalarFieldEnum = {
   id: 'id',
   mobile: 'mobile',
@@ -91,6 +104,7 @@ export const UserScalarFieldEnum = {
   role: 'role',
   province: 'province',
   isActive: 'isActive',
+  countyId: 'countyId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -162,6 +176,8 @@ export const CompetitionScalarFieldEnum = {
   id: 'id',
   title: 'title',
   province: 'province',
+  level: 'level',
+  hostCountyId: 'hostCountyId',
   discipline: 'discipline',
   gender: 'gender',
   ageCategoryId: 'ageCategoryId',
@@ -179,6 +195,22 @@ export const CompetitionScalarFieldEnum = {
 } as const
 
 export type CompetitionScalarFieldEnum = (typeof CompetitionScalarFieldEnum)[keyof typeof CompetitionScalarFieldEnum]
+
+
+export const CoachCountyChangeRequestScalarFieldEnum = {
+  id: 'id',
+  coachId: 'coachId',
+  fromCountyId: 'fromCountyId',
+  toCountyId: 'toCountyId',
+  status: 'status',
+  note: 'note',
+  decidedById: 'decidedById',
+  decidedAt: 'decidedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CoachCountyChangeRequestScalarFieldEnum = (typeof CoachCountyChangeRequestScalarFieldEnum)[keyof typeof CoachCountyChangeRequestScalarFieldEnum]
 
 
 export const DeadlineExtensionScalarFieldEnum = {

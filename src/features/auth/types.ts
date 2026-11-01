@@ -6,4 +6,6 @@ export type AuthUser = {
   role: SessionRole;
   fullName: string;
   province: Province;
+  countyId: string | null;
+  countyName: string | null;
 };

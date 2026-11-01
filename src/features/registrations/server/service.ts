@@ -232,6 +232,10 @@ export async function createRegistrations(
   const competition = await repo.findCompetitionById(competitionId);
   if (!competition || competition.province !== identity.province) throw competitionNotFound();
 
+  if (competition.level === "COUNTY" && competition.hostCountyId !== identity.countyId) {
+    throw new AppError(403, "FORBIDDEN", "ثبت نام در این مسابقه فقط برای مربیان شهرستان میزبان امکان پذیر است.");
+  }
+
   assertRegistrationWindow(competition, new Date());
 
   const receipt = await readReceiptImage(input.receipt);

@@ -3,6 +3,7 @@ import { hashSync } from "bcryptjs";
 import { getServerEnv } from "../src/lib/env";
 import { getPrisma } from "../src/lib/prisma";
 import { ageCategories, belts, weightClasses } from "./data/base-data";
+import { tehranCounties } from "./data/counties";
 
 const prisma = getPrisma();
 
@@ -63,6 +64,14 @@ async function main() {
     });
   }
 
+  for (const name of tehranCounties) {
+    await prisma.county.upsert({
+      where: { province_name: { province: "TEHRAN", name } },
+      update: {},
+      create: { province: "TEHRAN", name },
+    });
+  }
+
   if (!serverEnv.ADMIN_MOBILE || !serverEnv.ADMIN_PASSWORD || !serverEnv.ADMIN_PROVINCE) {
     throw new Error("ADMIN_MOBILE, ADMIN_PASSWORD and ADMIN_PROVINCE are required for seeding.");
   }
@@ -84,7 +93,7 @@ async function main() {
   });
 
   console.log(
-    `داده های پایه آماده شدند: ${belts.length} کمربند، ${ageCategories.length} رده سنی، ${weightClasses.length} رده وزنی و یک حساب مدیر.`,
+    `داده های پایه آماده شدند: ${belts.length} کمربند، ${ageCategories.length} رده سنی، ${weightClasses.length} رده وزنی، ${tehranCounties.length} شهرستان استان تهران و یک حساب مدیر.`,
   );
 }
 

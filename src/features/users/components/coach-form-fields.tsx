@@ -1,6 +1,7 @@
 "use client";
 
 import { type Control, Controller } from "react-hook-form";
+import { ControlledSelectField } from "@/components/shared";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import type { CoachFormValues } from "../schemas";
@@ -28,4 +29,18 @@ export function CoachTextField({
       )}
     />
   );
+}
+
+export function CoachSelectField({
+  control,
+  name,
+  label,
+  items,
+}: {
+  control: Control<CoachFormValues>;
+  name: keyof CoachFormValues;
+  label: string;
+  items: Record<string, React.ReactNode>;
+}) {
+  return <ControlledSelectField control={control} name={name} label={label} items={items} />;
 }

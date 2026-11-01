@@ -24,6 +24,7 @@ export function coachColumns(options: { students: Student[]; onToggleStatus: (co
       sortValue: (row) => row.fullName,
     },
     { id: "mobile", header: "شماره همراه", cell: (row) => toPersianDigits(row.mobile) },
+    { id: "county", header: "شهرستان", cell: (row) => row.countyName ?? "نامشخص", minScreen: "lg" },
     {
       id: "students",
       header: "هنرجویان",

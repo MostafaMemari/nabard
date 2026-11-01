@@ -1,4 +1,14 @@
-import type { CompetitionStatus, Discipline, Gender, PaymentStatus, Province, RegistrationStatus, Role } from "../../src/generated/enums";
+import type {
+  CompetitionLevel,
+  CompetitionStatus,
+  CountyChangeStatus,
+  Discipline,
+  Gender,
+  PaymentStatus,
+  Province,
+  RegistrationStatus,
+  Role,
+} from "../../src/generated/enums";
 
 function nationalCode(base: number): string {
   const digits = String(base).padStart(9, "0").slice(0, 9);
@@ -16,21 +26,22 @@ export type UserSeed = {
   role: Role;
   province: Province;
   isActive: boolean;
+  countyName: string | null;
   createdAt: string;
 };
 
-const userRows: Array<{ fullName: string; role: Role; active?: boolean }> = [
+const userRows: Array<{ fullName: string; role: Role; active?: boolean; countyName?: string }> = [
   { fullName: "حمیدرضا کاظمی", role: "ADMIN" },
   { fullName: "مریم صادقی", role: "ADMIN" },
   { fullName: "علی رستمی", role: "ADMIN" },
-  { fullName: "رضا محمدی", role: "COACH" },
-  { fullName: "سعید احمدی", role: "COACH" },
-  { fullName: "مهدی کریمی", role: "COACH" },
-  { fullName: "حسین موسوی", role: "COACH", active: false },
-  { fullName: "امیر حسین زاده", role: "COACH" },
-  { fullName: "محمد رضایی", role: "COACH" },
-  { fullName: "بابک نیک پور", role: "COACH", active: false },
-  { fullName: "کامران شریفی", role: "COACH" },
+  { fullName: "رضا محمدی", role: "COACH", countyName: "تهران" },
+  { fullName: "سعید احمدی", role: "COACH", countyName: "تهران" },
+  { fullName: "مهدی کریمی", role: "COACH", countyName: "ری" },
+  { fullName: "حسین موسوی", role: "COACH", active: false, countyName: "ری" },
+  { fullName: "امیر حسین زاده", role: "COACH", countyName: "ری" },
+  { fullName: "محمد رضایی", role: "COACH", countyName: "شمیرانات" },
+  { fullName: "بابک نیک پور", role: "COACH", active: false, countyName: "اسلامشهر" },
+  { fullName: "کامران شریفی", role: "COACH", countyName: "پردیس" },
 ];
 
 export const demoUsers: UserSeed[] = userRows.map((row, index) => {
@@ -45,6 +56,7 @@ export const demoUsers: UserSeed[] = userRows.map((row, index) => {
     role: row.role,
     province: "TEHRAN",
     isActive: row.active ?? true,
+    countyName: row.countyName ?? null,
     createdAt: "2026-07-15T08:30:00.000Z",
   };
 });
@@ -163,6 +175,8 @@ export type CompetitionSeed = {
   id: string;
   title: string;
   province: Province;
+  level: CompetitionLevel;
+  hostCountyName: string | null;
   discipline: Discipline;
   gender: Gender;
   ageCategoryId: string;
@@ -184,6 +198,8 @@ export const demoCompetitions: CompetitionSeed[] = [
     id: "comp-1",
     title: "مسابقات قهرمانی استان تهران",
     province: "TEHRAN",
+    level: "PROVINCIAL",
+    hostCountyName: null,
     discipline: "KYORUGI",
     gender: "MALE",
     ageCategoryId: "senior",
@@ -199,8 +215,10 @@ export const demoCompetitions: CompetitionSeed[] = [
   },
   {
     id: "comp-2",
-    title: "مسابقات نونهالان پسر",
+    title: "مسابقات نونهالان پسر شهرستان ری",
     province: "TEHRAN",
+    level: "COUNTY",
+    hostCountyName: "ری",
     discipline: "KYORUGI",
     gender: "MALE",
     ageCategoryId: "youth",
@@ -218,6 +236,8 @@ export const demoCompetitions: CompetitionSeed[] = [
     id: "comp-3",
     title: "مسابقات نوجوانان دختر",
     province: "TEHRAN",
+    level: "PROVINCIAL",
+    hostCountyName: null,
     discipline: "KYORUGI",
     gender: "FEMALE",
     ageCategoryId: "cadet",
@@ -235,6 +255,8 @@ export const demoCompetitions: CompetitionSeed[] = [
     id: "comp-4",
     title: "مسابقات پومسه بزرگسالان",
     province: "TEHRAN",
+    level: "PROVINCIAL",
+    hostCountyName: null,
     discipline: "POOMSAE",
     gender: "FEMALE",
     ageCategoryId: "senior",
@@ -252,6 +274,8 @@ export const demoCompetitions: CompetitionSeed[] = [
     id: "comp-5",
     title: "مسابقات جوانان پسر",
     province: "TEHRAN",
+    level: "PROVINCIAL",
+    hostCountyName: null,
     discipline: "KYORUGI",
     gender: "MALE",
     ageCategoryId: "junior",
@@ -269,6 +293,8 @@ export const demoCompetitions: CompetitionSeed[] = [
     id: "comp-6",
     title: "مسابقات پیشکسوتان",
     province: "TEHRAN",
+    level: "PROVINCIAL",
+    hostCountyName: null,
     discipline: "POOMSAE",
     gender: "MALE",
     ageCategoryId: "ultra",
@@ -281,6 +307,69 @@ export const demoCompetitions: CompetitionSeed[] = [
     status: "DRAFT",
     createdAt: "2026-10-18T15:25:00.000Z",
     updatedAt: "2026-10-18T15:25:00.000Z",
+  },
+  {
+    id: "comp-7",
+    title: "مسابقات کیوروگی شهرستان تهران",
+    province: "TEHRAN",
+    level: "COUNTY",
+    hostCountyName: "تهران",
+    discipline: "KYORUGI",
+    gender: "FEMALE",
+    ageCategoryId: "young",
+    beltIds: ["belt-green", "belt-blue", "belt-red"],
+    feePerStudent: "3000000",
+    payeeCardNumber: "6104337812345684",
+    payeeCardHolder,
+    registrationDeadline: "2026-11-25T20:30:00.000Z",
+    eventDate: "2026-12-12T08:00:00.000Z",
+    status: "PUBLISHED",
+    createdAt: "2026-10-20T09:00:00.000Z",
+    updatedAt: "2026-10-21T10:00:00.000Z",
+  },
+];
+
+export type CountyChangeRequestSeed = {
+  id: string;
+  coachId: string;
+  fromCountyName: string;
+  toCountyName: string;
+  status: CountyChangeStatus;
+  note: string | null;
+  decided: boolean;
+  createdAt: string;
+};
+
+export const demoCountyChangeRequests: CountyChangeRequestSeed[] = [
+  {
+    id: "ccr-1",
+    coachId: "coach-8",
+    fromCountyName: "پردیس",
+    toCountyName: "تهران",
+    status: "PENDING",
+    note: null,
+    decided: false,
+    createdAt: "2026-10-28T09:40:00.000Z",
+  },
+  {
+    id: "ccr-2",
+    coachId: "coach-6",
+    fromCountyName: "تهران",
+    toCountyName: "شمیرانات",
+    status: "APPROVED",
+    note: null,
+    decided: true,
+    createdAt: "2026-10-12T14:20:00.000Z",
+  },
+  {
+    id: "ccr-3",
+    coachId: "coach-5",
+    fromCountyName: "ری",
+    toCountyName: "تهران",
+    status: "REJECTED",
+    note: "تغییر شهرستان در فاصله یک ماه تا پایان مسابقات امکان پذیر نیست.",
+    decided: true,
+    createdAt: "2026-10-05T11:10:00.000Z",
   },
 ];
 

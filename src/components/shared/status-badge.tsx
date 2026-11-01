@@ -15,6 +15,9 @@ const statusStyles = {
   PROFILE_PENDING: { label: "در انتظار تایید", className: "bg-warning-bg text-warning" },
   PROFILE_APPROVED: { label: "پروفایل تایید شده", className: "bg-success-bg text-success" },
   PROFILE_REJECTED: { label: "پروفایل رد شده", className: "bg-danger-bg text-danger" },
+  COUNTY_CHANGE_PENDING: { label: "در انتظار بررسی", className: "bg-warning-bg text-warning" },
+  COUNTY_CHANGE_APPROVED: { label: "تایید شده", className: "bg-success-bg text-success" },
+  COUNTY_CHANGE_REJECTED: { label: "رد شده", className: "bg-danger-bg text-danger" },
 } as const;
 
 export type StatusKey = keyof typeof statusStyles;

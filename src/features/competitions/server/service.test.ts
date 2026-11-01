@@ -18,8 +18,8 @@ import {
 const admin: CurrentUser = { id: "admin-1", role: "ADMIN" };
 const coach: CurrentUser = { id: "coach-1", role: "COACH" };
 
-const adminRecord: UserIdentityRecord = { id: "admin-1", role: "ADMIN", province: "TEHRAN", isActive: true };
-const coachRecord: UserIdentityRecord = { id: "coach-1", role: "COACH", province: "TEHRAN", isActive: true };
+const adminRecord: UserIdentityRecord = { id: "admin-1", role: "ADMIN", province: "TEHRAN", isActive: true, countyId: null };
+const coachRecord: UserIdentityRecord = { id: "coach-1", role: "COACH", province: "TEHRAN", isActive: true, countyId: "county-tehran" };
 const inactiveCoachRecord: UserIdentityRecord = { ...coachRecord, isActive: false };
 
 const DAY_MS = 86_400_000;
@@ -91,11 +91,18 @@ const coachStudents = [
   },
 ];
 
+const tehranCounty = { id: "county-tehran", province: "TEHRAN" as const, name: "تهران" };
+const rayCounty = { id: "county-ray", province: "TEHRAN" as const, name: "ری" };
+const shirazCounty = { id: "county-shiraz", province: "FARS" as const, name: "شیراز" };
+
 function rowWith(overrides: Partial<CompetitionRow> = {}): CompetitionRow {
   return {
     id: "comp-9",
     title: "مسابقات قهرمانی استان",
     province: "TEHRAN",
+    level: "PROVINCIAL",
+    hostCountyId: null,
+    hostCountyName: null,
     discipline: "KYORUGI",
     gender: "MALE",
     ageCategoryId: "senior",
@@ -127,6 +134,11 @@ const farsRow = rowWith({ id: "comp-2", province: "FARS" });
 function repoWith(overrides: Partial<CompetitionsRepository> = {}): CompetitionsRepository {
   return {
     findUserById: vi.fn().mockResolvedValue(coachRecord),
+    findCountyById: vi
+      .fn()
+      .mockImplementation(async (id: string) =>
+        id === tehranCounty.id ? tehranCounty : id === rayCounty.id ? rayCounty : id === shirazCounty.id ? shirazCounty : null,
+      ),
     countCompetitions: vi.fn().mockResolvedValue(1),
     findCompetitions: vi.fn().mockResolvedValue([draftRow]),
     findCompetitionById: vi.fn().mockResolvedValue(draftRow),
@@ -158,6 +170,7 @@ const createInput = {
   gender: "MALE" as const,
   ageCategoryId: "senior",
   beltIds: ["belt-blue", "belt-red"],
+  level: "PROVINCIAL" as const,
   feePerStudent: "3500000",
   payeeCardNumber: "6104337812345678",
   payeeCardHolder: "فدراسیون تکواندو استان تهران",
@@ -214,7 +227,7 @@ describe("listCompetitions", () => {
     const result = await listCompetitions(repo, coach, { status: "DRAFT" });
 
     expect(repo.findCompetitions).toHaveBeenCalledWith(
-      { province: "TEHRAN", status: "PUBLISHED", discipline: undefined, search: undefined },
+      { province: "TEHRAN", status: "PUBLISHED", discipline: undefined, search: undefined, coachCountyId: "county-tehran" },
       0,
       100,
       "deadlineAsc",
@@ -288,6 +301,113 @@ describe("getCompetition", () => {
     const failure = await failureOf(getCompetition(repo, coach, "comp-404"));
 
     expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+  });
+});
+
+describe("county competitions", () => {
+  const countyRow = rowWith({
+    id: "comp-5",
+    status: "PUBLISHED",
+    level: "COUNTY",
+    hostCountyId: rayCounty.id,
+    hostCountyName: rayCounty.name,
+  });
+
+  it("sends the coach county filter so only provincial and same-county rows are returned", async () => {
+    const repo = repoWith();
+    await listCompetitions(repo, coach, {});
+
+    const filters = vi.mocked(repo.countCompetitions).mock.calls[0][0];
+    expect(filters).toMatchObject({ province: "TEHRAN", status: "PUBLISHED", coachCountyId: "county-tehran" });
+  });
+
+  it("hides a county competition of another county behind 404 on details", async () => {
+    const repo = repoWith({ findCompetitionById: vi.fn().mockResolvedValue(countyRow) });
+    const failure = await failureOf(getCompetition(repo, coach, "comp-5"));
+
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+  });
+
+  it("returns a county competition hosted in the coach county", async () => {
+    const ownCountyRow = rowWith({
+      id: "comp-5",
+      status: "PUBLISHED",
+      level: "COUNTY",
+      hostCountyId: tehranCounty.id,
+      hostCountyName: tehranCounty.name,
+    });
+    const repo = repoWith({ findCompetitionById: vi.fn().mockResolvedValue(ownCountyRow) });
+    const result = await getCompetition(repo, coach, "comp-5");
+
+    expect(result).toMatchObject({ id: "comp-5", level: "COUNTY", hostCountyName: "تهران", eligibleStudentCount: 1 });
+  });
+
+  it("always shows provincial competitions to the coach", async () => {
+    const repo = repoWith({ findCompetitionById: vi.fn().mockResolvedValue(publishedOpenRow) });
+    const result = await getCompetition(repo, coach, "comp-1");
+
+    expect(result).toMatchObject({ id: "comp-1", level: "PROVINCIAL" });
+  });
+
+  it("creates a county competition only with a county of the admin province", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
+    await createCompetition(repo, admin, { ...createInput, level: "COUNTY", hostCountyId: tehranCounty.id });
+
+    const data = vi.mocked(repo.createCompetition).mock.calls[0][0];
+    expect(data).toMatchObject({ level: "COUNTY", hostCountyId: "county-tehran" });
+  });
+
+  it("rejects a host county of another province with 400", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
+    const failure = await failureOf(createCompetition(repo, admin, { ...createInput, level: "COUNTY", hostCountyId: shirazCounty.id }));
+
+    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
+    expect(repo.createCompetition).not.toHaveBeenCalled();
+  });
+
+  it("rejects an unknown host county with 400", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
+    const failure = await failureOf(createCompetition(repo, admin, { ...createInput, level: "COUNTY", hostCountyId: "county-nope" }));
+
+    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
+  });
+
+  it("ignores the host county of a provincial competition", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
+    await createCompetition(repo, admin, { ...createInput, level: "PROVINCIAL", hostCountyId: tehranCounty.id });
+
+    const data = vi.mocked(repo.createCompetition).mock.calls[0][0];
+    expect(data).toMatchObject({ level: "PROVINCIAL", hostCountyId: null });
+  });
+
+  it("rejects a level change to county without a host county with 400", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
+    const failure = await failureOf(updateCompetition(repo, admin, "comp-9", { level: "COUNTY" }));
+
+    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
+    expect(repo.updateCompetition).not.toHaveBeenCalled();
+  });
+
+  it("clears the host county when the level moves back to provincial", async () => {
+    const countyDraft = rowWith({ level: "COUNTY", hostCountyId: rayCounty.id, hostCountyName: rayCounty.name });
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findCompetitionById: vi.fn().mockResolvedValue(countyDraft),
+    });
+    await updateCompetition(repo, admin, "comp-9", { level: "PROVINCIAL" });
+
+    expect(repo.updateCompetition).toHaveBeenCalledWith("comp-9", { level: "PROVINCIAL", hostCountyId: null });
+  });
+
+  it("keeps level and host county locked once registrations exist", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      countRegistrations: vi.fn().mockResolvedValue(3),
+    });
+    const failure = await failureOf(updateCompetition(repo, admin, "comp-9", { level: "COUNTY", hostCountyId: rayCounty.id }));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect(repo.updateCompetition).not.toHaveBeenCalled();
   });
 });
 

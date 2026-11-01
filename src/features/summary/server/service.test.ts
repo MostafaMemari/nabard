@@ -16,6 +16,7 @@ function repoWith(overrides: Partial<SummaryRepository> = {}): SummaryRepository
     countRegistrationsSince: vi.fn().mockResolvedValue(7),
     countRefunds: vi.fn().mockResolvedValue(4),
     countPendingProfiles: vi.fn().mockResolvedValue(5),
+    countPendingCountyChanges: vi.fn().mockResolvedValue(2),
     findLatestPendingPayments: vi
       .fn()
       .mockResolvedValue([
@@ -52,11 +53,13 @@ describe("getAdminSummary", () => {
     expect(repo.countRegistrationsSince).toHaveBeenCalledWith("TEHRAN", expect.any(Date));
     expect(repo.countRefunds).toHaveBeenCalledWith("TEHRAN", "PENDING");
     expect(repo.countPendingProfiles).toHaveBeenCalledWith("TEHRAN");
+    expect(repo.countPendingCountyChanges).toHaveBeenCalledWith("TEHRAN");
     expect(repo.findLatestPendingPayments).toHaveBeenCalledWith("TEHRAN");
     expect(repo.findUpcomingCompetitions).toHaveBeenCalledWith("TEHRAN");
     expect(summary.pendingPaymentsCount).toBe(3);
     expect(summary.pendingRefundsCount).toBe(4);
     expect(summary.pendingProfilesCount).toBe(5);
+    expect(summary.pendingCountyChangesCount).toBe(2);
     expect(summary.latestPendingPayments[0]?.coachName).toBe("سعید احمدی");
     expect(summary.upcomingCompetitions[0]?.registrationsCount).toBe(12);
   });

@@ -7,10 +7,15 @@ export type CompetitionStatus = "DRAFT" | "PUBLISHED" | "CANCELED";
 
 export type CompetitionRegistrationState = "NOT_YET_OPEN" | "OPEN" | "CLOSED";
 
+export type CompetitionLevel = "PROVINCIAL" | "COUNTY";
+
 export type Competition = {
   id: string;
   title: string;
   province: Province;
+  level: CompetitionLevel;
+  hostCountyId: string | null;
+  hostCountyName: string | null;
   discipline: Discipline;
   gender: Gender;
   ageCategoryId: string;

@@ -11,6 +11,8 @@ export type UserRecord = {
   role: SessionRole;
   province: Province;
   isActive: boolean;
+  countyId: string | null;
+  countyName: string | null;
 };
 
 const userSelection = {
@@ -21,6 +23,7 @@ const userSelection = {
   role: true,
   province: true,
   isActive: true,
+  county: { select: { id: true, name: true } },
 } as const;
 
 function toRecord(user: {
@@ -31,6 +34,7 @@ function toRecord(user: {
   role: SessionRole;
   province: Province;
   isActive: boolean;
+  county: { id: string; name: string } | null;
 }): UserRecord {
   return {
     id: user.id,
@@ -40,6 +44,8 @@ function toRecord(user: {
     role: user.role,
     province: user.province,
     isActive: user.isActive,
+    countyId: user.county?.id ?? null,
+    countyName: user.county?.name ?? null,
   };
 }
 

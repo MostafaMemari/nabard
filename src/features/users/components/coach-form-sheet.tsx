@@ -5,11 +5,12 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { useCounties } from "@/features/counties";
 import { createCoach } from "../api";
 import { type CoachFormValues, createCoachSchema } from "../schemas";
-import { CoachTextField } from "./coach-form-fields";
+import { CoachSelectField, CoachTextField } from "./coach-form-fields";
 
-const emptyForm: CoachFormValues = { fullName: "", mobile: "", nationalCode: "", initialPassword: "" };
+const emptyForm: CoachFormValues = { fullName: "", mobile: "", nationalCode: "", initialPassword: "", countyId: "" };
 
 export function CoachFormSheet({
   open,
@@ -24,6 +25,8 @@ export function CoachFormSheet({
     resolver: zodResolver(createCoachSchema),
     defaultValues: emptyForm,
   });
+  const { counties } = useCounties();
+  const countyItems = Object.fromEntries(counties.map((county) => [county.id, county.name]));
 
   async function submit(values: CoachFormValues) {
     try {
@@ -32,6 +35,7 @@ export function CoachFormSheet({
         mobile: values.mobile,
         nationalCode: values.nationalCode,
         initialPassword: values.initialPassword,
+        countyId: values.countyId,
       });
       toast.success("مربی اضافه شد.");
       form.reset(emptyForm);
@@ -69,6 +73,7 @@ export function CoachFormSheet({
             autoComplete="off"
             placeholder="۰۰۱۲۳۴۵۶۷۸۹"
           />
+          <CoachSelectField control={form.control} name="countyId" label="شهرستان" items={countyItems} />
           <CoachTextField
             control={form.control}
             name="initialPassword"

@@ -160,6 +160,23 @@ export const RefundStatus = {
 export type RefundStatus = (typeof RefundStatus)[keyof typeof RefundStatus]
 
 
+export const CompetitionLevel = {
+  PROVINCIAL: 'PROVINCIAL',
+  COUNTY: 'COUNTY'
+} as const
+
+export type CompetitionLevel = (typeof CompetitionLevel)[keyof typeof CompetitionLevel]
+
+
+export const CountyChangeStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type CountyChangeStatus = (typeof CountyChangeStatus)[keyof typeof CountyChangeStatus]
+
+
 export const ProfileStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',

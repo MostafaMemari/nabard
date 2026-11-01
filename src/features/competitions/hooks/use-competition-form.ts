@@ -10,7 +10,7 @@ import { useRegistrations } from "@/features/registrations";
 import { createCompetition, updateCompetition } from "../api";
 import { useCompetition } from "../hooks/use-competitions";
 import { type CompetitionFormValues, competitionSchema, emptyCompetitionForm } from "../schemas";
-import type { CompetitionInput, Discipline } from "../types";
+import type { CompetitionInput, CompetitionLevel, Discipline } from "../types";
 
 export function useCompetitionForm(competitionId?: string) {
   const router = useRouter();
@@ -43,6 +43,8 @@ export function useCompetitionForm(competitionId?: string) {
         gender: competition.gender,
         ageCategoryId: competition.ageCategoryId,
         beltIds: [...competition.beltIds],
+        level: competition.level,
+        hostCountyId: competition.hostCountyId ?? "",
         feePerStudent: competition.feePerStudent,
         payeeCardNumber: competition.payeeCardNumber,
         payeeCardHolder: competition.payeeCardHolder,
@@ -62,6 +64,9 @@ export function useCompetitionForm(competitionId?: string) {
       gender: formValues.gender as Gender,
       ageCategoryId: formValues.ageCategoryId,
       beltIds: formValues.beltIds,
+      level: formValues.level as CompetitionLevel,
+      hostCountyId: formValues.level === "COUNTY" ? formValues.hostCountyId : null,
+      hostCountyName: null,
       feePerStudent: formValues.feePerStudent,
       payeeCardNumber: formValues.payeeCardNumber,
       payeeCardHolder: formValues.payeeCardHolder.trim(),

@@ -22,6 +22,7 @@ export function CoachCard({
         end={<StatusBadge status={coach.isActive ? "ACTIVE" : "INACTIVE"} />}
       />
       <MobileCardLine label="شماره همراه" value={<span className="tabular-nums">{toPersianDigits(coach.mobile)}</span>} />
+      <MobileCardLine label="شهرستان" value={coach.countyName ?? "نامشخص"} />
       <MobileCardLine label="هنرجویان" value={<span className="tabular-nums">{toPersianDigits(studentCount)} نفر</span>} />
       <div className="-mx-4 -mb-4 border-t border-border p-2">
         <Button

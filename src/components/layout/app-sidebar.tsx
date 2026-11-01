@@ -1,5 +1,6 @@
 import { cn } from "cn";
 import type { LucideIcon } from "lucide-react";
+import type { ReactNode } from "react";
 import { Avatar } from "@/components/shared";
 import { ChangePasswordButton } from "@/features/auth";
 import { APP_NAME, APP_SUBTITLE } from "@/lib/app";
@@ -26,12 +27,14 @@ export function AppSidebar({
   active,
   user,
   groupLabel,
+  userMenuExtra,
   breakpoint = "lg",
 }: {
   items: SidebarNavItem[];
   active: string;
   user: SidebarUser | null;
   groupLabel: string;
+  userMenuExtra?: ReactNode;
   breakpoint?: "lg" | "@5xl";
 }) {
   return (
@@ -69,6 +72,7 @@ export function AppSidebar({
               <span className="truncate text-xs text-sidebar-foreground/80">{user.roleLabel}</span>
             </div>
             <ChangePasswordButton className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" />
+            {userMenuExtra}
             <LogoutButton className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" />
           </div>
         ) : (

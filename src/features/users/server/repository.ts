@@ -18,6 +18,8 @@ export type CoachRecord = {
   role: UserRole;
   province: Province;
   isActive: boolean;
+  countyId: string | null;
+  countyName: string | null;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -33,6 +35,7 @@ export type NewCoachData = {
   nationalCode: string;
   passwordHash: string;
   province: Province;
+  countyId: string;
 };
 
 export type CoachUpdateData = {
@@ -40,6 +43,13 @@ export type CoachUpdateData = {
   mobile?: string;
   nationalCode?: string;
   isActive?: boolean;
+  countyId?: string;
+};
+
+export type CountyRecord = {
+  id: string;
+  province: Province;
+  name: string;
 };
 
 export type CoachRepository = {
@@ -49,6 +59,7 @@ export type CoachRepository = {
   findCoachById(id: string): Promise<CoachRecord | null>;
   findMobileOwner(mobile: string): Promise<{ id: string } | null>;
   findNationalCodeOwner(nationalCode: string): Promise<{ id: string } | null>;
+  findCountyById(id: string): Promise<CountyRecord | null>;
   createCoach(data: NewCoachData): Promise<CoachRecord>;
   updateCoach(id: string, data: CoachUpdateData): Promise<CoachRecord>;
   updateCoachPassword(id: string, passwordHash: string): Promise<CoachRecord>;
@@ -62,9 +73,39 @@ const coachSelection = {
   role: true,
   province: true,
   isActive: true,
+  county: { select: { id: true, name: true } },
   createdAt: true,
   updatedAt: true,
 } as const;
+
+type CoachRowInput = {
+  id: string;
+  mobile: string;
+  fullName: string;
+  nationalCode: string | null;
+  role: UserRole;
+  province: Province;
+  isActive: boolean;
+  county: { id: string; name: string } | null;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+function toCoachRecord(row: CoachRowInput): CoachRecord {
+  return {
+    id: row.id,
+    mobile: row.mobile,
+    fullName: row.fullName,
+    nationalCode: row.nationalCode,
+    role: row.role,
+    province: row.province,
+    isActive: row.isActive,
+    countyId: row.county?.id ?? null,
+    countyName: row.county?.name ?? null,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+  };
+}
 
 function coachWhere(province: Province, filters: CoachFilters) {
   return {
@@ -91,18 +132,20 @@ export async function countCoaches(province: Province, filters: CoachFilters): P
 }
 
 export async function findCoaches(province: Province, filters: CoachFilters, skip: number, take: number): Promise<CoachRecord[]> {
-  return getPrisma().user.findMany({
+  const rows = await getPrisma().user.findMany({
     where: coachWhere(province, filters),
     select: coachSelection,
     orderBy: { createdAt: "asc" },
     skip,
     take,
   });
+
+  return rows.map(toCoachRecord);
 }
 
 export async function findCoachById(id: string): Promise<CoachRecord | null> {
   const user = await getPrisma().user.findUnique({ where: { id }, select: coachSelection });
-  return user?.role === "COACH" ? user : null;
+  return user && user.role === "COACH" ? toCoachRecord(user) : null;
 }
 
 export async function findMobileOwner(mobile: string): Promise<{ id: string } | null> {
@@ -113,8 +156,12 @@ export async function findNationalCodeOwner(nationalCode: string): Promise<{ id:
   return getPrisma().user.findUnique({ where: { nationalCode }, select: { id: true } });
 }
 
+export async function findCountyById(id: string): Promise<CountyRecord | null> {
+  return getPrisma().county.findUnique({ where: { id }, select: { id: true, province: true, name: true } });
+}
+
 export async function createCoach(data: NewCoachData): Promise<CoachRecord> {
-  return getPrisma().user.create({
+  const user = await getPrisma().user.create({
     data: {
       mobile: data.mobile,
       fullName: data.fullName,
@@ -123,15 +170,22 @@ export async function createCoach(data: NewCoachData): Promise<CoachRecord> {
       role: "COACH",
       province: data.province,
       isActive: true,
+      countyId: data.countyId,
     },
     select: coachSelection,
   });
+
+  return toCoachRecord(user);
 }
 
 export async function updateCoach(id: string, data: CoachUpdateData): Promise<CoachRecord> {
-  return getPrisma().user.update({ where: { id }, data, select: coachSelection });
+  const user = await getPrisma().user.update({ where: { id }, data, select: coachSelection });
+
+  return toCoachRecord(user);
 }
 
 export async function updateCoachPassword(id: string, passwordHash: string): Promise<CoachRecord> {
-  return getPrisma().user.update({ where: { id }, data: { passwordHash }, select: coachSelection });
+  const user = await getPrisma().user.update({ where: { id }, data: { passwordHash }, select: coachSelection });
+
+  return toCoachRecord(user);
 }

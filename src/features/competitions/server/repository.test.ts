@@ -20,6 +20,9 @@ const canceledRow: CompetitionRow = {
   id: "comp-1",
   title: "مسابقات قهرمانی استان",
   province: "TEHRAN",
+  level: "PROVINCIAL",
+  hostCountyId: null,
+  hostCountyName: null,
   discipline: "KYORUGI",
   gender: "MALE",
   ageCategoryId: "senior",
@@ -83,7 +86,7 @@ describe("cancelCompetitionWithRefunds", () => {
         note: UNREVIEWED_PAYMENT_REFUND_NOTE,
       },
     });
-    expect(result).toBe(canceledRow);
+    expect(result).toEqual(canceledRow);
   });
 
   it("never duplicates refunds and skips rejected receipts through the query filters", async () => {

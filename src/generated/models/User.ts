@@ -33,6 +33,7 @@ export type UserMinAggregateOutputType = {
   role: $Enums.Role | null
   province: $Enums.Province | null
   isActive: boolean | null
+  countyId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -46,6 +47,7 @@ export type UserMaxAggregateOutputType = {
   role: $Enums.Role | null
   province: $Enums.Province | null
   isActive: boolean | null
+  countyId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -59,6 +61,7 @@ export type UserCountAggregateOutputType = {
   role: number
   province: number
   isActive: number
+  countyId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -74,6 +77,7 @@ export type UserMinAggregateInputType = {
   role?: true
   province?: true
   isActive?: true
+  countyId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -87,6 +91,7 @@ export type UserMaxAggregateInputType = {
   role?: true
   province?: true
   isActive?: true
+  countyId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -100,6 +105,7 @@ export type UserCountAggregateInputType = {
   role?: true
   province?: true
   isActive?: true
+  countyId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -186,6 +192,7 @@ export type UserGroupByOutputType = {
   role: $Enums.Role
   province: $Enums.Province
   isActive: boolean
+  countyId: string | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -220,8 +227,10 @@ export type UserWhereInput = {
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   province?: Prisma.EnumProvinceFilter<"User"> | $Enums.Province
   isActive?: Prisma.BoolFilter<"User"> | boolean
+  countyId?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  county?: Prisma.XOR<Prisma.CountyNullableScalarRelationFilter, Prisma.CountyWhereInput> | null
   students?: Prisma.StudentListRelationFilter
   registrations?: Prisma.RegistrationListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
@@ -229,6 +238,8 @@ export type UserWhereInput = {
   refunds?: Prisma.RefundListRelationFilter
   processedRefunds?: Prisma.RefundListRelationFilter
   reviewedProfiles?: Prisma.StudentListRelationFilter
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestListRelationFilter
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -240,8 +251,10 @@ export type UserOrderByWithRelationInput = {
   role?: Prisma.SortOrder
   province?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  countyId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  county?: Prisma.CountyOrderByWithRelationInput
   students?: Prisma.StudentOrderByRelationAggregateInput
   registrations?: Prisma.RegistrationOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
@@ -249,6 +262,8 @@ export type UserOrderByWithRelationInput = {
   refunds?: Prisma.RefundOrderByRelationAggregateInput
   processedRefunds?: Prisma.RefundOrderByRelationAggregateInput
   reviewedProfiles?: Prisma.StudentOrderByRelationAggregateInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestOrderByRelationAggregateInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -263,8 +278,10 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   province?: Prisma.EnumProvinceFilter<"User"> | $Enums.Province
   isActive?: Prisma.BoolFilter<"User"> | boolean
+  countyId?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  county?: Prisma.XOR<Prisma.CountyNullableScalarRelationFilter, Prisma.CountyWhereInput> | null
   students?: Prisma.StudentListRelationFilter
   registrations?: Prisma.RegistrationListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
@@ -272,6 +289,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   refunds?: Prisma.RefundListRelationFilter
   processedRefunds?: Prisma.RefundListRelationFilter
   reviewedProfiles?: Prisma.StudentListRelationFilter
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestListRelationFilter
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestListRelationFilter
 }, "id" | "mobile" | "nationalCode">
 
 export type UserOrderByWithAggregationInput = {
@@ -283,6 +302,7 @@ export type UserOrderByWithAggregationInput = {
   role?: Prisma.SortOrder
   province?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  countyId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -302,6 +322,7 @@ export type UserScalarWhereWithAggregatesInput = {
   role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
   province?: Prisma.EnumProvinceWithAggregatesFilter<"User"> | $Enums.Province
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  countyId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -317,6 +338,7 @@ export type UserCreateInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
@@ -324,6 +346,8 @@ export type UserCreateInput = {
   refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
   processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
   reviewedProfiles?: Prisma.StudentCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutDecidedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -335,6 +359,7 @@ export type UserUncheckedCreateInput = {
   role: $Enums.Role
   province: $Enums.Province
   isActive?: boolean
+  countyId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -344,6 +369,8 @@ export type UserUncheckedCreateInput = {
   refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
   processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
   reviewedProfiles?: Prisma.StudentUncheckedCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
 }
 
 export type UserUpdateInput = {
@@ -357,6 +384,7 @@ export type UserUpdateInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
@@ -364,6 +392,8 @@ export type UserUpdateInput = {
   refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
   processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
   reviewedProfiles?: Prisma.StudentUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUpdateManyWithoutDecidedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -375,6 +405,7 @@ export type UserUncheckedUpdateInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -384,6 +415,8 @@ export type UserUncheckedUpdateInput = {
   refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
   processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
   reviewedProfiles?: Prisma.StudentUncheckedUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -395,6 +428,7 @@ export type UserCreateManyInput = {
   role: $Enums.Role
   province: $Enums.Province
   isActive?: boolean
+  countyId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -421,8 +455,19 @@ export type UserUncheckedUpdateManyInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type UserListRelationFilter = {
+  every?: Prisma.UserWhereInput
+  some?: Prisma.UserWhereInput
+  none?: Prisma.UserWhereInput
+}
+
+export type UserOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
 }
 
 export type UserCountOrderByAggregateInput = {
@@ -434,6 +479,7 @@ export type UserCountOrderByAggregateInput = {
   role?: Prisma.SortOrder
   province?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  countyId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -447,6 +493,7 @@ export type UserMaxOrderByAggregateInput = {
   role?: Prisma.SortOrder
   province?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  countyId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -460,6 +507,7 @@ export type UserMinOrderByAggregateInput = {
   role?: Prisma.SortOrder
   province?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
+  countyId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -474,8 +522,46 @@ export type UserNullableScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput | null
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
+export type UserCreateNestedManyWithoutCountyInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCountyInput, Prisma.UserUncheckedCreateWithoutCountyInput> | Prisma.UserCreateWithoutCountyInput[] | Prisma.UserUncheckedCreateWithoutCountyInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCountyInput | Prisma.UserCreateOrConnectWithoutCountyInput[]
+  createMany?: Prisma.UserCreateManyCountyInputEnvelope
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+}
+
+export type UserUncheckedCreateNestedManyWithoutCountyInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCountyInput, Prisma.UserUncheckedCreateWithoutCountyInput> | Prisma.UserCreateWithoutCountyInput[] | Prisma.UserUncheckedCreateWithoutCountyInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCountyInput | Prisma.UserCreateOrConnectWithoutCountyInput[]
+  createMany?: Prisma.UserCreateManyCountyInputEnvelope
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+}
+
+export type UserUpdateManyWithoutCountyNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCountyInput, Prisma.UserUncheckedCreateWithoutCountyInput> | Prisma.UserCreateWithoutCountyInput[] | Prisma.UserUncheckedCreateWithoutCountyInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCountyInput | Prisma.UserCreateOrConnectWithoutCountyInput[]
+  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutCountyInput | Prisma.UserUpsertWithWhereUniqueWithoutCountyInput[]
+  createMany?: Prisma.UserCreateManyCountyInputEnvelope
+  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  update?: Prisma.UserUpdateWithWhereUniqueWithoutCountyInput | Prisma.UserUpdateWithWhereUniqueWithoutCountyInput[]
+  updateMany?: Prisma.UserUpdateManyWithWhereWithoutCountyInput | Prisma.UserUpdateManyWithWhereWithoutCountyInput[]
+  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+}
+
+export type UserUncheckedUpdateManyWithoutCountyNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCountyInput, Prisma.UserUncheckedCreateWithoutCountyInput> | Prisma.UserCreateWithoutCountyInput[] | Prisma.UserUncheckedCreateWithoutCountyInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCountyInput | Prisma.UserCreateOrConnectWithoutCountyInput[]
+  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutCountyInput | Prisma.UserUpsertWithWhereUniqueWithoutCountyInput[]
+  createMany?: Prisma.UserCreateManyCountyInputEnvelope
+  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  update?: Prisma.UserUpdateWithWhereUniqueWithoutCountyInput | Prisma.UserUpdateWithWhereUniqueWithoutCountyInput[]
+  updateMany?: Prisma.UserUpdateManyWithWhereWithoutCountyInput | Prisma.UserUpdateManyWithWhereWithoutCountyInput[]
+  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
 }
 
 export type NullableStringFieldUpdateOperationsInput = {
@@ -486,16 +572,8 @@ export type EnumRoleFieldUpdateOperationsInput = {
   set?: $Enums.Role
 }
 
-export type EnumProvinceFieldUpdateOperationsInput = {
-  set?: $Enums.Province
-}
-
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
-}
-
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
 }
 
 export type UserCreateNestedOneWithoutStudentsInput = {
@@ -526,6 +604,36 @@ export type UserUpdateOneWithoutReviewedProfilesNestedInput = {
   delete?: Prisma.UserWhereInput | boolean
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviewedProfilesInput, Prisma.UserUpdateWithoutReviewedProfilesInput>, Prisma.UserUncheckedUpdateWithoutReviewedProfilesInput>
+}
+
+export type UserCreateNestedOneWithoutCountyChangeRequestsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCountyChangeRequestsInput, Prisma.UserUncheckedCreateWithoutCountyChangeRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCountyChangeRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutDecidedCountyChangesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDecidedCountyChangesInput, Prisma.UserUncheckedCreateWithoutDecidedCountyChangesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDecidedCountyChangesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCountyChangeRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCountyChangeRequestsInput, Prisma.UserUncheckedCreateWithoutCountyChangeRequestsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCountyChangeRequestsInput
+  upsert?: Prisma.UserUpsertWithoutCountyChangeRequestsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCountyChangeRequestsInput, Prisma.UserUpdateWithoutCountyChangeRequestsInput>, Prisma.UserUncheckedUpdateWithoutCountyChangeRequestsInput>
+}
+
+export type UserUpdateOneWithoutDecidedCountyChangesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutDecidedCountyChangesInput, Prisma.UserUncheckedCreateWithoutDecidedCountyChangesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutDecidedCountyChangesInput
+  upsert?: Prisma.UserUpsertWithoutDecidedCountyChangesInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDecidedCountyChangesInput, Prisma.UserUpdateWithoutDecidedCountyChangesInput>, Prisma.UserUncheckedUpdateWithoutDecidedCountyChangesInput>
 }
 
 export type UserCreateNestedOneWithoutDeadlineExtensionsInput = {
@@ -600,6 +708,93 @@ export type UserUpdateOneWithoutProcessedRefundsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProcessedRefundsInput, Prisma.UserUpdateWithoutProcessedRefundsInput>, Prisma.UserUncheckedUpdateWithoutProcessedRefundsInput>
 }
 
+export type UserCreateWithoutCountyInput = {
+  id?: string
+  mobile: string
+  passwordHash: string
+  fullName: string
+  nationalCode?: string | null
+  role: $Enums.Role
+  province: $Enums.Province
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  students?: Prisma.StudentCreateNestedManyWithoutCoachInput
+  registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
+  reviewedProfiles?: Prisma.StudentCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutDecidedByInput
+}
+
+export type UserUncheckedCreateWithoutCountyInput = {
+  id?: string
+  mobile: string
+  passwordHash: string
+  fullName: string
+  nationalCode?: string | null
+  role: $Enums.Role
+  province: $Enums.Province
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
+  registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCoachInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCoachInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
+  reviewedProfiles?: Prisma.StudentUncheckedCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
+}
+
+export type UserCreateOrConnectWithoutCountyInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCountyInput, Prisma.UserUncheckedCreateWithoutCountyInput>
+}
+
+export type UserCreateManyCountyInputEnvelope = {
+  data: Prisma.UserCreateManyCountyInput | Prisma.UserCreateManyCountyInput[]
+  skipDuplicates?: boolean
+}
+
+export type UserUpsertWithWhereUniqueWithoutCountyInput = {
+  where: Prisma.UserWhereUniqueInput
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCountyInput, Prisma.UserUncheckedUpdateWithoutCountyInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCountyInput, Prisma.UserUncheckedCreateWithoutCountyInput>
+}
+
+export type UserUpdateWithWhereUniqueWithoutCountyInput = {
+  where: Prisma.UserWhereUniqueInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCountyInput, Prisma.UserUncheckedUpdateWithoutCountyInput>
+}
+
+export type UserUpdateManyWithWhereWithoutCountyInput = {
+  where: Prisma.UserScalarWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutCountyInput>
+}
+
+export type UserScalarWhereInput = {
+  AND?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+  OR?: Prisma.UserScalarWhereInput[]
+  NOT?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+  id?: Prisma.StringFilter<"User"> | string
+  mobile?: Prisma.StringFilter<"User"> | string
+  passwordHash?: Prisma.StringFilter<"User"> | string
+  fullName?: Prisma.StringFilter<"User"> | string
+  nationalCode?: Prisma.StringNullableFilter<"User"> | string | null
+  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
+  province?: Prisma.EnumProvinceFilter<"User"> | $Enums.Province
+  isActive?: Prisma.BoolFilter<"User"> | boolean
+  countyId?: Prisma.StringNullableFilter<"User"> | string | null
+  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+}
+
 export type UserCreateWithoutStudentsInput = {
   id?: string
   mobile: string
@@ -611,12 +806,15 @@ export type UserCreateWithoutStudentsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
   refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
   processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
   reviewedProfiles?: Prisma.StudentCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutDecidedByInput
 }
 
 export type UserUncheckedCreateWithoutStudentsInput = {
@@ -628,6 +826,7 @@ export type UserUncheckedCreateWithoutStudentsInput = {
   role: $Enums.Role
   province: $Enums.Province
   isActive?: boolean
+  countyId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCoachInput
@@ -636,6 +835,8 @@ export type UserUncheckedCreateWithoutStudentsInput = {
   refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
   processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
   reviewedProfiles?: Prisma.StudentUncheckedCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
 }
 
 export type UserCreateOrConnectWithoutStudentsInput = {
@@ -654,12 +855,15 @@ export type UserCreateWithoutReviewedProfilesInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
   refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
   processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutDecidedByInput
 }
 
 export type UserUncheckedCreateWithoutReviewedProfilesInput = {
@@ -671,6 +875,7 @@ export type UserUncheckedCreateWithoutReviewedProfilesInput = {
   role: $Enums.Role
   province: $Enums.Province
   isActive?: boolean
+  countyId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -679,6 +884,8 @@ export type UserUncheckedCreateWithoutReviewedProfilesInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCreatedByInput
   refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
   processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
 }
 
 export type UserCreateOrConnectWithoutReviewedProfilesInput = {
@@ -708,12 +915,15 @@ export type UserUpdateWithoutStudentsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
   refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
   processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
   reviewedProfiles?: Prisma.StudentUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUpdateManyWithoutDecidedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStudentsInput = {
@@ -725,6 +935,7 @@ export type UserUncheckedUpdateWithoutStudentsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCoachNestedInput
@@ -733,6 +944,8 @@ export type UserUncheckedUpdateWithoutStudentsInput = {
   refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
   processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
   reviewedProfiles?: Prisma.StudentUncheckedUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
 }
 
 export type UserUpsertWithoutReviewedProfilesInput = {
@@ -757,12 +970,15 @@ export type UserUpdateWithoutReviewedProfilesInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
   refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
   processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUpdateManyWithoutDecidedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewedProfilesInput = {
@@ -774,6 +990,7 @@ export type UserUncheckedUpdateWithoutReviewedProfilesInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -782,6 +999,216 @@ export type UserUncheckedUpdateWithoutReviewedProfilesInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCreatedByNestedInput
   refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
   processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+}
+
+export type UserCreateWithoutCountyChangeRequestsInput = {
+  id?: string
+  mobile: string
+  passwordHash: string
+  fullName: string
+  nationalCode?: string | null
+  role: $Enums.Role
+  province: $Enums.Province
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  students?: Prisma.StudentCreateNestedManyWithoutCoachInput
+  registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
+  reviewedProfiles?: Prisma.StudentCreateNestedManyWithoutApprovedByInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutDecidedByInput
+}
+
+export type UserUncheckedCreateWithoutCountyChangeRequestsInput = {
+  id?: string
+  mobile: string
+  passwordHash: string
+  fullName: string
+  nationalCode?: string | null
+  role: $Enums.Role
+  province: $Enums.Province
+  isActive?: boolean
+  countyId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
+  registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCoachInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCoachInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
+  reviewedProfiles?: Prisma.StudentUncheckedCreateNestedManyWithoutApprovedByInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
+}
+
+export type UserCreateOrConnectWithoutCountyChangeRequestsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCountyChangeRequestsInput, Prisma.UserUncheckedCreateWithoutCountyChangeRequestsInput>
+}
+
+export type UserCreateWithoutDecidedCountyChangesInput = {
+  id?: string
+  mobile: string
+  passwordHash: string
+  fullName: string
+  nationalCode?: string | null
+  role: $Enums.Role
+  province: $Enums.Province
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  students?: Prisma.StudentCreateNestedManyWithoutCoachInput
+  registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
+  reviewedProfiles?: Prisma.StudentCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutCoachInput
+}
+
+export type UserUncheckedCreateWithoutDecidedCountyChangesInput = {
+  id?: string
+  mobile: string
+  passwordHash: string
+  fullName: string
+  nationalCode?: string | null
+  role: $Enums.Role
+  province: $Enums.Province
+  isActive?: boolean
+  countyId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
+  registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCoachInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCoachInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
+  reviewedProfiles?: Prisma.StudentUncheckedCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutCoachInput
+}
+
+export type UserCreateOrConnectWithoutDecidedCountyChangesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutDecidedCountyChangesInput, Prisma.UserUncheckedCreateWithoutDecidedCountyChangesInput>
+}
+
+export type UserUpsertWithoutCountyChangeRequestsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCountyChangeRequestsInput, Prisma.UserUncheckedUpdateWithoutCountyChangeRequestsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCountyChangeRequestsInput, Prisma.UserUncheckedCreateWithoutCountyChangeRequestsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCountyChangeRequestsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCountyChangeRequestsInput, Prisma.UserUncheckedUpdateWithoutCountyChangeRequestsInput>
+}
+
+export type UserUpdateWithoutCountyChangeRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mobile?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
+  registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
+  reviewedProfiles?: Prisma.StudentUpdateManyWithoutApprovedByNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUpdateManyWithoutDecidedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCountyChangeRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mobile?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
+  registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCoachNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutCoachNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
+  reviewedProfiles?: Prisma.StudentUncheckedUpdateManyWithoutApprovedByNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+}
+
+export type UserUpsertWithoutDecidedCountyChangesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutDecidedCountyChangesInput, Prisma.UserUncheckedUpdateWithoutDecidedCountyChangesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutDecidedCountyChangesInput, Prisma.UserUncheckedCreateWithoutDecidedCountyChangesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutDecidedCountyChangesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutDecidedCountyChangesInput, Prisma.UserUncheckedUpdateWithoutDecidedCountyChangesInput>
+}
+
+export type UserUpdateWithoutDecidedCountyChangesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mobile?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
+  registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
+  reviewedProfiles?: Prisma.StudentUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUpdateManyWithoutCoachNestedInput
+}
+
+export type UserUncheckedUpdateWithoutDecidedCountyChangesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mobile?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
+  registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCoachNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutCoachNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
+  reviewedProfiles?: Prisma.StudentUncheckedUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutCoachNestedInput
 }
 
 export type UserCreateWithoutDeadlineExtensionsInput = {
@@ -795,12 +1222,15 @@ export type UserCreateWithoutDeadlineExtensionsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
   refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
   processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
   reviewedProfiles?: Prisma.StudentCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutDecidedByInput
 }
 
 export type UserUncheckedCreateWithoutDeadlineExtensionsInput = {
@@ -812,6 +1242,7 @@ export type UserUncheckedCreateWithoutDeadlineExtensionsInput = {
   role: $Enums.Role
   province: $Enums.Province
   isActive?: boolean
+  countyId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -820,6 +1251,8 @@ export type UserUncheckedCreateWithoutDeadlineExtensionsInput = {
   refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
   processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
   reviewedProfiles?: Prisma.StudentUncheckedCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
 }
 
 export type UserCreateOrConnectWithoutDeadlineExtensionsInput = {
@@ -849,12 +1282,15 @@ export type UserUpdateWithoutDeadlineExtensionsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
   refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
   processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
   reviewedProfiles?: Prisma.StudentUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUpdateManyWithoutDecidedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDeadlineExtensionsInput = {
@@ -866,6 +1302,7 @@ export type UserUncheckedUpdateWithoutDeadlineExtensionsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -874,6 +1311,8 @@ export type UserUncheckedUpdateWithoutDeadlineExtensionsInput = {
   refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
   processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
   reviewedProfiles?: Prisma.StudentUncheckedUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
 }
 
 export type UserCreateWithoutPaymentsInput = {
@@ -887,12 +1326,15 @@ export type UserCreateWithoutPaymentsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
   refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
   processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
   reviewedProfiles?: Prisma.StudentCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutDecidedByInput
 }
 
 export type UserUncheckedCreateWithoutPaymentsInput = {
@@ -904,6 +1346,7 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   role: $Enums.Role
   province: $Enums.Province
   isActive?: boolean
+  countyId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -912,6 +1355,8 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
   processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
   reviewedProfiles?: Prisma.StudentUncheckedCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
 }
 
 export type UserCreateOrConnectWithoutPaymentsInput = {
@@ -941,12 +1386,15 @@ export type UserUpdateWithoutPaymentsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
   refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
   processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
   reviewedProfiles?: Prisma.StudentUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUpdateManyWithoutDecidedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentsInput = {
@@ -958,6 +1406,7 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -966,6 +1415,8 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
   processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
   reviewedProfiles?: Prisma.StudentUncheckedUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
 }
 
 export type UserCreateWithoutRegistrationsInput = {
@@ -979,12 +1430,15 @@ export type UserCreateWithoutRegistrationsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
   refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
   processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
   reviewedProfiles?: Prisma.StudentCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutDecidedByInput
 }
 
 export type UserUncheckedCreateWithoutRegistrationsInput = {
@@ -996,6 +1450,7 @@ export type UserUncheckedCreateWithoutRegistrationsInput = {
   role: $Enums.Role
   province: $Enums.Province
   isActive?: boolean
+  countyId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -1004,6 +1459,8 @@ export type UserUncheckedCreateWithoutRegistrationsInput = {
   refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
   processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
   reviewedProfiles?: Prisma.StudentUncheckedCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
 }
 
 export type UserCreateOrConnectWithoutRegistrationsInput = {
@@ -1033,12 +1490,15 @@ export type UserUpdateWithoutRegistrationsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
   refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
   processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
   reviewedProfiles?: Prisma.StudentUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUpdateManyWithoutDecidedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRegistrationsInput = {
@@ -1050,6 +1510,7 @@ export type UserUncheckedUpdateWithoutRegistrationsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -1058,6 +1519,8 @@ export type UserUncheckedUpdateWithoutRegistrationsInput = {
   refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
   processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
   reviewedProfiles?: Prisma.StudentUncheckedUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
 }
 
 export type UserCreateWithoutRefundsInput = {
@@ -1071,12 +1534,15 @@ export type UserCreateWithoutRefundsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
   processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
   reviewedProfiles?: Prisma.StudentCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutDecidedByInput
 }
 
 export type UserUncheckedCreateWithoutRefundsInput = {
@@ -1088,6 +1554,7 @@ export type UserUncheckedCreateWithoutRefundsInput = {
   role: $Enums.Role
   province: $Enums.Province
   isActive?: boolean
+  countyId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -1096,6 +1563,8 @@ export type UserUncheckedCreateWithoutRefundsInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCreatedByInput
   processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
   reviewedProfiles?: Prisma.StudentUncheckedCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
 }
 
 export type UserCreateOrConnectWithoutRefundsInput = {
@@ -1114,12 +1583,15 @@ export type UserCreateWithoutProcessedRefundsInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
   refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
   reviewedProfiles?: Prisma.StudentCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutDecidedByInput
 }
 
 export type UserUncheckedCreateWithoutProcessedRefundsInput = {
@@ -1131,6 +1603,7 @@ export type UserUncheckedCreateWithoutProcessedRefundsInput = {
   role: $Enums.Role
   province: $Enums.Province
   isActive?: boolean
+  countyId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -1139,6 +1612,8 @@ export type UserUncheckedCreateWithoutProcessedRefundsInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCreatedByInput
   refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
   reviewedProfiles?: Prisma.StudentUncheckedCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
 }
 
 export type UserCreateOrConnectWithoutProcessedRefundsInput = {
@@ -1168,12 +1643,15 @@ export type UserUpdateWithoutRefundsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
   processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
   reviewedProfiles?: Prisma.StudentUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUpdateManyWithoutDecidedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRefundsInput = {
@@ -1185,6 +1663,7 @@ export type UserUncheckedUpdateWithoutRefundsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -1193,6 +1672,8 @@ export type UserUncheckedUpdateWithoutRefundsInput = {
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCreatedByNestedInput
   processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
   reviewedProfiles?: Prisma.StudentUncheckedUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
 }
 
 export type UserUpsertWithoutProcessedRefundsInput = {
@@ -1217,15 +1698,75 @@ export type UserUpdateWithoutProcessedRefundsInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
   refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
   reviewedProfiles?: Prisma.StudentUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUpdateManyWithoutDecidedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProcessedRefundsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mobile?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
+  registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCoachNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutCoachNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
+  reviewedProfiles?: Prisma.StudentUncheckedUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+}
+
+export type UserCreateManyCountyInput = {
+  id?: string
+  mobile: string
+  passwordHash: string
+  fullName: string
+  nationalCode?: string | null
+  role: $Enums.Role
+  province: $Enums.Province
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type UserUpdateWithoutCountyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mobile?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
+  registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
+  reviewedProfiles?: Prisma.StudentUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUpdateManyWithoutDecidedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCountyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   mobile?: Prisma.StringFieldUpdateOperationsInput | string
   passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1241,7 +1782,23 @@ export type UserUncheckedUpdateWithoutProcessedRefundsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutCoachNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCreatedByNestedInput
   refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
   reviewedProfiles?: Prisma.StudentUncheckedUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+}
+
+export type UserUncheckedUpdateManyWithoutCountyInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mobile?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 
@@ -1257,6 +1814,8 @@ export type UserCountOutputType = {
   refunds: number
   processedRefunds: number
   reviewedProfiles: number
+  countyChangeRequests: number
+  decidedCountyChanges: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1267,6 +1826,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   refunds?: boolean | UserCountOutputTypeCountRefundsArgs
   processedRefunds?: boolean | UserCountOutputTypeCountProcessedRefundsArgs
   reviewedProfiles?: boolean | UserCountOutputTypeCountReviewedProfilesArgs
+  countyChangeRequests?: boolean | UserCountOutputTypeCountCountyChangeRequestsArgs
+  decidedCountyChanges?: boolean | UserCountOutputTypeCountDecidedCountyChangesArgs
 }
 
 /**
@@ -1328,6 +1889,20 @@ export type UserCountOutputTypeCountReviewedProfilesArgs<ExtArgs extends runtime
   where?: Prisma.StudentWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCountyChangeRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CoachCountyChangeRequestWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountDecidedCountyChangesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CoachCountyChangeRequestWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1338,8 +1913,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   role?: boolean
   province?: boolean
   isActive?: boolean
+  countyId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  county?: boolean | Prisma.User$countyArgs<ExtArgs>
   students?: boolean | Prisma.User$studentsArgs<ExtArgs>
   registrations?: boolean | Prisma.User$registrationsArgs<ExtArgs>
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
@@ -1347,6 +1924,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   refunds?: boolean | Prisma.User$refundsArgs<ExtArgs>
   processedRefunds?: boolean | Prisma.User$processedRefundsArgs<ExtArgs>
   reviewedProfiles?: boolean | Prisma.User$reviewedProfilesArgs<ExtArgs>
+  countyChangeRequests?: boolean | Prisma.User$countyChangeRequestsArgs<ExtArgs>
+  decidedCountyChanges?: boolean | Prisma.User$decidedCountyChangesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1359,8 +1938,10 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   role?: boolean
   province?: boolean
   isActive?: boolean
+  countyId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  county?: boolean | Prisma.User$countyArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1372,8 +1953,10 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   role?: boolean
   province?: boolean
   isActive?: boolean
+  countyId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  county?: boolean | Prisma.User$countyArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -1385,12 +1968,14 @@ export type UserSelectScalar = {
   role?: boolean
   province?: boolean
   isActive?: boolean
+  countyId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "mobile" | "passwordHash" | "fullName" | "nationalCode" | "role" | "province" | "isActive" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "mobile" | "passwordHash" | "fullName" | "nationalCode" | "role" | "province" | "isActive" | "countyId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  county?: boolean | Prisma.User$countyArgs<ExtArgs>
   students?: boolean | Prisma.User$studentsArgs<ExtArgs>
   registrations?: boolean | Prisma.User$registrationsArgs<ExtArgs>
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
@@ -1398,14 +1983,21 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   refunds?: boolean | Prisma.User$refundsArgs<ExtArgs>
   processedRefunds?: boolean | Prisma.User$processedRefundsArgs<ExtArgs>
   reviewedProfiles?: boolean | Prisma.User$reviewedProfilesArgs<ExtArgs>
+  countyChangeRequests?: boolean | Prisma.User$countyChangeRequestsArgs<ExtArgs>
+  decidedCountyChanges?: boolean | Prisma.User$decidedCountyChangesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  county?: boolean | Prisma.User$countyArgs<ExtArgs>
+}
+export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  county?: boolean | Prisma.User$countyArgs<ExtArgs>
+}
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
+    county: Prisma.$CountyPayload<ExtArgs> | null
     students: Prisma.$StudentPayload<ExtArgs>[]
     registrations: Prisma.$RegistrationPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
@@ -1413,6 +2005,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     refunds: Prisma.$RefundPayload<ExtArgs>[]
     processedRefunds: Prisma.$RefundPayload<ExtArgs>[]
     reviewedProfiles: Prisma.$StudentPayload<ExtArgs>[]
+    countyChangeRequests: Prisma.$CoachCountyChangeRequestPayload<ExtArgs>[]
+    decidedCountyChanges: Prisma.$CoachCountyChangeRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1423,6 +2017,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     role: $Enums.Role
     province: $Enums.Province
     isActive: boolean
+    countyId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1819,6 +2414,7 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  county<T extends Prisma.User$countyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$countyArgs<ExtArgs>>): Prisma.Prisma__CountyClient<runtime.Types.Result.GetResult<Prisma.$CountyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   students<T extends Prisma.User$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   registrations<T extends Prisma.User$registrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$registrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.User$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1826,6 +2422,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   refunds<T extends Prisma.User$refundsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$refundsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   processedRefunds<T extends Prisma.User$processedRefundsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$processedRefundsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RefundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviewedProfiles<T extends Prisma.User$reviewedProfilesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewedProfilesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  countyChangeRequests<T extends Prisma.User$countyChangeRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$countyChangeRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CoachCountyChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  decidedCountyChanges<T extends Prisma.User$decidedCountyChangesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$decidedCountyChangesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CoachCountyChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1863,6 +2461,7 @@ export interface UserFieldRefs {
   readonly role: Prisma.FieldRef<"User", 'Role'>
   readonly province: Prisma.FieldRef<"User", 'Province'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
+  readonly countyId: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -2119,6 +2718,10 @@ export type UserCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    */
   data: Prisma.UserCreateManyInput | Prisma.UserCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -2189,6 +2792,10 @@ export type UserUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many Users to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -2255,6 +2862,25 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Users to delete.
    */
   limit?: number
+}
+
+/**
+ * User.county
+ */
+export type User$countyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the County
+   */
+  select?: Prisma.CountySelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the County
+   */
+  omit?: Prisma.CountyOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CountyInclude<ExtArgs> | null
+  where?: Prisma.CountyWhereInput
 }
 
 /**
@@ -2423,6 +3049,54 @@ export type User$reviewedProfilesArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.StudentScalarFieldEnum | Prisma.StudentScalarFieldEnum[]
+}
+
+/**
+ * User.countyChangeRequests
+ */
+export type User$countyChangeRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CoachCountyChangeRequest
+   */
+  select?: Prisma.CoachCountyChangeRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CoachCountyChangeRequest
+   */
+  omit?: Prisma.CoachCountyChangeRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CoachCountyChangeRequestInclude<ExtArgs> | null
+  where?: Prisma.CoachCountyChangeRequestWhereInput
+  orderBy?: Prisma.CoachCountyChangeRequestOrderByWithRelationInput | Prisma.CoachCountyChangeRequestOrderByWithRelationInput[]
+  cursor?: Prisma.CoachCountyChangeRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CoachCountyChangeRequestScalarFieldEnum | Prisma.CoachCountyChangeRequestScalarFieldEnum[]
+}
+
+/**
+ * User.decidedCountyChanges
+ */
+export type User$decidedCountyChangesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CoachCountyChangeRequest
+   */
+  select?: Prisma.CoachCountyChangeRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CoachCountyChangeRequest
+   */
+  omit?: Prisma.CoachCountyChangeRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CoachCountyChangeRequestInclude<ExtArgs> | null
+  where?: Prisma.CoachCountyChangeRequestWhereInput
+  orderBy?: Prisma.CoachCountyChangeRequestOrderByWithRelationInput | Prisma.CoachCountyChangeRequestOrderByWithRelationInput[]
+  cursor?: Prisma.CoachCountyChangeRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CoachCountyChangeRequestScalarFieldEnum | Prisma.CoachCountyChangeRequestScalarFieldEnum[]
 }
 
 /**
