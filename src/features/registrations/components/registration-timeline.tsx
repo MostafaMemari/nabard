@@ -34,9 +34,11 @@ function buildSteps(registration: Registration, paymentStatus: PaymentStatus | n
       hint:
         paymentStatus === null
           ? "هنوز رسیدی بارگذاری نشده است."
-          : paymentStatus === "REJECTED"
-            ? "رسید رد شد؛ رسید جدید بارگذاری کنید."
-            : undefined,
+          : paymentStatus === "PENDING"
+            ? "در انتظار بررسی مدیریت استان"
+            : paymentStatus === "REJECTED"
+              ? "رسید رد شد؛ رسید جدید بارگذاری کنید."
+              : "رسید تایید شد",
       state: receiptState,
     },
     {
@@ -51,14 +53,14 @@ export function RegistrationTimeline({ registration, paymentStatus }: { registra
   const steps = buildSteps(registration, paymentStatus);
 
   return (
-    <ol className="flex flex-col">
+    <ol className="flex flex-col sm:grid sm:grid-cols-3 sm:gap-x-8">
       {steps.map((step, index) => {
         const visual = stepVisuals[step.state];
         const last = index === steps.length - 1;
 
         return (
-          <li key={step.title} className="flex gap-3">
-            <div className="flex flex-col items-center">
+          <li key={step.title} className="flex gap-3 sm:flex-col sm:gap-0">
+            <div className="flex flex-col items-center sm:w-full sm:flex-row sm:gap-3">
               <span className={cn("flex size-8 shrink-0 items-center justify-center rounded-full", visual.className)}>
                 {visual.icon ? (
                   <visual.icon aria-hidden className="size-4" />
@@ -66,9 +68,9 @@ export function RegistrationTimeline({ registration, paymentStatus }: { registra
                   <span aria-hidden className="size-1.5 rounded-full bg-current" />
                 )}
               </span>
-              {last ? null : <span aria-hidden className="my-1 w-px flex-1 bg-border" />}
+              {last ? null : <span aria-hidden className="my-1 w-px flex-1 bg-border sm:my-0 sm:h-px sm:w-auto" />}
             </div>
-            <div className={cn("flex flex-col gap-0.5", last ? "pb-0" : "pb-5")}>
+            <div className={cn("flex flex-col gap-0.5 sm:mt-2", last ? "pb-0" : "pb-5 sm:pb-0")}>
               <p className="text-sm leading-tight font-medium">{step.title}</p>
               {step.hint ? <p className="text-subtle text-muted-foreground">{step.hint}</p> : null}
             </div>

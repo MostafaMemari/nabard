@@ -26,7 +26,9 @@ export function useCoachRegistrationRows(coachId: string) {
         registration,
         studentName: student?.fullName ?? null,
         competitionTitle: competition?.title ?? "—",
+        competitionDeadline: competition?.registrationDeadline ?? null,
         paymentStatus: payment?.status ?? null,
+        paymentAmount: payment?.amount ?? null,
         weightClassLabel: weightClass ? `${toPersianDigits(weightClass.label)} کیلوگرم` : null,
       };
     });

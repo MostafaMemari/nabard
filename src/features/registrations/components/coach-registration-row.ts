@@ -6,7 +6,9 @@ export type CoachRegistrationRow = {
   registration: Registration;
   studentName: string | null;
   competitionTitle: string;
+  competitionDeadline: string | null;
   paymentStatus: PaymentStatus | null;
+  paymentAmount: string | null;
   weightClassLabel: string | null;
 };
 
