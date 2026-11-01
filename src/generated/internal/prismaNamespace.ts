@@ -1142,6 +1142,7 @@ export const CompetitionScalarFieldEnum = {
   registrationDeadline: 'registrationDeadline',
   eventDate: 'eventDate',
   status: 'status',
+  cancelReason: 'cancelReason',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

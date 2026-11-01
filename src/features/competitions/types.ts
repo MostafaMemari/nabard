@@ -5,6 +5,8 @@ export type Discipline = "KYORUGI" | "POOMSAE";
 
 export type CompetitionStatus = "DRAFT" | "PUBLISHED" | "CANCELED";
 
+export type CompetitionRegistrationState = "NOT_YET_OPEN" | "OPEN" | "CLOSED";
+
 export type Competition = {
   id: string;
   title: string;
@@ -19,6 +21,9 @@ export type Competition = {
   registrationDeadline: string;
   eventDate: string;
   status: CompetitionStatus;
+  cancelReason?: string | null;
+  state?: CompetitionRegistrationState;
+  eligibleStudentCount?: number;
   createdAt: string;
   updatedAt: string;
 };

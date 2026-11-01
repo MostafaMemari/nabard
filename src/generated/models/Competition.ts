@@ -49,6 +49,7 @@ export type CompetitionMinAggregateOutputType = {
   registrationDeadline: Date | null
   eventDate: Date | null
   status: $Enums.CompetitionStatus | null
+  cancelReason: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,6 +69,7 @@ export type CompetitionMaxAggregateOutputType = {
   registrationDeadline: Date | null
   eventDate: Date | null
   status: $Enums.CompetitionStatus | null
+  cancelReason: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -87,6 +89,7 @@ export type CompetitionCountAggregateOutputType = {
   registrationDeadline: number
   eventDate: number
   status: number
+  cancelReason: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -116,6 +119,7 @@ export type CompetitionMinAggregateInputType = {
   registrationDeadline?: true
   eventDate?: true
   status?: true
+  cancelReason?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -135,6 +139,7 @@ export type CompetitionMaxAggregateInputType = {
   registrationDeadline?: true
   eventDate?: true
   status?: true
+  cancelReason?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -154,6 +159,7 @@ export type CompetitionCountAggregateInputType = {
   registrationDeadline?: true
   eventDate?: true
   status?: true
+  cancelReason?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -260,6 +266,7 @@ export type CompetitionGroupByOutputType = {
   registrationDeadline: Date
   eventDate: Date
   status: $Enums.CompetitionStatus
+  cancelReason: string | null
   createdAt: Date
   updatedAt: Date
   _count: CompetitionCountAggregateOutputType | null
@@ -302,6 +309,7 @@ export type CompetitionWhereInput = {
   registrationDeadline?: Prisma.DateTimeFilter<"Competition"> | Date | string
   eventDate?: Prisma.DateTimeFilter<"Competition"> | Date | string
   status?: Prisma.EnumCompetitionStatusFilter<"Competition"> | $Enums.CompetitionStatus
+  cancelReason?: Prisma.StringNullableFilter<"Competition"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
   ageCategory?: Prisma.XOR<Prisma.AgeCategoryScalarRelationFilter, Prisma.AgeCategoryWhereInput>
@@ -326,6 +334,7 @@ export type CompetitionOrderByWithRelationInput = {
   registrationDeadline?: Prisma.SortOrder
   eventDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  cancelReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   ageCategory?: Prisma.AgeCategoryOrderByWithRelationInput
@@ -353,6 +362,7 @@ export type CompetitionWhereUniqueInput = Prisma.AtLeast<{
   registrationDeadline?: Prisma.DateTimeFilter<"Competition"> | Date | string
   eventDate?: Prisma.DateTimeFilter<"Competition"> | Date | string
   status?: Prisma.EnumCompetitionStatusFilter<"Competition"> | $Enums.CompetitionStatus
+  cancelReason?: Prisma.StringNullableFilter<"Competition"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
   ageCategory?: Prisma.XOR<Prisma.AgeCategoryScalarRelationFilter, Prisma.AgeCategoryWhereInput>
@@ -377,6 +387,7 @@ export type CompetitionOrderByWithAggregationInput = {
   registrationDeadline?: Prisma.SortOrder
   eventDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  cancelReason?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CompetitionCountOrderByAggregateInput
@@ -404,6 +415,7 @@ export type CompetitionScalarWhereWithAggregatesInput = {
   registrationDeadline?: Prisma.DateTimeWithAggregatesFilter<"Competition"> | Date | string
   eventDate?: Prisma.DateTimeWithAggregatesFilter<"Competition"> | Date | string
   status?: Prisma.EnumCompetitionStatusWithAggregatesFilter<"Competition"> | $Enums.CompetitionStatus
+  cancelReason?: Prisma.StringNullableWithAggregatesFilter<"Competition"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Competition"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Competition"> | Date | string
 }
@@ -420,6 +432,7 @@ export type CompetitionCreateInput = {
   registrationDeadline: Date | string
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutCompetitionsInput
@@ -444,6 +457,7 @@ export type CompetitionUncheckedCreateInput = {
   registrationDeadline: Date | string
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCompetitionInput
@@ -462,6 +476,7 @@ export type CompetitionUpdateInput = {
   registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutCompetitionsNestedInput
@@ -486,6 +501,7 @@ export type CompetitionUncheckedUpdateInput = {
   registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCompetitionNestedInput
@@ -507,6 +523,7 @@ export type CompetitionCreateManyInput = {
   registrationDeadline: Date | string
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -523,6 +540,7 @@ export type CompetitionUpdateManyMutationInput = {
   registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -542,6 +560,7 @@ export type CompetitionUncheckedUpdateManyInput = {
   registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -571,6 +590,7 @@ export type CompetitionCountOrderByAggregateInput = {
   registrationDeadline?: Prisma.SortOrder
   eventDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  cancelReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -594,6 +614,7 @@ export type CompetitionMaxOrderByAggregateInput = {
   registrationDeadline?: Prisma.SortOrder
   eventDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  cancelReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -613,6 +634,7 @@ export type CompetitionMinOrderByAggregateInput = {
   registrationDeadline?: Prisma.SortOrder
   eventDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  cancelReason?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -808,6 +830,7 @@ export type CompetitionCreateWithoutMinBeltInput = {
   registrationDeadline: Date | string
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutCompetitionsInput
@@ -830,6 +853,7 @@ export type CompetitionUncheckedCreateWithoutMinBeltInput = {
   registrationDeadline: Date | string
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCompetitionInput
@@ -858,6 +882,7 @@ export type CompetitionCreateWithoutMaxBeltInput = {
   registrationDeadline: Date | string
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutCompetitionsInput
@@ -880,6 +905,7 @@ export type CompetitionUncheckedCreateWithoutMaxBeltInput = {
   registrationDeadline: Date | string
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCompetitionInput
@@ -930,6 +956,7 @@ export type CompetitionScalarWhereInput = {
   registrationDeadline?: Prisma.DateTimeFilter<"Competition"> | Date | string
   eventDate?: Prisma.DateTimeFilter<"Competition"> | Date | string
   status?: Prisma.EnumCompetitionStatusFilter<"Competition"> | $Enums.CompetitionStatus
+  cancelReason?: Prisma.StringNullableFilter<"Competition"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
 }
@@ -962,6 +989,7 @@ export type CompetitionCreateWithoutAgeCategoryInput = {
   registrationDeadline: Date | string
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   minBelt: Prisma.BeltCreateNestedOneWithoutMinForInput
@@ -984,6 +1012,7 @@ export type CompetitionUncheckedCreateWithoutAgeCategoryInput = {
   registrationDeadline: Date | string
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCompetitionInput
@@ -1028,6 +1057,7 @@ export type CompetitionCreateWithoutPaymentsInput = {
   registrationDeadline: Date | string
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutCompetitionsInput
@@ -1051,6 +1081,7 @@ export type CompetitionUncheckedCreateWithoutPaymentsInput = {
   registrationDeadline: Date | string
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCompetitionInput
@@ -1084,6 +1115,7 @@ export type CompetitionUpdateWithoutPaymentsInput = {
   registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutCompetitionsNestedInput
@@ -1107,6 +1139,7 @@ export type CompetitionUncheckedUpdateWithoutPaymentsInput = {
   registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCompetitionNestedInput
@@ -1124,6 +1157,7 @@ export type CompetitionCreateWithoutRegistrationsInput = {
   registrationDeadline: Date | string
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutCompetitionsInput
@@ -1147,6 +1181,7 @@ export type CompetitionUncheckedCreateWithoutRegistrationsInput = {
   registrationDeadline: Date | string
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCompetitionInput
@@ -1180,6 +1215,7 @@ export type CompetitionUpdateWithoutRegistrationsInput = {
   registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutCompetitionsNestedInput
@@ -1203,6 +1239,7 @@ export type CompetitionUncheckedUpdateWithoutRegistrationsInput = {
   registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutCompetitionNestedInput
@@ -1222,6 +1259,7 @@ export type CompetitionCreateManyMinBeltInput = {
   registrationDeadline: Date | string
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1240,6 +1278,7 @@ export type CompetitionCreateManyMaxBeltInput = {
   registrationDeadline: Date | string
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1256,6 +1295,7 @@ export type CompetitionUpdateWithoutMinBeltInput = {
   registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutCompetitionsNestedInput
@@ -1278,6 +1318,7 @@ export type CompetitionUncheckedUpdateWithoutMinBeltInput = {
   registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCompetitionNestedInput
@@ -1298,6 +1339,7 @@ export type CompetitionUncheckedUpdateManyWithoutMinBeltInput = {
   registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1314,6 +1356,7 @@ export type CompetitionUpdateWithoutMaxBeltInput = {
   registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutCompetitionsNestedInput
@@ -1336,6 +1379,7 @@ export type CompetitionUncheckedUpdateWithoutMaxBeltInput = {
   registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCompetitionNestedInput
@@ -1356,6 +1400,7 @@ export type CompetitionUncheckedUpdateManyWithoutMaxBeltInput = {
   registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1374,6 +1419,7 @@ export type CompetitionCreateManyAgeCategoryInput = {
   registrationDeadline: Date | string
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
+  cancelReason?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1390,6 +1436,7 @@ export type CompetitionUpdateWithoutAgeCategoryInput = {
   registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   minBelt?: Prisma.BeltUpdateOneRequiredWithoutMinForNestedInput
@@ -1412,6 +1459,7 @@ export type CompetitionUncheckedUpdateWithoutAgeCategoryInput = {
   registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCompetitionNestedInput
@@ -1432,6 +1480,7 @@ export type CompetitionUncheckedUpdateManyWithoutAgeCategoryInput = {
   registrationDeadline?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1491,6 +1540,7 @@ export type CompetitionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   registrationDeadline?: boolean
   eventDate?: boolean
   status?: boolean
+  cancelReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   ageCategory?: boolean | Prisma.AgeCategoryDefaultArgs<ExtArgs>
@@ -1516,6 +1566,7 @@ export type CompetitionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   registrationDeadline?: boolean
   eventDate?: boolean
   status?: boolean
+  cancelReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   ageCategory?: boolean | Prisma.AgeCategoryDefaultArgs<ExtArgs>
@@ -1538,6 +1589,7 @@ export type CompetitionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   registrationDeadline?: boolean
   eventDate?: boolean
   status?: boolean
+  cancelReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   ageCategory?: boolean | Prisma.AgeCategoryDefaultArgs<ExtArgs>
@@ -1560,11 +1612,12 @@ export type CompetitionSelectScalar = {
   registrationDeadline?: boolean
   eventDate?: boolean
   status?: boolean
+  cancelReason?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CompetitionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "province" | "discipline" | "gender" | "ageCategoryId" | "minBeltId" | "maxBeltId" | "feePerStudent" | "payeeCardNumber" | "payeeCardHolder" | "registrationDeadline" | "eventDate" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["competition"]>
+export type CompetitionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "province" | "discipline" | "gender" | "ageCategoryId" | "minBeltId" | "maxBeltId" | "feePerStudent" | "payeeCardNumber" | "payeeCardHolder" | "registrationDeadline" | "eventDate" | "status" | "cancelReason" | "createdAt" | "updatedAt", ExtArgs["result"]["competition"]>
 export type CompetitionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ageCategory?: boolean | Prisma.AgeCategoryDefaultArgs<ExtArgs>
   minBelt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
@@ -1608,6 +1661,7 @@ export type $CompetitionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     registrationDeadline: Date
     eventDate: Date
     status: $Enums.CompetitionStatus
+    cancelReason: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["competition"]>
@@ -2052,6 +2106,7 @@ export interface CompetitionFieldRefs {
   readonly registrationDeadline: Prisma.FieldRef<"Competition", 'DateTime'>
   readonly eventDate: Prisma.FieldRef<"Competition", 'DateTime'>
   readonly status: Prisma.FieldRef<"Competition", 'CompetitionStatus'>
+  readonly cancelReason: Prisma.FieldRef<"Competition", 'String'>
   readonly createdAt: Prisma.FieldRef<"Competition", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Competition", 'DateTime'>
 }

@@ -1,6 +1,5 @@
-import { mockDelay } from "@/lib/mock";
-import { type ListQuery, type ListResult, paginate } from "@/lib/pagination";
-import { competitions } from "./mock/competitions";
+import { api } from "@/lib/http";
+import type { ListQuery, ListResult } from "@/lib/pagination";
 import type { Competition, CompetitionInput, CompetitionStatus, Discipline } from "./types";
 
 export type CompetitionListParams = ListQuery & {
@@ -9,61 +8,34 @@ export type CompetitionListParams = ListQuery & {
   search?: string;
 };
 
-let nextId = competitions.length + 1;
-
 export async function listCompetitions(params: CompetitionListParams = {}): Promise<ListResult<Competition>> {
-  await mockDelay();
-  const search = params.search?.trim() ?? "";
-  const filtered = competitions.filter(
-    (competition) =>
-      (params.status === undefined || competition.status === params.status) &&
-      (params.discipline === undefined || competition.discipline === params.discipline) &&
-      (search === "" || competition.title.includes(search)),
-  );
+  const query = new URLSearchParams();
+  if (params.status) query.set("status", params.status);
+  if (params.discipline) query.set("discipline", params.discipline);
+  if (params.search) query.set("search", params.search);
+  if (params.page !== undefined) query.set("page", String(params.page));
+  if (params.pageSize !== undefined) query.set("pageSize", String(params.pageSize));
 
-  return paginate(filtered, params);
+  const queryString = query.toString();
+  return api<ListResult<Competition>>(`/api/v1/competitions${queryString === "" ? "" : `?${queryString}`}`);
 }
 
-export async function getCompetition(id: string): Promise<Competition> {
-  await mockDelay();
-  const competition = competitions.find((item) => item.id === id);
+export function getCompetition(id: string): Promise<Competition> {
+  return api<Competition>(`/api/v1/competitions/${id}`);
+}
 
-  if (!competition) {
-    throw new Error("مسابقه یافت نشد.");
+export function createCompetition(input: CompetitionInput): Promise<Competition> {
+  return api<Competition>("/api/v1/competitions", { method: "POST", body: input });
+}
+
+export function updateCompetition(id: string, input: Partial<CompetitionInput>): Promise<Competition> {
+  return api<Competition>(`/api/v1/competitions/${id}`, { method: "PATCH", body: input });
+}
+
+export function updateCompetitionStatus(id: string, status: CompetitionStatus, options: { reason?: string } = {}): Promise<Competition> {
+  if (status === "CANCELED") {
+    return api<Competition>(`/api/v1/competitions/${id}/cancel`, { method: "POST", body: { reason: options.reason ?? "" } });
   }
 
-  return competition;
-}
-
-export async function createCompetition(input: CompetitionInput): Promise<Competition> {
-  await mockDelay();
-  const now = new Date().toISOString();
-  const competition: Competition = {
-    ...input,
-    id: `comp-${nextId}`,
-    status: input.status ?? "DRAFT",
-    createdAt: now,
-    updatedAt: now,
-  };
-  nextId += 1;
-  competitions.push(competition);
-
-  return competition;
-}
-
-export async function updateCompetition(id: string, input: Partial<CompetitionInput>): Promise<Competition> {
-  await mockDelay();
-  const index = competitions.findIndex((item) => item.id === id);
-
-  if (index === -1) {
-    throw new Error("مسابقه یافت نشد.");
-  }
-
-  competitions[index] = { ...competitions[index], ...input, updatedAt: new Date().toISOString() };
-
-  return competitions[index];
-}
-
-export async function updateCompetitionStatus(id: string, status: CompetitionStatus): Promise<Competition> {
-  return updateCompetition(id, { status });
+  return api<Competition>(`/api/v1/competitions/${id}/publish`, { method: "POST" });
 }
