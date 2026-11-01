@@ -29,7 +29,12 @@ export function fail(error: AppError): Response {
 
 type BodyOf<TSchema> = TSchema extends ZodType ? z.infer<TSchema> : undefined;
 
-export async function readFormData(request: Request): Promise<FormData> {
+export async function readFormData(request: Request, options?: { maxBytes: number }): Promise<FormData> {
+  const contentLength = Number(request.headers.get("content-length") ?? "0");
+  if (options && Number.isFinite(contentLength) && contentLength > options.maxBytes) {
+    throw new AppError(413, "PAYLOAD_TOO_LARGE", "حجم درخواست بیش از حد مجاز است.");
+  }
+
   try {
     return await request.formData();
   } catch {
