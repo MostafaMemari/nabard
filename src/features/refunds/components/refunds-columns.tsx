@@ -34,6 +34,17 @@ export function useRefundColumns({ onComplete }: { onComplete: (refund: Refund) 
       align: "end",
     },
     { id: "reason", header: "دلیل", cell: (row) => refundReasonLabels[row.reason], minScreen: "lg" },
+    {
+      id: "note",
+      header: "توضیح",
+      cell: (row) =>
+        row.note ? (
+          <span className="block max-w-56 truncate text-muted-foreground" title={row.note}>
+            {row.note}
+          </span>
+        ) : null,
+      minScreen: "xl",
+    },
     { id: "createdAt", header: "تاریخ", cell: (row) => formatJalaliDate(new Date(row.createdAt)), minScreen: "xl" },
     { id: "status", header: "وضعیت", cell: (row) => <StatusBadge status={refundStatusKey(row.status)} /> },
     {

@@ -222,6 +222,8 @@ export async function updateCompetition(id: string, data: CompetitionUpdateData)
   return getPrisma().competition.update({ where: { id }, data, select: competitionSelection });
 }
 
+export const UNREVIEWED_PAYMENT_REFUND_NOTE = "پرداخت بررسی نشده بود؛ قبل از بازپرداخت دریافت وجه را تأیید کنید.";
+
 export async function cancelCompetitionWithRefunds(id: string, reason: string): Promise<CompetitionRow | null> {
   return getPrisma().$transaction(async (tx) => {
     const applied = await tx.competition.updateMany({
@@ -231,8 +233,13 @@ export async function cancelCompetitionWithRefunds(id: string, reason: string): 
     if (applied.count === 0) return null;
 
     const rows = await tx.registration.findMany({
-      where: { competitionId: id, payment: { status: "CONFIRMED" }, refund: { is: null } },
-      select: { id: true, coachId: true, competition: { select: { feePerStudent: true } } },
+      where: { competitionId: id, payment: { status: { in: ["CONFIRMED", "PENDING"] } }, refund: { is: null } },
+      select: {
+        id: true,
+        coachId: true,
+        payment: { select: { status: true } },
+        competition: { select: { feePerStudent: true } },
+      },
     });
 
     for (const row of rows) {
@@ -243,6 +250,7 @@ export async function cancelCompetitionWithRefunds(id: string, reason: string): 
           amount: row.competition.feePerStudent,
           reason: "COMPETITION_CANCELED",
           status: "PENDING",
+          ...(row.payment?.status === "PENDING" ? { note: UNREVIEWED_PAYMENT_REFUND_NOTE } : {}),
         },
       });
     }

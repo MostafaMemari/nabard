@@ -13,6 +13,7 @@ export function RefundCard({ refund, onComplete }: { refund: Refund; onComplete:
       <MobileCardLine label="هنرجو" value={refund.studentName} />
       <MobileCardLine label="مسابقه" value={refund.competitionTitle} />
       <MobileCardLine label="مبلغ" value={<span className="tabular-nums">{formatRialsAsToman(Number(refund.amount))}</span>} />
+      {refund.note ? <MobileCardLine label="توضیح" value={refund.note} /> : null}
       <MobileCardChips>
         <span className="text-subtle text-muted-foreground">{refundReasonLabels[refund.reason]}</span>
         <span className="text-subtle text-muted-foreground">{formatJalaliDate(new Date(refund.createdAt))}</span>
