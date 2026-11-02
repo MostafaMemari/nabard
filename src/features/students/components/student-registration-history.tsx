@@ -16,7 +16,12 @@ export function StudentRegistrationHistory({ studentId }: { studentId: string })
 
   return (
     <section className="flex flex-col gap-3">
-      <h2 className="text-base font-semibold">تاریخچه ثبت نام مسابقات</h2>
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="text-base font-semibold">تاریخچه ثبت نام مسابقات</h2>
+        {registrations.length > 0 ? (
+          <span className="text-subtle text-muted-foreground">{toPersianDigits(registrations.length)} ثبت نام</span>
+        ) : null}
+      </div>
       {error ? (
         <ErrorBanner onRetry={() => void mutate()} />
       ) : isLoading ? (

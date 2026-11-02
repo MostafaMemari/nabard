@@ -2,13 +2,12 @@
 
 import { HouseIcon, LayersIcon, MapPinnedIcon, ShieldCheckIcon, TrophyIcon, UsersIcon } from "lucide-react";
 import type { ReactNode } from "react";
-import { Avatar } from "@/components/shared";
-import { ChangePasswordButton, roleLabels, useMe } from "@/features/auth";
+import { roleLabels, useMe } from "@/features/auth";
 import { APP_NAME } from "@/lib/app";
 import { AppSidebar, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
 import { BrandMark } from "./brand-mark";
-import { LogoutButton } from "./logout-button";
 import { MobileBottomNav } from "./mobile-bottom-nav";
+import { MobileUserSheet } from "./mobile-user-sheet";
 
 const navItems: SidebarNavItem[] = [
   { id: "home", label: "خانه", href: "/super", icon: HouseIcon },
@@ -42,20 +41,18 @@ export function SuperShell({ active, children }: { active: string; children: Rea
             <BrandMark className="size-7" />
             <span className="text-sm font-semibold">{APP_NAME}</span>
           </div>
-          <div className="flex items-center gap-1">
-            {sidebarUser ? (
-              <Avatar id={sidebarUser.id} name={sidebarUser.name} size="sm" />
-            ) : (
-              <span aria-hidden className="size-7 rounded-full bg-muted" />
-            )}
-            <ChangePasswordButton />
-            <LogoutButton />
-          </div>
+          <MobileUserSheet user={sidebarUser} />
         </div>
         <main id="super-main" className="flex-1 pb-20 lg:pb-0">
           <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 lg:p-8 print:p-0">{children}</div>
         </main>
-        <MobileBottomNav items={navItems} active={active} label="ناوبری مدیریت کل" className="lg:hidden" />
+        <MobileBottomNav
+          items={navItems.slice(0, 4)}
+          moreItems={navItems.slice(4)}
+          active={active}
+          label="ناوبری مدیریت کل"
+          className="lg:hidden"
+        />
       </div>
     </div>
   );

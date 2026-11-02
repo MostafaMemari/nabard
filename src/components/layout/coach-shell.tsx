@@ -2,14 +2,13 @@
 
 import { ClipboardListIcon, HouseIcon, TrophyIcon, UsersIcon } from "lucide-react";
 import type { ReactNode } from "react";
-import { Avatar } from "@/components/shared";
-import { ChangePasswordButton, roleLabels, useMe } from "@/features/auth";
+import { roleLabels, useMe } from "@/features/auth";
 import { CoachProfileButton } from "@/features/county-changes";
 import { APP_NAME } from "@/lib/app";
 import { AppSidebar, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
 import { BrandMark } from "./brand-mark";
-import { LogoutButton } from "./logout-button";
 import { MobileBottomNav } from "./mobile-bottom-nav";
+import { MobileUserSheet } from "./mobile-user-sheet";
 
 export const coachNavItems: SidebarNavItem[] = [
   { id: "home", label: "خانه", href: "/coach", icon: HouseIcon },
@@ -50,16 +49,7 @@ export function CoachShell({ active, children }: { active: string; children: Rea
               <BrandMark className="size-7" />
               <span className="text-sm font-semibold">{APP_NAME}</span>
             </div>
-            <div className="flex items-center gap-1">
-              {sidebarUser ? (
-                <Avatar id={sidebarUser.id} name={sidebarUser.name} size="sm" />
-              ) : (
-                <span aria-hidden className="size-7 rounded-full bg-muted" />
-              )}
-              <ChangePasswordButton />
-              {profileButton}
-              <LogoutButton />
-            </div>
+            <MobileUserSheet user={sidebarUser} extra={<CoachProfileButton className="size-9 rounded-lg" />} />
           </div>
         </header>
         <main id="coach-main" className="flex-1 pb-20 @5xl:pb-8">

@@ -4,7 +4,7 @@ import { ArrowLeftRightIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { FilterTabs, PageHeader, SearchInput } from "@/components/shared";
+import { BeltDot, FilterTabs, PageHeader, SearchInput } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { useBelts } from "@/features/base-data";
 import type { CoachTransferRequest } from "@/features/transfers";
@@ -28,11 +28,12 @@ export function StudentsScreen() {
   const coachRequests = (transfers?.data ?? []).filter((request): request is CoachTransferRequest => "direction" in request);
 
   const query = search.value.trim();
-  const rows = students.filter(
-    (student) =>
-      (query === "" || student.fullName.includes(query) || student.nationalCode.includes(query)) &&
-      (beltId === "all" || student.beltId === beltId),
-  );
+  const searched = students.filter((student) => query === "" || student.fullName.includes(query) || student.nationalCode.includes(query));
+  const rows = searched.filter((student) => beltId === "all" || student.beltId === beltId);
+  const beltCounts: Record<string, number> = { all: searched.length };
+  for (const student of searched) {
+    beltCounts[student.beltId] = (beltCounts[student.beltId] ?? 0) + 1;
+  }
 
   function openStudent(student: Student) {
     router.push(`/coach/students/${student.id}`);
@@ -62,7 +63,12 @@ export function StudentsScreen() {
       <FilterTabs
         value={beltId}
         onChange={setBeltId}
-        items={[{ id: "all", label: "همه کمربندها" }, ...belts.map((belt) => ({ id: belt.id, label: belt.label }))]}
+        scroll
+        counts={beltCounts}
+        items={[
+          { id: "all", label: "همه کمربندها" },
+          ...belts.map((belt) => ({ id: belt.id, label: belt.label, dot: <BeltDot code={belt.code} /> })),
+        ]}
       />
 
       <StudentsResults
