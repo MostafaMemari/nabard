@@ -50,7 +50,7 @@ function genderMismatch(): AppError {
 }
 
 function coachGenderMissing(): AppError {
-  return new AppError(400, "VALIDATION_ERROR", "جنسیت حساب مربی ثبت نشده است؛ از مدیر استان بخواهید جنسیت مربی را مشخص کند.");
+  return new AppError(400, "VALIDATION_ERROR", "جنسیت شما ثبت نشده است؛ با ادمین استان تماس بگیرید.");
 }
 
 async function requireActiveUser(repo: StudentRepository, user: CurrentUser): Promise<UserIdentityRecord> {

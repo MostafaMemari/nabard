@@ -233,7 +233,7 @@ describe("createStudent", () => {
     const failure = (await failureOf(createStudent(repo, coach, createInput))) as { message: string };
 
     expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
-    expect(failure?.message).toContain("جنسیت حساب مربی ثبت نشده است");
+    expect(failure?.message).toContain("جنسیت شما ثبت نشده است");
     expect(repo.createStudent).not.toHaveBeenCalled();
   });
 
