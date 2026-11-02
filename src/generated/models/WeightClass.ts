@@ -48,6 +48,7 @@ export type WeightClassMinAggregateOutputType = {
   order: number | null
   excludeMin: boolean | null
   excludeMax: boolean | null
+  isActive: boolean | null
 }
 
 export type WeightClassMaxAggregateOutputType = {
@@ -60,6 +61,7 @@ export type WeightClassMaxAggregateOutputType = {
   order: number | null
   excludeMin: boolean | null
   excludeMax: boolean | null
+  isActive: boolean | null
 }
 
 export type WeightClassCountAggregateOutputType = {
@@ -72,6 +74,7 @@ export type WeightClassCountAggregateOutputType = {
   order: number
   excludeMin: number
   excludeMax: number
+  isActive: number
   _all: number
 }
 
@@ -98,6 +101,7 @@ export type WeightClassMinAggregateInputType = {
   order?: true
   excludeMin?: true
   excludeMax?: true
+  isActive?: true
 }
 
 export type WeightClassMaxAggregateInputType = {
@@ -110,6 +114,7 @@ export type WeightClassMaxAggregateInputType = {
   order?: true
   excludeMin?: true
   excludeMax?: true
+  isActive?: true
 }
 
 export type WeightClassCountAggregateInputType = {
@@ -122,6 +127,7 @@ export type WeightClassCountAggregateInputType = {
   order?: true
   excludeMin?: true
   excludeMax?: true
+  isActive?: true
   _all?: true
 }
 
@@ -221,6 +227,7 @@ export type WeightClassGroupByOutputType = {
   order: number
   excludeMin: boolean
   excludeMax: boolean
+  isActive: boolean
   _count: WeightClassCountAggregateOutputType | null
   _avg: WeightClassAvgAggregateOutputType | null
   _sum: WeightClassSumAggregateOutputType | null
@@ -256,6 +263,7 @@ export type WeightClassWhereInput = {
   order?: Prisma.IntFilter<"WeightClass"> | number
   excludeMin?: Prisma.BoolFilter<"WeightClass"> | boolean
   excludeMax?: Prisma.BoolFilter<"WeightClass"> | boolean
+  isActive?: Prisma.BoolFilter<"WeightClass"> | boolean
   ageCategory?: Prisma.XOR<Prisma.AgeCategoryScalarRelationFilter, Prisma.AgeCategoryWhereInput>
   registrations?: Prisma.RegistrationListRelationFilter
 }
@@ -270,6 +278,7 @@ export type WeightClassOrderByWithRelationInput = {
   order?: Prisma.SortOrder
   excludeMin?: Prisma.SortOrder
   excludeMax?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   ageCategory?: Prisma.AgeCategoryOrderByWithRelationInput
   registrations?: Prisma.RegistrationOrderByRelationAggregateInput
 }
@@ -287,6 +296,7 @@ export type WeightClassWhereUniqueInput = Prisma.AtLeast<{
   order?: Prisma.IntFilter<"WeightClass"> | number
   excludeMin?: Prisma.BoolFilter<"WeightClass"> | boolean
   excludeMax?: Prisma.BoolFilter<"WeightClass"> | boolean
+  isActive?: Prisma.BoolFilter<"WeightClass"> | boolean
   ageCategory?: Prisma.XOR<Prisma.AgeCategoryScalarRelationFilter, Prisma.AgeCategoryWhereInput>
   registrations?: Prisma.RegistrationListRelationFilter
 }, "id">
@@ -301,6 +311,7 @@ export type WeightClassOrderByWithAggregationInput = {
   order?: Prisma.SortOrder
   excludeMin?: Prisma.SortOrder
   excludeMax?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   _count?: Prisma.WeightClassCountOrderByAggregateInput
   _avg?: Prisma.WeightClassAvgOrderByAggregateInput
   _max?: Prisma.WeightClassMaxOrderByAggregateInput
@@ -321,6 +332,7 @@ export type WeightClassScalarWhereWithAggregatesInput = {
   order?: Prisma.IntWithAggregatesFilter<"WeightClass"> | number
   excludeMin?: Prisma.BoolWithAggregatesFilter<"WeightClass"> | boolean
   excludeMax?: Prisma.BoolWithAggregatesFilter<"WeightClass"> | boolean
+  isActive?: Prisma.BoolWithAggregatesFilter<"WeightClass"> | boolean
 }
 
 export type WeightClassCreateInput = {
@@ -332,6 +344,7 @@ export type WeightClassCreateInput = {
   order: number
   excludeMin?: boolean
   excludeMax?: boolean
+  isActive?: boolean
   ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutWeightClassesInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutWeightClassInput
 }
@@ -346,6 +359,7 @@ export type WeightClassUncheckedCreateInput = {
   order: number
   excludeMin?: boolean
   excludeMax?: boolean
+  isActive?: boolean
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeightClassInput
 }
 
@@ -358,6 +372,7 @@ export type WeightClassUpdateInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   excludeMin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   excludeMax?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutWeightClassesNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutWeightClassNestedInput
 }
@@ -372,6 +387,7 @@ export type WeightClassUncheckedUpdateInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   excludeMin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   excludeMax?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeightClassNestedInput
 }
 
@@ -385,6 +401,7 @@ export type WeightClassCreateManyInput = {
   order: number
   excludeMin?: boolean
   excludeMax?: boolean
+  isActive?: boolean
 }
 
 export type WeightClassUpdateManyMutationInput = {
@@ -396,6 +413,7 @@ export type WeightClassUpdateManyMutationInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   excludeMin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   excludeMax?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type WeightClassUncheckedUpdateManyInput = {
@@ -408,6 +426,7 @@ export type WeightClassUncheckedUpdateManyInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   excludeMin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   excludeMax?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type WeightClassListRelationFilter = {
@@ -430,6 +449,7 @@ export type WeightClassCountOrderByAggregateInput = {
   order?: Prisma.SortOrder
   excludeMin?: Prisma.SortOrder
   excludeMax?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
 }
 
 export type WeightClassAvgOrderByAggregateInput = {
@@ -448,6 +468,7 @@ export type WeightClassMaxOrderByAggregateInput = {
   order?: Prisma.SortOrder
   excludeMin?: Prisma.SortOrder
   excludeMax?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
 }
 
 export type WeightClassMinOrderByAggregateInput = {
@@ -460,6 +481,7 @@ export type WeightClassMinOrderByAggregateInput = {
   order?: Prisma.SortOrder
   excludeMin?: Prisma.SortOrder
   excludeMax?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
 }
 
 export type WeightClassSumOrderByAggregateInput = {
@@ -548,6 +570,7 @@ export type WeightClassCreateWithoutAgeCategoryInput = {
   order: number
   excludeMin?: boolean
   excludeMax?: boolean
+  isActive?: boolean
   registrations?: Prisma.RegistrationCreateNestedManyWithoutWeightClassInput
 }
 
@@ -560,6 +583,7 @@ export type WeightClassUncheckedCreateWithoutAgeCategoryInput = {
   order: number
   excludeMin?: boolean
   excludeMax?: boolean
+  isActive?: boolean
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeightClassInput
 }
 
@@ -602,6 +626,7 @@ export type WeightClassScalarWhereInput = {
   order?: Prisma.IntFilter<"WeightClass"> | number
   excludeMin?: Prisma.BoolFilter<"WeightClass"> | boolean
   excludeMax?: Prisma.BoolFilter<"WeightClass"> | boolean
+  isActive?: Prisma.BoolFilter<"WeightClass"> | boolean
 }
 
 export type WeightClassCreateWithoutRegistrationsInput = {
@@ -613,6 +638,7 @@ export type WeightClassCreateWithoutRegistrationsInput = {
   order: number
   excludeMin?: boolean
   excludeMax?: boolean
+  isActive?: boolean
   ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutWeightClassesInput
 }
 
@@ -626,6 +652,7 @@ export type WeightClassUncheckedCreateWithoutRegistrationsInput = {
   order: number
   excludeMin?: boolean
   excludeMax?: boolean
+  isActive?: boolean
 }
 
 export type WeightClassCreateOrConnectWithoutRegistrationsInput = {
@@ -653,6 +680,7 @@ export type WeightClassUpdateWithoutRegistrationsInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   excludeMin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   excludeMax?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutWeightClassesNestedInput
 }
 
@@ -666,6 +694,7 @@ export type WeightClassUncheckedUpdateWithoutRegistrationsInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   excludeMin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   excludeMax?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type WeightClassCreateManyAgeCategoryInput = {
@@ -677,6 +706,7 @@ export type WeightClassCreateManyAgeCategoryInput = {
   order: number
   excludeMin?: boolean
   excludeMax?: boolean
+  isActive?: boolean
 }
 
 export type WeightClassUpdateWithoutAgeCategoryInput = {
@@ -688,6 +718,7 @@ export type WeightClassUpdateWithoutAgeCategoryInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   excludeMin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   excludeMax?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   registrations?: Prisma.RegistrationUpdateManyWithoutWeightClassNestedInput
 }
 
@@ -700,6 +731,7 @@ export type WeightClassUncheckedUpdateWithoutAgeCategoryInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   excludeMin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   excludeMax?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeightClassNestedInput
 }
 
@@ -712,6 +744,7 @@ export type WeightClassUncheckedUpdateManyWithoutAgeCategoryInput = {
   order?: Prisma.IntFieldUpdateOperationsInput | number
   excludeMin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   excludeMax?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 
@@ -755,6 +788,7 @@ export type WeightClassSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   order?: boolean
   excludeMin?: boolean
   excludeMax?: boolean
+  isActive?: boolean
   ageCategory?: boolean | Prisma.AgeCategoryDefaultArgs<ExtArgs>
   registrations?: boolean | Prisma.WeightClass$registrationsArgs<ExtArgs>
   _count?: boolean | Prisma.WeightClassCountOutputTypeDefaultArgs<ExtArgs>
@@ -770,6 +804,7 @@ export type WeightClassSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   order?: boolean
   excludeMin?: boolean
   excludeMax?: boolean
+  isActive?: boolean
   ageCategory?: boolean | Prisma.AgeCategoryDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["weightClass"]>
 
@@ -783,6 +818,7 @@ export type WeightClassSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   order?: boolean
   excludeMin?: boolean
   excludeMax?: boolean
+  isActive?: boolean
   ageCategory?: boolean | Prisma.AgeCategoryDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["weightClass"]>
 
@@ -796,9 +832,10 @@ export type WeightClassSelectScalar = {
   order?: boolean
   excludeMin?: boolean
   excludeMax?: boolean
+  isActive?: boolean
 }
 
-export type WeightClassOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ageCategoryId" | "gender" | "label" | "minWeightKg" | "maxWeightKg" | "order" | "excludeMin" | "excludeMax", ExtArgs["result"]["weightClass"]>
+export type WeightClassOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "ageCategoryId" | "gender" | "label" | "minWeightKg" | "maxWeightKg" | "order" | "excludeMin" | "excludeMax" | "isActive", ExtArgs["result"]["weightClass"]>
 export type WeightClassInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   ageCategory?: boolean | Prisma.AgeCategoryDefaultArgs<ExtArgs>
   registrations?: boolean | Prisma.WeightClass$registrationsArgs<ExtArgs>
@@ -827,6 +864,7 @@ export type $WeightClassPayload<ExtArgs extends runtime.Types.Extensions.Interna
     order: number
     excludeMin: boolean
     excludeMax: boolean
+    isActive: boolean
   }, ExtArgs["result"]["weightClass"]>
   composites: {}
 }
@@ -1261,6 +1299,7 @@ export interface WeightClassFieldRefs {
   readonly order: Prisma.FieldRef<"WeightClass", 'Int'>
   readonly excludeMin: Prisma.FieldRef<"WeightClass", 'Boolean'>
   readonly excludeMax: Prisma.FieldRef<"WeightClass", 'Boolean'>
+  readonly isActive: Prisma.FieldRef<"WeightClass", 'Boolean'>
 }
     
 

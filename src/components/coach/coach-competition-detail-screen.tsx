@@ -5,7 +5,7 @@ import Link from "next/link";
 import { CountdownLarge, DetailPageHeader, ErrorBanner, IconTile, StatusBadge } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ageCategoryLabel, genderLabels, useBelts } from "@/features/base-data";
+import { genderLabels, useBelts } from "@/features/base-data";
 import { BeltChips, disciplineIcons, disciplineLabels, useCompetition } from "@/features/competitions";
 import { formatJalaliDate, formatRialsAsToman } from "@/lib/format";
 
@@ -35,7 +35,7 @@ export function CoachCompetitionDetailScreen({ competitionId }: { competitionId:
         backHref="/coach/competitions"
         backLabel="مسابقات"
         title={competition.title}
-        description={`${disciplineLabels[competition.discipline]} · ${ageCategoryLabel(competition.ageCategoryId)} · ${genderLabels[competition.gender]}`}
+        description={`${disciplineLabels[competition.discipline]} · ${competition.ageCategoryLabel} · ${genderLabels[competition.gender]}`}
         action={
           open ? (
             <Button render={<Link href={`/coach/competitions/${competitionId}/register`} />}>

@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import type { Control } from "react-hook-form";
-import { BeltDot, beltLabel, ControlledDateField, ControlledSelectField, ControlledTextField } from "@/components/shared";
+import { BeltDot, ControlledDateField, ControlledSelectField, ControlledTextField } from "@/components/shared";
 import type { Belt } from "@/features/base-data";
 import type { StudentFormValues } from "../schemas";
 
@@ -25,8 +25,8 @@ export function StudentBeltField({ control, name, label, belts }: FieldProps & {
     belts.map((belt) => [
       belt.id,
       <span key={belt.id} className="flex items-center gap-2">
-        <BeltDot name={belt.name} />
-        {beltLabel(belt.name)}
+        <BeltDot code={belt.code} />
+        {belt.label}
       </span>,
     ]),
   );

@@ -1,11 +1,22 @@
 import type { Belt, Gender, WeightClass } from "@/features/base-data";
-import { checkEligibility, type EligibilityCompetition, type EligibilityStudent } from "@/features/registrations/server/eligibility";
+import {
+  checkEligibility,
+  type EligibilityCompetition,
+  type EligibilityStudent,
+  eligibilityCompetitionFromSnapshot,
+} from "@/features/registrations/server/eligibility";
 import type { Province } from "@/generated/client";
 import { AppError } from "@/lib/api";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
 import type { CompetitionListQuery, CreateCompetitionInput, UpdateCompetitionInput } from "../schemas";
-import type { CompetitionLevel, CompetitionRegistrationState, Discipline, ExtendCompetitionInput } from "../types";
+import type {
+  CompetitionLevel,
+  CompetitionRegistrationState,
+  CompetitionRulesSnapshot,
+  Discipline,
+  ExtendCompetitionInput,
+} from "../types";
 import type {
   AgeCategoryRow,
   CompetitionFilters,
@@ -28,6 +39,7 @@ export type CompetitionRecord = {
   discipline: Discipline;
   gender: Gender;
   ageCategoryId: string;
+  ageCategoryLabel: string;
   beltIds: string[];
   feePerStudent: string;
   payeeCardNumber: string;
@@ -35,6 +47,7 @@ export type CompetitionRecord = {
   registrationDeadline: Date;
   eventDate: Date;
   status: CompetitionStatusOf;
+  rules: CompetitionRulesSnapshot | null;
   cancelReason: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -83,7 +96,9 @@ function expandBeltIds(row: { minBeltId: string; maxBeltId: string }, belts: Bel
   return belts.filter((belt) => belt.level >= minLevel && belt.level <= maxLevel).map((belt) => belt.id);
 }
 
-function toRecord(row: CompetitionRow, belts: Belt[]): CompetitionRecord {
+function toRecord(row: CompetitionRow, belts: Belt[], categories: AgeCategoryRow[]): CompetitionRecord {
+  const ageCategoryLabel = row.rules?.ageCategory.label ?? categories.find((category) => category.id === row.ageCategoryId)?.label ?? "";
+
   return {
     id: row.id,
     title: row.title,
@@ -94,6 +109,7 @@ function toRecord(row: CompetitionRow, belts: Belt[]): CompetitionRecord {
     discipline: row.discipline,
     gender: row.gender,
     ageCategoryId: row.ageCategoryId,
+    ageCategoryLabel,
     beltIds: expandBeltIds(row, belts),
     feePerStudent: row.feePerStudent.toString(),
     payeeCardNumber: row.payeeCardNumber,
@@ -101,6 +117,7 @@ function toRecord(row: CompetitionRow, belts: Belt[]): CompetitionRecord {
     registrationDeadline: row.registrationDeadline,
     eventDate: row.eventDate,
     status: row.status,
+    rules: row.rules,
     cancelReason: row.cancelReason,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
@@ -162,7 +179,7 @@ async function validateCounties(repo: CompetitionsRepository, province: string, 
 async function validateCompetitionData(
   repo: CompetitionsRepository,
   data: MergedCompetitionData,
-): Promise<{ belts: Belt[]; minBeltId: string; maxBeltId: string }> {
+): Promise<{ belts: Belt[]; minBeltId: string; maxBeltId: string; categories: AgeCategoryRow[] }> {
   const range = await resolveBeltRange(repo, data.beltIds);
 
   const categories = await repo.findAllAgeCategories();
@@ -181,7 +198,7 @@ async function validateCompetitionData(
     }
   }
 
-  return range;
+  return { ...range, categories };
 }
 
 function toEligibilityStudent(row: {
@@ -210,6 +227,10 @@ function toEligibilityCompetition(
   categories: AgeCategoryRow[],
   weightClasses: WeightClass[],
 ): EligibilityCompetition | null {
+  if (row.rules) {
+    return eligibilityCompetitionFromSnapshot({ discipline: row.discipline, gender: row.gender }, row.rules, belts);
+  }
+
   const ageCategory = categories.find((category) => category.id === row.ageCategoryId);
   if (!ageCategory) return null;
 
@@ -218,11 +239,13 @@ function toEligibilityCompetition(
     gender: row.gender,
     ageCategory: {
       id: ageCategory.id,
-      name: ageCategory.name,
+      code: ageCategory.code,
+      label: ageCategory.label,
       startDate: ageCategory.startDate.toISOString(),
       endDate: ageCategory.endDate.toISOString(),
       birthYearStart: ageCategory.birthYearStart,
       birthYearEnd: ageCategory.birthYearEnd,
+      isActive: ageCategory.isActive,
     },
     beltIds: expandBeltIds(row, belts),
     weightClasses:
@@ -271,13 +294,14 @@ export async function listCompetitions(
       search,
     };
 
-    const [total, rows, belts] = await Promise.all([
+    const [total, rows, belts, categories] = await Promise.all([
       repo.countCompetitions(filters),
       repo.findCompetitions(filters, (page - 1) * pageSize, pageSize, "createdAtDesc"),
       repo.findAllBelts(),
+      repo.findAllAgeCategories(),
     ]);
 
-    return { data: rows.map((row) => toRecord(row, belts)), meta: { page, pageSize, total } };
+    return { data: rows.map((row) => toRecord(row, belts, categories)), meta: { page, pageSize, total } };
   }
 
   if (identity.role === "ADMIN") {
@@ -288,13 +312,14 @@ export async function listCompetitions(
       search,
     };
 
-    const [total, rows, belts] = await Promise.all([
+    const [total, rows, belts, categories] = await Promise.all([
       repo.countCompetitions(filters),
       repo.findCompetitions(filters, (page - 1) * pageSize, pageSize, "createdAtDesc"),
       repo.findAllBelts(),
+      repo.findAllAgeCategories(),
     ]);
 
-    return { data: rows.map((row) => toRecord(row, belts)), meta: { page, pageSize, total } };
+    return { data: rows.map((row) => toRecord(row, belts, categories)), meta: { page, pageSize, total } };
   }
 
   const filters: CompetitionFilters = {
@@ -305,16 +330,17 @@ export async function listCompetitions(
     coachCountyId: identity.countyId ?? "none",
   };
 
-  const [total, rows, belts] = await Promise.all([
+  const [total, rows, belts, categories] = await Promise.all([
     repo.countCompetitions(filters),
     repo.findCompetitions(filters, (page - 1) * pageSize, pageSize, "deadlineAsc"),
     repo.findAllBelts(),
+    repo.findAllAgeCategories(),
   ]);
 
   const data = await Promise.all(
     rows.map(async (row) => {
       const decoration = await decorateForCoach(repo, user.id, row, belts);
-      return { ...toRecord(row, belts), ...decoration };
+      return { ...toRecord(row, belts, categories), ...decoration };
     }),
   );
 
@@ -326,19 +352,19 @@ export async function getCompetition(repo: CompetitionsRepository, user: Current
   const row = await repo.findCompetitionById(id);
   if (!row) throw competitionNotFound();
 
-  const belts = await repo.findAllBelts();
-  if (identity.role === "SUPER_ADMIN") return toRecord(row, belts);
+  const [belts, categories] = await Promise.all([repo.findAllBelts(), repo.findAllAgeCategories()]);
+  if (identity.role === "SUPER_ADMIN") return toRecord(row, belts, categories);
 
   if (identity.role === "ADMIN") {
     if (row.province !== provinceOf(identity)) throw competitionNotFound();
-    return toRecord(row, belts);
+    return toRecord(row, belts, categories);
   }
 
   if (row.province !== provinceOf(identity) || row.status === "DRAFT") throw competitionNotFound();
   if (row.level === "COUNTY" && !row.countyIds.includes(identity.countyId ?? "")) throw competitionNotFound();
   const decoration = await decorateForCoach(repo, user.id, row, belts);
 
-  return { ...toRecord(row, belts), ...decoration };
+  return { ...toRecord(row, belts, categories), ...decoration };
 }
 
 export async function createCompetition(
@@ -382,7 +408,7 @@ export async function createCompetition(
 
   const row = await repo.createCompetition(data);
 
-  return toRecord(row, range.belts);
+  return toRecord(row, range.belts, range.categories);
 }
 
 export async function updateCompetition(
@@ -442,7 +468,7 @@ export async function updateCompetition(
 
   const updated = await repo.updateCompetition(id, data);
 
-  return toRecord(updated, range.belts);
+  return toRecord(updated, range.belts, range.categories);
 }
 
 export async function publishCompetition(repo: CompetitionsRepository, user: CurrentUser, id: string): Promise<CompetitionRecord> {
@@ -473,9 +499,10 @@ export async function publishCompetition(repo: CompetitionsRepository, user: Cur
     throw new AppError(400, "VALIDATION_ERROR", "مهلت ثبت نام گذشته است و مسابقه قابل انتشار نیست.");
   }
 
-  const updated = await repo.updateCompetition(id, { status: "PUBLISHED" });
+  const updated = await repo.publishWithRulesSnapshot(id);
+  if (!updated) throw new AppError(409, "CONFLICT", "این مسابقه قبلاً منتشر شده است.");
 
-  return toRecord(updated, beltsForMerge);
+  return toRecord(updated, beltsForMerge, await repo.findAllAgeCategories());
 }
 
 export async function cancelCompetition(
@@ -497,9 +524,9 @@ export async function cancelCompetition(
     throw new AppError(409, "CONFLICT", "فقط مسابقه منتشر شده قابل لغو است.");
   }
 
-  const belts = await repo.findAllBelts();
+  const [belts, categories] = await Promise.all([repo.findAllBelts(), repo.findAllAgeCategories()]);
   const updated = await repo.cancelCompetitionWithRefunds(id, reason);
-  if (updated) return toRecord(updated, belts);
+  if (updated) return toRecord(updated, belts, categories);
 
   const current = await repo.findCompetitionById(id);
   if (current?.status === "CANCELED") {
@@ -542,7 +569,7 @@ export async function extendCompetition(
     createdById: user.id,
   });
 
-  return toRecord(updated, await repo.findAllBelts());
+  return toRecord(updated, await repo.findAllBelts(), await repo.findAllAgeCategories());
 }
 
 export async function listDeadlineExtensions(repo: CompetitionsRepository, user: CurrentUser, id: string): Promise<DeadlineExtensionRow[]> {

@@ -38,32 +38,38 @@ export type BeltSumAggregateOutputType = {
 
 export type BeltMinAggregateOutputType = {
   id: string | null
-  name: $Enums.BeltName | null
+  code: string | null
+  label: string | null
   level: number | null
   order: number | null
   rankType: $Enums.RankType | null
   color: string | null
   colorHex: string | null
+  isActive: boolean | null
 }
 
 export type BeltMaxAggregateOutputType = {
   id: string | null
-  name: $Enums.BeltName | null
+  code: string | null
+  label: string | null
   level: number | null
   order: number | null
   rankType: $Enums.RankType | null
   color: string | null
   colorHex: string | null
+  isActive: boolean | null
 }
 
 export type BeltCountAggregateOutputType = {
   id: number
-  name: number
+  code: number
+  label: number
   level: number
   order: number
   rankType: number
   color: number
   colorHex: number
+  isActive: number
   _all: number
 }
 
@@ -80,32 +86,38 @@ export type BeltSumAggregateInputType = {
 
 export type BeltMinAggregateInputType = {
   id?: true
-  name?: true
+  code?: true
+  label?: true
   level?: true
   order?: true
   rankType?: true
   color?: true
   colorHex?: true
+  isActive?: true
 }
 
 export type BeltMaxAggregateInputType = {
   id?: true
-  name?: true
+  code?: true
+  label?: true
   level?: true
   order?: true
   rankType?: true
   color?: true
   colorHex?: true
+  isActive?: true
 }
 
 export type BeltCountAggregateInputType = {
   id?: true
-  name?: true
+  code?: true
+  label?: true
   level?: true
   order?: true
   rankType?: true
   color?: true
   colorHex?: true
+  isActive?: true
   _all?: true
 }
 
@@ -197,12 +209,14 @@ export type BeltGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type BeltGroupByOutputType = {
   id: string
-  name: $Enums.BeltName
+  code: string
+  label: string
   level: number
   order: number | null
   rankType: $Enums.RankType
   color: string | null
   colorHex: string | null
+  isActive: boolean
   _count: BeltCountAggregateOutputType | null
   _avg: BeltAvgAggregateOutputType | null
   _sum: BeltSumAggregateOutputType | null
@@ -230,12 +244,14 @@ export type BeltWhereInput = {
   OR?: Prisma.BeltWhereInput[]
   NOT?: Prisma.BeltWhereInput | Prisma.BeltWhereInput[]
   id?: Prisma.StringFilter<"Belt"> | string
-  name?: Prisma.EnumBeltNameFilter<"Belt"> | $Enums.BeltName
+  code?: Prisma.StringFilter<"Belt"> | string
+  label?: Prisma.StringFilter<"Belt"> | string
   level?: Prisma.IntFilter<"Belt"> | number
   order?: Prisma.IntNullableFilter<"Belt"> | number | null
   rankType?: Prisma.EnumRankTypeFilter<"Belt"> | $Enums.RankType
   color?: Prisma.StringNullableFilter<"Belt"> | string | null
   colorHex?: Prisma.StringNullableFilter<"Belt"> | string | null
+  isActive?: Prisma.BoolFilter<"Belt"> | boolean
   students?: Prisma.StudentListRelationFilter
   minFor?: Prisma.CompetitionListRelationFilter
   maxFor?: Prisma.CompetitionListRelationFilter
@@ -243,12 +259,14 @@ export type BeltWhereInput = {
 
 export type BeltOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  label?: Prisma.SortOrder
   level?: Prisma.SortOrder
   order?: Prisma.SortOrderInput | Prisma.SortOrder
   rankType?: Prisma.SortOrder
   color?: Prisma.SortOrderInput | Prisma.SortOrder
   colorHex?: Prisma.SortOrderInput | Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   students?: Prisma.StudentOrderByRelationAggregateInput
   minFor?: Prisma.CompetitionOrderByRelationAggregateInput
   maxFor?: Prisma.CompetitionOrderByRelationAggregateInput
@@ -256,7 +274,8 @@ export type BeltOrderByWithRelationInput = {
 
 export type BeltWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  name?: $Enums.BeltName
+  code?: string
+  label?: string
   AND?: Prisma.BeltWhereInput | Prisma.BeltWhereInput[]
   OR?: Prisma.BeltWhereInput[]
   NOT?: Prisma.BeltWhereInput | Prisma.BeltWhereInput[]
@@ -265,19 +284,22 @@ export type BeltWhereUniqueInput = Prisma.AtLeast<{
   rankType?: Prisma.EnumRankTypeFilter<"Belt"> | $Enums.RankType
   color?: Prisma.StringNullableFilter<"Belt"> | string | null
   colorHex?: Prisma.StringNullableFilter<"Belt"> | string | null
+  isActive?: Prisma.BoolFilter<"Belt"> | boolean
   students?: Prisma.StudentListRelationFilter
   minFor?: Prisma.CompetitionListRelationFilter
   maxFor?: Prisma.CompetitionListRelationFilter
-}, "id" | "name">
+}, "id" | "code" | "label">
 
 export type BeltOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  label?: Prisma.SortOrder
   level?: Prisma.SortOrder
   order?: Prisma.SortOrderInput | Prisma.SortOrder
   rankType?: Prisma.SortOrder
   color?: Prisma.SortOrderInput | Prisma.SortOrder
   colorHex?: Prisma.SortOrderInput | Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   _count?: Prisma.BeltCountOrderByAggregateInput
   _avg?: Prisma.BeltAvgOrderByAggregateInput
   _max?: Prisma.BeltMaxOrderByAggregateInput
@@ -290,22 +312,26 @@ export type BeltScalarWhereWithAggregatesInput = {
   OR?: Prisma.BeltScalarWhereWithAggregatesInput[]
   NOT?: Prisma.BeltScalarWhereWithAggregatesInput | Prisma.BeltScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Belt"> | string
-  name?: Prisma.EnumBeltNameWithAggregatesFilter<"Belt"> | $Enums.BeltName
+  code?: Prisma.StringWithAggregatesFilter<"Belt"> | string
+  label?: Prisma.StringWithAggregatesFilter<"Belt"> | string
   level?: Prisma.IntWithAggregatesFilter<"Belt"> | number
   order?: Prisma.IntNullableWithAggregatesFilter<"Belt"> | number | null
   rankType?: Prisma.EnumRankTypeWithAggregatesFilter<"Belt"> | $Enums.RankType
   color?: Prisma.StringNullableWithAggregatesFilter<"Belt"> | string | null
   colorHex?: Prisma.StringNullableWithAggregatesFilter<"Belt"> | string | null
+  isActive?: Prisma.BoolWithAggregatesFilter<"Belt"> | boolean
 }
 
 export type BeltCreateInput = {
   id?: string
-  name: $Enums.BeltName
+  code: string
+  label: string
   level: number
   order?: number | null
   rankType?: $Enums.RankType
   color?: string | null
   colorHex?: string | null
+  isActive?: boolean
   students?: Prisma.StudentCreateNestedManyWithoutBeltInput
   minFor?: Prisma.CompetitionCreateNestedManyWithoutMinBeltInput
   maxFor?: Prisma.CompetitionCreateNestedManyWithoutMaxBeltInput
@@ -313,12 +339,14 @@ export type BeltCreateInput = {
 
 export type BeltUncheckedCreateInput = {
   id?: string
-  name: $Enums.BeltName
+  code: string
+  label: string
   level: number
   order?: number | null
   rankType?: $Enums.RankType
   color?: string | null
   colorHex?: string | null
+  isActive?: boolean
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutBeltInput
   minFor?: Prisma.CompetitionUncheckedCreateNestedManyWithoutMinBeltInput
   maxFor?: Prisma.CompetitionUncheckedCreateNestedManyWithoutMaxBeltInput
@@ -326,12 +354,14 @@ export type BeltUncheckedCreateInput = {
 
 export type BeltUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.EnumBeltNameFieldUpdateOperationsInput | $Enums.BeltName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
   level?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rankType?: Prisma.EnumRankTypeFieldUpdateOperationsInput | $Enums.RankType
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   students?: Prisma.StudentUpdateManyWithoutBeltNestedInput
   minFor?: Prisma.CompetitionUpdateManyWithoutMinBeltNestedInput
   maxFor?: Prisma.CompetitionUpdateManyWithoutMaxBeltNestedInput
@@ -339,12 +369,14 @@ export type BeltUpdateInput = {
 
 export type BeltUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.EnumBeltNameFieldUpdateOperationsInput | $Enums.BeltName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
   level?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rankType?: Prisma.EnumRankTypeFieldUpdateOperationsInput | $Enums.RankType
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   students?: Prisma.StudentUncheckedUpdateManyWithoutBeltNestedInput
   minFor?: Prisma.CompetitionUncheckedUpdateManyWithoutMinBeltNestedInput
   maxFor?: Prisma.CompetitionUncheckedUpdateManyWithoutMaxBeltNestedInput
@@ -352,32 +384,38 @@ export type BeltUncheckedUpdateInput = {
 
 export type BeltCreateManyInput = {
   id?: string
-  name: $Enums.BeltName
+  code: string
+  label: string
   level: number
   order?: number | null
   rankType?: $Enums.RankType
   color?: string | null
   colorHex?: string | null
+  isActive?: boolean
 }
 
 export type BeltUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.EnumBeltNameFieldUpdateOperationsInput | $Enums.BeltName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
   level?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rankType?: Prisma.EnumRankTypeFieldUpdateOperationsInput | $Enums.RankType
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type BeltUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.EnumBeltNameFieldUpdateOperationsInput | $Enums.BeltName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
   level?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rankType?: Prisma.EnumRankTypeFieldUpdateOperationsInput | $Enums.RankType
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type BeltScalarRelationFilter = {
@@ -387,12 +425,14 @@ export type BeltScalarRelationFilter = {
 
 export type BeltCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  label?: Prisma.SortOrder
   level?: Prisma.SortOrder
   order?: Prisma.SortOrder
   rankType?: Prisma.SortOrder
   color?: Prisma.SortOrder
   colorHex?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
 }
 
 export type BeltAvgOrderByAggregateInput = {
@@ -402,22 +442,26 @@ export type BeltAvgOrderByAggregateInput = {
 
 export type BeltMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  label?: Prisma.SortOrder
   level?: Prisma.SortOrder
   order?: Prisma.SortOrder
   rankType?: Prisma.SortOrder
   color?: Prisma.SortOrder
   colorHex?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
 }
 
 export type BeltMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  label?: Prisma.SortOrder
   level?: Prisma.SortOrder
   order?: Prisma.SortOrder
   rankType?: Prisma.SortOrder
   color?: Prisma.SortOrder
   colorHex?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
 }
 
 export type BeltSumOrderByAggregateInput = {
@@ -437,10 +481,6 @@ export type BeltUpdateOneRequiredWithoutStudentsNestedInput = {
   upsert?: Prisma.BeltUpsertWithoutStudentsInput
   connect?: Prisma.BeltWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.BeltUpdateToOneWithWhereWithoutStudentsInput, Prisma.BeltUpdateWithoutStudentsInput>, Prisma.BeltUncheckedUpdateWithoutStudentsInput>
-}
-
-export type EnumBeltNameFieldUpdateOperationsInput = {
-  set?: $Enums.BeltName
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -493,24 +533,28 @@ export type BeltUpdateOneRequiredWithoutMaxForNestedInput = {
 
 export type BeltCreateWithoutStudentsInput = {
   id?: string
-  name: $Enums.BeltName
+  code: string
+  label: string
   level: number
   order?: number | null
   rankType?: $Enums.RankType
   color?: string | null
   colorHex?: string | null
+  isActive?: boolean
   minFor?: Prisma.CompetitionCreateNestedManyWithoutMinBeltInput
   maxFor?: Prisma.CompetitionCreateNestedManyWithoutMaxBeltInput
 }
 
 export type BeltUncheckedCreateWithoutStudentsInput = {
   id?: string
-  name: $Enums.BeltName
+  code: string
+  label: string
   level: number
   order?: number | null
   rankType?: $Enums.RankType
   color?: string | null
   colorHex?: string | null
+  isActive?: boolean
   minFor?: Prisma.CompetitionUncheckedCreateNestedManyWithoutMinBeltInput
   maxFor?: Prisma.CompetitionUncheckedCreateNestedManyWithoutMaxBeltInput
 }
@@ -533,48 +577,56 @@ export type BeltUpdateToOneWithWhereWithoutStudentsInput = {
 
 export type BeltUpdateWithoutStudentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.EnumBeltNameFieldUpdateOperationsInput | $Enums.BeltName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
   level?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rankType?: Prisma.EnumRankTypeFieldUpdateOperationsInput | $Enums.RankType
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   minFor?: Prisma.CompetitionUpdateManyWithoutMinBeltNestedInput
   maxFor?: Prisma.CompetitionUpdateManyWithoutMaxBeltNestedInput
 }
 
 export type BeltUncheckedUpdateWithoutStudentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.EnumBeltNameFieldUpdateOperationsInput | $Enums.BeltName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
   level?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rankType?: Prisma.EnumRankTypeFieldUpdateOperationsInput | $Enums.RankType
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   minFor?: Prisma.CompetitionUncheckedUpdateManyWithoutMinBeltNestedInput
   maxFor?: Prisma.CompetitionUncheckedUpdateManyWithoutMaxBeltNestedInput
 }
 
 export type BeltCreateWithoutMinForInput = {
   id?: string
-  name: $Enums.BeltName
+  code: string
+  label: string
   level: number
   order?: number | null
   rankType?: $Enums.RankType
   color?: string | null
   colorHex?: string | null
+  isActive?: boolean
   students?: Prisma.StudentCreateNestedManyWithoutBeltInput
   maxFor?: Prisma.CompetitionCreateNestedManyWithoutMaxBeltInput
 }
 
 export type BeltUncheckedCreateWithoutMinForInput = {
   id?: string
-  name: $Enums.BeltName
+  code: string
+  label: string
   level: number
   order?: number | null
   rankType?: $Enums.RankType
   color?: string | null
   colorHex?: string | null
+  isActive?: boolean
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutBeltInput
   maxFor?: Prisma.CompetitionUncheckedCreateNestedManyWithoutMaxBeltInput
 }
@@ -586,24 +638,28 @@ export type BeltCreateOrConnectWithoutMinForInput = {
 
 export type BeltCreateWithoutMaxForInput = {
   id?: string
-  name: $Enums.BeltName
+  code: string
+  label: string
   level: number
   order?: number | null
   rankType?: $Enums.RankType
   color?: string | null
   colorHex?: string | null
+  isActive?: boolean
   students?: Prisma.StudentCreateNestedManyWithoutBeltInput
   minFor?: Prisma.CompetitionCreateNestedManyWithoutMinBeltInput
 }
 
 export type BeltUncheckedCreateWithoutMaxForInput = {
   id?: string
-  name: $Enums.BeltName
+  code: string
+  label: string
   level: number
   order?: number | null
   rankType?: $Enums.RankType
   color?: string | null
   colorHex?: string | null
+  isActive?: boolean
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutBeltInput
   minFor?: Prisma.CompetitionUncheckedCreateNestedManyWithoutMinBeltInput
 }
@@ -626,24 +682,28 @@ export type BeltUpdateToOneWithWhereWithoutMinForInput = {
 
 export type BeltUpdateWithoutMinForInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.EnumBeltNameFieldUpdateOperationsInput | $Enums.BeltName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
   level?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rankType?: Prisma.EnumRankTypeFieldUpdateOperationsInput | $Enums.RankType
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   students?: Prisma.StudentUpdateManyWithoutBeltNestedInput
   maxFor?: Prisma.CompetitionUpdateManyWithoutMaxBeltNestedInput
 }
 
 export type BeltUncheckedUpdateWithoutMinForInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.EnumBeltNameFieldUpdateOperationsInput | $Enums.BeltName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
   level?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rankType?: Prisma.EnumRankTypeFieldUpdateOperationsInput | $Enums.RankType
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   students?: Prisma.StudentUncheckedUpdateManyWithoutBeltNestedInput
   maxFor?: Prisma.CompetitionUncheckedUpdateManyWithoutMaxBeltNestedInput
 }
@@ -661,24 +721,28 @@ export type BeltUpdateToOneWithWhereWithoutMaxForInput = {
 
 export type BeltUpdateWithoutMaxForInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.EnumBeltNameFieldUpdateOperationsInput | $Enums.BeltName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
   level?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rankType?: Prisma.EnumRankTypeFieldUpdateOperationsInput | $Enums.RankType
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   students?: Prisma.StudentUpdateManyWithoutBeltNestedInput
   minFor?: Prisma.CompetitionUpdateManyWithoutMinBeltNestedInput
 }
 
 export type BeltUncheckedUpdateWithoutMaxForInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.EnumBeltNameFieldUpdateOperationsInput | $Enums.BeltName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
   level?: Prisma.IntFieldUpdateOperationsInput | number
   order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   rankType?: Prisma.EnumRankTypeFieldUpdateOperationsInput | $Enums.RankType
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   students?: Prisma.StudentUncheckedUpdateManyWithoutBeltNestedInput
   minFor?: Prisma.CompetitionUncheckedUpdateManyWithoutMinBeltNestedInput
 }
@@ -734,12 +798,14 @@ export type BeltCountOutputTypeCountMaxForArgs<ExtArgs extends runtime.Types.Ext
 
 export type BeltSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  code?: boolean
+  label?: boolean
   level?: boolean
   order?: boolean
   rankType?: boolean
   color?: boolean
   colorHex?: boolean
+  isActive?: boolean
   students?: boolean | Prisma.Belt$studentsArgs<ExtArgs>
   minFor?: boolean | Prisma.Belt$minForArgs<ExtArgs>
   maxFor?: boolean | Prisma.Belt$maxForArgs<ExtArgs>
@@ -748,35 +814,41 @@ export type BeltSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type BeltSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  code?: boolean
+  label?: boolean
   level?: boolean
   order?: boolean
   rankType?: boolean
   color?: boolean
   colorHex?: boolean
+  isActive?: boolean
 }, ExtArgs["result"]["belt"]>
 
 export type BeltSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  code?: boolean
+  label?: boolean
   level?: boolean
   order?: boolean
   rankType?: boolean
   color?: boolean
   colorHex?: boolean
+  isActive?: boolean
 }, ExtArgs["result"]["belt"]>
 
 export type BeltSelectScalar = {
   id?: boolean
-  name?: boolean
+  code?: boolean
+  label?: boolean
   level?: boolean
   order?: boolean
   rankType?: boolean
   color?: boolean
   colorHex?: boolean
+  isActive?: boolean
 }
 
-export type BeltOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "level" | "order" | "rankType" | "color" | "colorHex", ExtArgs["result"]["belt"]>
+export type BeltOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "label" | "level" | "order" | "rankType" | "color" | "colorHex" | "isActive", ExtArgs["result"]["belt"]>
 export type BeltInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   students?: boolean | Prisma.Belt$studentsArgs<ExtArgs>
   minFor?: boolean | Prisma.Belt$minForArgs<ExtArgs>
@@ -795,12 +867,14 @@ export type $BeltPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    name: $Enums.BeltName
+    code: string
+    label: string
     level: number
     order: number | null
     rankType: $Enums.RankType
     color: string | null
     colorHex: string | null
+    isActive: boolean
   }, ExtArgs["result"]["belt"]>
   composites: {}
 }
@@ -1228,12 +1302,14 @@ export interface Prisma__BeltClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface BeltFieldRefs {
   readonly id: Prisma.FieldRef<"Belt", 'String'>
-  readonly name: Prisma.FieldRef<"Belt", 'BeltName'>
+  readonly code: Prisma.FieldRef<"Belt", 'String'>
+  readonly label: Prisma.FieldRef<"Belt", 'String'>
   readonly level: Prisma.FieldRef<"Belt", 'Int'>
   readonly order: Prisma.FieldRef<"Belt", 'Int'>
   readonly rankType: Prisma.FieldRef<"Belt", 'RankType'>
   readonly color: Prisma.FieldRef<"Belt", 'String'>
   readonly colorHex: Prisma.FieldRef<"Belt", 'String'>
+  readonly isActive: Prisma.FieldRef<"Belt", 'Boolean'>
 }
     
 

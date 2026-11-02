@@ -1,27 +1,24 @@
 import { cn } from "cn";
 import type { Belt } from "@/features/base-data";
-import { beltLabel } from "@/features/base-data/labels";
 
-export { beltLabel };
-
-const colorBeltDots: Partial<Record<Belt["name"], string>> = {
-  WHITE: "bg-belt-white border border-border",
-  YELLOW: "bg-belt-yellow",
-  GREEN: "bg-belt-green",
-  BLUE: "bg-belt-blue",
-  RED: "bg-belt-red",
+const colorBeltDots: Record<string, string> = {
+  white: "bg-belt-white border border-border",
+  yellow: "bg-belt-yellow",
+  green: "bg-belt-green",
+  blue: "bg-belt-blue",
+  red: "bg-belt-red",
 };
 
-function dotClass(name: Belt["name"]): string {
-  const colorDot = colorBeltDots[name];
+function dotClass(code: string): string {
+  const colorDot = colorBeltDots[code];
   if (colorDot) {
     return colorDot;
   }
-  return name.startsWith("POOM") ? "bg-belt-poom" : "bg-belt-dan";
+  return code.startsWith("poom") ? "bg-belt-poom" : "bg-belt-dan";
 }
 
-export function BeltDot({ name }: { name: Belt["name"] }) {
-  return <span aria-hidden className={cn("size-2 shrink-0 rounded-full", dotClass(name))} />;
+export function BeltDot({ code }: { code: string }) {
+  return <span aria-hidden className={cn("size-2 shrink-0 rounded-full", dotClass(code))} />;
 }
 
 export function BeltChip({ belt, className }: { belt: Belt; className?: string }) {
@@ -32,8 +29,8 @@ export function BeltChip({ belt, className }: { belt: Belt; className?: string }
         className,
       )}
     >
-      <BeltDot name={belt.name} />
-      {beltLabel(belt.name)}
+      <BeltDot code={belt.code} />
+      {belt.label}
     </span>
   );
 }

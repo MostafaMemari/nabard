@@ -59,6 +59,17 @@ export function formatJalaliDate(value: Date | number): string {
   return joinedParts(dateFormatter, value, "/");
 }
 
+const jalaliYearFormatter = new Intl.DateTimeFormat("en-US", {
+  calendar: "persian",
+  timeZone: "Asia/Tehran",
+  year: "numeric",
+});
+
+export function jalaliYear(value: Date | number): number {
+  const year = jalaliYearFormatter.formatToParts(new Date(value)).find((part) => part.type === "year")?.value ?? "";
+  return Number(year.replace(/\D/g, ""));
+}
+
 export function formatJalaliDateTime(value: Date | number): string {
   return joinedParts(dateTimeFormatter, value, "/");
 }

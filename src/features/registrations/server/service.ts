@@ -1,4 +1,4 @@
-import type { Belt, BeltName, WeightClass } from "@/features/base-data";
+import type { Belt, WeightClass } from "@/features/base-data";
 import type { Province } from "@/generated/client";
 import { AppError } from "@/lib/api";
 import type { ListResult } from "@/lib/pagination";
@@ -6,7 +6,7 @@ import type { CurrentUser } from "@/lib/session";
 import { readReceiptImage } from "@/lib/storage/image";
 import type { Storage } from "@/lib/storage/types";
 import type { RegistrationListQuery } from "../schemas";
-import { checkEligibility, type EligibilityCompetition, type EligibilityStudent } from "./eligibility";
+import { checkEligibility, type EligibilityCompetition, type EligibilityStudent, eligibilityCompetitionFromSnapshot } from "./eligibility";
 import type {
   AgeCategoryRow,
   CompetitionRegistrationRow,
@@ -40,7 +40,7 @@ export type ParticipantRecord = {
   fullName: string;
   nationalCode: string;
   birthDate: Date;
-  beltName: BeltName;
+  beltLabel: string;
   weightClassLabel: string | null;
   coachName: string;
 };
@@ -94,20 +94,28 @@ function toEligibilityStudent(row: RegistrationStudentRow): EligibilityStudent {
 
 function toEligibilityCompetition(
   row: CompetitionRegistrationRow,
-  ageCategory: AgeCategoryRow,
   belts: Belt[],
+  ageCategory: AgeCategoryRow | null,
   weightClasses: WeightClass[],
-): EligibilityCompetition {
+): EligibilityCompetition | null {
+  if (row.rules) {
+    return eligibilityCompetitionFromSnapshot({ discipline: row.discipline, gender: row.gender }, row.rules, belts);
+  }
+
+  if (!ageCategory) return null;
+
   return {
     discipline: row.discipline,
     gender: row.gender,
     ageCategory: {
       id: ageCategory.id,
-      name: ageCategory.name,
+      code: ageCategory.code,
+      label: ageCategory.label,
       startDate: ageCategory.startDate.toISOString(),
       endDate: ageCategory.endDate.toISOString(),
       birthYearStart: null,
       birthYearEnd: null,
+      isActive: ageCategory.isActive,
     },
     beltIds: expandBeltIds(row, belts),
     weightClasses: row.discipline === "KYORUGI" ? weightClasses : [],
@@ -122,6 +130,7 @@ function toRegistrationRecord(row: RegistrationWithScope): RegistrationRecord {
     coachId: row.coachId,
     paymentId: row.paymentId,
     weightClassId: row.weightClassId,
+    weightClassLabel: row.weightClassLabel,
     status: row.status,
     note: row.note,
     createdAt: row.createdAt,
@@ -279,7 +288,11 @@ export async function createRegistrations(
     throw new AppError(409, "CONFLICT", "برای برخی از هنرجوهای انتخاب شده امکان ثبت نام در این مسابقه نیست.", problems);
   }
 
-  const eligibilityCompetition = toEligibilityCompetition(competition, ageCategory, belts, weightClasses);
+  const eligibilityCompetition = toEligibilityCompetition(competition, belts, ageCategory, weightClasses);
+  if (!eligibilityCompetition) {
+    throw new AppError(409, "CONFLICT", "رده سنی این مسابقه معتبر نیست.");
+  }
+
   const results = students.map((student) => ({
     student,
     eligibility: checkEligibility(toEligibilityStudent(student), eligibilityCompetition, belts),
@@ -297,10 +310,17 @@ export async function createRegistrations(
   }
 
   const stored = await storage.put(receipt);
-  const studentsToRegister = results.map((result) => ({
-    studentId: result.student.id,
-    weightClassId: result.eligibility.eligible ? (result.eligibility.weightClass?.id ?? null) : null,
-  }));
+  const studentsToRegister = results.map((result) => {
+    const weightClass = result.eligibility.eligible ? result.eligibility.weightClass : null;
+
+    return {
+      studentId: result.student.id,
+      weightClassId: weightClass?.id ?? null,
+      weightClassLabel: weightClass?.label ?? null,
+      weightClassMin: weightClass?.minWeightKg ?? null,
+      weightClassMax: weightClass?.maxWeightKg ?? null,
+    };
+  });
 
   return repo.createRegistrationBundle({
     competitionId,
@@ -326,8 +346,8 @@ function toParticipantRecord(row: ParticipantRow): ParticipantRecord {
     fullName: row.student.fullName,
     nationalCode: row.student.nationalCode,
     birthDate: row.student.birthDate,
-    beltName: row.student.beltName,
-    weightClassLabel: row.weightClass?.label ?? null,
+    beltLabel: row.student.beltLabel,
+    weightClassLabel: row.weightClassLabel,
     coachName: row.coachName,
   };
 }

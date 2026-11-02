@@ -1,5 +1,5 @@
 import type { AgeCategory, Belt, Gender, WeightClass } from "@/features/base-data";
-import type { Discipline } from "@/features/competitions";
+import type { CompetitionRulesSnapshot, Discipline } from "@/features/competitions";
 
 export type ProfileStatus = "PENDING" | "APPROVED" | "REJECTED";
 
@@ -22,6 +22,45 @@ export type EligibilityCompetition = {
 };
 
 export type EligibilityResult = { eligible: true; weightClass: WeightClass | null } | { eligible: false; reason: string };
+
+// A published competition is judged by its frozen rules snapshot: the age
+// category dates and the min/max belt levels come from the snapshot, the belt
+// list is only used to resolve the student's belt level.
+export function eligibilityCompetitionFromSnapshot(
+  base: { discipline: Discipline; gender: Gender },
+  rules: CompetitionRulesSnapshot,
+  belts: Belt[],
+): EligibilityCompetition {
+  const ageCategory: AgeCategory = {
+    id: rules.ageCategory.id,
+    code: rules.ageCategory.code,
+    label: rules.ageCategory.label,
+    startDate: rules.ageCategory.startDate,
+    endDate: rules.ageCategory.endDate,
+    birthYearStart: null,
+    birthYearEnd: null,
+    isActive: true,
+  };
+
+  return {
+    discipline: base.discipline,
+    gender: base.gender,
+    ageCategory,
+    beltIds: belts.filter((belt) => belt.level >= rules.minBelt.level && belt.level <= rules.maxBelt.level).map((belt) => belt.id),
+    weightClasses: rules.weightClasses.map((weightClass) => ({
+      id: weightClass.id,
+      ageCategoryId: rules.ageCategory.id,
+      gender: base.gender,
+      label: weightClass.label,
+      minWeightKg: weightClass.min,
+      maxWeightKg: weightClass.max,
+      order: weightClass.order,
+      excludeMin: weightClass.excludeMin,
+      excludeMax: weightClass.excludeMax,
+      isActive: true,
+    })),
+  };
+}
 
 const REASONS = {
   profile: "پروفایل هنرجو هنوز تایید نشده است",

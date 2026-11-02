@@ -24,6 +24,7 @@ export function useCoachRegistrationRows() {
       const payment = payments.find((item) => item.id === registration.paymentId);
       const refund = refunds.find((item) => item.registrationId === registration.id);
       const weightClass = weightClasses.find((item) => item.id === registration.weightClassId);
+      const label = registration.weightClassLabel ?? weightClass?.label ?? null;
 
       return {
         registration,
@@ -32,7 +33,7 @@ export function useCoachRegistrationRows() {
         competitionDeadline: competition?.registrationDeadline ?? null,
         paymentStatus: payment?.status ?? null,
         paymentAmount: payment?.amount ?? null,
-        weightClassLabel: weightClass ? `${toPersianDigits(weightClass.label)} کیلوگرم` : null,
+        weightClassLabel: label ? `${toPersianDigits(label)} کیلوگرم` : null,
         refundStatus: refund?.status ?? null,
       };
     });

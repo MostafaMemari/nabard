@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
-import { type Gender, useBelts, useWeightClasses } from "@/features/base-data";
+import { type Gender, useAgeCategories, useBelts, useWeightClasses } from "@/features/base-data";
 import { useRegistrations } from "@/features/registrations";
 import { createCompetition, updateCompetition } from "../api";
 import { useCompetition } from "../hooks/use-competitions";
@@ -24,6 +24,7 @@ export function useCompetitionForm(competitionId?: string) {
   } = useCompetition(competitionId ?? "");
   const { registrations } = useRegistrations();
   const { belts } = useBelts();
+  const { ageCategories } = useAgeCategories();
 
   const form = useForm<CompetitionFormValues, unknown, CompetitionFormValues>({
     resolver: zodResolver(competitionSchema),
@@ -88,6 +89,7 @@ export function useCompetitionForm(competitionId?: string) {
     form,
     values,
     belts,
+    ageCategories,
     weightClasses,
     weightLoading,
     locked,

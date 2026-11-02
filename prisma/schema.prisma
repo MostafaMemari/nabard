@@ -66,42 +66,10 @@ enum Province {
   KURDISTAN                  @map("kurdistan")
 }
 
-enum BeltName {
-  WHITE  @map("white")
-  YELLOW @map("yellow")
-  GREEN  @map("green")
-  BLUE   @map("blue")
-  RED    @map("red")
-  POOM_1 @map("poom_1")
-  POOM_2 @map("poom_2")
-  POOM_3 @map("poom_3")
-  POOM_4 @map("poom_4")
-  DAN_1  @map("dan_1")
-  DAN_2  @map("dan_2")
-  DAN_3  @map("dan_3")
-  DAN_4  @map("dan_4")
-  DAN_5  @map("dan_5")
-  DAN_6  @map("dan_6")
-  DAN_7  @map("dan_7")
-  DAN_8  @map("dan_8")
-  DAN_9  @map("dan_9")
-  DAN_10 @map("dan_10")
-}
-
 enum RankType {
   COLOR @map("color")
   POOM  @map("poom")
   DAN   @map("dan")
-}
-
-enum AgeCategoryName {
-  BLOSSOM @map("blossom")
-  YOUTH   @map("youth")
-  CADET   @map("cadet")
-  JUNIOR  @map("junior")
-  YOUNG   @map("young")
-  SENIOR  @map("senior")
-  ULTRA   @map("ultra")
 }
 
 enum Discipline {
@@ -254,14 +222,18 @@ model Student {
 
 // ───────────── Base data (same as the existing schema) ─────────────
 
+// Belts are editable base data: code is the stable identifier, label is the
+// Persian name shown in the UI. Archived belts stay visible to old data.
 model Belt {
   id       String   @id @default(uuid()) @map("id")
-  name     BeltName @unique @map("name")
+  code     String   @unique @map("code") @db.VarChar(60)
+  label    String   @unique @map("label") @db.VarChar(60)
   level    Int      @map("level")
   order    Int?     @map("order")
   rankType RankType @default(COLOR) @map("rank_type")
   color    String?  @map("color")
   colorHex String?  @map("color_hex")
+  isActive Boolean  @default(true) @map("is_active")
 
   students Student[]
   minFor   Competition[] @relation("CompetitionMinBelt")
@@ -270,13 +242,17 @@ model Belt {
   @@map("belts")
 }
 
+// Age categories follow the same code/label/isActive pattern as belts; the
+// birth years are Jalali and derived from the date range on every write.
 model AgeCategory {
-  id             String          @id @default(uuid())
-  name           AgeCategoryName @unique @map("name")
-  startDate      DateTime        @map("start_date")
-  endDate        DateTime        @map("end_date")
-  birthYearStart Int?            @map("birth_year_start")
-  birthYearEnd   Int?            @map("birth_year_end")
+  id             String   @id @default(uuid())
+  code           String   @unique @map("code") @db.VarChar(60)
+  label          String   @unique @map("label") @db.VarChar(60)
+  startDate      DateTime @map("start_date")
+  endDate        DateTime @map("end_date")
+  birthYearStart Int?     @map("birth_year_start")
+  birthYearEnd   Int?     @map("birth_year_end")
+  isActive       Boolean  @default(true) @map("is_active")
 
   weightClasses WeightClass[]
   competitions  Competition[]
@@ -295,6 +271,7 @@ model WeightClass {
   order         Int         @map("order")
   excludeMin    Boolean     @default(false) @map("exclude_min")
   excludeMax    Boolean     @default(true) @map("exclude_max")
+  isActive      Boolean     @default(true) @map("is_active")
 
   registrations Registration[]
 
@@ -328,6 +305,7 @@ model Competition {
   eventDate            DateTime          @map("event_date")
   status               CompetitionStatus @default(DRAFT) @map("status")
   cancelReason         String?           @map("cancel_reason") @db.VarChar(500) // admin note on cancel
+  rulesSnapshot        Json?             @map("rules_snapshot") // frozen rules taken when the competition is published
 
   registrations      Registration[]
   deadlineExtensions DeadlineExtension[]
@@ -521,9 +499,12 @@ model Registration {
   paymentId     String?     @map("payment_id")
   payment       Payment?    @relation(fields: [paymentId], references: [id])
 
-  // Kyorugi only: found automatically from the student's weight
-  weightClassId String?      @map("weight_class_id")
-  weightClass   WeightClass? @relation(fields: [weightClassId], references: [id])
+  // Kyorugi only: resolved from the competition rules snapshot at registration
+  weightClassId    String?   @map("weight_class_id")
+  weightClass      WeightClass? @relation(fields: [weightClassId], references: [id])
+  weightClassLabel String?   @map("weight_class_label") @db.VarChar(60)
+  weightClassMin   Decimal?  @map("weight_class_min") @db.Decimal(5, 3)
+  weightClassMax   Decimal?  @map("weight_class_max") @db.Decimal(5, 3)
 
   status RegistrationStatus @default(PENDING) @map("status")
   note   String?            @map("note") @db.VarChar(500) // admin note on rejection

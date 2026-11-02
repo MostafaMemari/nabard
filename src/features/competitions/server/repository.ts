@@ -1,7 +1,8 @@
 import type { AgeCategory, Belt, Gender, WeightClass } from "@/features/base-data";
 import type { Province } from "@/generated/client";
 import { getPrisma } from "@/lib/prisma";
-import type { CompetitionLevel, CompetitionStatus, Discipline } from "../types";
+import type { CompetitionLevel, CompetitionRulesSnapshot, CompetitionStatus, Discipline } from "../types";
+import { buildRulesSnapshot, parseRulesSnapshot } from "./snapshot";
 
 export type UserRole = "ADMIN" | "COACH" | "SUPER_ADMIN";
 
@@ -18,7 +19,6 @@ export type BeltRow = Belt;
 export type AgeCategoryRow = Omit<AgeCategory, "startDate" | "endDate"> & { startDate: Date; endDate: Date };
 
 export type WeightClassRow = WeightClass;
-
 export type EligibilityStudentRow = {
   id: string;
   fullName: string;
@@ -47,6 +47,7 @@ export type CompetitionRow = {
   registrationDeadline: Date;
   eventDate: Date;
   status: CompetitionStatus;
+  rules: CompetitionRulesSnapshot | null;
   cancelReason: string | null;
   createdAt: Date;
   updatedAt: Date;
@@ -126,6 +127,7 @@ export type CompetitionsRepository = {
   countRegistrations(competitionId: string): Promise<number>;
   createCompetition(data: NewCompetitionData): Promise<CompetitionRow>;
   updateCompetition(id: string, data: CompetitionUpdateData): Promise<CompetitionRow>;
+  publishWithRulesSnapshot(id: string): Promise<CompetitionRow | null>;
   cancelCompetitionWithRefunds(id: string, reason: string): Promise<CompetitionRow | null>;
   extendDeadline(input: DeadlineExtensionInput): Promise<CompetitionRow>;
   findDeadlineExtensions(competitionId: string): Promise<DeadlineExtensionRow[]>;
@@ -152,21 +154,24 @@ const competitionSelection = {
   registrationDeadline: true,
   eventDate: true,
   status: true,
+  rulesSnapshot: true,
   cancelReason: true,
   createdAt: true,
   updatedAt: true,
 } as const;
 
-type CompetitionRowInput = Omit<CompetitionRow, "countyIds" | "countyNames"> & {
+type CompetitionRowInput = Omit<CompetitionRow, "countyIds" | "countyNames" | "rules"> & {
   counties: Array<{ countyId: string; county: { name: string } }>;
+  rulesSnapshot: unknown;
 };
 
 function toCompetitionRow(row: CompetitionRowInput): CompetitionRow {
   const counties = [...row.counties].sort((left, right) => left.county.name.localeCompare(right.county.name, "fa"));
-  const { counties: _counties, ...rest } = row;
+  const { counties: _counties, rulesSnapshot, ...rest } = row;
 
   return {
     ...rest,
+    rules: parseRulesSnapshot(rulesSnapshot),
     countyIds: counties.map((item) => item.countyId),
     countyNames: counties.map((item) => item.county.name),
   };
@@ -174,12 +179,14 @@ function toCompetitionRow(row: CompetitionRowInput): CompetitionRow {
 
 const beltSelection = {
   id: true,
-  name: true,
+  code: true,
+  label: true,
   level: true,
   order: true,
   rankType: true,
   color: true,
   colorHex: true,
+  isActive: true,
 } as const;
 
 function competitionWhere(filters: CompetitionFilters) {
@@ -371,10 +378,45 @@ export async function findAllBelts(): Promise<BeltRow[]> {
   return getPrisma().belt.findMany({ select: beltSelection, orderBy: { level: "asc" } });
 }
 
+// Publishes inside one transaction and freezes the rules: age category, min and
+// max belt and the weight classes of the age category and gender. The snapshot
+// is read from the live rows in the same transaction, so later base data edits
+// never change a published competition.
+export async function publishWithRulesSnapshot(id: string): Promise<CompetitionRow | null> {
+  return getPrisma().$transaction(async (tx) => {
+    const applied = await tx.competition.updateMany({ where: { id, status: "DRAFT" }, data: { status: "PUBLISHED" } });
+    if (applied.count === 0) return null;
+
+    const row = await tx.competition.findUnique({
+      where: { id },
+      select: {
+        ageCategoryId: true,
+        gender: true,
+        minBeltId: true,
+        maxBeltId: true,
+      },
+    });
+    if (!row) return null;
+
+    const [ageCategory, minBelt, maxBelt, weightClasses] = await Promise.all([
+      tx.ageCategory.findUnique({ where: { id: row.ageCategoryId } }),
+      tx.belt.findUnique({ where: { id: row.minBeltId } }),
+      tx.belt.findUnique({ where: { id: row.maxBeltId } }),
+      tx.weightClass.findMany({ where: { ageCategoryId: row.ageCategoryId, gender: row.gender }, orderBy: { order: "asc" } }),
+    ]);
+
+    if (!ageCategory || !minBelt || !maxBelt) return null;
+
+    const snapshot = buildRulesSnapshot({ ageCategory, minBelt, maxBelt, weightClasses });
+
+    return tx.competition.update({ where: { id }, data: { rulesSnapshot: snapshot }, select: competitionSelection }).then(toCompetitionRow);
+  });
+}
+
 export async function findAllAgeCategories(): Promise<AgeCategoryRow[]> {
   return getPrisma().ageCategory.findMany({
-    select: { id: true, name: true, startDate: true, endDate: true, birthYearStart: true, birthYearEnd: true },
-    orderBy: { name: "asc" },
+    select: { id: true, code: true, label: true, startDate: true, endDate: true, birthYearStart: true, birthYearEnd: true, isActive: true },
+    orderBy: [{ startDate: "asc" }, { endDate: "asc" }],
   });
 }
 
@@ -391,6 +433,7 @@ export async function findWeightClasses(ageCategoryId: string, gender: Gender): 
       order: true,
       excludeMin: true,
       excludeMax: true,
+      isActive: true,
     },
     orderBy: { order: "asc" },
   });
@@ -403,6 +446,7 @@ export async function findWeightClasses(ageCategoryId: string, gender: Gender): 
     minWeightKg: Number(row.minWeightKg),
     maxWeightKg: row.maxWeightKg === null ? null : Number(row.maxWeightKg),
     order: row.order,
+    isActive: row.isActive,
     excludeMin: row.excludeMin,
     excludeMax: row.excludeMax,
   }));

@@ -1,19 +1,8 @@
-import type { Belt, WeightClass } from "../types";
-import type * as repository from "./repository";
-import type { AgeCategoryRecord } from "./repository";
+import type { BaseDataResult } from "./repository";
+import * as repository from "./repository";
 
-export type BaseDataResult = {
-  belts: Belt[];
-  ageCategories: AgeCategoryRecord[];
-  weightClasses: WeightClass[];
-};
+export type { BaseDataResult };
 
-export async function getBaseData(repo: typeof repository): Promise<BaseDataResult> {
-  const [belts, ageCategories, weightClasses] = await Promise.all([
-    repo.findAllBelts(),
-    repo.findAllAgeCategories(),
-    repo.findAllWeightClasses(),
-  ]);
-
-  return { belts, ageCategories, weightClasses };
+export async function getBaseData(repo: typeof repository = repository): Promise<BaseDataResult> {
+  return repo.getBaseData();
 }

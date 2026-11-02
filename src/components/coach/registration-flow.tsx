@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ageCategoryLabel, genderLabels } from "@/features/base-data";
+import { genderLabels } from "@/features/base-data";
 import { disciplineLabels } from "@/features/competitions";
 import { CompetitionSummaryCard, PaymentStep, SelectionSummaryBar, StudentSelectionList } from "@/features/registrations";
 import { formatRialsAsToman } from "@/lib/format";
@@ -35,7 +35,7 @@ export function RegistrationFlow({ competitionId }: { competitionId: string }) {
   const summary = (
     <CompetitionSummaryCard
       title={competition.title}
-      meta={`${disciplineLabels[competition.discipline]} · ${ageCategoryLabel(competition.ageCategoryId)} · ${genderLabels[competition.gender]}`}
+      meta={`${disciplineLabels[competition.discipline]} · ${competition.ageCategoryLabel} · ${genderLabels[competition.gender]}`}
       deadline={competition.registrationDeadline}
       feeLabel={formatRialsAsToman(Number(competition.feePerStudent))}
       discipline={competition.discipline}

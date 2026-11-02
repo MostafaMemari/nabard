@@ -7,7 +7,7 @@ import { formatNumber } from "@/lib/format";
 
 const statuses: StatusKey[] = ["AWAITING_PAYMENT", "PENDING_REVIEW", "APPROVED", "REJECTED", "CANCELED", "DRAFT", "PUBLISHED"];
 
-const showcaseBeltNames = ["WHITE", "YELLOW", "GREEN", "BLUE", "RED", "POOM_1", "POOM_3", "DAN_1", "DAN_3"];
+const showcaseBeltNames = ["white", "yellow", "green", "blue", "red", "poom_1", "poom_3", "dan_1", "dan_3"];
 
 const people = [
   { id: "coach-1", name: "رضا محمدی" },
@@ -40,7 +40,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 
 export function ComponentShowcase() {
   const { belts } = useBelts();
-  const showcaseBelts = showcaseBeltNames.map((name) => belts.find((belt) => belt.name === name)).filter((belt) => belt !== undefined);
+  const showcaseBelts = showcaseBeltNames.map((code) => belts.find((belt) => belt.code === code)).filter((belt) => belt !== undefined);
 
   return (
     <div className="flex flex-col gap-8">

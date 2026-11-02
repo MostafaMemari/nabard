@@ -1855,12 +1855,14 @@ export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeo
 
 export const BeltScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  code: 'code',
+  label: 'label',
   level: 'level',
   order: 'order',
   rankType: 'rankType',
   color: 'color',
-  colorHex: 'colorHex'
+  colorHex: 'colorHex',
+  isActive: 'isActive'
 } as const
 
 export type BeltScalarFieldEnum = (typeof BeltScalarFieldEnum)[keyof typeof BeltScalarFieldEnum]
@@ -1868,11 +1870,13 @@ export type BeltScalarFieldEnum = (typeof BeltScalarFieldEnum)[keyof typeof Belt
 
 export const AgeCategoryScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  code: 'code',
+  label: 'label',
   startDate: 'startDate',
   endDate: 'endDate',
   birthYearStart: 'birthYearStart',
-  birthYearEnd: 'birthYearEnd'
+  birthYearEnd: 'birthYearEnd',
+  isActive: 'isActive'
 } as const
 
 export type AgeCategoryScalarFieldEnum = (typeof AgeCategoryScalarFieldEnum)[keyof typeof AgeCategoryScalarFieldEnum]
@@ -1887,7 +1891,8 @@ export const WeightClassScalarFieldEnum = {
   maxWeightKg: 'maxWeightKg',
   order: 'order',
   excludeMin: 'excludeMin',
-  excludeMax: 'excludeMax'
+  excludeMax: 'excludeMax',
+  isActive: 'isActive'
 } as const
 
 export type WeightClassScalarFieldEnum = (typeof WeightClassScalarFieldEnum)[keyof typeof WeightClassScalarFieldEnum]
@@ -1910,6 +1915,7 @@ export const CompetitionScalarFieldEnum = {
   eventDate: 'eventDate',
   status: 'status',
   cancelReason: 'cancelReason',
+  rulesSnapshot: 'rulesSnapshot',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2039,6 +2045,9 @@ export const RegistrationScalarFieldEnum = {
   coachId: 'coachId',
   paymentId: 'paymentId',
   weightClassId: 'weightClassId',
+  weightClassLabel: 'weightClassLabel',
+  weightClassMin: 'weightClassMin',
+  weightClassMax: 'weightClassMax',
   status: 'status',
   note: 'note',
   createdAt: 'createdAt',
@@ -2218,20 +2227,6 @@ export type ListEnumProfileStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
- * Reference to a field of type 'BeltName'
- */
-export type EnumBeltNameFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BeltName'>
-    
-
-
-/**
- * Reference to a field of type 'BeltName[]'
- */
-export type ListEnumBeltNameFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'BeltName[]'>
-    
-
-
-/**
  * Reference to a field of type 'Int'
  */
 export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
@@ -2256,20 +2251,6 @@ export type EnumRankTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'RankType[]'
  */
 export type ListEnumRankTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RankType[]'>
-    
-
-
-/**
- * Reference to a field of type 'AgeCategoryName'
- */
-export type EnumAgeCategoryNameFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AgeCategoryName'>
-    
-
-
-/**
- * Reference to a field of type 'AgeCategoryName[]'
- */
-export type ListEnumAgeCategoryNameFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AgeCategoryName[]'>
     
 
 
@@ -2330,6 +2311,20 @@ export type ListEnumCompetitionStatusFieldRefInput<$PrismaModel> = FieldRefInput
 
 
 /**
+ * Reference to a field of type 'Json'
+ */
+export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+/**
+ * Reference to a field of type 'QueryMode'
+ */
+export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
+    
+
+
+/**
  * Reference to a field of type 'CountyChangeStatus'
  */
 export type EnumCountyChangeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CountyChangeStatus'>
@@ -2354,20 +2349,6 @@ export type EnumStudentTransferStatusFieldRefInput<$PrismaModel> = FieldRefInput
  * Reference to a field of type 'StudentTransferStatus[]'
  */
 export type ListEnumStudentTransferStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentTransferStatus[]'>
-    
-
-
-/**
- * Reference to a field of type 'Json'
- */
-export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-/**
- * Reference to a field of type 'QueryMode'
- */
-export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 

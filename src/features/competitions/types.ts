@@ -9,6 +9,38 @@ export type CompetitionRegistrationState = "NOT_YET_OPEN" | "OPEN" | "CLOSED";
 
 export type CompetitionLevel = "PROVINCIAL" | "COUNTY";
 
+export type RulesSnapshotAgeCategory = {
+  id: string;
+  code: string;
+  label: string;
+  startDate: string;
+  endDate: string;
+};
+
+export type RulesSnapshotBelt = {
+  id: string;
+  code: string;
+  label: string;
+  level: number;
+};
+
+export type RulesSnapshotWeightClass = {
+  id: string;
+  label: string;
+  min: number;
+  max: number | null;
+  excludeMin: boolean;
+  excludeMax: boolean;
+  order: number;
+};
+
+export type CompetitionRulesSnapshot = {
+  ageCategory: RulesSnapshotAgeCategory;
+  minBelt: RulesSnapshotBelt;
+  maxBelt: RulesSnapshotBelt;
+  weightClasses: RulesSnapshotWeightClass[];
+};
+
 export type Competition = {
   id: string;
   title: string;
@@ -19,6 +51,7 @@ export type Competition = {
   discipline: Discipline;
   gender: Gender;
   ageCategoryId: string;
+  ageCategoryLabel: string;
   beltIds: string[];
   feePerStudent: string;
   payeeCardNumber: string;
@@ -26,6 +59,7 @@ export type Competition = {
   registrationDeadline: string;
   eventDate: string;
   status: CompetitionStatus;
+  rules: CompetitionRulesSnapshot | null;
   cancelReason?: string | null;
   state?: CompetitionRegistrationState;
   eligibleStudentCount?: number;
@@ -33,7 +67,10 @@ export type Competition = {
   updatedAt: string;
 };
 
-export type CompetitionInput = Omit<Competition, "id" | "createdAt" | "updatedAt" | "status" | "countyNames"> & {
+export type CompetitionInput = Omit<
+  Competition,
+  "id" | "createdAt" | "updatedAt" | "status" | "countyNames" | "ageCategoryLabel" | "rules"
+> & {
   status?: CompetitionStatus;
 };
 

@@ -2,7 +2,7 @@
 
 import { BanknoteIcon, UsersRoundIcon } from "lucide-react";
 import { DescriptionList, FormSection } from "@/components/shared";
-import { ageCategoryLabel, type Belt, genderLabels } from "@/features/base-data";
+import { type Belt, genderLabels } from "@/features/base-data";
 import { formatCardNumber, formatJalaliDate, formatRialsAsToman, toPersianDigits } from "@/lib/format";
 import { disciplineLabels } from "../labels";
 import type { Competition } from "../types";
@@ -25,7 +25,7 @@ export function CompetitionInfoSections({
           items={[
             { term: "رشته", value: disciplineLabels[competition.discipline] },
             { term: "جنسیت", value: genderLabels[competition.gender] },
-            { term: "رده سنی", value: ageCategoryLabel(competition.ageCategoryId) },
+            { term: "رده سنی", value: competition.ageCategoryLabel },
             ...(competition.level === "COUNTY" && competition.countyNames.length > 0
               ? [
                   {

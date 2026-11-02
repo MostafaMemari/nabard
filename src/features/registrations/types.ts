@@ -1,4 +1,3 @@
-import type { BeltName } from "@/features/base-data";
 import type { PaymentStatus } from "@/features/payments";
 
 export type RegistrationStatus = "PENDING" | "APPROVED" | "REJECTED";
@@ -17,6 +16,7 @@ export type Registration = {
   coachId: string;
   paymentId: string | null;
   weightClassId: string | null;
+  weightClassLabel: string | null;
   status: RegistrationStatus;
   note: string | null;
   createdAt: string;
@@ -45,7 +45,7 @@ export type Participant = {
   fullName: string;
   nationalCode: string;
   birthDate: string;
-  beltName: BeltName;
+  beltLabel: string;
   weightClassLabel: string | null;
   coachName: string;
 };

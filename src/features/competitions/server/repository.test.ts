@@ -34,6 +34,7 @@ const canceledRow: CompetitionRow = {
   registrationDeadline: new Date("2026-11-10T00:00:00.000Z"),
   eventDate: new Date("2026-11-20T00:00:00.000Z"),
   status: "CANCELED",
+  rules: null,
   cancelReason: "دلیل لغو",
   createdAt: new Date("2026-11-01T00:00:00.000Z"),
   updatedAt: new Date("2026-11-02T00:00:00.000Z"),

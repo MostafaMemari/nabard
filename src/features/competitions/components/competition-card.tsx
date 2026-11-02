@@ -1,7 +1,7 @@
 "use client";
 
 import { CountdownChip, IconTile, MobileCardChips, MobileCardLine, MobileCardLink, MobileCardTop, StatusBadge } from "@/components/shared";
-import { ageCategoryLabel, type Belt, genderLabels } from "@/features/base-data";
+import { type Belt, genderLabels } from "@/features/base-data";
 import { formatNumber } from "@/lib/format";
 import { disciplineIcons, disciplineLabels } from "../labels";
 import type { Competition } from "../types";
@@ -25,7 +25,7 @@ export function CompetitionCard({
         subtitle={disciplineLabels[competition.discipline]}
         end={<StatusBadge status={competition.status} />}
       />
-      <MobileCardLine label="رده سنی" value={`${ageCategoryLabel(competition.ageCategoryId)} · ${genderLabels[competition.gender]}`} />
+      <MobileCardLine label="رده سنی" value={`${competition.ageCategoryLabel} · ${genderLabels[competition.gender]}`} />
       <MobileCardLine label="ثبت نام ها" value={`${formatNumber(registrationCount)} هنرجو`} />
       <MobileCardChips>
         <BeltChips belts={belts} ids={competition.beltIds} />

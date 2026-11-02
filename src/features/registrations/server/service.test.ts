@@ -40,11 +40,11 @@ const adminRecord = {
 const inactiveRecord = { ...coachRecord, isActive: false };
 
 const belts: Belt[] = [
-  { id: "belt-white", name: "WHITE", level: 1, order: 1, rankType: "COLOR", color: null, colorHex: null },
-  { id: "belt-yellow", name: "YELLOW", level: 2, order: 2, rankType: "COLOR", color: null, colorHex: null },
-  { id: "belt-green", name: "GREEN", level: 3, order: 3, rankType: "COLOR", color: null, colorHex: null },
-  { id: "belt-blue", name: "BLUE", level: 4, order: 4, rankType: "COLOR", color: null, colorHex: null },
-  { id: "belt-dan-1", name: "DAN_1", level: 10, order: 5, rankType: "DAN", color: null, colorHex: null },
+  { id: "belt-white", code: "white", label: "سفید", level: 1, order: 1, rankType: "COLOR", color: null, colorHex: null, isActive: true },
+  { id: "belt-yellow", code: "yellow", label: "زرد", level: 2, order: 2, rankType: "COLOR", color: null, colorHex: null, isActive: true },
+  { id: "belt-green", code: "green", label: "سبز", level: 3, order: 3, rankType: "COLOR", color: null, colorHex: null, isActive: true },
+  { id: "belt-blue", code: "blue", label: "آبی", level: 4, order: 4, rankType: "COLOR", color: null, colorHex: null, isActive: true },
+  { id: "belt-dan-1", code: "dan_1", label: "دان ۱", level: 10, order: 5, rankType: "DAN", color: null, colorHex: null, isActive: true },
 ];
 
 function weightClass(id: string, min: number, max: number | null): WeightClass {
@@ -58,6 +58,7 @@ function weightClass(id: string, min: number, max: number | null): WeightClass {
     order: 1,
     excludeMin: false,
     excludeMax: true,
+    isActive: true,
   };
 }
 
@@ -65,9 +66,11 @@ const weightClasses: WeightClass[] = [weightClass("wc-light", 30, 33), weightCla
 
 const ageCategoryRow = {
   id: "cadet",
-  name: "CADET" as const,
+  code: "cadet",
+  label: "نوجوان",
   startDate: new Date("2012-01-01T00:00:00.000Z"),
   endDate: new Date("2014-12-31T00:00:00.000Z"),
+  isActive: true,
 };
 
 const competition = {
@@ -81,6 +84,7 @@ const competition = {
   ageCategoryId: "cadet",
   minBeltId: "belt-yellow",
   maxBeltId: "belt-blue",
+  rules: null,
   feePerStudent: BigInt(2500000),
   registrationDeadline: new Date("2026-11-20T20:30:00.000Z"),
   createdAt: new Date("2026-09-01T10:00:00.000Z"),
@@ -109,6 +113,7 @@ const registrationRow: RegistrationWithScope = {
   coachId: "coach-1",
   paymentId: "pay-1",
   weightClassId: "wc-middle",
+  weightClassLabel: "۳۳",
   status: "PENDING",
   note: null,
   createdAt,
@@ -265,8 +270,8 @@ describe("createRegistrations", () => {
       amount: BigInt(5000000),
       receiptKey: "file-1",
       students: [
-        { studentId: "student-1", weightClassId: "wc-middle" },
-        { studentId: "student-2", weightClassId: "wc-middle" },
+        { studentId: "student-1", weightClassId: "wc-middle", weightClassLabel: "33", weightClassMin: 33, weightClassMax: 37 },
+        { studentId: "student-2", weightClassId: "wc-middle", weightClassLabel: "33", weightClassMin: 33, weightClassMax: 37 },
       ],
     });
     expect(result.payment.amount).toBe("5000000");
@@ -280,6 +285,65 @@ describe("createRegistrations", () => {
     );
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect(repo.createRegistrationBundle).not.toHaveBeenCalled();
+  });
+
+  it("judges the registration by the frozen snapshot and writes its weight class values", async () => {
+    const snapshot = {
+      ageCategory: {
+        id: "cadet",
+        code: "cadet",
+        label: "نوجوان",
+        startDate: "2011-01-01T00:00:00.000Z",
+        endDate: "2013-12-31T00:00:00.000Z",
+      },
+      minBelt: { id: "belt-yellow", code: "yellow", label: "زرد", level: 2 },
+      maxBelt: { id: "belt-blue", code: "blue", label: "آبی", level: 4 },
+      weightClasses: [
+        { id: "wc-snap-1", label: "-35", min: 0, max: 35, excludeMin: false, excludeMax: false, order: 1 },
+        { id: "wc-snap-2", label: "+35", min: 35, max: null, excludeMin: true, excludeMax: true, order: 2 },
+      ],
+    };
+    const repo = repoWith({
+      findCompetitionById: vi.fn().mockResolvedValue({ ...competition, rules: snapshot }),
+      // The live weight classes have changed since publishing; they must be ignored.
+      findWeightClasses: vi.fn().mockResolvedValue([weightClass("wc-live-1", 40, 50)]),
+      findCoachStudentsByIds: vi.fn().mockResolvedValue([studentRow]),
+    });
+    const storage = storageWith();
+    await createRegistrations(repo, storage, coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() });
+
+    expect(repo.createRegistrationBundle).toHaveBeenCalledWith(
+      expect.objectContaining({
+        students: [{ studentId: "student-1", weightClassId: "wc-snap-1", weightClassLabel: "-35", weightClassMin: 0, weightClassMax: 35 }],
+      }),
+    );
+  });
+
+  it("rejects a student that the snapshot rules exclude even if the live data changed", async () => {
+    const snapshot = {
+      ageCategory: {
+        id: "cadet",
+        code: "cadet",
+        label: "نوجوان",
+        startDate: "2011-01-01T00:00:00.000Z",
+        endDate: "2012-12-31T00:00:00.000Z",
+      },
+      minBelt: { id: "belt-yellow", code: "yellow", label: "زرد", level: 2 },
+      maxBelt: { id: "belt-blue", code: "blue", label: "آبی", level: 4 },
+      weightClasses: [{ id: "wc-snap-1", label: "-35", min: 0, max: 35, excludeMin: false, excludeMax: true, order: 1 }],
+    };
+    const repo = repoWith({
+      findCompetitionById: vi.fn().mockResolvedValue({ ...competition, rules: snapshot }),
+      findAgeCategoryById: vi.fn().mockResolvedValue(ageCategoryRow),
+      findCoachStudentsByIds: vi.fn().mockResolvedValue([studentRow]),
+    });
+    // The live age category now covers 2013 birth dates, but the snapshot does not.
+    const failure = await failureOf(
+      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+    );
+
+    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
     expect(repo.createRegistrationBundle).not.toHaveBeenCalled();
   });
 
@@ -463,7 +527,9 @@ describe("createRegistrations", () => {
     });
 
     expect(repo.createRegistrationBundle).toHaveBeenCalledWith(
-      expect.objectContaining({ students: [{ studentId: "student-1", weightClassId: "wc-middle" }] }),
+      expect.objectContaining({
+        students: [{ studentId: "student-1", weightClassId: "wc-middle", weightClassLabel: "33", weightClassMin: 33, weightClassMax: 37 }],
+      }),
     );
   });
 
@@ -533,8 +599,8 @@ describe("createRegistrations", () => {
     expect(repo.createRegistrationBundle).toHaveBeenCalledWith(
       expect.objectContaining({
         students: [
-          { studentId: "student-1", weightClassId: null },
-          { studentId: "student-2", weightClassId: null },
+          { studentId: "student-1", weightClassId: null, weightClassLabel: null, weightClassMin: null, weightClassMax: null },
+          { studentId: "student-2", weightClassId: null, weightClassLabel: null, weightClassMin: null, weightClassMax: null },
         ],
       }),
     );
@@ -726,10 +792,11 @@ function participantRow(overrides: Partial<ParticipantRow> = {}): ParticipantRow
       fullName: "علی محمدی",
       nationalCode: "0012345678",
       birthDate: new Date("2013-05-10T00:00:00.000Z"),
-      beltName: "GREEN",
+      beltLabel: "سبز",
     },
     coachName: "رضا کریمی",
-    weightClass: { label: "۳۳", order: 2 },
+    weightClass: { order: 2 },
+    weightClassLabel: "۳۳",
     ...overrides,
   };
 }
@@ -741,17 +808,20 @@ describe("listParticipants", () => {
       findApprovedParticipants: vi.fn().mockResolvedValue([
         participantRow({
           id: "reg-3",
-          weightClass: { label: "۳۷", order: 3 },
+          weightClass: { order: 3 },
+          weightClassLabel: "۳۷",
           student: { ...participantRow().student, fullName: "اکبر احمدی" },
         }),
         participantRow({
           id: "reg-1",
-          weightClass: { label: "۳۳", order: 2 },
+          weightClass: { order: 2 },
+          weightClassLabel: "۳۳",
           student: { ...participantRow().student, fullName: "مهدی کریمی" },
         }),
         participantRow({
           id: "reg-2",
-          weightClass: { label: "۳۳", order: 2 },
+          weightClass: { order: 2 },
+          weightClassLabel: "۳۳",
           student: { ...participantRow().student, fullName: "علی رضایی" },
         }),
         participantRow({ id: "reg-4", weightClass: null, student: { ...participantRow().student, fullName: "سینا مرادی" } }),
@@ -765,7 +835,7 @@ describe("listParticipants", () => {
       registrationId: "reg-2",
       fullName: "علی رضایی",
       nationalCode: "0012345678",
-      beltName: "GREEN",
+      beltLabel: "سبز",
       weightClassLabel: "۳۳",
       coachName: "رضا کریمی",
     });

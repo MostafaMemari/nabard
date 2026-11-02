@@ -24,25 +24,37 @@ const inactiveCoachRecord: UserIdentityRecord = { ...coachRecord, isActive: fals
 
 const DAY_MS = 86_400_000;
 
-function makeBelt(id: string, name: Belt["name"], level: number): Belt {
-  return { id, name, level, order: level, rankType: level >= 6 ? "DAN" : "COLOR", color: "مشکی", colorHex: "#18181b" };
+function makeBelt(id: string, code: string, level: number): Belt {
+  return {
+    id,
+    code,
+    label: code,
+    level,
+    order: level,
+    rankType: level >= 6 ? "DAN" : "COLOR",
+    color: "مشکی",
+    colorHex: "#18181b",
+    isActive: true,
+  };
 }
 
 const belts: Belt[] = [
-  makeBelt("belt-white", "WHITE", 1),
-  makeBelt("belt-yellow", "YELLOW", 2),
-  makeBelt("belt-green", "GREEN", 3),
-  makeBelt("belt-blue", "BLUE", 4),
-  makeBelt("belt-red", "RED", 5),
+  makeBelt("belt-white", "white", 1),
+  makeBelt("belt-yellow", "yellow", 2),
+  makeBelt("belt-green", "green", 3),
+  makeBelt("belt-blue", "blue", 4),
+  makeBelt("belt-red", "red", 5),
 ];
 
 const seniorCategory = {
   id: "senior",
-  name: "SENIOR" as const,
+  code: "senior",
+  label: "بزرگسال",
   startDate: new Date("1990-01-01T00:00:00.000Z"),
   endDate: new Date("2005-12-31T00:00:00.000Z"),
-  birthYearStart: 1990,
-  birthYearEnd: 2005,
+  birthYearStart: 1368,
+  birthYearEnd: 1384,
+  isActive: true,
 };
 
 const seniorMaleWeightClasses = [
@@ -56,6 +68,7 @@ const seniorMaleWeightClasses = [
     order: 1,
     excludeMin: false,
     excludeMax: true,
+    isActive: true,
   },
   {
     id: "wc-senior-male-2",
@@ -67,6 +80,7 @@ const seniorMaleWeightClasses = [
     order: 2,
     excludeMin: false,
     excludeMax: true,
+    isActive: true,
   },
 ];
 
@@ -114,6 +128,7 @@ function rowWith(overrides: Partial<CompetitionRow> = {}): CompetitionRow {
     registrationDeadline: new Date(Date.now() + 7 * DAY_MS),
     eventDate: new Date(Date.now() + 14 * DAY_MS),
     status: "DRAFT",
+    rules: null,
     cancelReason: null,
     createdAt: new Date(Date.now() - DAY_MS),
     updatedAt: new Date(Date.now() - DAY_MS),
@@ -145,6 +160,7 @@ function repoWith(overrides: Partial<CompetitionsRepository> = {}): Competitions
     countRegistrations: vi.fn().mockResolvedValue(0),
     createCompetition: vi.fn().mockResolvedValue(draftRow),
     updateCompetition: vi.fn().mockImplementation(async (_id: string, data: Record<string, unknown>) => ({ ...draftRow, ...data })),
+    publishWithRulesSnapshot: vi.fn().mockResolvedValue(null),
     cancelCompetitionWithRefunds: vi.fn().mockResolvedValue(null),
     extendDeadline: vi.fn().mockImplementation(async (input: { competitionId: string; newDeadline: Date }) => ({
       ...draftRow,
@@ -559,12 +575,43 @@ describe("updateCompetition", () => {
 });
 
 describe("publishCompetition", () => {
-  it("publishes a valid draft with a future deadline", async () => {
-    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
+  it("publishes a valid draft by freezing the rules snapshot", async () => {
+    const publishedWithSnapshot = rowWith({
+      status: "PUBLISHED",
+      rules: {
+        ageCategory: {
+          id: "senior",
+          code: "senior",
+          label: "بزرگسال",
+          startDate: "1990-01-01T00:00:00.000Z",
+          endDate: "2005-12-31T00:00:00.000Z",
+        },
+        minBelt: { id: "belt-blue", code: "blue", label: "آبی", level: 4 },
+        maxBelt: { id: "belt-red", code: "red", label: "قرمز", level: 5 },
+        weightClasses: [],
+      },
+    });
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      publishWithRulesSnapshot: vi.fn().mockResolvedValue(publishedWithSnapshot),
+    });
     const result = await publishCompetition(repo, admin, "comp-9");
 
-    expect(repo.updateCompetition).toHaveBeenCalledWith("comp-9", { status: "PUBLISHED" });
+    expect(repo.publishWithRulesSnapshot).toHaveBeenCalledWith("comp-9");
+    expect(repo.updateCompetition).not.toHaveBeenCalled();
     expect(result.status).toBe("PUBLISHED");
+    expect(result.rules?.minBelt.level).toBe(4);
+    expect(result.ageCategoryLabel).toBe("بزرگسال");
+  });
+
+  it("reports a conflict when the snapshot publish finds no draft row", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      publishWithRulesSnapshot: vi.fn().mockResolvedValue(null),
+    });
+    const failure = await failureOf(publishCompetition(repo, admin, "comp-9"));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
   });
 
   it("rejects publishing an already published competition with 409", async () => {
@@ -575,7 +622,7 @@ describe("publishCompetition", () => {
     const failure = await failureOf(publishCompetition(repo, admin, "comp-1"));
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
-    expect(repo.updateCompetition).not.toHaveBeenCalled();
+    expect(repo.publishWithRulesSnapshot).not.toHaveBeenCalled();
   });
 
   it("never republishes a canceled competition", async () => {
@@ -588,7 +635,7 @@ describe("publishCompetition", () => {
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
     expect((failure as AppError).message).toContain("لغو شده");
-    expect(repo.updateCompetition).not.toHaveBeenCalled();
+    expect(repo.publishWithRulesSnapshot).not.toHaveBeenCalled();
   });
 
   it("rejects publishing when the deadline has passed with 400", async () => {

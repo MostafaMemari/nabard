@@ -1,7 +1,7 @@
 "use client";
 
 import { type DataTableColumn, DeadlineChip, IconTile, StatusBadge } from "@/components/shared";
-import { ageCategoryLabel, type Belt, genderLabels } from "@/features/base-data";
+import { type Belt, genderLabels } from "@/features/base-data";
 import { disciplineIcons, disciplineLabels } from "../labels";
 import type { Competition } from "../types";
 import { BeltChips } from "./belt-chips";
@@ -35,7 +35,7 @@ export function competitionsColumns(options: {
       ),
       sortValue: (row) => row.title,
     },
-    { id: "age", header: "رده سنی", cell: (row) => ageCategoryLabel(row.ageCategoryId), minScreen: "lg" },
+    { id: "age", header: "رده سنی", cell: (row) => row.ageCategoryLabel, minScreen: "lg" },
     { id: "gender", header: "جنسیت", cell: (row) => genderLabels[row.gender], minScreen: "xl" },
     { id: "belts", header: "کمربندها", cell: (row) => <BeltChips belts={belts} ids={row.beltIds} />, minScreen: "xl" },
     {

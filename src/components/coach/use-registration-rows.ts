@@ -1,9 +1,9 @@
 "use client";
 
 import { useMemo } from "react";
-import { useAgeCategories, useBelts, useWeightClasses } from "@/features/base-data";
+import { useBelts } from "@/features/base-data";
 import { useCompetition } from "@/features/competitions";
-import { checkEligibility, type SelectionRow, useRegistrations } from "@/features/registrations";
+import { checkEligibility, eligibilityCompetitionFromSnapshot, type SelectionRow, useRegistrations } from "@/features/registrations";
 import { useStudents } from "@/features/students";
 import { toPersianDigits } from "@/lib/format";
 
@@ -11,39 +11,27 @@ export function useRegistrationRows(competitionId: string) {
   const { competition, isLoading: competitionLoading, error, mutate } = useCompetition(competitionId);
   const { students, isLoading: studentsLoading } = useStudents();
   const { belts } = useBelts();
-  const { ageCategories } = useAgeCategories();
-  const { weightClasses } = useWeightClasses();
   const { registrations } = useRegistrations({ competitionId });
 
   const registeredStudentIds = useMemo(() => new Set(registrations.map((registration) => registration.studentId)), [registrations]);
 
   const rows = useMemo<SelectionRow[]>(() => {
-    if (!competition || belts.length === 0 || ageCategories.length === 0) {
+    if (!competition || belts.length === 0) {
       return [];
     }
 
-    const ageCategory = ageCategories.find((item) => item.id === competition.ageCategoryId);
+    // A published competition is judged by its frozen rules snapshot; a draft
+    // (no snapshot yet) is judged by the live base data.
+    const eligibilityCompetition = competition.rules
+      ? eligibilityCompetitionFromSnapshot({ discipline: competition.discipline, gender: competition.gender }, competition.rules, belts)
+      : null;
 
-    if (!ageCategory) {
+    if (!eligibilityCompetition) {
       return [];
     }
-
-    const competitionWeightClasses = weightClasses.filter(
-      (item) => item.ageCategoryId === competition.ageCategoryId && item.gender === competition.gender,
-    );
 
     return students.map((student) => {
-      const eligibility = checkEligibility(
-        student,
-        {
-          discipline: competition.discipline,
-          gender: competition.gender,
-          ageCategory,
-          beltIds: competition.beltIds,
-          weightClasses: competitionWeightClasses,
-        },
-        belts,
-      );
+      const eligibility = checkEligibility(student, eligibilityCompetition, belts);
       const weightClassLabel =
         eligibility.eligible && eligibility.weightClass ? `رده وزنی ${toPersianDigits(eligibility.weightClass.label)} کیلوگرم` : null;
 
@@ -55,7 +43,7 @@ export function useRegistrationRows(competitionId: string) {
         weightClassLabel,
       };
     });
-  }, [competition, students, belts, ageCategories, weightClasses, registeredStudentIds]);
+  }, [competition, students, belts, registeredStudentIds]);
 
   return {
     competition,

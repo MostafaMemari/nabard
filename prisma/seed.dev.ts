@@ -1,6 +1,8 @@
 import "dotenv/config";
 import { readFileSync } from "node:fs";
 import { hashSync } from "bcryptjs";
+import { buildRulesSnapshot } from "../src/features/competitions/server/snapshot";
+import { Prisma } from "../src/generated/client";
 import { getPrisma } from "../src/lib/prisma";
 import { belts } from "./data/base-data";
 import { demoCompetitions, demoCountyChangeRequests, demoPayments, demoRegistrations, demoStudents, demoUsers } from "./data/demo";
@@ -102,6 +104,22 @@ async function main() {
     const range = beltRange(competition.beltIds);
     const level = competition.level;
 
+    let rulesSnapshot: Prisma.InputJsonValue | null = null;
+    if (competition.status !== "DRAFT") {
+      const [ageCategory, minBelt, maxBelt, weightClassRows] = await Promise.all([
+        prisma.ageCategory.findUnique({ where: { id: competition.ageCategoryId } }),
+        prisma.belt.findUnique({ where: { id: range.minBeltId } }),
+        prisma.belt.findUnique({ where: { id: range.maxBeltId } }),
+        prisma.weightClass.findMany({
+          where: { ageCategoryId: competition.ageCategoryId, gender: competition.gender },
+          orderBy: { order: "asc" },
+        }),
+      ]);
+      if (ageCategory && minBelt && maxBelt) {
+        rulesSnapshot = buildRulesSnapshot({ ageCategory, minBelt, maxBelt, weightClasses: weightClassRows });
+      }
+    }
+
     await prisma.competition.upsert({
       where: { id: competition.id },
       update: {
@@ -119,6 +137,7 @@ async function main() {
         registrationDeadline: new Date(competition.registrationDeadline),
         eventDate: new Date(competition.eventDate),
         status: competition.status,
+        rulesSnapshot: rulesSnapshot ?? Prisma.JsonNull,
       },
       create: {
         id: competition.id,
@@ -136,6 +155,7 @@ async function main() {
         registrationDeadline: new Date(competition.registrationDeadline),
         eventDate: new Date(competition.eventDate),
         status: competition.status,
+        rulesSnapshot: rulesSnapshot ?? Prisma.JsonNull,
         createdAt: new Date(competition.createdAt),
         updatedAt: new Date(competition.updatedAt),
       },
@@ -188,7 +208,19 @@ async function main() {
     await prisma.payment.update({ where: { id: payment.id }, data: { receiptKey: fileId } });
   }
 
+  const weightClassRows = await prisma.weightClass.findMany();
+  const weightClassById = new Map(weightClassRows.map((row) => [row.id, row]));
+
   for (const registration of demoRegistrations) {
+    const weightClass = registration.weightClassId === null ? null : (weightClassById.get(registration.weightClassId) ?? null);
+    const weightClassSnapshot = weightClass
+      ? {
+          weightClassLabel: weightClass.label,
+          weightClassMin: weightClass.minWeightKg,
+          weightClassMax: weightClass.maxWeightKg,
+        }
+      : { weightClassLabel: null, weightClassMin: null, weightClassMax: null };
+
     await prisma.registration.upsert({
       where: { id: registration.id },
       update: {
@@ -197,6 +229,7 @@ async function main() {
         coachId: registration.coachId,
         paymentId: registration.paymentId,
         weightClassId: registration.weightClassId,
+        ...weightClassSnapshot,
         status: registration.status,
         note: registration.note,
       },
@@ -207,6 +240,7 @@ async function main() {
         coachId: registration.coachId,
         paymentId: registration.paymentId,
         weightClassId: registration.weightClassId,
+        ...weightClassSnapshot,
         status: registration.status,
         note: registration.note,
         createdAt: new Date(registration.createdAt),

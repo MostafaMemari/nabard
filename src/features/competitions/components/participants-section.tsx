@@ -7,25 +7,22 @@ import { FormSection } from "@/components/shared";
 import { BeltChip } from "@/components/shared/belt-chip";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { ageCategoryLabels, type Belt, genderLabels } from "@/features/base-data";
+import { type AgeCategory, type Belt, genderLabels } from "@/features/base-data";
 import type { CompetitionFormValues } from "../schemas";
 import { FormSelectField } from "./form-fields";
 
 export function ParticipantsSection({
   control,
   belts,
+  ageCategories,
   children,
 }: {
   control: Control<CompetitionFormValues>;
   belts: Belt[];
+  ageCategories: AgeCategory[];
   children?: React.ReactNode;
 }) {
-  const ageItems = Object.fromEntries(
-    (["BLOSSOM", "YOUTH", "CADET", "JUNIOR", "YOUNG", "SENIOR", "ULTRA"] as const).map((name) => [
-      name.toLowerCase(),
-      ageCategoryLabels[name],
-    ]),
-  );
+  const ageItems = Object.fromEntries(ageCategories.map((category) => [category.id, category.label]));
 
   return (
     <FormSection title="شرکت کنندگان" description="جنسیت و بازه سنی و کمربندهای مجاز برای شرکت در مسابقه." icon={UsersRoundIcon}>

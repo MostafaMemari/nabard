@@ -4,7 +4,7 @@ import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
 import { CountdownChip, DeadlineProgress, IconTile } from "@/components/shared";
 import { Button } from "@/components/ui/button";
-import { ageCategoryLabel, genderLabels } from "@/features/base-data";
+import { genderLabels } from "@/features/base-data";
 import { formatJalaliDate, formatRialsAsToman } from "@/lib/format";
 import { disciplineIcons, disciplineLabels } from "../labels";
 import type { Competition } from "../types";
@@ -25,8 +25,7 @@ export function CoachCompetitionList({ competitions }: { competitions: Competiti
                 {competition.title}
               </Link>
               <p className="text-subtle mt-0.5 truncate text-muted-foreground">
-                {disciplineLabels[competition.discipline]} · {ageCategoryLabel(competition.ageCategoryId)} ·{" "}
-                {genderLabels[competition.gender]}
+                {disciplineLabels[competition.discipline]} · {competition.ageCategoryLabel} · {genderLabels[competition.gender]}
               </p>
               {competition.level === "COUNTY" && competition.countyNames.length > 0 ? (
                 <span className="mt-1.5 flex w-fit flex-wrap gap-1">

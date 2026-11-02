@@ -1,47 +1,28 @@
 export type Gender = "MALE" | "FEMALE";
 
-export type BeltName =
-  | "WHITE"
-  | "YELLOW"
-  | "GREEN"
-  | "BLUE"
-  | "RED"
-  | "POOM_1"
-  | "POOM_2"
-  | "POOM_3"
-  | "POOM_4"
-  | "DAN_1"
-  | "DAN_2"
-  | "DAN_3"
-  | "DAN_4"
-  | "DAN_5"
-  | "DAN_6"
-  | "DAN_7"
-  | "DAN_8"
-  | "DAN_9"
-  | "DAN_10";
-
 export type RankType = "COLOR" | "POOM" | "DAN";
-
-export type AgeCategoryName = "BLOSSOM" | "YOUTH" | "CADET" | "JUNIOR" | "YOUNG" | "SENIOR" | "ULTRA";
 
 export type Belt = {
   id: string;
-  name: BeltName;
+  code: string;
+  label: string;
   level: number;
   order: number | null;
   rankType: RankType;
   color: string | null;
   colorHex: string | null;
+  isActive: boolean;
 };
 
 export type AgeCategory = {
   id: string;
-  name: AgeCategoryName;
+  code: string;
+  label: string;
   startDate: string;
   endDate: string;
   birthYearStart: number | null;
   birthYearEnd: number | null;
+  isActive: boolean;
 };
 
 export type WeightClass = {
@@ -54,4 +35,22 @@ export type WeightClass = {
   order: number;
   excludeMin: boolean;
   excludeMax: boolean;
+  isActive: boolean;
 };
+
+export type WeightClassSetRow = {
+  id?: string;
+  label: string;
+  minWeightKg: number;
+  maxWeightKg: number | null;
+  excludeMin: boolean;
+  excludeMax: boolean;
+};
+
+export type WeightClassSetRowIssue = {
+  index: number;
+  field: "label" | "minWeightKg" | "maxWeightKg" | "excludeMin" | "excludeMax" | "order";
+  message: string;
+};
+
+export type WeightClassSetIssue = WeightClassSetRowIssue | { index: null; field: "rows"; message: string };

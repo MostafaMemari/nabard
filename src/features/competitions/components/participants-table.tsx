@@ -1,7 +1,6 @@
 "use client";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { beltLabel } from "@/features/base-data/labels";
 import type { Participant } from "@/features/registrations";
 import { formatJalaliDate, toPersianDigits } from "@/lib/format";
 
@@ -25,7 +24,7 @@ export function ParticipantsTable({ participants }: { participants: Participant[
               <TableCell className="font-medium whitespace-nowrap">{participant.fullName}</TableCell>
               <TableCell className="tabular-nums">{toPersianDigits(participant.nationalCode)}</TableCell>
               <TableCell className="whitespace-nowrap tabular-nums">{formatJalaliDate(new Date(participant.birthDate))}</TableCell>
-              <TableCell className="whitespace-nowrap">{beltLabel(participant.beltName)}</TableCell>
+              <TableCell className="whitespace-nowrap">{participant.beltLabel}</TableCell>
               <TableCell className="whitespace-nowrap text-muted-foreground">{participant.coachName}</TableCell>
             </TableRow>
           ))}

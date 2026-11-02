@@ -1,22 +1,25 @@
 import { describe, expect, it } from "vitest";
 import type { AgeCategory, Belt, WeightClass } from "@/features/base-data";
-import { checkEligibility, type EligibilityCompetition, type EligibilityStudent } from "./eligibility";
+import type { CompetitionRulesSnapshot } from "@/features/competitions";
+import { checkEligibility, type EligibilityCompetition, type EligibilityStudent, eligibilityCompetitionFromSnapshot } from "./eligibility";
 
 const belts: Belt[] = [
-  { id: "b-white", name: "WHITE", level: 1, order: 1, rankType: "COLOR", color: null, colorHex: null },
-  { id: "b-yellow", name: "YELLOW", level: 2, order: 2, rankType: "COLOR", color: null, colorHex: null },
-  { id: "b-green", name: "GREEN", level: 3, order: 3, rankType: "COLOR", color: null, colorHex: null },
-  { id: "b-blue", name: "BLUE", level: 4, order: 4, rankType: "COLOR", color: null, colorHex: null },
-  { id: "b-dan-1", name: "DAN_1", level: 10, order: 5, rankType: "DAN", color: null, colorHex: null },
+  { id: "b-white", code: "white", label: "سفید", level: 1, order: 1, rankType: "COLOR", color: null, colorHex: null, isActive: true },
+  { id: "b-yellow", code: "yellow", label: "زرد", level: 2, order: 2, rankType: "COLOR", color: null, colorHex: null, isActive: true },
+  { id: "b-green", code: "green", label: "سبز", level: 3, order: 3, rankType: "COLOR", color: null, colorHex: null, isActive: true },
+  { id: "b-blue", code: "blue", label: "آبی", level: 4, order: 4, rankType: "COLOR", color: null, colorHex: null, isActive: true },
+  { id: "b-dan-1", code: "dan_1", label: "دان ۱", level: 10, order: 5, rankType: "DAN", color: null, colorHex: null, isActive: true },
 ];
 
 const ageCategory: AgeCategory = {
   id: "cadet",
-  name: "CADET",
+  code: "cadet",
+  label: "نوجوان",
   startDate: "2012-01-01T00:00:00.000Z",
   endDate: "2014-12-31T00:00:00.000Z",
-  birthYearStart: 2012,
-  birthYearEnd: 2014,
+  birthYearStart: 1390,
+  birthYearEnd: 1393,
+  isActive: true,
 };
 
 function weightClass(id: string, label: string, min: number, max: number | null, overrides: Partial<WeightClass> = {}): WeightClass {
@@ -30,6 +33,7 @@ function weightClass(id: string, label: string, min: number, max: number | null,
     order: 1,
     excludeMin: false,
     excludeMax: true,
+    isActive: true,
     ...overrides,
   };
 }
@@ -177,5 +181,49 @@ describe("checkEligibility", () => {
     const result = checkEligibility(student({ weightKg: 95 }), poomsae, belts);
 
     expect(result.eligible).toBe(true);
+  });
+});
+
+describe("eligibilityCompetitionFromSnapshot", () => {
+  const snapshot: CompetitionRulesSnapshot = {
+    ageCategory: {
+      id: "cadet",
+      code: "cadet",
+      label: "نوجوان",
+      startDate: "2011-01-01T00:00:00.000Z",
+      endDate: "2013-12-31T00:00:00.000Z",
+    },
+    minBelt: { id: "b-yellow", code: "yellow", label: "زرد", level: 2 },
+    maxBelt: { id: "b-blue", code: "blue", label: "آبی", level: 4 },
+    weightClasses: [
+      { id: "wc-light", label: "-33", min: 0, max: 33, excludeMin: false, excludeMax: true, order: 1 },
+      { id: "wc-heavy", label: "+33", min: 33, max: null, excludeMin: false, excludeMax: true, order: 2 },
+    ],
+  };
+
+  it("builds the rules from the snapshot instead of the live base data", () => {
+    const built = eligibilityCompetitionFromSnapshot({ discipline: "KYORUGI", gender: "MALE" }, snapshot, belts);
+
+    expect(built.ageCategory.startDate).toBe("2011-01-01T00:00:00.000Z");
+    expect(built.beltIds).toEqual(["b-yellow", "b-green", "b-blue"]);
+    expect(built.weightClasses).toHaveLength(2);
+    expect(built.weightClasses[0].id).toBe("wc-light");
+  });
+
+  it("judges a student by the frozen snapshot dates, not the live category", () => {
+    const built = eligibilityCompetitionFromSnapshot({ discipline: "KYORUGI", gender: "MALE" }, snapshot, belts);
+
+    const inside = checkEligibility(student({ birthDate: "2012-06-01T00:00:00.000Z" }), built, belts);
+    const outsideLive = checkEligibility(student({ birthDate: "2014-06-01T00:00:00.000Z" }), built, belts);
+
+    expect(inside.eligible).toBe(true);
+    expect(outsideLive.eligible).toBe(false);
+  });
+
+  it("resolves the weight from the snapshot classes", () => {
+    const built = eligibilityCompetitionFromSnapshot({ discipline: "KYORUGI", gender: "MALE" }, snapshot, belts);
+    const result = checkEligibility(student({ weightKg: 33 }), built, belts);
+
+    expect(result).toEqual({ eligible: true, weightClass: built.weightClasses[1] });
   });
 });

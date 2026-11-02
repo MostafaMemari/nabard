@@ -2,67 +2,15 @@ import "dotenv/config";
 import { hashSync } from "bcryptjs";
 import { getServerEnv } from "../src/lib/env";
 import { getPrisma } from "../src/lib/prisma";
-import { ageCategories, belts, weightClasses } from "./data/base-data";
 import { tehranCounties } from "./data/counties";
+import { seedBaseData } from "./seed-base-data";
 
 const prisma = getPrisma();
 
 async function main() {
   const serverEnv = getServerEnv();
 
-  for (const belt of belts) {
-    await prisma.belt.upsert({
-      where: { name: belt.name },
-      update: { level: belt.level, order: belt.order, rankType: belt.rankType, color: belt.color, colorHex: belt.colorHex },
-      create: {
-        id: belt.id,
-        name: belt.name,
-        level: belt.level,
-        order: belt.order,
-        rankType: belt.rankType,
-        color: belt.color,
-        colorHex: belt.colorHex,
-      },
-    });
-  }
-
-  for (const category of ageCategories) {
-    await prisma.ageCategory.upsert({
-      where: { name: category.name },
-      update: {
-        startDate: new Date(category.startDate),
-        endDate: new Date(category.endDate),
-        birthYearStart: category.birthYearStart,
-        birthYearEnd: category.birthYearEnd,
-      },
-      create: {
-        id: category.id,
-        name: category.name,
-        startDate: new Date(category.startDate),
-        endDate: new Date(category.endDate),
-        birthYearStart: category.birthYearStart,
-        birthYearEnd: category.birthYearEnd,
-      },
-    });
-  }
-
-  const weightClassCount = await prisma.weightClass.count();
-
-  if (weightClassCount === 0) {
-    await prisma.weightClass.createMany({
-      data: weightClasses.map((weightClass) => ({
-        id: weightClass.id,
-        ageCategoryId: weightClass.ageCategoryId,
-        gender: weightClass.gender,
-        label: weightClass.label,
-        minWeightKg: weightClass.minWeightKg,
-        maxWeightKg: weightClass.maxWeightKg,
-        order: weightClass.order,
-        excludeMin: weightClass.excludeMin,
-        excludeMax: weightClass.excludeMax,
-      })),
-    });
-  }
+  const baseData = await seedBaseData(prisma);
 
   for (const name of tehranCounties) {
     await prisma.county.upsert({
@@ -93,7 +41,7 @@ async function main() {
   });
 
   console.log(
-    `داده های پایه آماده شدند: ${belts.length} کمربند، ${ageCategories.length} رده سنی، ${weightClasses.length} رده وزنی، ${tehranCounties.length} شهرستان استان تهران و یک حساب مدیر.`,
+    `داده های پایه آماده شدند: ${baseData.belts} کمربند، ${baseData.ageCategories} رده سنی، ${baseData.weightClasses} رده وزنی (جدید) و ${tehranCounties.length} شهرستان استان تهران و یک حساب مدیر.`,
   );
 }
 

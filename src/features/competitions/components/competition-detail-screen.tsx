@@ -5,10 +5,11 @@ import Link from "next/link";
 import { CountdownChip, DetailPageHeader, ErrorBanner, IconTile, StatusBadge } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ageCategoryLabel, genderLabels, useBelts, useWeightClasses } from "@/features/base-data";
+import { genderLabels, useBelts, useWeightClasses, type WeightClass } from "@/features/base-data";
 import { useRegistrations } from "@/features/registrations";
 import { useCompetition } from "../hooks/use-competitions";
 import { disciplineIcons, disciplineLabels } from "../labels";
+import type { Competition } from "../types";
 import { CompetitionInfoSections } from "./competition-info-sections";
 import { CompetitionParticipants } from "./competition-participants";
 import { CompetitionRegistrations } from "./competition-registrations";
@@ -18,7 +19,7 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
   const { competition, isLoading, error, mutate } = useCompetition(competitionId);
   const { registrations } = useRegistrations();
   const { belts } = useBelts();
-  const { weightClasses } = useWeightClasses(competition ? { ageCategoryId: competition.ageCategoryId, gender: competition.gender } : {});
+  const { weightClasses } = useWeightClassesFor(competition);
 
   if (isLoading) {
     return (
@@ -45,7 +46,7 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
         backHref="/admin/competitions"
         backLabel="مسابقات"
         title={competition.title}
-        description={`${disciplineLabels[competition.discipline]} · ${ageCategoryLabel(competition.ageCategoryId)} · ${genderLabels[competition.gender]}`}
+        description={`${disciplineLabels[competition.discipline]} · ${competition.ageCategoryLabel} · ${genderLabels[competition.gender]}`}
         action={
           <div className="flex flex-wrap items-center gap-2 print:hidden">
             <Button variant="outline" disabled={hasRegistrations} render={<Link href={`/admin/competitions/${competitionId}/edit`} />}>
@@ -75,4 +76,36 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
       <CompetitionParticipants competitionId={competitionId} />
     </div>
   );
+}
+
+function useWeightClassesFor(competition: Competition | undefined): { weightClasses: WeightClass[] } {
+  const live = useWeightClasses(
+    competition && !competition.rules ? { ageCategoryId: competition.ageCategoryId, gender: competition.gender } : {},
+  );
+
+  if (!competition) return { weightClasses: [] };
+
+  return {
+    weightClasses: competition.rules
+      ? competition.rules.weightClasses.map((item) => toWeightClass(item, competition.gender))
+      : live.weightClasses,
+  };
+}
+
+function toWeightClass(
+  weightClass: NonNullable<Competition["rules"]>["weightClasses"][number],
+  gender: Competition["gender"],
+): WeightClass {
+  return {
+    id: weightClass.id,
+    ageCategoryId: "",
+    gender,
+    label: weightClass.label,
+    minWeightKg: weightClass.min,
+    maxWeightKg: weightClass.max,
+    order: weightClass.order,
+    excludeMin: weightClass.excludeMin,
+    excludeMax: weightClass.excludeMax,
+    isActive: true,
+  };
 }

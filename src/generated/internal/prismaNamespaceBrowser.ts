@@ -137,12 +137,14 @@ export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeo
 
 export const BeltScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  code: 'code',
+  label: 'label',
   level: 'level',
   order: 'order',
   rankType: 'rankType',
   color: 'color',
-  colorHex: 'colorHex'
+  colorHex: 'colorHex',
+  isActive: 'isActive'
 } as const
 
 export type BeltScalarFieldEnum = (typeof BeltScalarFieldEnum)[keyof typeof BeltScalarFieldEnum]
@@ -150,11 +152,13 @@ export type BeltScalarFieldEnum = (typeof BeltScalarFieldEnum)[keyof typeof Belt
 
 export const AgeCategoryScalarFieldEnum = {
   id: 'id',
-  name: 'name',
+  code: 'code',
+  label: 'label',
   startDate: 'startDate',
   endDate: 'endDate',
   birthYearStart: 'birthYearStart',
-  birthYearEnd: 'birthYearEnd'
+  birthYearEnd: 'birthYearEnd',
+  isActive: 'isActive'
 } as const
 
 export type AgeCategoryScalarFieldEnum = (typeof AgeCategoryScalarFieldEnum)[keyof typeof AgeCategoryScalarFieldEnum]
@@ -169,7 +173,8 @@ export const WeightClassScalarFieldEnum = {
   maxWeightKg: 'maxWeightKg',
   order: 'order',
   excludeMin: 'excludeMin',
-  excludeMax: 'excludeMax'
+  excludeMax: 'excludeMax',
+  isActive: 'isActive'
 } as const
 
 export type WeightClassScalarFieldEnum = (typeof WeightClassScalarFieldEnum)[keyof typeof WeightClassScalarFieldEnum]
@@ -192,6 +197,7 @@ export const CompetitionScalarFieldEnum = {
   eventDate: 'eventDate',
   status: 'status',
   cancelReason: 'cancelReason',
+  rulesSnapshot: 'rulesSnapshot',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -321,6 +327,9 @@ export const RegistrationScalarFieldEnum = {
   coachId: 'coachId',
   paymentId: 'paymentId',
   weightClassId: 'weightClassId',
+  weightClassLabel: 'weightClassLabel',
+  weightClassMin: 'weightClassMin',
+  weightClassMax: 'weightClassMax',
   status: 'status',
   note: 'note',
   createdAt: 'createdAt',

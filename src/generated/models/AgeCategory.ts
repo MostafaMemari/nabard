@@ -38,29 +38,35 @@ export type AgeCategorySumAggregateOutputType = {
 
 export type AgeCategoryMinAggregateOutputType = {
   id: string | null
-  name: $Enums.AgeCategoryName | null
+  code: string | null
+  label: string | null
   startDate: Date | null
   endDate: Date | null
   birthYearStart: number | null
   birthYearEnd: number | null
+  isActive: boolean | null
 }
 
 export type AgeCategoryMaxAggregateOutputType = {
   id: string | null
-  name: $Enums.AgeCategoryName | null
+  code: string | null
+  label: string | null
   startDate: Date | null
   endDate: Date | null
   birthYearStart: number | null
   birthYearEnd: number | null
+  isActive: boolean | null
 }
 
 export type AgeCategoryCountAggregateOutputType = {
   id: number
-  name: number
+  code: number
+  label: number
   startDate: number
   endDate: number
   birthYearStart: number
   birthYearEnd: number
+  isActive: number
   _all: number
 }
 
@@ -77,29 +83,35 @@ export type AgeCategorySumAggregateInputType = {
 
 export type AgeCategoryMinAggregateInputType = {
   id?: true
-  name?: true
+  code?: true
+  label?: true
   startDate?: true
   endDate?: true
   birthYearStart?: true
   birthYearEnd?: true
+  isActive?: true
 }
 
 export type AgeCategoryMaxAggregateInputType = {
   id?: true
-  name?: true
+  code?: true
+  label?: true
   startDate?: true
   endDate?: true
   birthYearStart?: true
   birthYearEnd?: true
+  isActive?: true
 }
 
 export type AgeCategoryCountAggregateInputType = {
   id?: true
-  name?: true
+  code?: true
+  label?: true
   startDate?: true
   endDate?: true
   birthYearStart?: true
   birthYearEnd?: true
+  isActive?: true
   _all?: true
 }
 
@@ -191,11 +203,13 @@ export type AgeCategoryGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 
 export type AgeCategoryGroupByOutputType = {
   id: string
-  name: $Enums.AgeCategoryName
+  code: string
+  label: string
   startDate: Date
   endDate: Date
   birthYearStart: number | null
   birthYearEnd: number | null
+  isActive: boolean
   _count: AgeCategoryCountAggregateOutputType | null
   _avg: AgeCategoryAvgAggregateOutputType | null
   _sum: AgeCategorySumAggregateOutputType | null
@@ -223,29 +237,34 @@ export type AgeCategoryWhereInput = {
   OR?: Prisma.AgeCategoryWhereInput[]
   NOT?: Prisma.AgeCategoryWhereInput | Prisma.AgeCategoryWhereInput[]
   id?: Prisma.StringFilter<"AgeCategory"> | string
-  name?: Prisma.EnumAgeCategoryNameFilter<"AgeCategory"> | $Enums.AgeCategoryName
+  code?: Prisma.StringFilter<"AgeCategory"> | string
+  label?: Prisma.StringFilter<"AgeCategory"> | string
   startDate?: Prisma.DateTimeFilter<"AgeCategory"> | Date | string
   endDate?: Prisma.DateTimeFilter<"AgeCategory"> | Date | string
   birthYearStart?: Prisma.IntNullableFilter<"AgeCategory"> | number | null
   birthYearEnd?: Prisma.IntNullableFilter<"AgeCategory"> | number | null
+  isActive?: Prisma.BoolFilter<"AgeCategory"> | boolean
   weightClasses?: Prisma.WeightClassListRelationFilter
   competitions?: Prisma.CompetitionListRelationFilter
 }
 
 export type AgeCategoryOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  label?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   birthYearStart?: Prisma.SortOrderInput | Prisma.SortOrder
   birthYearEnd?: Prisma.SortOrderInput | Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   weightClasses?: Prisma.WeightClassOrderByRelationAggregateInput
   competitions?: Prisma.CompetitionOrderByRelationAggregateInput
 }
 
 export type AgeCategoryWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  name?: $Enums.AgeCategoryName
+  code?: string
+  label?: string
   AND?: Prisma.AgeCategoryWhereInput | Prisma.AgeCategoryWhereInput[]
   OR?: Prisma.AgeCategoryWhereInput[]
   NOT?: Prisma.AgeCategoryWhereInput | Prisma.AgeCategoryWhereInput[]
@@ -253,17 +272,20 @@ export type AgeCategoryWhereUniqueInput = Prisma.AtLeast<{
   endDate?: Prisma.DateTimeFilter<"AgeCategory"> | Date | string
   birthYearStart?: Prisma.IntNullableFilter<"AgeCategory"> | number | null
   birthYearEnd?: Prisma.IntNullableFilter<"AgeCategory"> | number | null
+  isActive?: Prisma.BoolFilter<"AgeCategory"> | boolean
   weightClasses?: Prisma.WeightClassListRelationFilter
   competitions?: Prisma.CompetitionListRelationFilter
-}, "id" | "name">
+}, "id" | "code" | "label">
 
 export type AgeCategoryOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  label?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   birthYearStart?: Prisma.SortOrderInput | Prisma.SortOrder
   birthYearEnd?: Prisma.SortOrderInput | Prisma.SortOrder
+  isActive?: Prisma.SortOrder
   _count?: Prisma.AgeCategoryCountOrderByAggregateInput
   _avg?: Prisma.AgeCategoryAvgOrderByAggregateInput
   _max?: Prisma.AgeCategoryMaxOrderByAggregateInput
@@ -276,91 +298,109 @@ export type AgeCategoryScalarWhereWithAggregatesInput = {
   OR?: Prisma.AgeCategoryScalarWhereWithAggregatesInput[]
   NOT?: Prisma.AgeCategoryScalarWhereWithAggregatesInput | Prisma.AgeCategoryScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"AgeCategory"> | string
-  name?: Prisma.EnumAgeCategoryNameWithAggregatesFilter<"AgeCategory"> | $Enums.AgeCategoryName
+  code?: Prisma.StringWithAggregatesFilter<"AgeCategory"> | string
+  label?: Prisma.StringWithAggregatesFilter<"AgeCategory"> | string
   startDate?: Prisma.DateTimeWithAggregatesFilter<"AgeCategory"> | Date | string
   endDate?: Prisma.DateTimeWithAggregatesFilter<"AgeCategory"> | Date | string
   birthYearStart?: Prisma.IntNullableWithAggregatesFilter<"AgeCategory"> | number | null
   birthYearEnd?: Prisma.IntNullableWithAggregatesFilter<"AgeCategory"> | number | null
+  isActive?: Prisma.BoolWithAggregatesFilter<"AgeCategory"> | boolean
 }
 
 export type AgeCategoryCreateInput = {
   id?: string
-  name: $Enums.AgeCategoryName
+  code: string
+  label: string
   startDate: Date | string
   endDate: Date | string
   birthYearStart?: number | null
   birthYearEnd?: number | null
+  isActive?: boolean
   weightClasses?: Prisma.WeightClassCreateNestedManyWithoutAgeCategoryInput
   competitions?: Prisma.CompetitionCreateNestedManyWithoutAgeCategoryInput
 }
 
 export type AgeCategoryUncheckedCreateInput = {
   id?: string
-  name: $Enums.AgeCategoryName
+  code: string
+  label: string
   startDate: Date | string
   endDate: Date | string
   birthYearStart?: number | null
   birthYearEnd?: number | null
+  isActive?: boolean
   weightClasses?: Prisma.WeightClassUncheckedCreateNestedManyWithoutAgeCategoryInput
   competitions?: Prisma.CompetitionUncheckedCreateNestedManyWithoutAgeCategoryInput
 }
 
 export type AgeCategoryUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.EnumAgeCategoryNameFieldUpdateOperationsInput | $Enums.AgeCategoryName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   birthYearStart?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthYearEnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   weightClasses?: Prisma.WeightClassUpdateManyWithoutAgeCategoryNestedInput
   competitions?: Prisma.CompetitionUpdateManyWithoutAgeCategoryNestedInput
 }
 
 export type AgeCategoryUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.EnumAgeCategoryNameFieldUpdateOperationsInput | $Enums.AgeCategoryName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   birthYearStart?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthYearEnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   weightClasses?: Prisma.WeightClassUncheckedUpdateManyWithoutAgeCategoryNestedInput
   competitions?: Prisma.CompetitionUncheckedUpdateManyWithoutAgeCategoryNestedInput
 }
 
 export type AgeCategoryCreateManyInput = {
   id?: string
-  name: $Enums.AgeCategoryName
+  code: string
+  label: string
   startDate: Date | string
   endDate: Date | string
   birthYearStart?: number | null
   birthYearEnd?: number | null
+  isActive?: boolean
 }
 
 export type AgeCategoryUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.EnumAgeCategoryNameFieldUpdateOperationsInput | $Enums.AgeCategoryName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   birthYearStart?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthYearEnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type AgeCategoryUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.EnumAgeCategoryNameFieldUpdateOperationsInput | $Enums.AgeCategoryName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   birthYearStart?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthYearEnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type AgeCategoryCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  label?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   birthYearStart?: Prisma.SortOrder
   birthYearEnd?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
 }
 
 export type AgeCategoryAvgOrderByAggregateInput = {
@@ -370,20 +410,24 @@ export type AgeCategoryAvgOrderByAggregateInput = {
 
 export type AgeCategoryMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  label?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   birthYearStart?: Prisma.SortOrder
   birthYearEnd?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
 }
 
 export type AgeCategoryMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  name?: Prisma.SortOrder
+  code?: Prisma.SortOrder
+  label?: Prisma.SortOrder
   startDate?: Prisma.SortOrder
   endDate?: Prisma.SortOrder
   birthYearStart?: Prisma.SortOrder
   birthYearEnd?: Prisma.SortOrder
+  isActive?: Prisma.SortOrder
 }
 
 export type AgeCategorySumOrderByAggregateInput = {
@@ -394,10 +438,6 @@ export type AgeCategorySumOrderByAggregateInput = {
 export type AgeCategoryScalarRelationFilter = {
   is?: Prisma.AgeCategoryWhereInput
   isNot?: Prisma.AgeCategoryWhereInput
-}
-
-export type EnumAgeCategoryNameFieldUpdateOperationsInput = {
-  set?: $Enums.AgeCategoryName
 }
 
 export type AgeCategoryCreateNestedOneWithoutWeightClassesInput = {
@@ -430,21 +470,25 @@ export type AgeCategoryUpdateOneRequiredWithoutCompetitionsNestedInput = {
 
 export type AgeCategoryCreateWithoutWeightClassesInput = {
   id?: string
-  name: $Enums.AgeCategoryName
+  code: string
+  label: string
   startDate: Date | string
   endDate: Date | string
   birthYearStart?: number | null
   birthYearEnd?: number | null
+  isActive?: boolean
   competitions?: Prisma.CompetitionCreateNestedManyWithoutAgeCategoryInput
 }
 
 export type AgeCategoryUncheckedCreateWithoutWeightClassesInput = {
   id?: string
-  name: $Enums.AgeCategoryName
+  code: string
+  label: string
   startDate: Date | string
   endDate: Date | string
   birthYearStart?: number | null
   birthYearEnd?: number | null
+  isActive?: boolean
   competitions?: Prisma.CompetitionUncheckedCreateNestedManyWithoutAgeCategoryInput
 }
 
@@ -466,41 +510,49 @@ export type AgeCategoryUpdateToOneWithWhereWithoutWeightClassesInput = {
 
 export type AgeCategoryUpdateWithoutWeightClassesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.EnumAgeCategoryNameFieldUpdateOperationsInput | $Enums.AgeCategoryName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   birthYearStart?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthYearEnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   competitions?: Prisma.CompetitionUpdateManyWithoutAgeCategoryNestedInput
 }
 
 export type AgeCategoryUncheckedUpdateWithoutWeightClassesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.EnumAgeCategoryNameFieldUpdateOperationsInput | $Enums.AgeCategoryName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   birthYearStart?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthYearEnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   competitions?: Prisma.CompetitionUncheckedUpdateManyWithoutAgeCategoryNestedInput
 }
 
 export type AgeCategoryCreateWithoutCompetitionsInput = {
   id?: string
-  name: $Enums.AgeCategoryName
+  code: string
+  label: string
   startDate: Date | string
   endDate: Date | string
   birthYearStart?: number | null
   birthYearEnd?: number | null
+  isActive?: boolean
   weightClasses?: Prisma.WeightClassCreateNestedManyWithoutAgeCategoryInput
 }
 
 export type AgeCategoryUncheckedCreateWithoutCompetitionsInput = {
   id?: string
-  name: $Enums.AgeCategoryName
+  code: string
+  label: string
   startDate: Date | string
   endDate: Date | string
   birthYearStart?: number | null
   birthYearEnd?: number | null
+  isActive?: boolean
   weightClasses?: Prisma.WeightClassUncheckedCreateNestedManyWithoutAgeCategoryInput
 }
 
@@ -522,21 +574,25 @@ export type AgeCategoryUpdateToOneWithWhereWithoutCompetitionsInput = {
 
 export type AgeCategoryUpdateWithoutCompetitionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.EnumAgeCategoryNameFieldUpdateOperationsInput | $Enums.AgeCategoryName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   birthYearStart?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthYearEnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   weightClasses?: Prisma.WeightClassUpdateManyWithoutAgeCategoryNestedInput
 }
 
 export type AgeCategoryUncheckedUpdateWithoutCompetitionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  name?: Prisma.EnumAgeCategoryNameFieldUpdateOperationsInput | $Enums.AgeCategoryName
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
   startDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   endDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   birthYearStart?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   birthYearEnd?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   weightClasses?: Prisma.WeightClassUncheckedUpdateManyWithoutAgeCategoryNestedInput
 }
 
@@ -582,11 +638,13 @@ export type AgeCategoryCountOutputTypeCountCompetitionsArgs<ExtArgs extends runt
 
 export type AgeCategorySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  code?: boolean
+  label?: boolean
   startDate?: boolean
   endDate?: boolean
   birthYearStart?: boolean
   birthYearEnd?: boolean
+  isActive?: boolean
   weightClasses?: boolean | Prisma.AgeCategory$weightClassesArgs<ExtArgs>
   competitions?: boolean | Prisma.AgeCategory$competitionsArgs<ExtArgs>
   _count?: boolean | Prisma.AgeCategoryCountOutputTypeDefaultArgs<ExtArgs>
@@ -594,32 +652,38 @@ export type AgeCategorySelect<ExtArgs extends runtime.Types.Extensions.InternalA
 
 export type AgeCategorySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  code?: boolean
+  label?: boolean
   startDate?: boolean
   endDate?: boolean
   birthYearStart?: boolean
   birthYearEnd?: boolean
+  isActive?: boolean
 }, ExtArgs["result"]["ageCategory"]>
 
 export type AgeCategorySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
-  name?: boolean
+  code?: boolean
+  label?: boolean
   startDate?: boolean
   endDate?: boolean
   birthYearStart?: boolean
   birthYearEnd?: boolean
+  isActive?: boolean
 }, ExtArgs["result"]["ageCategory"]>
 
 export type AgeCategorySelectScalar = {
   id?: boolean
-  name?: boolean
+  code?: boolean
+  label?: boolean
   startDate?: boolean
   endDate?: boolean
   birthYearStart?: boolean
   birthYearEnd?: boolean
+  isActive?: boolean
 }
 
-export type AgeCategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "startDate" | "endDate" | "birthYearStart" | "birthYearEnd", ExtArgs["result"]["ageCategory"]>
+export type AgeCategoryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "label" | "startDate" | "endDate" | "birthYearStart" | "birthYearEnd" | "isActive", ExtArgs["result"]["ageCategory"]>
 export type AgeCategoryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   weightClasses?: boolean | Prisma.AgeCategory$weightClassesArgs<ExtArgs>
   competitions?: boolean | Prisma.AgeCategory$competitionsArgs<ExtArgs>
@@ -636,11 +700,13 @@ export type $AgeCategoryPayload<ExtArgs extends runtime.Types.Extensions.Interna
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    name: $Enums.AgeCategoryName
+    code: string
+    label: string
     startDate: Date
     endDate: Date
     birthYearStart: number | null
     birthYearEnd: number | null
+    isActive: boolean
   }, ExtArgs["result"]["ageCategory"]>
   composites: {}
 }
@@ -1067,11 +1133,13 @@ export interface Prisma__AgeCategoryClient<T, Null = never, ExtArgs extends runt
  */
 export interface AgeCategoryFieldRefs {
   readonly id: Prisma.FieldRef<"AgeCategory", 'String'>
-  readonly name: Prisma.FieldRef<"AgeCategory", 'AgeCategoryName'>
+  readonly code: Prisma.FieldRef<"AgeCategory", 'String'>
+  readonly label: Prisma.FieldRef<"AgeCategory", 'String'>
   readonly startDate: Prisma.FieldRef<"AgeCategory", 'DateTime'>
   readonly endDate: Prisma.FieldRef<"AgeCategory", 'DateTime'>
   readonly birthYearStart: Prisma.FieldRef<"AgeCategory", 'Int'>
   readonly birthYearEnd: Prisma.FieldRef<"AgeCategory", 'Int'>
+  readonly isActive: Prisma.FieldRef<"AgeCategory", 'Boolean'>
 }
     
 

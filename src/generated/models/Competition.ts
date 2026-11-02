@@ -93,6 +93,7 @@ export type CompetitionCountAggregateOutputType = {
   eventDate: number
   status: number
   cancelReason: number
+  rulesSnapshot: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -166,6 +167,7 @@ export type CompetitionCountAggregateInputType = {
   eventDate?: true
   status?: true
   cancelReason?: true
+  rulesSnapshot?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -274,6 +276,7 @@ export type CompetitionGroupByOutputType = {
   eventDate: Date
   status: $Enums.CompetitionStatus
   cancelReason: string | null
+  rulesSnapshot: runtime.JsonValue | null
   createdAt: Date
   updatedAt: Date
   _count: CompetitionCountAggregateOutputType | null
@@ -318,6 +321,7 @@ export type CompetitionWhereInput = {
   eventDate?: Prisma.DateTimeFilter<"Competition"> | Date | string
   status?: Prisma.EnumCompetitionStatusFilter<"Competition"> | $Enums.CompetitionStatus
   cancelReason?: Prisma.StringNullableFilter<"Competition"> | string | null
+  rulesSnapshot?: Prisma.JsonNullableFilter<"Competition">
   createdAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
   counties?: Prisma.CompetitionCountyListRelationFilter
@@ -346,6 +350,7 @@ export type CompetitionOrderByWithRelationInput = {
   eventDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   cancelReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  rulesSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   counties?: Prisma.CompetitionCountyOrderByRelationAggregateInput
@@ -377,6 +382,7 @@ export type CompetitionWhereUniqueInput = Prisma.AtLeast<{
   eventDate?: Prisma.DateTimeFilter<"Competition"> | Date | string
   status?: Prisma.EnumCompetitionStatusFilter<"Competition"> | $Enums.CompetitionStatus
   cancelReason?: Prisma.StringNullableFilter<"Competition"> | string | null
+  rulesSnapshot?: Prisma.JsonNullableFilter<"Competition">
   createdAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
   counties?: Prisma.CompetitionCountyListRelationFilter
@@ -405,6 +411,7 @@ export type CompetitionOrderByWithAggregationInput = {
   eventDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   cancelReason?: Prisma.SortOrderInput | Prisma.SortOrder
+  rulesSnapshot?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.CompetitionCountOrderByAggregateInput
@@ -434,6 +441,7 @@ export type CompetitionScalarWhereWithAggregatesInput = {
   eventDate?: Prisma.DateTimeWithAggregatesFilter<"Competition"> | Date | string
   status?: Prisma.EnumCompetitionStatusWithAggregatesFilter<"Competition"> | $Enums.CompetitionStatus
   cancelReason?: Prisma.StringNullableWithAggregatesFilter<"Competition"> | string | null
+  rulesSnapshot?: Prisma.JsonNullableWithAggregatesFilter<"Competition">
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Competition"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Competition"> | Date | string
 }
@@ -452,6 +460,7 @@ export type CompetitionCreateInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   counties?: Prisma.CompetitionCountyCreateNestedManyWithoutCompetitionInput
@@ -480,6 +489,7 @@ export type CompetitionUncheckedCreateInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   counties?: Prisma.CompetitionCountyUncheckedCreateNestedManyWithoutCompetitionInput
@@ -502,6 +512,7 @@ export type CompetitionUpdateInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counties?: Prisma.CompetitionCountyUpdateManyWithoutCompetitionNestedInput
@@ -530,6 +541,7 @@ export type CompetitionUncheckedUpdateInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counties?: Prisma.CompetitionCountyUncheckedUpdateManyWithoutCompetitionNestedInput
@@ -555,6 +567,7 @@ export type CompetitionCreateManyInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -573,6 +586,7 @@ export type CompetitionUpdateManyMutationInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -594,6 +608,7 @@ export type CompetitionUncheckedUpdateManyInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -625,6 +640,7 @@ export type CompetitionCountOrderByAggregateInput = {
   eventDate?: Prisma.SortOrder
   status?: Prisma.SortOrder
   cancelReason?: Prisma.SortOrder
+  rulesSnapshot?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -900,6 +916,7 @@ export type CompetitionCreateWithoutMinBeltInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   counties?: Prisma.CompetitionCountyCreateNestedManyWithoutCompetitionInput
@@ -926,6 +943,7 @@ export type CompetitionUncheckedCreateWithoutMinBeltInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   counties?: Prisma.CompetitionCountyUncheckedCreateNestedManyWithoutCompetitionInput
@@ -958,6 +976,7 @@ export type CompetitionCreateWithoutMaxBeltInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   counties?: Prisma.CompetitionCountyCreateNestedManyWithoutCompetitionInput
@@ -984,6 +1003,7 @@ export type CompetitionUncheckedCreateWithoutMaxBeltInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   counties?: Prisma.CompetitionCountyUncheckedCreateNestedManyWithoutCompetitionInput
@@ -1038,6 +1058,7 @@ export type CompetitionScalarWhereInput = {
   eventDate?: Prisma.DateTimeFilter<"Competition"> | Date | string
   status?: Prisma.EnumCompetitionStatusFilter<"Competition"> | $Enums.CompetitionStatus
   cancelReason?: Prisma.StringNullableFilter<"Competition"> | string | null
+  rulesSnapshot?: Prisma.JsonNullableFilter<"Competition">
   createdAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Competition"> | Date | string
 }
@@ -1072,6 +1093,7 @@ export type CompetitionCreateWithoutAgeCategoryInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   counties?: Prisma.CompetitionCountyCreateNestedManyWithoutCompetitionInput
@@ -1098,6 +1120,7 @@ export type CompetitionUncheckedCreateWithoutAgeCategoryInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   counties?: Prisma.CompetitionCountyUncheckedCreateNestedManyWithoutCompetitionInput
@@ -1146,6 +1169,7 @@ export type CompetitionCreateWithoutCountiesInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   ageCategory: Prisma.AgeCategoryCreateNestedOneWithoutCompetitionsInput
@@ -1173,6 +1197,7 @@ export type CompetitionUncheckedCreateWithoutCountiesInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCompetitionInput
@@ -1210,6 +1235,7 @@ export type CompetitionUpdateWithoutCountiesInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   ageCategory?: Prisma.AgeCategoryUpdateOneRequiredWithoutCompetitionsNestedInput
@@ -1237,6 +1263,7 @@ export type CompetitionUncheckedUpdateWithoutCountiesInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCompetitionNestedInput
@@ -1258,6 +1285,7 @@ export type CompetitionCreateWithoutDeadlineExtensionsInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   counties?: Prisma.CompetitionCountyCreateNestedManyWithoutCompetitionInput
@@ -1285,6 +1313,7 @@ export type CompetitionUncheckedCreateWithoutDeadlineExtensionsInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   counties?: Prisma.CompetitionCountyUncheckedCreateNestedManyWithoutCompetitionInput
@@ -1322,6 +1351,7 @@ export type CompetitionUpdateWithoutDeadlineExtensionsInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counties?: Prisma.CompetitionCountyUpdateManyWithoutCompetitionNestedInput
@@ -1349,6 +1379,7 @@ export type CompetitionUncheckedUpdateWithoutDeadlineExtensionsInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counties?: Prisma.CompetitionCountyUncheckedUpdateManyWithoutCompetitionNestedInput
@@ -1370,6 +1401,7 @@ export type CompetitionCreateWithoutPaymentsInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   counties?: Prisma.CompetitionCountyCreateNestedManyWithoutCompetitionInput
@@ -1397,6 +1429,7 @@ export type CompetitionUncheckedCreateWithoutPaymentsInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   counties?: Prisma.CompetitionCountyUncheckedCreateNestedManyWithoutCompetitionInput
@@ -1434,6 +1467,7 @@ export type CompetitionUpdateWithoutPaymentsInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counties?: Prisma.CompetitionCountyUpdateManyWithoutCompetitionNestedInput
@@ -1461,6 +1495,7 @@ export type CompetitionUncheckedUpdateWithoutPaymentsInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counties?: Prisma.CompetitionCountyUncheckedUpdateManyWithoutCompetitionNestedInput
@@ -1482,6 +1517,7 @@ export type CompetitionCreateWithoutRegistrationsInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   counties?: Prisma.CompetitionCountyCreateNestedManyWithoutCompetitionInput
@@ -1509,6 +1545,7 @@ export type CompetitionUncheckedCreateWithoutRegistrationsInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
   counties?: Prisma.CompetitionCountyUncheckedCreateNestedManyWithoutCompetitionInput
@@ -1546,6 +1583,7 @@ export type CompetitionUpdateWithoutRegistrationsInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counties?: Prisma.CompetitionCountyUpdateManyWithoutCompetitionNestedInput
@@ -1573,6 +1611,7 @@ export type CompetitionUncheckedUpdateWithoutRegistrationsInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counties?: Prisma.CompetitionCountyUncheckedUpdateManyWithoutCompetitionNestedInput
@@ -1596,6 +1635,7 @@ export type CompetitionCreateManyMinBeltInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1616,6 +1656,7 @@ export type CompetitionCreateManyMaxBeltInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1634,6 +1675,7 @@ export type CompetitionUpdateWithoutMinBeltInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counties?: Prisma.CompetitionCountyUpdateManyWithoutCompetitionNestedInput
@@ -1660,6 +1702,7 @@ export type CompetitionUncheckedUpdateWithoutMinBeltInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counties?: Prisma.CompetitionCountyUncheckedUpdateManyWithoutCompetitionNestedInput
@@ -1684,6 +1727,7 @@ export type CompetitionUncheckedUpdateManyWithoutMinBeltInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1702,6 +1746,7 @@ export type CompetitionUpdateWithoutMaxBeltInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counties?: Prisma.CompetitionCountyUpdateManyWithoutCompetitionNestedInput
@@ -1728,6 +1773,7 @@ export type CompetitionUncheckedUpdateWithoutMaxBeltInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counties?: Prisma.CompetitionCountyUncheckedUpdateManyWithoutCompetitionNestedInput
@@ -1752,6 +1798,7 @@ export type CompetitionUncheckedUpdateManyWithoutMaxBeltInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1772,6 +1819,7 @@ export type CompetitionCreateManyAgeCategoryInput = {
   eventDate: Date | string
   status?: $Enums.CompetitionStatus
   cancelReason?: string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1790,6 +1838,7 @@ export type CompetitionUpdateWithoutAgeCategoryInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counties?: Prisma.CompetitionCountyUpdateManyWithoutCompetitionNestedInput
@@ -1816,6 +1865,7 @@ export type CompetitionUncheckedUpdateWithoutAgeCategoryInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   counties?: Prisma.CompetitionCountyUncheckedUpdateManyWithoutCompetitionNestedInput
@@ -1840,6 +1890,7 @@ export type CompetitionUncheckedUpdateManyWithoutAgeCategoryInput = {
   eventDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   status?: Prisma.EnumCompetitionStatusFieldUpdateOperationsInput | $Enums.CompetitionStatus
   cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rulesSnapshot?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1919,6 +1970,7 @@ export type CompetitionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   eventDate?: boolean
   status?: boolean
   cancelReason?: boolean
+  rulesSnapshot?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   counties?: boolean | Prisma.Competition$countiesArgs<ExtArgs>
@@ -1948,6 +2000,7 @@ export type CompetitionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   eventDate?: boolean
   status?: boolean
   cancelReason?: boolean
+  rulesSnapshot?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   ageCategory?: boolean | Prisma.AgeCategoryDefaultArgs<ExtArgs>
@@ -1972,6 +2025,7 @@ export type CompetitionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   eventDate?: boolean
   status?: boolean
   cancelReason?: boolean
+  rulesSnapshot?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   ageCategory?: boolean | Prisma.AgeCategoryDefaultArgs<ExtArgs>
@@ -1996,11 +2050,12 @@ export type CompetitionSelectScalar = {
   eventDate?: boolean
   status?: boolean
   cancelReason?: boolean
+  rulesSnapshot?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type CompetitionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "province" | "level" | "discipline" | "gender" | "ageCategoryId" | "minBeltId" | "maxBeltId" | "feePerStudent" | "payeeCardNumber" | "payeeCardHolder" | "registrationDeadline" | "eventDate" | "status" | "cancelReason" | "createdAt" | "updatedAt", ExtArgs["result"]["competition"]>
+export type CompetitionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "province" | "level" | "discipline" | "gender" | "ageCategoryId" | "minBeltId" | "maxBeltId" | "feePerStudent" | "payeeCardNumber" | "payeeCardHolder" | "registrationDeadline" | "eventDate" | "status" | "cancelReason" | "rulesSnapshot" | "createdAt" | "updatedAt", ExtArgs["result"]["competition"]>
 export type CompetitionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   counties?: boolean | Prisma.Competition$countiesArgs<ExtArgs>
   ageCategory?: boolean | Prisma.AgeCategoryDefaultArgs<ExtArgs>
@@ -2050,6 +2105,7 @@ export type $CompetitionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     eventDate: Date
     status: $Enums.CompetitionStatus
     cancelReason: string | null
+    rulesSnapshot: runtime.JsonValue | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["competition"]>
@@ -2498,6 +2554,7 @@ export interface CompetitionFieldRefs {
   readonly eventDate: Prisma.FieldRef<"Competition", 'DateTime'>
   readonly status: Prisma.FieldRef<"Competition", 'CompetitionStatus'>
   readonly cancelReason: Prisma.FieldRef<"Competition", 'String'>
+  readonly rulesSnapshot: Prisma.FieldRef<"Competition", 'Json'>
   readonly createdAt: Prisma.FieldRef<"Competition", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Competition", 'DateTime'>
 }

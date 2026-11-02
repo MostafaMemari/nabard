@@ -9,7 +9,7 @@ function participant(overrides: Partial<ParticipantRecord> = {}): ParticipantRec
     fullName: "علی محمدی",
     nationalCode: "0012345678",
     birthDate: new Date("2013-05-10T00:00:00.000Z"),
-    beltName: "GREEN",
+    beltLabel: "سبز",
     weightClassLabel: "۳۳",
     coachName: "رضا کریمی",
     ...overrides,
@@ -91,7 +91,7 @@ describe("toParticipantsCsv", () => {
 
   it("neutralizes only user-entered text cells in the final document", () => {
     const csv = toParticipantsCsv([
-      participant({ fullName: "=SUM(A1)", weightClassLabel: "-54", coachName: "+extract", beltName: "DAN_1" }),
+      participant({ fullName: "=SUM(A1)", weightClassLabel: "-54", coachName: "+extract", beltLabel: "دان ۱" }),
     ]);
     expect(csv).toContain("'=SUM(A1)");
     expect(csv).toContain("'+extract");
@@ -100,8 +100,8 @@ describe("toParticipantsCsv", () => {
     expect(csv).not.toContain("\r\n=SUM");
   });
 
-  it("maps belt names to Persian labels including dan ranks", () => {
-    const csv = toParticipantsCsv([participant({ beltName: "DAN_1" }), participant({ beltName: "POOM_2" })]);
+  it("writes the belt label coming from the API as is", () => {
+    const csv = toParticipantsCsv([participant({ beltLabel: "دان ۱" }), participant({ beltLabel: "پوم ۲" })]);
     expect(csv).toContain("دان ۱");
     expect(csv).toContain("پوم ۲");
   });

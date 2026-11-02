@@ -15,6 +15,7 @@ export function CompetitionFormScreen({ competitionId }: { competitionId?: strin
     form,
     values,
     belts,
+    ageCategories,
     weightClasses,
     weightLoading,
     locked,
@@ -59,7 +60,7 @@ export function CompetitionFormScreen({ competitionId }: { competitionId?: strin
 
         <BasicInfoSection control={form.control} />
 
-        <ParticipantsSection control={form.control} belts={belts}>
+        <ParticipantsSection control={form.control} belts={belts} ageCategories={ageCategories}>
           <WeightClassHint
             visible={values.discipline === "KYORUGI" && values.ageCategoryId !== "" && values.gender !== ""}
             classes={weightClasses}

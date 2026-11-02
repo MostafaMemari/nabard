@@ -63,31 +63,6 @@ export const Province = {
 export type Province = (typeof Province)[keyof typeof Province]
 
 
-export const BeltName = {
-  WHITE: 'WHITE',
-  YELLOW: 'YELLOW',
-  GREEN: 'GREEN',
-  BLUE: 'BLUE',
-  RED: 'RED',
-  POOM_1: 'POOM_1',
-  POOM_2: 'POOM_2',
-  POOM_3: 'POOM_3',
-  POOM_4: 'POOM_4',
-  DAN_1: 'DAN_1',
-  DAN_2: 'DAN_2',
-  DAN_3: 'DAN_3',
-  DAN_4: 'DAN_4',
-  DAN_5: 'DAN_5',
-  DAN_6: 'DAN_6',
-  DAN_7: 'DAN_7',
-  DAN_8: 'DAN_8',
-  DAN_9: 'DAN_9',
-  DAN_10: 'DAN_10'
-} as const
-
-export type BeltName = (typeof BeltName)[keyof typeof BeltName]
-
-
 export const RankType = {
   COLOR: 'COLOR',
   POOM: 'POOM',
@@ -95,19 +70,6 @@ export const RankType = {
 } as const
 
 export type RankType = (typeof RankType)[keyof typeof RankType]
-
-
-export const AgeCategoryName = {
-  BLOSSOM: 'BLOSSOM',
-  YOUTH: 'YOUTH',
-  CADET: 'CADET',
-  JUNIOR: 'JUNIOR',
-  YOUNG: 'YOUNG',
-  SENIOR: 'SENIOR',
-  ULTRA: 'ULTRA'
-} as const
-
-export type AgeCategoryName = (typeof AgeCategoryName)[keyof typeof AgeCategoryName]
 
 
 export const Discipline = {

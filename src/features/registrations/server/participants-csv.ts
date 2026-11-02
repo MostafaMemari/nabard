@@ -1,4 +1,3 @@
-import { beltLabel } from "@/features/base-data/labels";
 import { formatJalaliDate } from "@/lib/format";
 import type { CurrentUser } from "@/lib/session";
 import type { RegistrationRepository } from "./repository";
@@ -32,7 +31,7 @@ function participantCells(participant: ParticipantRecord): string[] {
     csvCell(participant.fullName),
     csvCell(participant.nationalCode),
     csvCell(formatJalaliDate(participant.birthDate)),
-    csvBaseCell(beltLabel(participant.beltName)),
+    csvBaseCell(participant.beltLabel),
     csvBaseCell(weightClassCell(participant.weightClassLabel)),
     csvCell(participant.coachName),
   ];

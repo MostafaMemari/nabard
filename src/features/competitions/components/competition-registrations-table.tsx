@@ -23,10 +23,11 @@ export function CompetitionRegistrationsTable({
 
   const rows: RegistrationRow[] = registrations.map((registration) => {
     const weightClass = weightClasses.find((item) => item.id === registration.weightClassId);
+    const label = registration.weightClassLabel ?? weightClass?.label ?? null;
     return {
       registration,
       student: registration.student,
-      weightClassLabel: weightClass ? `${toPersianDigits(weightClass.label)} کیلوگرم` : null,
+      weightClassLabel: label ? `${toPersianDigits(label)} کیلوگرم` : null,
     };
   });
 
