@@ -4,15 +4,17 @@ import { ArrowLeftRightIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { BeltDot, FilterTabs, PageHeader, SearchInput } from "@/components/shared";
+import { PageHeader, SearchInput } from "@/components/shared";
 import { Button } from "@/components/ui/button";
-import { useBelts } from "@/features/base-data";
+import { useAgeCategories, useBelts } from "@/features/base-data";
 import type { CoachTransferRequest } from "@/features/transfers";
 import { CoachTransfersSection, TransferRequestDialog, useTransferRequests } from "@/features/transfers";
 import { useSearchParamText } from "@/lib/use-search-param";
 import { useStudents } from "../hooks/use-students";
+import { birthDateInAgeCategory } from "../student-age";
 import type { Student } from "../types";
 import { StudentDeleteDialog } from "./student-delete-dialog";
+import { StudentsActiveFilters, StudentsFilterSheet } from "./students-filter-sheet";
 import { StudentsResults } from "./students-results";
 
 export function StudentsScreen() {
@@ -20,20 +22,22 @@ export function StudentsScreen() {
   const search = useSearchParamText("q");
   const { students, isLoading, error, mutate } = useStudents();
   const { belts } = useBelts();
+  const { ageCategories } = useAgeCategories();
   const [pendingDelete, setPendingDelete] = useState<Student | null>(null);
   const [transferOpen, setTransferOpen] = useState(false);
   const [beltId, setBeltId] = useState("all");
+  const [ageCategoryId, setAgeCategoryId] = useState("all");
   const { result: transfers, isLoading: transfersLoading, error: transfersError, mutate: reloadTransfers } = useTransferRequests();
 
   const coachRequests = (transfers?.data ?? []).filter((request): request is CoachTransferRequest => "direction" in request);
 
   const query = search.value.trim();
   const searched = students.filter((student) => query === "" || student.fullName.includes(query) || student.nationalCode.includes(query));
-  const rows = searched.filter((student) => beltId === "all" || student.beltId === beltId);
-  const beltCounts: Record<string, number> = { all: searched.length };
-  for (const student of searched) {
-    beltCounts[student.beltId] = (beltCounts[student.beltId] ?? 0) + 1;
-  }
+  const selectedCategory = ageCategories.find((category) => category.id === ageCategoryId);
+  const rows = searched.filter(
+    (student) =>
+      (beltId === "all" || student.beltId === beltId) && (!selectedCategory || birthDateInAgeCategory(student.birthDate, selectedCategory)),
+  );
 
   function openStudent(student: Student) {
     router.push(`/coach/students/${student.id}`);
@@ -58,17 +62,27 @@ export function StudentsScreen() {
         }
       />
 
-      <SearchInput value={search.input} onChange={search.setInput} placeholder="جستجوی هنرجو" label="جستجوی هنرجو" />
+      <div className="flex items-center gap-2">
+        <SearchInput value={search.input} onChange={search.setInput} placeholder="جستجوی هنرجو" label="جستجوی هنرجو" />
+        <StudentsFilterSheet
+          students={searched}
+          belts={belts}
+          ageCategories={ageCategories}
+          beltId={beltId}
+          ageCategoryId={ageCategoryId}
+          onBeltChange={setBeltId}
+          onAgeCategoryChange={setAgeCategoryId}
+          resultCount={rows.length}
+        />
+      </div>
 
-      <FilterTabs
-        value={beltId}
-        onChange={setBeltId}
-        scroll
-        counts={beltCounts}
-        items={[
-          { id: "all", label: "همه کمربندها" },
-          ...belts.map((belt) => ({ id: belt.id, label: belt.label, dot: <BeltDot code={belt.code} /> })),
-        ]}
+      <StudentsActiveFilters
+        belts={belts}
+        ageCategories={ageCategories}
+        beltId={beltId}
+        ageCategoryId={ageCategoryId}
+        onBeltChange={setBeltId}
+        onAgeCategoryChange={setAgeCategoryId}
       />
 
       <StudentsResults
