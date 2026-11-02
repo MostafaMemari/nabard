@@ -228,6 +228,15 @@ describe("createStudent", () => {
     expect(repo.createStudent).not.toHaveBeenCalled();
   });
 
+  it("rejects a coach whose own gender is missing with 400", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue({ ...coachRecord, gender: null }) });
+    const failure = (await failureOf(createStudent(repo, coach, createInput))) as { message: string };
+
+    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
+    expect(failure?.message).toContain("جنسیت حساب مربی ثبت نشده است");
+    expect(repo.createStudent).not.toHaveBeenCalled();
+  });
+
   it("rejects an admin with 403 without touching the repository", async () => {
     const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
     const failure = await failureOf(createStudent(repo, admin, createInput));

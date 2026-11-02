@@ -6,7 +6,7 @@ import { EmptyState, FormActions, FormContainer, FormSection, PageHeader } from 
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMe } from "@/features/auth";
-import { genderLabels } from "@/features/base-data";
+import { personGenderLabels } from "@/features/base-data";
 import { useStudentDocuments } from "../hooks/use-student-documents";
 import { useStudentForm } from "../hooks/use-student-form";
 import { studentDocumentTypes } from "../labels";
@@ -65,9 +65,14 @@ export function StudentFormScreen({ studentId }: { studentId?: string }) {
             autoComplete="off"
           />
           {coachGender ? (
-            <StudentSelectField control={form.control} name="gender" label="جنسیت" items={{ [coachGender]: genderLabels[coachGender] }} />
+            <StudentSelectField
+              control={form.control}
+              name="gender"
+              label="جنسیت"
+              items={{ [coachGender]: personGenderLabels[coachGender] }}
+            />
           ) : (
-            <StudentSelectField control={form.control} name="gender" label="جنسیت" items={genderLabels} />
+            <StudentSelectField control={form.control} name="gender" label="جنسیت" items={personGenderLabels} />
           )}
           <StudentTextField
             control={form.control}

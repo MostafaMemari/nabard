@@ -218,7 +218,7 @@ export const demoCompetitions: CompetitionSeed[] = [
   },
   {
     id: "comp-2",
-    title: "مسابقات نونهالان پسر شهرستان ری",
+    title: "مسابقات نونهالان آقایان شهرستان ری",
     province: "TEHRAN",
     level: "COUNTY",
     countyNames: ["ری"],
@@ -237,7 +237,7 @@ export const demoCompetitions: CompetitionSeed[] = [
   },
   {
     id: "comp-3",
-    title: "مسابقات نوجوانان دختر",
+    title: "مسابقات نوجوانان بانوان",
     province: "TEHRAN",
     level: "PROVINCIAL",
     countyNames: [],
@@ -275,7 +275,7 @@ export const demoCompetitions: CompetitionSeed[] = [
   },
   {
     id: "comp-5",
-    title: "مسابقات جوانان پسر",
+    title: "مسابقات جوانان آقایان",
     province: "TEHRAN",
     level: "PROVINCIAL",
     countyNames: [],

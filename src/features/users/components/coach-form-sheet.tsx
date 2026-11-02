@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { personGenderLabels } from "@/features/base-data";
 import { useCounties } from "@/features/counties";
 import { createCoach } from "../api";
 import { type CoachFormValues, createCoachSchema } from "../schemas";
@@ -19,8 +20,6 @@ const emptyForm = {
   countyId: "",
   gender: "",
 } as unknown as CoachFormValues;
-
-const genderItems = { MALE: "مرد", FEMALE: "زن" };
 
 export function CoachFormSheet({
   open,
@@ -85,7 +84,7 @@ export function CoachFormSheet({
             placeholder="۰۰۱۲۳۴۵۶۷۸۹"
           />
           <CoachSelectField control={form.control} name="countyId" label="شهرستان" items={countyItems} />
-          <CoachSelectField control={form.control} name="gender" label="جنسیت" items={genderItems} />
+          <CoachSelectField control={form.control} name="gender" label="جنسیت" items={personGenderLabels} />
           <CoachTextField
             control={form.control}
             name="initialPassword"

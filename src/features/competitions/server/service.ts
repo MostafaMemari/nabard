@@ -322,11 +322,15 @@ export async function listCompetitions(
     return { data: rows.map((row) => toRecord(row, belts, categories)), meta: { page, pageSize, total } };
   }
 
+  // A coach without a gender would match both genders' competitions; show none
+  // instead of leaking the wrong half.
+  if (identity.gender === null) return { data: [], meta: { page, pageSize, total: 0 } };
+
   const filters: CompetitionFilters = {
     province: provinceOf(identity),
     status: "PUBLISHED",
     discipline: query.discipline,
-    gender: identity.gender ?? undefined,
+    gender: identity.gender,
     search,
     coachCountyId: identity.countyId ?? "none",
   };
@@ -362,6 +366,7 @@ export async function getCompetition(repo: CompetitionsRepository, user: Current
   }
 
   if (row.province !== provinceOf(identity) || row.status === "DRAFT") throw competitionNotFound();
+  if (row.gender !== identity.gender) throw competitionNotFound();
   if (row.level === "COUNTY" && !row.countyIds.includes(identity.countyId ?? "")) throw competitionNotFound();
   const decoration = await decorateForCoach(repo, user.id, row, belts);
 

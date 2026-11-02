@@ -9,13 +9,13 @@ import { formatMoney, formatNumber } from "@/lib/format";
 
 const pendingReceipts = [
   { id: "pay-1", coach: "سعید احمدی", competition: "مسابقات قهرمانی استان تهران", students: 6, amount: 21_000_000 },
-  { id: "pay-2", coach: "مهدی کریمی", competition: "مسابقات نونهالان پسر", students: 4, amount: 10_000_000 },
-  { id: "pay-3", coach: "حسین موسوی", competition: "مسابقات نوجوانان دختر", students: 5, amount: 12_500_000 },
+  { id: "pay-2", coach: "مهدی کریمی", competition: "مسابقات نونهالان آقایان", students: 4, amount: 10_000_000 },
+  { id: "pay-3", coach: "حسین موسوی", competition: "مسابقات نوجوانان بانوان", students: 5, amount: 12_500_000 },
 ];
 
 const upcomingCompetitions = [
   { id: "comp-1", title: "مسابقات قهرمانی استان تهران", deadline: "2026-11-20T20:30:00.000Z", registrations: 48 },
-  { id: "comp-2", title: "مسابقات نونهالان پسر", deadline: "2026-11-10T20:30:00.000Z", registrations: 31 },
+  { id: "comp-2", title: "مسابقات نونهالان آقایان", deadline: "2026-11-10T20:30:00.000Z", registrations: 31 },
 ];
 
 const now = new Date("2026-10-31T12:00:00.000Z");

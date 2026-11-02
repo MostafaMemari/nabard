@@ -49,6 +49,10 @@ function genderMismatch(): AppError {
   return new AppError(400, "VALIDATION_ERROR", "جنسیت هنرجو باید با جنسیت مربی یکسان باشد.");
 }
 
+function coachGenderMissing(): AppError {
+  return new AppError(400, "VALIDATION_ERROR", "جنسیت حساب مربی ثبت نشده است؛ از مدیر استان بخواهید جنسیت مربی را مشخص کند.");
+}
+
 async function requireActiveUser(repo: StudentRepository, user: CurrentUser): Promise<UserIdentityRecord> {
   const record = await repo.findUserById(user.id);
   if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
@@ -126,7 +130,8 @@ export async function getStudent(repo: StudentRepository, user: CurrentUser, id:
 export async function createStudent(repo: StudentRepository, user: CurrentUser, input: CreateStudentInput): Promise<StudentRecord> {
   const identity = await requireActiveUser(repo, user);
   if (identity.role !== "COACH") throw forbidden();
-  if (identity.gender && input.gender !== identity.gender) throw genderMismatch();
+  if (!identity.gender) throw coachGenderMissing();
+  if (input.gender !== identity.gender) throw genderMismatch();
 
   if (!(await repo.beltExists(input.beltId))) throw invalidBelt();
 
@@ -157,7 +162,10 @@ export async function updateStudent(
 
   const student = await repo.findStudentById(id);
   if (!student || student.coachId !== user.id) throw studentNotFound();
-  if (identity.gender && input.gender !== undefined && input.gender !== identity.gender) throw genderMismatch();
+  if (input.gender !== undefined) {
+    if (!identity.gender) throw coachGenderMissing();
+    if (input.gender !== identity.gender) throw genderMismatch();
+  }
 
   if (input.nationalCode !== undefined) {
     const owner = await repo.findNationalCodeOwner(input.nationalCode);

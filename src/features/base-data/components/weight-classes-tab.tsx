@@ -6,11 +6,10 @@ import { Field, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { AgeCategoryAdmin } from "../api-admin";
 import { useWeightClassSet } from "../hooks/use-base-data-admin";
+import { genderLabels } from "../labels";
 import type { Gender } from "../types";
 import { WeightSetEditor } from "./weight-set-editor";
 import { rowOfAdmin } from "./weight-set-row";
-
-const genderItems = { MALE: "پسر", FEMALE: "دختر" };
 
 function Selector({
   label,
@@ -70,7 +69,7 @@ export function WeightClassesTab({ ageCategories }: { ageCategories: AgeCategory
       <div className="flex flex-col gap-5 p-4">
         <div className="grid gap-4 sm:grid-cols-2">
           <Selector label="رده سنی" value={ageCategoryId} items={categoryItems} onChange={setAgeCategoryId} />
-          <Selector label="جنسیت" value={gender} items={genderItems} onChange={setGender} />
+          <Selector label="جنسیت" value={gender} items={genderLabels} onChange={setGender} />
         </div>
 
         {!selected ? (

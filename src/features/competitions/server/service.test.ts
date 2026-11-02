@@ -270,6 +270,15 @@ describe("listCompetitions", () => {
     );
   });
 
+  it("lists nothing for a coach whose gender is missing", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue({ ...coachRecord, gender: null }) });
+    const result = await listCompetitions(repo, coach, {});
+
+    expect(result.data).toEqual([]);
+    expect(result.meta).toMatchObject({ page: 1, pageSize: 100, total: 0 });
+    expect(repo.findCompetitions).not.toHaveBeenCalled();
+  });
+
   it("marks a coach competition past its deadline as CLOSED", async () => {
     const repo = repoWith({ findCompetitions: vi.fn().mockResolvedValue([publishedClosedRow]) });
     const result = await listCompetitions(repo, coach, {});
@@ -327,6 +336,14 @@ describe("getCompetition", () => {
   it("never exposes a draft to a coach", async () => {
     const repo = repoWith({ findCompetitionById: vi.fn().mockResolvedValue(draftRow) });
     const failure = await failureOf(getCompetition(repo, coach, "comp-9"));
+
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+  });
+
+  it("hides an opposite gender competition behind 404 for a coach", async () => {
+    const femaleRow = rowWith({ id: "comp-6", status: "PUBLISHED", gender: "FEMALE" });
+    const repo = repoWith({ findCompetitionById: vi.fn().mockResolvedValue(femaleRow) });
+    const failure = await failureOf(getCompetition(repo, coach, "comp-6"));
 
     expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
   });
