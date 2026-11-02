@@ -171,7 +171,7 @@ model County {
   name     String   @map("name") @db.VarChar(80)
 
   coaches            User[]
-  hostedCompetitions Competition[]          @relation("CompetitionHostCounty")
+  competitions       CompetitionCounty[]
   changeRequestsFrom CoachCountyChangeRequest[] @relation("CountyChangeFrom")
   changeRequestsTo   CoachCountyChangeRequest[] @relation("CountyChangeTo")
 
@@ -299,9 +299,8 @@ model Competition {
   title    String   @map("title") @db.VarChar(150)
   province Province @map("province")
 
-  level        CompetitionLevel @default(PROVINCIAL) @map("level")
-  hostCountyId String?          @map("host_county_id") // set when level is COUNTY, belongs to the competition province
-  hostCounty   County?          @relation("CompetitionHostCounty", fields: [hostCountyId], references: [id])
+  level     CompetitionLevel    @default(PROVINCIAL) @map("level")
+  counties  CompetitionCounty[] // one or more counties when level is COUNTY, none when PROVINCIAL
 
   discipline    Discipline  @map("discipline")
   gender        Gender      @map("gender")
@@ -328,8 +327,21 @@ model Competition {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([province, status])
-  @@index([hostCountyId])
   @@map("competitions")
+}
+
+// A county level competition is held in one or more counties of its province;
+// a provincial competition has none. The list is locked once registrations exist.
+model CompetitionCounty {
+  id            String      @id @default(uuid()) @map("id")
+  competitionId String      @map("competition_id")
+  competition   Competition @relation(fields: [competitionId], references: [id], onDelete: Cascade)
+  countyId      String      @map("county_id")
+  county        County      @relation(fields: [countyId], references: [id], onDelete: Cascade)
+
+  @@unique([competitionId, countyId])
+  @@index([countyId])
+  @@map("competition_counties")
 }
 
 // A coach asks to move to another county of the same province. The admin

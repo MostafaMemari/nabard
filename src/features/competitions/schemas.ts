@@ -10,7 +10,7 @@ export const competitionSchema = z
     ageCategoryId: z.string().min(1, "رده سنی را انتخاب کنید."),
     beltIds: z.array(z.string()).min(1, "حداقل یک کمربند را انتخاب کنید."),
     level: z.string().min(1, "سطح مسابقه را انتخاب کنید."),
-    hostCountyId: z.string(),
+    countyIds: z.array(z.string()),
     feePerStudent: z
       .string()
       .transform(normalizeDigits)
@@ -24,9 +24,9 @@ export const competitionSchema = z
     message: "تاریخ برگزاری باید بعد از مهلت ثبت نام باشد.",
     path: ["eventDate"],
   })
-  .refine((data) => data.level !== "COUNTY" || (data.hostCountyId !== undefined && data.hostCountyId !== ""), {
-    message: "شهرستان میزبان را انتخاب کنید.",
-    path: ["hostCountyId"],
+  .refine((data) => data.level !== "COUNTY" || data.countyIds.length > 0, {
+    message: "حداقل یک شهرستان را انتخاب کنید.",
+    path: ["countyIds"],
   });
 
 export type CompetitionFormValues = {
@@ -36,7 +36,7 @@ export type CompetitionFormValues = {
   ageCategoryId: string;
   beltIds: string[];
   level: string;
-  hostCountyId: string;
+  countyIds: string[];
   feePerStudent: string;
   payeeCardNumber: string;
   payeeCardHolder: string;
@@ -70,7 +70,7 @@ const payeeCardHolderField = z.string().trim().min(3, "نام صاحب کارت 
 const registrationDeadlineField = z.string().min(1, "مهلت ثبت نام را انتخاب کنید.").refine(isIsoDate, "مهلت ثبت نام معتبر نیست.");
 const eventDateField = z.string().min(1, "تاریخ برگزاری را انتخاب کنید.").refine(isIsoDate, "تاریخ برگزاری معتبر نیست.");
 const levelField = z.enum(["PROVINCIAL", "COUNTY"], { message: "سطح مسابقه را انتخاب کنید." });
-const hostCountyIdField = z.string();
+const countyIdsField = z.array(z.string().min(1));
 
 export const createCompetitionSchema = z
   .object({
@@ -80,16 +80,16 @@ export const createCompetitionSchema = z
     ageCategoryId: ageCategoryField,
     beltIds: beltIdsField,
     level: levelField,
-    hostCountyId: hostCountyIdField.optional(),
+    countyIds: countyIdsField.optional(),
     feePerStudent: feeField,
     payeeCardNumber: payeeCardNumberField,
     payeeCardHolder: payeeCardHolderField,
     registrationDeadline: registrationDeadlineField,
     eventDate: eventDateField,
   })
-  .refine((value) => value.level !== "COUNTY" || (value.hostCountyId !== undefined && value.hostCountyId !== ""), {
-    message: "شهرستان میزبان را انتخاب کنید.",
-    path: ["hostCountyId"],
+  .refine((value) => value.level !== "COUNTY" || (value.countyIds !== undefined && value.countyIds.length > 0), {
+    message: "حداقل یک شهرستان را انتخاب کنید.",
+    path: ["countyIds"],
   });
 
 export const updateCompetitionSchema = z
@@ -100,7 +100,7 @@ export const updateCompetitionSchema = z
     ageCategoryId: ageCategoryField.optional(),
     beltIds: beltIdsField.optional(),
     level: levelField.optional(),
-    hostCountyId: hostCountyIdField.optional(),
+    countyIds: countyIdsField.optional(),
     feePerStudent: feeField.optional(),
     payeeCardNumber: payeeCardNumberField.optional(),
     payeeCardHolder: payeeCardHolderField.optional(),
@@ -139,7 +139,7 @@ export const emptyCompetitionForm: CompetitionFormValues = {
   ageCategoryId: "",
   beltIds: [],
   level: "PROVINCIAL",
-  hostCountyId: "",
+  countyIds: [],
   feePerStudent: "",
   payeeCardNumber: "",
   payeeCardHolder: "",

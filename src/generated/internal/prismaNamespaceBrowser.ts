@@ -58,6 +58,7 @@ export const ModelName = {
   AgeCategory: 'AgeCategory',
   WeightClass: 'WeightClass',
   Competition: 'Competition',
+  CompetitionCounty: 'CompetitionCounty',
   CoachCountyChangeRequest: 'CoachCountyChangeRequest',
   AuditLog: 'AuditLog',
   DeadlineExtension: 'DeadlineExtension',
@@ -178,7 +179,6 @@ export const CompetitionScalarFieldEnum = {
   title: 'title',
   province: 'province',
   level: 'level',
-  hostCountyId: 'hostCountyId',
   discipline: 'discipline',
   gender: 'gender',
   ageCategoryId: 'ageCategoryId',
@@ -196,6 +196,15 @@ export const CompetitionScalarFieldEnum = {
 } as const
 
 export type CompetitionScalarFieldEnum = (typeof CompetitionScalarFieldEnum)[keyof typeof CompetitionScalarFieldEnum]
+
+
+export const CompetitionCountyScalarFieldEnum = {
+  id: 'id',
+  competitionId: 'competitionId',
+  countyId: 'countyId'
+} as const
+
+export type CompetitionCountyScalarFieldEnum = (typeof CompetitionCountyScalarFieldEnum)[keyof typeof CompetitionCountyScalarFieldEnum]
 
 
 export const CoachCountyChangeRequestScalarFieldEnum = {

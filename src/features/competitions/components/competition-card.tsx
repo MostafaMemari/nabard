@@ -29,7 +29,7 @@ export function CompetitionCard({
       <MobileCardLine label="ثبت نام ها" value={`${formatNumber(registrationCount)} هنرجو`} />
       <MobileCardChips>
         <BeltChips belts={belts} ids={competition.beltIds} />
-        {competition.level === "COUNTY" && competition.hostCountyName ? <CountyChip name={competition.hostCountyName} /> : null}
+        {competition.level === "COUNTY" ? competition.countyNames.map((name) => <CountyChip key={name} name={name} />) : null}
       </MobileCardChips>
       <CountdownChip deadline={competition.registrationDeadline} className="self-start" />
     </MobileCardLink>

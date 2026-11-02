@@ -14,8 +14,8 @@ export type Competition = {
   title: string;
   province: Province;
   level: CompetitionLevel;
-  hostCountyId: string | null;
-  hostCountyName: string | null;
+  countyIds: string[];
+  countyNames: string[];
   discipline: Discipline;
   gender: Gender;
   ageCategoryId: string;
@@ -33,7 +33,7 @@ export type Competition = {
   updatedAt: string;
 };
 
-export type CompetitionInput = Omit<Competition, "id" | "createdAt" | "updatedAt" | "status"> & {
+export type CompetitionInput = Omit<Competition, "id" | "createdAt" | "updatedAt" | "status" | "countyNames"> & {
   status?: CompetitionStatus;
 };
 

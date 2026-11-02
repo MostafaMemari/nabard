@@ -21,8 +21,8 @@ const canceledRow: CompetitionRow = {
   title: "مسابقات قهرمانی استان",
   province: "TEHRAN",
   level: "PROVINCIAL",
-  hostCountyId: null,
-  hostCountyName: null,
+  countyIds: [],
+  countyNames: [],
   discipline: "KYORUGI",
   gender: "MALE",
   ageCategoryId: "senior",
@@ -54,7 +54,7 @@ describe("cancelCompetitionWithRefunds", () => {
       registrationRow("reg-1", "coach-1", "CONFIRMED"),
       registrationRow("reg-2", "coach-2", "PENDING"),
     ]);
-    tx.competition.findUnique.mockResolvedValue(canceledRow);
+    tx.competition.findUnique.mockResolvedValue({ ...canceledRow, counties: [] });
 
     const result = await cancelCompetitionWithRefunds("comp-1", "دلیل لغو");
 
@@ -92,7 +92,7 @@ describe("cancelCompetitionWithRefunds", () => {
   it("never duplicates refunds and skips rejected receipts through the query filters", async () => {
     tx.competition.updateMany.mockResolvedValue({ count: 1 });
     tx.registration.findMany.mockResolvedValue([registrationRow("reg-1", "coach-1", "CONFIRMED")]);
-    tx.competition.findUnique.mockResolvedValue(canceledRow);
+    tx.competition.findUnique.mockResolvedValue({ ...canceledRow, counties: [] });
 
     await cancelCompetitionWithRefunds("comp-1", "دلیل لغو");
 

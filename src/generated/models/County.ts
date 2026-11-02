@@ -183,7 +183,7 @@ export type CountyWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"County"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"County"> | Date | string
   coaches?: Prisma.UserListRelationFilter
-  hostedCompetitions?: Prisma.CompetitionListRelationFilter
+  competitions?: Prisma.CompetitionCountyListRelationFilter
   changeRequestsFrom?: Prisma.CoachCountyChangeRequestListRelationFilter
   changeRequestsTo?: Prisma.CoachCountyChangeRequestListRelationFilter
 }
@@ -195,7 +195,7 @@ export type CountyOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   coaches?: Prisma.UserOrderByRelationAggregateInput
-  hostedCompetitions?: Prisma.CompetitionOrderByRelationAggregateInput
+  competitions?: Prisma.CompetitionCountyOrderByRelationAggregateInput
   changeRequestsFrom?: Prisma.CoachCountyChangeRequestOrderByRelationAggregateInput
   changeRequestsTo?: Prisma.CoachCountyChangeRequestOrderByRelationAggregateInput
 }
@@ -211,7 +211,7 @@ export type CountyWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"County"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"County"> | Date | string
   coaches?: Prisma.UserListRelationFilter
-  hostedCompetitions?: Prisma.CompetitionListRelationFilter
+  competitions?: Prisma.CompetitionCountyListRelationFilter
   changeRequestsFrom?: Prisma.CoachCountyChangeRequestListRelationFilter
   changeRequestsTo?: Prisma.CoachCountyChangeRequestListRelationFilter
 }, "id" | "province_name">
@@ -245,7 +245,7 @@ export type CountyCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   coaches?: Prisma.UserCreateNestedManyWithoutCountyInput
-  hostedCompetitions?: Prisma.CompetitionCreateNestedManyWithoutHostCountyInput
+  competitions?: Prisma.CompetitionCountyCreateNestedManyWithoutCountyInput
   changeRequestsFrom?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutFromCountyInput
   changeRequestsTo?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutToCountyInput
 }
@@ -257,7 +257,7 @@ export type CountyUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   coaches?: Prisma.UserUncheckedCreateNestedManyWithoutCountyInput
-  hostedCompetitions?: Prisma.CompetitionUncheckedCreateNestedManyWithoutHostCountyInput
+  competitions?: Prisma.CompetitionCountyUncheckedCreateNestedManyWithoutCountyInput
   changeRequestsFrom?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutFromCountyInput
   changeRequestsTo?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutToCountyInput
 }
@@ -269,7 +269,7 @@ export type CountyUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coaches?: Prisma.UserUpdateManyWithoutCountyNestedInput
-  hostedCompetitions?: Prisma.CompetitionUpdateManyWithoutHostCountyNestedInput
+  competitions?: Prisma.CompetitionCountyUpdateManyWithoutCountyNestedInput
   changeRequestsFrom?: Prisma.CoachCountyChangeRequestUpdateManyWithoutFromCountyNestedInput
   changeRequestsTo?: Prisma.CoachCountyChangeRequestUpdateManyWithoutToCountyNestedInput
 }
@@ -281,7 +281,7 @@ export type CountyUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coaches?: Prisma.UserUncheckedUpdateManyWithoutCountyNestedInput
-  hostedCompetitions?: Prisma.CompetitionUncheckedUpdateManyWithoutHostCountyNestedInput
+  competitions?: Prisma.CompetitionCountyUncheckedUpdateManyWithoutCountyNestedInput
   changeRequestsFrom?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutFromCountyNestedInput
   changeRequestsTo?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutToCountyNestedInput
 }
@@ -377,20 +377,18 @@ export type CountyUpdateOneWithoutCoachesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.CountyUpdateToOneWithWhereWithoutCoachesInput, Prisma.CountyUpdateWithoutCoachesInput>, Prisma.CountyUncheckedUpdateWithoutCoachesInput>
 }
 
-export type CountyCreateNestedOneWithoutHostedCompetitionsInput = {
-  create?: Prisma.XOR<Prisma.CountyCreateWithoutHostedCompetitionsInput, Prisma.CountyUncheckedCreateWithoutHostedCompetitionsInput>
-  connectOrCreate?: Prisma.CountyCreateOrConnectWithoutHostedCompetitionsInput
+export type CountyCreateNestedOneWithoutCompetitionsInput = {
+  create?: Prisma.XOR<Prisma.CountyCreateWithoutCompetitionsInput, Prisma.CountyUncheckedCreateWithoutCompetitionsInput>
+  connectOrCreate?: Prisma.CountyCreateOrConnectWithoutCompetitionsInput
   connect?: Prisma.CountyWhereUniqueInput
 }
 
-export type CountyUpdateOneWithoutHostedCompetitionsNestedInput = {
-  create?: Prisma.XOR<Prisma.CountyCreateWithoutHostedCompetitionsInput, Prisma.CountyUncheckedCreateWithoutHostedCompetitionsInput>
-  connectOrCreate?: Prisma.CountyCreateOrConnectWithoutHostedCompetitionsInput
-  upsert?: Prisma.CountyUpsertWithoutHostedCompetitionsInput
-  disconnect?: Prisma.CountyWhereInput | boolean
-  delete?: Prisma.CountyWhereInput | boolean
+export type CountyUpdateOneRequiredWithoutCompetitionsNestedInput = {
+  create?: Prisma.XOR<Prisma.CountyCreateWithoutCompetitionsInput, Prisma.CountyUncheckedCreateWithoutCompetitionsInput>
+  connectOrCreate?: Prisma.CountyCreateOrConnectWithoutCompetitionsInput
+  upsert?: Prisma.CountyUpsertWithoutCompetitionsInput
   connect?: Prisma.CountyWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.CountyUpdateToOneWithWhereWithoutHostedCompetitionsInput, Prisma.CountyUpdateWithoutHostedCompetitionsInput>, Prisma.CountyUncheckedUpdateWithoutHostedCompetitionsInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.CountyUpdateToOneWithWhereWithoutCompetitionsInput, Prisma.CountyUpdateWithoutCompetitionsInput>, Prisma.CountyUncheckedUpdateWithoutCompetitionsInput>
 }
 
 export type CountyCreateNestedOneWithoutChangeRequestsFromInput = {
@@ -427,7 +425,7 @@ export type CountyCreateWithoutCoachesInput = {
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  hostedCompetitions?: Prisma.CompetitionCreateNestedManyWithoutHostCountyInput
+  competitions?: Prisma.CompetitionCountyCreateNestedManyWithoutCountyInput
   changeRequestsFrom?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutFromCountyInput
   changeRequestsTo?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutToCountyInput
 }
@@ -438,7 +436,7 @@ export type CountyUncheckedCreateWithoutCoachesInput = {
   name: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  hostedCompetitions?: Prisma.CompetitionUncheckedCreateNestedManyWithoutHostCountyInput
+  competitions?: Prisma.CompetitionCountyUncheckedCreateNestedManyWithoutCountyInput
   changeRequestsFrom?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutFromCountyInput
   changeRequestsTo?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutToCountyInput
 }
@@ -465,7 +463,7 @@ export type CountyUpdateWithoutCoachesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  hostedCompetitions?: Prisma.CompetitionUpdateManyWithoutHostCountyNestedInput
+  competitions?: Prisma.CompetitionCountyUpdateManyWithoutCountyNestedInput
   changeRequestsFrom?: Prisma.CoachCountyChangeRequestUpdateManyWithoutFromCountyNestedInput
   changeRequestsTo?: Prisma.CoachCountyChangeRequestUpdateManyWithoutToCountyNestedInput
 }
@@ -476,12 +474,12 @@ export type CountyUncheckedUpdateWithoutCoachesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  hostedCompetitions?: Prisma.CompetitionUncheckedUpdateManyWithoutHostCountyNestedInput
+  competitions?: Prisma.CompetitionCountyUncheckedUpdateManyWithoutCountyNestedInput
   changeRequestsFrom?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutFromCountyNestedInput
   changeRequestsTo?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutToCountyNestedInput
 }
 
-export type CountyCreateWithoutHostedCompetitionsInput = {
+export type CountyCreateWithoutCompetitionsInput = {
   id?: string
   province: $Enums.Province
   name: string
@@ -492,7 +490,7 @@ export type CountyCreateWithoutHostedCompetitionsInput = {
   changeRequestsTo?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutToCountyInput
 }
 
-export type CountyUncheckedCreateWithoutHostedCompetitionsInput = {
+export type CountyUncheckedCreateWithoutCompetitionsInput = {
   id?: string
   province: $Enums.Province
   name: string
@@ -503,23 +501,23 @@ export type CountyUncheckedCreateWithoutHostedCompetitionsInput = {
   changeRequestsTo?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutToCountyInput
 }
 
-export type CountyCreateOrConnectWithoutHostedCompetitionsInput = {
+export type CountyCreateOrConnectWithoutCompetitionsInput = {
   where: Prisma.CountyWhereUniqueInput
-  create: Prisma.XOR<Prisma.CountyCreateWithoutHostedCompetitionsInput, Prisma.CountyUncheckedCreateWithoutHostedCompetitionsInput>
+  create: Prisma.XOR<Prisma.CountyCreateWithoutCompetitionsInput, Prisma.CountyUncheckedCreateWithoutCompetitionsInput>
 }
 
-export type CountyUpsertWithoutHostedCompetitionsInput = {
-  update: Prisma.XOR<Prisma.CountyUpdateWithoutHostedCompetitionsInput, Prisma.CountyUncheckedUpdateWithoutHostedCompetitionsInput>
-  create: Prisma.XOR<Prisma.CountyCreateWithoutHostedCompetitionsInput, Prisma.CountyUncheckedCreateWithoutHostedCompetitionsInput>
+export type CountyUpsertWithoutCompetitionsInput = {
+  update: Prisma.XOR<Prisma.CountyUpdateWithoutCompetitionsInput, Prisma.CountyUncheckedUpdateWithoutCompetitionsInput>
+  create: Prisma.XOR<Prisma.CountyCreateWithoutCompetitionsInput, Prisma.CountyUncheckedCreateWithoutCompetitionsInput>
   where?: Prisma.CountyWhereInput
 }
 
-export type CountyUpdateToOneWithWhereWithoutHostedCompetitionsInput = {
+export type CountyUpdateToOneWithWhereWithoutCompetitionsInput = {
   where?: Prisma.CountyWhereInput
-  data: Prisma.XOR<Prisma.CountyUpdateWithoutHostedCompetitionsInput, Prisma.CountyUncheckedUpdateWithoutHostedCompetitionsInput>
+  data: Prisma.XOR<Prisma.CountyUpdateWithoutCompetitionsInput, Prisma.CountyUncheckedUpdateWithoutCompetitionsInput>
 }
 
-export type CountyUpdateWithoutHostedCompetitionsInput = {
+export type CountyUpdateWithoutCompetitionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -530,7 +528,7 @@ export type CountyUpdateWithoutHostedCompetitionsInput = {
   changeRequestsTo?: Prisma.CoachCountyChangeRequestUpdateManyWithoutToCountyNestedInput
 }
 
-export type CountyUncheckedUpdateWithoutHostedCompetitionsInput = {
+export type CountyUncheckedUpdateWithoutCompetitionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   name?: Prisma.StringFieldUpdateOperationsInput | string
@@ -548,7 +546,7 @@ export type CountyCreateWithoutChangeRequestsFromInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   coaches?: Prisma.UserCreateNestedManyWithoutCountyInput
-  hostedCompetitions?: Prisma.CompetitionCreateNestedManyWithoutHostCountyInput
+  competitions?: Prisma.CompetitionCountyCreateNestedManyWithoutCountyInput
   changeRequestsTo?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutToCountyInput
 }
 
@@ -559,7 +557,7 @@ export type CountyUncheckedCreateWithoutChangeRequestsFromInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   coaches?: Prisma.UserUncheckedCreateNestedManyWithoutCountyInput
-  hostedCompetitions?: Prisma.CompetitionUncheckedCreateNestedManyWithoutHostCountyInput
+  competitions?: Prisma.CompetitionCountyUncheckedCreateNestedManyWithoutCountyInput
   changeRequestsTo?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutToCountyInput
 }
 
@@ -575,7 +573,7 @@ export type CountyCreateWithoutChangeRequestsToInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   coaches?: Prisma.UserCreateNestedManyWithoutCountyInput
-  hostedCompetitions?: Prisma.CompetitionCreateNestedManyWithoutHostCountyInput
+  competitions?: Prisma.CompetitionCountyCreateNestedManyWithoutCountyInput
   changeRequestsFrom?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutFromCountyInput
 }
 
@@ -586,7 +584,7 @@ export type CountyUncheckedCreateWithoutChangeRequestsToInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   coaches?: Prisma.UserUncheckedCreateNestedManyWithoutCountyInput
-  hostedCompetitions?: Prisma.CompetitionUncheckedCreateNestedManyWithoutHostCountyInput
+  competitions?: Prisma.CompetitionCountyUncheckedCreateNestedManyWithoutCountyInput
   changeRequestsFrom?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutFromCountyInput
 }
 
@@ -613,7 +611,7 @@ export type CountyUpdateWithoutChangeRequestsFromInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coaches?: Prisma.UserUpdateManyWithoutCountyNestedInput
-  hostedCompetitions?: Prisma.CompetitionUpdateManyWithoutHostCountyNestedInput
+  competitions?: Prisma.CompetitionCountyUpdateManyWithoutCountyNestedInput
   changeRequestsTo?: Prisma.CoachCountyChangeRequestUpdateManyWithoutToCountyNestedInput
 }
 
@@ -624,7 +622,7 @@ export type CountyUncheckedUpdateWithoutChangeRequestsFromInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coaches?: Prisma.UserUncheckedUpdateManyWithoutCountyNestedInput
-  hostedCompetitions?: Prisma.CompetitionUncheckedUpdateManyWithoutHostCountyNestedInput
+  competitions?: Prisma.CompetitionCountyUncheckedUpdateManyWithoutCountyNestedInput
   changeRequestsTo?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutToCountyNestedInput
 }
 
@@ -646,7 +644,7 @@ export type CountyUpdateWithoutChangeRequestsToInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coaches?: Prisma.UserUpdateManyWithoutCountyNestedInput
-  hostedCompetitions?: Prisma.CompetitionUpdateManyWithoutHostCountyNestedInput
+  competitions?: Prisma.CompetitionCountyUpdateManyWithoutCountyNestedInput
   changeRequestsFrom?: Prisma.CoachCountyChangeRequestUpdateManyWithoutFromCountyNestedInput
 }
 
@@ -657,7 +655,7 @@ export type CountyUncheckedUpdateWithoutChangeRequestsToInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coaches?: Prisma.UserUncheckedUpdateManyWithoutCountyNestedInput
-  hostedCompetitions?: Prisma.CompetitionUncheckedUpdateManyWithoutHostCountyNestedInput
+  competitions?: Prisma.CompetitionCountyUncheckedUpdateManyWithoutCountyNestedInput
   changeRequestsFrom?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutFromCountyNestedInput
 }
 
@@ -668,14 +666,14 @@ export type CountyUncheckedUpdateWithoutChangeRequestsToInput = {
 
 export type CountyCountOutputType = {
   coaches: number
-  hostedCompetitions: number
+  competitions: number
   changeRequestsFrom: number
   changeRequestsTo: number
 }
 
 export type CountyCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   coaches?: boolean | CountyCountOutputTypeCountCoachesArgs
-  hostedCompetitions?: boolean | CountyCountOutputTypeCountHostedCompetitionsArgs
+  competitions?: boolean | CountyCountOutputTypeCountCompetitionsArgs
   changeRequestsFrom?: boolean | CountyCountOutputTypeCountChangeRequestsFromArgs
   changeRequestsTo?: boolean | CountyCountOutputTypeCountChangeRequestsToArgs
 }
@@ -700,8 +698,8 @@ export type CountyCountOutputTypeCountCoachesArgs<ExtArgs extends runtime.Types.
 /**
  * CountyCountOutputType without action
  */
-export type CountyCountOutputTypeCountHostedCompetitionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.CompetitionWhereInput
+export type CountyCountOutputTypeCountCompetitionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CompetitionCountyWhereInput
 }
 
 /**
@@ -726,7 +724,7 @@ export type CountySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   createdAt?: boolean
   updatedAt?: boolean
   coaches?: boolean | Prisma.County$coachesArgs<ExtArgs>
-  hostedCompetitions?: boolean | Prisma.County$hostedCompetitionsArgs<ExtArgs>
+  competitions?: boolean | Prisma.County$competitionsArgs<ExtArgs>
   changeRequestsFrom?: boolean | Prisma.County$changeRequestsFromArgs<ExtArgs>
   changeRequestsTo?: boolean | Prisma.County$changeRequestsToArgs<ExtArgs>
   _count?: boolean | Prisma.CountyCountOutputTypeDefaultArgs<ExtArgs>
@@ -759,7 +757,7 @@ export type CountySelectScalar = {
 export type CountyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "province" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["county"]>
 export type CountyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   coaches?: boolean | Prisma.County$coachesArgs<ExtArgs>
-  hostedCompetitions?: boolean | Prisma.County$hostedCompetitionsArgs<ExtArgs>
+  competitions?: boolean | Prisma.County$competitionsArgs<ExtArgs>
   changeRequestsFrom?: boolean | Prisma.County$changeRequestsFromArgs<ExtArgs>
   changeRequestsTo?: boolean | Prisma.County$changeRequestsToArgs<ExtArgs>
   _count?: boolean | Prisma.CountyCountOutputTypeDefaultArgs<ExtArgs>
@@ -771,7 +769,7 @@ export type $CountyPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
   name: "County"
   objects: {
     coaches: Prisma.$UserPayload<ExtArgs>[]
-    hostedCompetitions: Prisma.$CompetitionPayload<ExtArgs>[]
+    competitions: Prisma.$CompetitionCountyPayload<ExtArgs>[]
     changeRequestsFrom: Prisma.$CoachCountyChangeRequestPayload<ExtArgs>[]
     changeRequestsTo: Prisma.$CoachCountyChangeRequestPayload<ExtArgs>[]
   }
@@ -1176,7 +1174,7 @@ readonly fields: CountyFieldRefs;
 export interface Prisma__CountyClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   coaches<T extends Prisma.County$coachesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.County$coachesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  hostedCompetitions<T extends Prisma.County$hostedCompetitionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.County$hostedCompetitionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompetitionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  competitions<T extends Prisma.County$competitionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.County$competitionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompetitionCountyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   changeRequestsFrom<T extends Prisma.County$changeRequestsFromArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.County$changeRequestsFromArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CoachCountyChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   changeRequestsTo<T extends Prisma.County$changeRequestsToArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.County$changeRequestsToArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CoachCountyChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1630,27 +1628,27 @@ export type County$coachesArgs<ExtArgs extends runtime.Types.Extensions.Internal
 }
 
 /**
- * County.hostedCompetitions
+ * County.competitions
  */
-export type County$hostedCompetitionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type County$competitionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
-   * Select specific fields to fetch from the Competition
+   * Select specific fields to fetch from the CompetitionCounty
    */
-  select?: Prisma.CompetitionSelect<ExtArgs> | null
+  select?: Prisma.CompetitionCountySelect<ExtArgs> | null
   /**
-   * Omit specific fields from the Competition
+   * Omit specific fields from the CompetitionCounty
    */
-  omit?: Prisma.CompetitionOmit<ExtArgs> | null
+  omit?: Prisma.CompetitionCountyOmit<ExtArgs> | null
   /**
    * Choose, which related nodes to fetch as well
    */
-  include?: Prisma.CompetitionInclude<ExtArgs> | null
-  where?: Prisma.CompetitionWhereInput
-  orderBy?: Prisma.CompetitionOrderByWithRelationInput | Prisma.CompetitionOrderByWithRelationInput[]
-  cursor?: Prisma.CompetitionWhereUniqueInput
+  include?: Prisma.CompetitionCountyInclude<ExtArgs> | null
+  where?: Prisma.CompetitionCountyWhereInput
+  orderBy?: Prisma.CompetitionCountyOrderByWithRelationInput | Prisma.CompetitionCountyOrderByWithRelationInput[]
+  cursor?: Prisma.CompetitionCountyWhereUniqueInput
   take?: number
   skip?: number
-  distinct?: Prisma.CompetitionScalarFieldEnum | Prisma.CompetitionScalarFieldEnum[]
+  distinct?: Prisma.CompetitionCountyScalarFieldEnum | Prisma.CompetitionCountyScalarFieldEnum[]
 }
 
 /**

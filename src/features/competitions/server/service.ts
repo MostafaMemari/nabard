@@ -23,8 +23,8 @@ export type CompetitionRecord = {
   title: string;
   province: string;
   level: CompetitionLevel;
-  hostCountyId: string | null;
-  hostCountyName: string | null;
+  countyIds: string[];
+  countyNames: string[];
   discipline: Discipline;
   gender: Gender;
   ageCategoryId: string;
@@ -89,8 +89,8 @@ function toRecord(row: CompetitionRow, belts: Belt[]): CompetitionRecord {
     title: row.title,
     province: row.province,
     level: row.level,
-    hostCountyId: row.hostCountyId,
-    hostCountyName: row.hostCountyName,
+    countyIds: row.countyIds,
+    countyNames: row.countyNames,
     discipline: row.discipline,
     gender: row.gender,
     ageCategoryId: row.ageCategoryId,
@@ -140,17 +140,23 @@ async function resolveBeltRange(
   return { belts, minBeltId: minBelt?.id ?? "", maxBeltId: maxBelt?.id ?? "" };
 }
 
-async function validateHostCounty(
-  repo: CompetitionsRepository,
-  province: string,
-  hostCountyId: string,
-): Promise<{ id: string; province: string; name: string }> {
-  const county = await repo.findCountyById(hostCountyId);
-  if (!county || county.province !== province) {
-    throw new AppError(400, "VALIDATION_ERROR", "شهرستان میزبان انتخاب شده معتبر نیست.");
+async function validateCounties(repo: CompetitionsRepository, province: string, countyIds: string[]): Promise<string[]> {
+  const uniqueIds = [...new Set(countyIds)];
+  if (uniqueIds.length === 0) {
+    throw new AppError(400, "VALIDATION_ERROR", "حداقل یک شهرستان را انتخاب کنید.");
   }
 
-  return county;
+  const counties: string[] = [];
+  for (const countyId of uniqueIds) {
+    const county = await repo.findCountyById(countyId);
+    if (!county || county.province !== province) {
+      throw new AppError(400, "VALIDATION_ERROR", "شهرستان های انتخاب شده معتبر نیستند.");
+    }
+
+    counties.push(county.id);
+  }
+
+  return counties;
 }
 
 async function validateCompetitionData(
@@ -329,7 +335,7 @@ export async function getCompetition(repo: CompetitionsRepository, user: Current
   }
 
   if (row.province !== provinceOf(identity) || row.status === "DRAFT") throw competitionNotFound();
-  if (row.level === "COUNTY" && row.hostCountyId !== identity.countyId) throw competitionNotFound();
+  if (row.level === "COUNTY" && !row.countyIds.includes(identity.countyId ?? "")) throw competitionNotFound();
   const decoration = await decorateForCoach(repo, user.id, row, belts);
 
   return { ...toRecord(row, belts), ...decoration };
@@ -354,14 +360,13 @@ export async function createCompetition(
     eventDate,
   });
 
-  const hostCountyId =
-    input.level === "COUNTY" && input.hostCountyId ? (await validateHostCounty(repo, provinceOf(identity), input.hostCountyId)).id : null;
+  const countyIds = input.level === "COUNTY" ? await validateCounties(repo, provinceOf(identity), input.countyIds ?? []) : [];
 
   const data: NewCompetitionData = {
     title: input.title,
     province: provinceOf(identity),
     level: input.level,
-    hostCountyId,
+    countyIds,
     discipline: input.discipline,
     gender: input.gender,
     ageCategoryId: input.ageCategoryId,
@@ -422,22 +427,16 @@ export async function updateCompetition(
   if (input.registrationDeadline !== undefined) data.registrationDeadline = new Date(input.registrationDeadline);
   if (input.eventDate !== undefined) data.eventDate = new Date(input.eventDate);
 
-  if (input.level !== undefined || input.hostCountyId !== undefined) {
+  if (input.level !== undefined || input.countyIds !== undefined) {
     const mergedLevel = input.level ?? row.level;
-    const mergedHostCountyId = input.hostCountyId !== undefined ? input.hostCountyId : row.hostCountyId;
+    const mergedCountyIds = input.countyIds ?? row.countyIds;
 
     if (mergedLevel === "COUNTY") {
-      if (mergedHostCountyId === null || mergedHostCountyId === "") {
-        throw new AppError(400, "VALIDATION_ERROR", "شهرستان میزبان را انتخاب کنید.");
-      }
-
-      if (input.hostCountyId !== undefined && input.hostCountyId !== row.hostCountyId) {
-        data.hostCountyId = (await validateHostCounty(repo, provinceOf(identity), input.hostCountyId)).id;
-      }
+      data.countyIds = await validateCounties(repo, provinceOf(identity), mergedCountyIds);
       if (input.level !== undefined) data.level = input.level;
     } else {
       if (input.level !== undefined) data.level = "PROVINCIAL";
-      data.hostCountyId = null;
+      data.countyIds = [];
     }
   }
 

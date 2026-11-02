@@ -23,9 +23,11 @@ const columns = [
         <div className="flex min-w-36 flex-col gap-1 leading-tight">
           <span className="font-medium">{row.title}</span>
           <span className="text-subtle text-muted-foreground">{disciplineLabels[row.discipline]}</span>
-          {row.level === "COUNTY" && row.hostCountyName ? (
-            <span className="w-fit">
-              <CountyChip name={row.hostCountyName} />
+          {row.level === "COUNTY" && row.countyNames.length > 0 ? (
+            <span className="flex w-fit flex-wrap gap-1">
+              {row.countyNames.map((name) => (
+                <CountyChip key={name} name={name} />
+              ))}
             </span>
           ) : null}
         </div>

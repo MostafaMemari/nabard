@@ -12,6 +12,7 @@ export const auditActions = {
   countyCreated: "county.created",
   countyUpdated: "county.updated",
   countyDeleted: "county.deleted",
+  countyDefaultsAdded: "county.defaults_added",
   ageCategoryDatesChanged: "age_category.dates_changed",
 } as const;
 

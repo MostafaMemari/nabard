@@ -34,8 +34,8 @@ export type CompetitionRow = {
   title: string;
   province: Province;
   level: CompetitionLevel;
-  hostCountyId: string | null;
-  hostCountyName: string | null;
+  countyIds: string[];
+  countyNames: string[];
   discipline: Discipline;
   gender: Gender;
   ageCategoryId: string;
@@ -66,7 +66,7 @@ export type NewCompetitionData = {
   title: string;
   province: Province;
   level: CompetitionLevel;
-  hostCountyId: string | null;
+  countyIds: string[];
   discipline: Discipline;
   gender: Gender;
   ageCategoryId: string;
@@ -83,7 +83,7 @@ export type NewCompetitionData = {
 export type CompetitionUpdateData = {
   title?: string;
   level?: CompetitionLevel;
-  hostCountyId?: string | null;
+  countyIds?: string[];
   discipline?: Discipline;
   gender?: Gender;
   ageCategoryId?: string;
@@ -140,7 +140,7 @@ const competitionSelection = {
   title: true,
   province: true,
   level: true,
-  hostCounty: { select: { id: true, name: true } },
+  counties: { select: { countyId: true, county: { select: { name: true } } } },
   discipline: true,
   gender: true,
   ageCategoryId: true,
@@ -157,10 +157,19 @@ const competitionSelection = {
   updatedAt: true,
 } as const;
 
-type CompetitionRowInput = Omit<CompetitionRow, "hostCountyId" | "hostCountyName"> & { hostCounty: { id: string; name: string } | null };
+type CompetitionRowInput = Omit<CompetitionRow, "countyIds" | "countyNames"> & {
+  counties: Array<{ countyId: string; county: { name: string } }>;
+};
 
 function toCompetitionRow(row: CompetitionRowInput): CompetitionRow {
-  return { ...row, hostCountyId: row.hostCounty?.id ?? null, hostCountyName: row.hostCounty?.name ?? null };
+  const counties = [...row.counties].sort((left, right) => left.county.name.localeCompare(right.county.name, "fa"));
+  const { counties: _counties, ...rest } = row;
+
+  return {
+    ...rest,
+    countyIds: counties.map((item) => item.countyId),
+    countyNames: counties.map((item) => item.county.name),
+  };
 }
 
 const beltSelection = {
@@ -182,7 +191,7 @@ function competitionWhere(filters: CompetitionFilters) {
     ...(filters.coachCountyId === undefined
       ? {}
       : {
-          OR: [{ level: "PROVINCIAL" as const }, { level: "COUNTY" as const, hostCountyId: filters.coachCountyId }],
+          OR: [{ level: "PROVINCIAL" as const }, { level: "COUNTY" as const, counties: { some: { countyId: filters.coachCountyId } } }],
         }),
   };
 }
@@ -235,7 +244,7 @@ export async function createCompetition(data: NewCompetitionData): Promise<Compe
       title: data.title,
       province: data.province,
       level: data.level,
-      hostCountyId: data.hostCountyId,
+      counties: { create: data.countyIds.map((countyId) => ({ countyId })) },
       discipline: data.discipline,
       gender: data.gender,
       ageCategoryId: data.ageCategoryId,
@@ -255,7 +264,17 @@ export async function createCompetition(data: NewCompetitionData): Promise<Compe
 }
 
 export async function updateCompetition(id: string, data: CompetitionUpdateData): Promise<CompetitionRow> {
-  const row = await getPrisma().competition.update({ where: { id }, data, select: competitionSelection });
+  const { countyIds, ...rest } = data;
+  const row = await getPrisma().competition.update({
+    where: { id },
+    data: {
+      ...rest,
+      ...(countyIds === undefined
+        ? {}
+        : { counties: { deleteMany: {}, create: [...new Set(countyIds)].map((countyId) => ({ countyId })) } }),
+    },
+    select: competitionSelection,
+  });
 
   return toCompetitionRow(row);
 }

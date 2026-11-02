@@ -58,7 +58,7 @@ export async function countCountyCoaches(id: string): Promise<number> {
 }
 
 export async function countCountyCompetitions(id: string): Promise<number> {
-  return getPrisma().competition.count({ where: { hostCountyId: id } });
+  return getPrisma().competitionCounty.count({ where: { countyId: id } });
 }
 
 export async function countCountyChangeRequests(id: string): Promise<number> {

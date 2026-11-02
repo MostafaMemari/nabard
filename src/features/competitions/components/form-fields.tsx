@@ -7,7 +7,7 @@ import type { CompetitionFormValues } from "../schemas";
 
 type FieldProps = {
   control: Control<CompetitionFormValues>;
-  name: Exclude<keyof CompetitionFormValues, "beltIds">;
+  name: Exclude<keyof CompetitionFormValues, "beltIds" | "countyIds">;
   label: string;
 };
 

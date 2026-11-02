@@ -7,6 +7,7 @@ import { formatCardNumber, formatJalaliDate, formatRialsAsToman, toPersianDigits
 import { disciplineLabels } from "../labels";
 import type { Competition } from "../types";
 import { BeltChips } from "./belt-chips";
+import { CountyChip } from "./county-chip";
 
 export function CompetitionInfoSections({
   competition,
@@ -25,6 +26,20 @@ export function CompetitionInfoSections({
             { term: "رشته", value: disciplineLabels[competition.discipline] },
             { term: "جنسیت", value: genderLabels[competition.gender] },
             { term: "رده سنی", value: ageCategoryLabel(competition.ageCategoryId) },
+            ...(competition.level === "COUNTY" && competition.countyNames.length > 0
+              ? [
+                  {
+                    term: "شهرستان ها",
+                    value: (
+                      <span className="flex flex-wrap gap-1">
+                        {competition.countyNames.map((name) => (
+                          <CountyChip key={name} name={name} />
+                        ))}
+                      </span>
+                    ),
+                  },
+                ]
+              : []),
             { term: "رده های وزنی", value: `${toPersianDigits(weightClassCount)} رده` },
             { term: "کمربندها", value: <BeltChips belts={belts} ids={competition.beltIds} /> },
           ]}

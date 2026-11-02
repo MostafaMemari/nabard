@@ -110,7 +110,7 @@ docs/
 design/                     reference screenshots, not code
 ```
 
-Features: `auth`, `users`, `students`, `competitions`, `registrations`, `payments`, `base-data`.
+Features: `auth`, `users`, `students`, `competitions`, `registrations`, `payments`, `base-data`, `counties`, `summary`, `admins`, `super`, `audit`.
 
 Import rules:
 
@@ -129,7 +129,7 @@ The backend lives in Next.js now and will move to NestJS or Express later. Build
 - The current user comes only from `getCurrentUser(request)` in `lib/session.ts`, which verifies a signed session cookie. Never trust identity headers such as `x-user-id`.
 - Services are plain TypeScript. They receive an `AuthUser` plain object and validated input, and return plain data. They throw `AppError(code, message, status)` for expected failures.
 - Repositories contain all Prisma queries. Services never call Prisma directly.
-- Services enforce authorization and scoping themselves: `ADMIN` only touches data of their own province, `COACH` only touches their own students, registrations and payments. `SUPER_ADMIN` (no province) gets read-only access to cross-province lists and details (competitions, coaches, students, payments, registrations) and never to decision actions; it manages province admins, counties and age category dates in `/super`. Every admin created or deactivated, every admin password reset, every county created, edited or deleted and every age category date change writes an `AuditLog` entry without personal data.
+- Services enforce authorization and scoping themselves: `ADMIN` only touches data of their own province (including its counties, which only admins create, rename, delete or fill from the defaults), `COACH` only touches their own students, registrations and payments, and `SUPER_ADMIN` (no province) only reads across provinces and manages province admins and age category dates; decision actions stay with the admin. Every admin created or deactivated, every admin password reset, every county created, renamed, deleted or filled from the defaults and every age category date change writes an `AuditLog` entry without personal data.
 - Response shape: success `{ data }`, lists `{ data, meta: { page, pageSize, total } }`, errors `{ error: { code, message, details? } }` with the correct HTTP status. User-facing messages are Persian.
 - BigInt and Date values are serialized as strings (ISO for dates) in one place in `lib/api`.
 - File uploads go through `Request.formData()` and a `Storage` interface in `lib/storage`. The first implementation stores files in PostgreSQL (a `StoredFile` model with `Bytes`), because Vercel has no persistent disk. Files are private and served through an authenticated endpoint.
@@ -174,4 +174,4 @@ The interface must look like a real, hand-designed product, not generated output
 
 ## Out of scope for the MVP
 
-Counties, super admin, delegates, profile and document approval, student transfers, deadline extensions, refunds, notifications, payment gateway, match day management, dark mode. Do not build them unless a step explicitly asks.
+Delegates, student transfers, notifications, payment gateway, match day management, dark mode, county merge. Do not build them unless a step explicitly asks.

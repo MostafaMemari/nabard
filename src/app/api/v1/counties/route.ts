@@ -9,6 +9,6 @@ export const GET = route({}, async ({ request, user }) => {
   return listCounties(repository, user, query);
 });
 
-export const POST = route({ roles: ["SUPER_ADMIN"], body: createCountySchema }, async ({ user, body }) =>
+export const POST = route({ roles: ["ADMIN"], body: createCountySchema }, async ({ user, body }) =>
   createCounty(repository, auditRepository, user, body),
 );

@@ -53,7 +53,7 @@ export type CompetitionRegistrationRow = {
   id: string;
   province: Province;
   level: CompetitionLevel;
-  hostCountyId: string | null;
+  countyIds: string[];
   status: CompetitionStatus;
   discipline: Discipline;
   gender: Gender;
@@ -273,13 +273,13 @@ export async function findApprovedParticipants(competitionId: string): Promise<P
 }
 
 export async function findCompetitionById(id: string): Promise<CompetitionRegistrationRow | null> {
-  return getPrisma().competition.findUnique({
+  const row = await getPrisma().competition.findUnique({
     where: { id },
     select: {
       id: true,
       province: true,
       level: true,
-      hostCountyId: true,
+      counties: { select: { countyId: true } },
       status: true,
       discipline: true,
       gender: true,
@@ -291,6 +291,9 @@ export async function findCompetitionById(id: string): Promise<CompetitionRegist
       createdAt: true,
     },
   });
+  if (row === null) return null;
+
+  return { ...row, countyIds: row.counties.map((item) => item.countyId) };
 }
 
 export async function findAgeCategoryById(id: string): Promise<AgeCategoryRow | null> {

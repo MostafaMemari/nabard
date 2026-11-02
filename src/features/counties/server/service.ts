@@ -1,7 +1,9 @@
 import { type AuditRepository, auditActions, auditEntityTypes } from "@/features/audit";
+import type { Province } from "@/generated/client";
 import { AppError } from "@/lib/api";
 import type { CurrentUser } from "@/lib/session";
-import type { CountyListQuery, CreateCountyInput, UpdateCountyInput } from "../schemas";
+import { defaultCounties } from "../default-counties";
+import { type CountyListQuery, type CreateCountyInput, normalizeCountyName, type UpdateCountyInput } from "../schemas";
 import type { County } from "../types";
 import type { CountiesRepository, UserIdentityRecord } from "./repository";
 
@@ -21,14 +23,14 @@ async function requireActiveUser(repo: CountiesRepository, user: CurrentUser): P
   return record;
 }
 
-async function requireActiveSuperAdmin(repo: CountiesRepository, user: CurrentUser): Promise<UserIdentityRecord> {
-  if (user.role !== "SUPER_ADMIN") throw forbidden();
+async function requireActiveAdmin(
+  repo: CountiesRepository,
+  user: CurrentUser,
+): Promise<UserIdentityRecord & { role: "ADMIN"; province: Province }> {
+  const record = await requireActiveUser(repo, user);
+  if (record.role !== "ADMIN" || record.province === null) throw forbidden();
 
-  const record = await repo.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
-  if (!record.isActive || record.role !== user.role) throw forbidden();
-
-  return record;
+  return record as UserIdentityRecord & { role: "ADMIN"; province: Province };
 }
 
 export async function listCounties(repo: CountiesRepository, user: CurrentUser, query: CountyListQuery = {}): Promise<County[]> {
@@ -49,14 +51,14 @@ export async function createCounty(
   user: CurrentUser,
   input: CreateCountyInput,
 ): Promise<County> {
-  await requireActiveSuperAdmin(repo, user);
+  const record = await requireActiveAdmin(repo, user);
 
-  const existing = await repo.findAllCounties(input.province);
-  if (existing.some((county) => county.name === input.name)) {
+  const existing = await repo.findCountiesByProvince(record.province);
+  if (existing.some((county) => normalizeCountyName(county.name) === normalizeCountyName(input.name))) {
     throw new AppError(409, "CONFLICT", "این شهرستان در این استان قبلا ثبت شده است.");
   }
 
-  const county = await repo.createCounty(input);
+  const county = await repo.createCounty({ province: record.province, name: input.name });
   await audit.createAuditLog({
     actorId: user.id,
     action: auditActions.countyCreated,
@@ -75,13 +77,13 @@ export async function updateCounty(
   id: string,
   input: UpdateCountyInput,
 ): Promise<County> {
-  await requireActiveSuperAdmin(repo, user);
+  const record = await requireActiveAdmin(repo, user);
 
   const county = await repo.findCountyById(id);
-  if (!county) throw countyNotFound();
+  if (!county || county.province !== record.province) throw countyNotFound();
 
-  const existing = await repo.findAllCounties(county.province);
-  if (existing.some((item) => item.id !== id && item.name === input.name)) {
+  const existing = await repo.findCountiesByProvince(record.province);
+  if (existing.some((item) => item.id !== id && normalizeCountyName(item.name) === normalizeCountyName(input.name))) {
     throw new AppError(409, "CONFLICT", "این شهرستان در این استان قبلا ثبت شده است.");
   }
 
@@ -103,10 +105,10 @@ export async function deleteCounty(
   user: CurrentUser,
   id: string,
 ): Promise<{ id: string }> {
-  await requireActiveSuperAdmin(repo, user);
+  const record = await requireActiveAdmin(repo, user);
 
   const county = await repo.findCountyById(id);
-  if (!county) throw countyNotFound();
+  if (!county || county.province !== record.province) throw countyNotFound();
 
   const [coaches, competitions, changeRequests] = await Promise.all([
     repo.countCountyCoaches(id),
@@ -128,4 +130,25 @@ export async function deleteCounty(
   });
 
   return { id };
+}
+
+export async function addDefaultCounties(repo: CountiesRepository, audit: AuditRepository, user: CurrentUser): Promise<{ added: number }> {
+  const record = await requireActiveAdmin(repo, user);
+
+  const existing = new Set((await repo.findCountiesByProvince(record.province)).map((county) => normalizeCountyName(county.name)));
+  const missing = defaultCounties[record.province].filter((name) => !existing.has(normalizeCountyName(name)));
+
+  for (const name of missing) {
+    await repo.createCounty({ province: record.province, name });
+  }
+
+  await audit.createAuditLog({
+    actorId: user.id,
+    action: auditActions.countyDefaultsAdded,
+    entityType: auditEntityTypes.county,
+    entityId: null,
+    details: { province: record.province, added: missing.length, total: defaultCounties[record.province].length },
+  });
+
+  return { added: missing.length };
 }

@@ -9,7 +9,7 @@ const valid = {
   ageCategoryId: "senior",
   beltIds: ["belt-red", "belt-poom_1", "belt-dan_1"],
   level: "PROVINCIAL",
-  hostCountyId: "",
+  countyIds: [],
   feePerStudent: "3500000",
   payeeCardNumber: "6104337812345678",
   payeeCardHolder: "فدراسیون تکواندو استان تهران",
@@ -122,22 +122,22 @@ describe("createCompetitionSchema", () => {
     }
   });
 
-  it("requires a host county for a county competition", () => {
+  it("requires at least one county for a county competition", () => {
     const result = createCompetitionSchema.safeParse({ ...valid, level: "COUNTY" });
 
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues.some((issue) => issue.path[0] === "hostCountyId")).toBe(true);
+      expect(result.error.issues.some((issue) => issue.path[0] === "countyIds")).toBe(true);
     }
   });
 
-  it("accepts a county competition with a host county", () => {
-    const result = createCompetitionSchema.safeParse({ ...valid, level: "COUNTY", hostCountyId: "county-1" });
+  it("accepts a county competition with several counties", () => {
+    const result = createCompetitionSchema.safeParse({ ...valid, level: "COUNTY", countyIds: ["county-1", "county-2"] });
 
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.data.level).toBe("COUNTY");
-      expect(result.data.hostCountyId).toBe("county-1");
+      expect(result.data.countyIds).toEqual(["county-1", "county-2"]);
     }
   });
 });

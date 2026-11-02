@@ -28,9 +28,11 @@ export function CoachCompetitionList({ competitions }: { competitions: Competiti
                 {disciplineLabels[competition.discipline]} · {ageCategoryLabel(competition.ageCategoryId)} ·{" "}
                 {genderLabels[competition.gender]}
               </p>
-              {competition.level === "COUNTY" && competition.hostCountyName ? (
-                <span className="mt-1.5 w-fit">
-                  <CountyChip name={competition.hostCountyName} />
+              {competition.level === "COUNTY" && competition.countyNames.length > 0 ? (
+                <span className="mt-1.5 flex w-fit flex-wrap gap-1">
+                  {competition.countyNames.map((name) => (
+                    <CountyChip key={name} name={name} />
+                  ))}
                 </span>
               ) : null}
             </div>

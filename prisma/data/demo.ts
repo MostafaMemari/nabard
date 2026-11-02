@@ -176,7 +176,7 @@ export type CompetitionSeed = {
   title: string;
   province: Province;
   level: CompetitionLevel;
-  hostCountyName: string | null;
+  countyNames: string[];
   discipline: Discipline;
   gender: Gender;
   ageCategoryId: string;
@@ -199,7 +199,7 @@ export const demoCompetitions: CompetitionSeed[] = [
     title: "مسابقات قهرمانی استان تهران",
     province: "TEHRAN",
     level: "PROVINCIAL",
-    hostCountyName: null,
+    countyNames: [],
     discipline: "KYORUGI",
     gender: "MALE",
     ageCategoryId: "senior",
@@ -218,7 +218,7 @@ export const demoCompetitions: CompetitionSeed[] = [
     title: "مسابقات نونهالان پسر شهرستان ری",
     province: "TEHRAN",
     level: "COUNTY",
-    hostCountyName: "ری",
+    countyNames: ["ری"],
     discipline: "KYORUGI",
     gender: "MALE",
     ageCategoryId: "youth",
@@ -237,7 +237,7 @@ export const demoCompetitions: CompetitionSeed[] = [
     title: "مسابقات نوجوانان دختر",
     province: "TEHRAN",
     level: "PROVINCIAL",
-    hostCountyName: null,
+    countyNames: [],
     discipline: "KYORUGI",
     gender: "FEMALE",
     ageCategoryId: "cadet",
@@ -256,7 +256,7 @@ export const demoCompetitions: CompetitionSeed[] = [
     title: "مسابقات پومسه بزرگسالان",
     province: "TEHRAN",
     level: "PROVINCIAL",
-    hostCountyName: null,
+    countyNames: [],
     discipline: "POOMSAE",
     gender: "FEMALE",
     ageCategoryId: "senior",
@@ -275,7 +275,7 @@ export const demoCompetitions: CompetitionSeed[] = [
     title: "مسابقات جوانان پسر",
     province: "TEHRAN",
     level: "PROVINCIAL",
-    hostCountyName: null,
+    countyNames: [],
     discipline: "KYORUGI",
     gender: "MALE",
     ageCategoryId: "junior",
@@ -294,7 +294,7 @@ export const demoCompetitions: CompetitionSeed[] = [
     title: "مسابقات پیشکسوتان",
     province: "TEHRAN",
     level: "PROVINCIAL",
-    hostCountyName: null,
+    countyNames: [],
     discipline: "POOMSAE",
     gender: "MALE",
     ageCategoryId: "ultra",
@@ -313,7 +313,7 @@ export const demoCompetitions: CompetitionSeed[] = [
     title: "مسابقات کیوروگی شهرستان تهران",
     province: "TEHRAN",
     level: "COUNTY",
-    hostCountyName: "تهران",
+    countyNames: ["تهران", "اسلامشهر"],
     discipline: "KYORUGI",
     gender: "FEMALE",
     ageCategoryId: "young",

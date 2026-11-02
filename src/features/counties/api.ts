@@ -25,3 +25,7 @@ export function updateCounty(id: string, input: UpdateCountyInput): Promise<Coun
 export function deleteCounty(id: string): Promise<{ id: string }> {
   return api<{ id: string }>(`/api/v1/counties/${id}`, { method: "DELETE" });
 }
+
+export function addDefaultCounties(): Promise<{ added: number }> {
+  return api<{ added: number }>("/api/v1/counties/defaults", { method: "POST" });
+}

@@ -77,6 +77,11 @@ export type WeightClass = Prisma.WeightClassModel
  */
 export type Competition = Prisma.CompetitionModel
 /**
+ * Model CompetitionCounty
+ * 
+ */
+export type CompetitionCounty = Prisma.CompetitionCountyModel
+/**
  * Model CoachCountyChangeRequest
  * 
  */

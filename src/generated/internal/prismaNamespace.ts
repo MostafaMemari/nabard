@@ -404,6 +404,7 @@ export const ModelName = {
   AgeCategory: 'AgeCategory',
   WeightClass: 'WeightClass',
   Competition: 'Competition',
+  CompetitionCounty: 'CompetitionCounty',
   CoachCountyChangeRequest: 'CoachCountyChangeRequest',
   AuditLog: 'AuditLog',
   DeadlineExtension: 'DeadlineExtension',
@@ -428,7 +429,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "county" | "user" | "student" | "belt" | "ageCategory" | "weightClass" | "competition" | "coachCountyChangeRequest" | "auditLog" | "deadlineExtension" | "storedFile" | "studentDocument" | "payment" | "loginFailure" | "registration" | "refund"
+    modelProps: "county" | "user" | "student" | "belt" | "ageCategory" | "weightClass" | "competition" | "competitionCounty" | "coachCountyChangeRequest" | "auditLog" | "deadlineExtension" | "storedFile" | "studentDocument" | "payment" | "loginFailure" | "registration" | "refund"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -947,6 +948,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CompetitionCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CompetitionCountAggregateOutputType> | number
+        }
+      }
+    }
+    CompetitionCounty: {
+      payload: Prisma.$CompetitionCountyPayload<ExtArgs>
+      fields: Prisma.CompetitionCountyFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CompetitionCountyFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompetitionCountyPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CompetitionCountyFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompetitionCountyPayload>
+        }
+        findFirst: {
+          args: Prisma.CompetitionCountyFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompetitionCountyPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CompetitionCountyFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompetitionCountyPayload>
+        }
+        findMany: {
+          args: Prisma.CompetitionCountyFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompetitionCountyPayload>[]
+        }
+        create: {
+          args: Prisma.CompetitionCountyCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompetitionCountyPayload>
+        }
+        createMany: {
+          args: Prisma.CompetitionCountyCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CompetitionCountyCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompetitionCountyPayload>[]
+        }
+        delete: {
+          args: Prisma.CompetitionCountyDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompetitionCountyPayload>
+        }
+        update: {
+          args: Prisma.CompetitionCountyUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompetitionCountyPayload>
+        }
+        deleteMany: {
+          args: Prisma.CompetitionCountyDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CompetitionCountyUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CompetitionCountyUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompetitionCountyPayload>[]
+        }
+        upsert: {
+          args: Prisma.CompetitionCountyUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CompetitionCountyPayload>
+        }
+        aggregate: {
+          args: Prisma.CompetitionCountyAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCompetitionCounty>
+        }
+        groupBy: {
+          args: Prisma.CompetitionCountyGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CompetitionCountyGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CompetitionCountyCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CompetitionCountyCountAggregateOutputType> | number
         }
       }
     }
@@ -1748,7 +1823,6 @@ export const CompetitionScalarFieldEnum = {
   title: 'title',
   province: 'province',
   level: 'level',
-  hostCountyId: 'hostCountyId',
   discipline: 'discipline',
   gender: 'gender',
   ageCategoryId: 'ageCategoryId',
@@ -1766,6 +1840,15 @@ export const CompetitionScalarFieldEnum = {
 } as const
 
 export type CompetitionScalarFieldEnum = (typeof CompetitionScalarFieldEnum)[keyof typeof CompetitionScalarFieldEnum]
+
+
+export const CompetitionCountyScalarFieldEnum = {
+  id: 'id',
+  competitionId: 'competitionId',
+  countyId: 'countyId'
+} as const
+
+export type CompetitionCountyScalarFieldEnum = (typeof CompetitionCountyScalarFieldEnum)[keyof typeof CompetitionCountyScalarFieldEnum]
 
 
 export const CoachCountyChangeRequestScalarFieldEnum = {
@@ -2438,6 +2521,7 @@ export type GlobalOmitConfig = {
   ageCategory?: Prisma.AgeCategoryOmit
   weightClass?: Prisma.WeightClassOmit
   competition?: Prisma.CompetitionOmit
+  competitionCounty?: Prisma.CompetitionCountyOmit
   coachCountyChangeRequest?: Prisma.CoachCountyChangeRequestOmit
   auditLog?: Prisma.AuditLogOmit
   deadlineExtension?: Prisma.DeadlineExtensionOmit

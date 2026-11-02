@@ -101,7 +101,6 @@ async function main() {
   for (const competition of demoCompetitions) {
     const range = beltRange(competition.beltIds);
     const level = competition.level;
-    const hostCountyId = competition.hostCountyName === null ? null : countyId(competition.hostCountyName);
 
     await prisma.competition.upsert({
       where: { id: competition.id },
@@ -109,7 +108,6 @@ async function main() {
         title: competition.title,
         province: competition.province,
         level,
-        hostCountyId,
         discipline: competition.discipline,
         gender: competition.gender,
         ageCategoryId: competition.ageCategoryId,
@@ -127,7 +125,6 @@ async function main() {
         title: competition.title,
         province: competition.province,
         level,
-        hostCountyId,
         discipline: competition.discipline,
         gender: competition.gender,
         ageCategoryId: competition.ageCategoryId,
@@ -143,6 +140,13 @@ async function main() {
         updatedAt: new Date(competition.updatedAt),
       },
     });
+
+    await prisma.competitionCounty.deleteMany({ where: { competitionId: competition.id } });
+    if (competition.countyNames.length > 0) {
+      await prisma.competitionCounty.createMany({
+        data: competition.countyNames.map((name) => ({ competitionId: competition.id, countyId: countyId(name) })),
+      });
+    }
   }
 
   for (const payment of demoPayments) {

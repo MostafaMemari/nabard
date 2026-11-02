@@ -74,7 +74,7 @@ const competition = {
   id: "comp-1",
   province: "TEHRAN" as const,
   level: "PROVINCIAL" as const,
-  hostCountyId: null,
+  countyIds: [] as string[],
   status: "PUBLISHED" as const,
   discipline: "KYORUGI" as const,
   gender: "MALE" as const,
@@ -294,20 +294,20 @@ describe("createRegistrations", () => {
 
   it("blocks a coach from another county with 403 on a county competition", async () => {
     const repo = repoWith({
-      findCompetitionById: vi.fn().mockResolvedValue({ ...competition, level: "COUNTY", hostCountyId: "county-ray" }),
+      findCompetitionById: vi.fn().mockResolvedValue({ ...competition, level: "COUNTY", countyIds: ["county-ray"] }),
     });
     const failure = await failureOf(
       createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
     );
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
-    expect((failure as AppError).message).toContain("شهرستان میزبان");
+    expect((failure as AppError).message).toContain("شهرستان های برگزار کننده");
     expect(repo.createRegistrationBundle).not.toHaveBeenCalled();
   });
 
   it("allows a coach of the host county to register in a county competition", async () => {
     const repo = repoWith({
-      findCompetitionById: vi.fn().mockResolvedValue({ ...competition, level: "COUNTY", hostCountyId: "county-tehran" }),
+      findCompetitionById: vi.fn().mockResolvedValue({ ...competition, level: "COUNTY", countyIds: ["county-tehran"] }),
     });
     await createRegistrations(repo, storageWith(), coach, "comp-1", {
       studentIds: ["student-1", "student-2"],
@@ -320,7 +320,7 @@ describe("createRegistrations", () => {
   it("blocks a coach without a county from a county competition with 403", async () => {
     const repo = repoWith({
       findUserById: vi.fn().mockResolvedValue({ ...coachRecord, countyId: null }),
-      findCompetitionById: vi.fn().mockResolvedValue({ ...competition, level: "COUNTY", hostCountyId: "county-ray" }),
+      findCompetitionById: vi.fn().mockResolvedValue({ ...competition, level: "COUNTY", countyIds: ["county-ray"] }),
     });
     const failure = await failureOf(
       createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
