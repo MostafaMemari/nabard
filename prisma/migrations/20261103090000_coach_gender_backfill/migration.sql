@@ -10,5 +10,5 @@ FROM (
     ORDER BY coach_id, created_at ASC
 ) AS first_student
 WHERE u.id = first_student.coach_id
-  AND u.role = 'COACH'
+  AND u.role = 'coach'
   AND u.gender IS NULL;
