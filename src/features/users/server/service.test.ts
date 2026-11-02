@@ -51,6 +51,7 @@ function repoWith(overrides: Partial<CoachRepository> = {}): CoachRepository {
     createCoach: vi.fn().mockResolvedValue(tehranCoach),
     updateCoach: vi.fn().mockResolvedValue(tehranCoach),
     updateCoachPassword: vi.fn().mockResolvedValue(tehranCoach),
+    countStudentsByGender: vi.fn().mockResolvedValue(0),
     ...overrides,
   };
 }
@@ -289,6 +290,43 @@ describe("updateCoach", () => {
     const failure = await failureOf(updateCoach(repo, admin, "coach-9", { countyId: "county-shiraz" }));
 
     expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
+    expect(repo.updateCoach).not.toHaveBeenCalled();
+  });
+
+  it("changes the gender of a coach without clashing students", async () => {
+    const repo = repoWith();
+    await updateCoach(repo, admin, "coach-9", { gender: "FEMALE" });
+
+    expect(repo.countStudentsByGender).toHaveBeenCalledWith("coach-9", "MALE");
+    expect(repo.updateCoach).toHaveBeenCalledWith("coach-9", { gender: "FEMALE" });
+  });
+
+  it("blocks a gender change with the count of the other-gender students", async () => {
+    const repo = repoWith({ countStudentsByGender: vi.fn().mockResolvedValue(3) });
+    const failure = await failureOf(updateCoach(repo, admin, "coach-9", { gender: "FEMALE" }));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect((failure as AppError).message).toContain("۳ هنرجوی آقایان");
+    expect(repo.updateCoach).not.toHaveBeenCalled();
+  });
+
+  it("skips the student count when the submitted gender is unchanged", async () => {
+    const repo = repoWith();
+    await updateCoach(repo, admin, "coach-9", { gender: "MALE" });
+
+    expect(repo.countStudentsByGender).not.toHaveBeenCalled();
+    expect(repo.updateCoach).toHaveBeenCalledWith("coach-9", {});
+  });
+
+  it("blocks assigning a gender to a coach with mixed-gender students", async () => {
+    const noGenderCoach: CoachRecord = { ...tehranCoach, gender: null };
+    const repo = repoWith({
+      findCoachById: vi.fn().mockResolvedValue(noGenderCoach),
+      countStudentsByGender: vi.fn().mockResolvedValue(2),
+    });
+    const failure = await failureOf(updateCoach(repo, admin, "coach-9", { gender: "MALE" }));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
     expect(repo.updateCoach).not.toHaveBeenCalled();
   });
 });

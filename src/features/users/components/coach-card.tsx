@@ -4,6 +4,7 @@ import { Avatar, MobileCard, MobileCardLine, MobileCardTop, StatusBadge } from "
 import { Button } from "@/components/ui/button";
 import { toPersianDigits } from "@/lib/format";
 import type { User } from "../types";
+import { GenderChip } from "./gender-chip";
 
 export function CoachCard({
   coach,
@@ -22,6 +23,7 @@ export function CoachCard({
         end={<StatusBadge status={coach.isActive ? "ACTIVE" : "INACTIVE"} />}
       />
       <MobileCardLine label="شماره همراه" value={<span className="tabular-nums">{toPersianDigits(coach.mobile)}</span>} />
+      <MobileCardLine label="جنسیت" value={<GenderChip gender={coach.gender} />} />
       <MobileCardLine label="شهرستان" value={coach.countyName ?? "نامشخص"} />
       <MobileCardLine label="هنرجویان" value={<span className="tabular-nums">{toPersianDigits(studentCount)} نفر</span>} />
       <div className="-mx-4 -mb-4 border-t border-border p-2">

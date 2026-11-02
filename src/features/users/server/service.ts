@@ -1,6 +1,8 @@
 import { hash } from "bcryptjs";
+import { genderLabels } from "@/features/base-data/labels";
 import type { Province } from "@/generated/client";
 import { AppError } from "@/lib/api";
+import { toPersianDigits } from "@/lib/format";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
 import type { CoachInput, CoachListQuery, UpdateCoachInput } from "../schemas";
@@ -123,7 +125,7 @@ export async function createCoach(repo: CoachRepository, user: CurrentUser, inpu
 export async function updateCoach(repo: CoachRepository, user: CurrentUser, id: string, input: UpdateCoachInput): Promise<CoachRecord> {
   const admin = await requireActiveAdmin(repo, user);
   const province = provinceOf(admin);
-  await coachInView(repo, admin, id);
+  const coach = await coachInView(repo, admin, id);
 
   if (input.mobile !== undefined) {
     const owner = await repo.findMobileOwner(input.mobile);
@@ -143,6 +145,18 @@ export async function updateCoach(repo: CoachRepository, user: CurrentUser, id: 
   if (input.countyId !== undefined) {
     await countyInProvince(repo, province, input.countyId);
     data.countyId = input.countyId;
+  }
+  if (input.gender !== undefined && input.gender !== coach.gender) {
+    const otherGender = input.gender === "MALE" ? "FEMALE" : "MALE";
+    const otherCount = await repo.countStudentsByGender(id, otherGender);
+    if (otherCount > 0) {
+      throw new AppError(
+        409,
+        "CONFLICT",
+        `تغییر جنسیت مربی ممکن نیست؛ این مربی ${toPersianDigits(otherCount)} هنرجوی ${genderLabels[otherGender]} دارد. ابتدا آن ها را به مربی هم جنسیت منتقل کنید.`,
+      );
+    }
+    data.gender = input.gender;
   }
 
   return repo.updateCoach(id, data);

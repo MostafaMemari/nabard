@@ -1,12 +1,13 @@
 import { type AuditRepository, auditActions, auditEntityTypes } from "@/features/audit";
 import type { Province } from "@/generated/client";
 import { AppError } from "@/lib/api";
+import { toPersianDigits } from "@/lib/format";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
 import type { CreateTransferRequestInput, ReassignStudentsInput, TransferListQuery } from "../schemas";
 import type { CoachTransferRequest, TransferLookupResult, TransferRequest, TransferStatus } from "../types";
 import type { StudentLookupRow, TransferFilters, TransfersRepository, TransferWithScope, UserIdentityRecord } from "./repository";
-import { StudentOwnerChangedError } from "./repository";
+import { StudentOwnerChangedError, TransferGenderMismatchError } from "./repository";
 
 const DEFAULT_PAGE_SIZE = 100;
 
@@ -108,6 +109,14 @@ function validateStudentForTransfer(identity: UserIdentityRecord, student: Stude
 
   if (student.coachProvince !== identity.province) {
     throw new AppError(403, "FORBIDDEN", "انتقال هنرجو بین استان ها فعلا امکان پذیر نیست.");
+  }
+
+  if (identity.gender === null) {
+    throw new AppError(403, "FORBIDDEN", "جنسیت شما ثبت نشده است؛ با ادمین استان تماس بگیرید.");
+  }
+
+  if (student.gender !== identity.gender) {
+    throw new AppError(400, "VALIDATION_ERROR", "جنسیت هنرجو باید با جنسیت شما یکسان باشد.");
   }
 }
 
@@ -212,6 +221,9 @@ export async function decideTransferRequest(
     if (error instanceof StudentOwnerChangedError) {
       throw new AppError(409, "CONFLICT", "مالکیت این هنرجو تغییر کرده است و درخواست قابل تایید نیست.");
     }
+    if (error instanceof TransferGenderMismatchError) {
+      throw new AppError(409, "CONFLICT", "جنسیت هنرجو با جنسیت مربی مقصد یکسان نیست و درخواست قابل تایید نیست.");
+    }
 
     throw error;
   }
@@ -250,6 +262,18 @@ export async function reassignCoachStudents(
   }
   if (target.id === source.id) {
     throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد نباید همان مربی فعلی باشد.");
+  }
+
+  const mismatchedCount = await repo.countCoachStudentsNotOfGender(source.id, target.gender);
+  if (target.gender === null && mismatchedCount > 0) {
+    throw new AppError(400, "VALIDATION_ERROR", "جنسیت مربی مقصد ثبت نشده است؛ ابتدا جنسیت او را مشخص کنید.");
+  }
+  if (mismatchedCount > 0) {
+    throw new AppError(
+      409,
+      "CONFLICT",
+      `مربی مقصد باید هم جنسیت همه هنرجوها باشد؛ ${toPersianDigits(mismatchedCount)} هنرجو با جنسیت دیگری در بین آن ها هست. ابتدا آن ها را منتقل کنید.`,
+    );
   }
 
   const moved = await repo.reassignCoachStudents(source.id, target.id);

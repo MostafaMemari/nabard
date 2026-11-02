@@ -251,9 +251,14 @@ export async function createRegistrations(
 ): Promise<RegistrationBundle> {
   const identity = await requireActiveUser(repo, user);
   if (identity.role !== "COACH") throw forbidden();
+  if (identity.gender === null) {
+    throw new AppError(403, "FORBIDDEN", "جنسیت شما ثبت نشده است؛ با ادمین استان تماس بگیرید.");
+  }
 
   const competition = await repo.findCompetitionById(competitionId);
-  if (!competition || competition.province !== identity.province) throw competitionNotFound();
+  if (!competition || competition.province !== identity.province || competition.gender !== identity.gender) {
+    throw competitionNotFound();
+  }
 
   if (competition.level === "COUNTY" && !competition.countyIds.includes(identity.countyId ?? "")) {
     throw new AppError(403, "FORBIDDEN", "ثبت نام در این مسابقه فقط برای مربیان شهرستان های برگزار کننده امکان پذیر است.");

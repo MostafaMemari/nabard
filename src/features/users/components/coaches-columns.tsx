@@ -7,6 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import type { Student } from "@/features/students";
 import { toPersianDigits } from "@/lib/format";
 import type { User } from "../types";
+import { GenderChip } from "./gender-chip";
 
 export function coachColumns(options: { students: Student[]; onToggleStatus: (coach: User) => void }): DataTableColumn<User>[] {
   const { students, onToggleStatus } = options;
@@ -24,6 +25,7 @@ export function coachColumns(options: { students: Student[]; onToggleStatus: (co
       sortValue: (row) => row.fullName,
     },
     { id: "mobile", header: "شماره همراه", cell: (row) => toPersianDigits(row.mobile) },
+    { id: "gender", header: "جنسیت", cell: (row) => <GenderChip gender={row.gender} /> },
     { id: "county", header: "شهرستان", cell: (row) => row.countyName ?? "نامشخص", minScreen: "lg" },
     {
       id: "students",

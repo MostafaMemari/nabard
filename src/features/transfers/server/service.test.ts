@@ -2,7 +2,13 @@ import { describe, expect, it, vi } from "vitest";
 import type { AuditEntry, AuditRepository } from "@/features/audit";
 import { AppError } from "@/lib/api";
 import type { CurrentUser } from "@/lib/session";
-import { StudentOwnerChangedError, type TransfersRepository, type TransferWithScope, type UserIdentityRecord } from "./repository";
+import {
+  StudentOwnerChangedError,
+  TransferGenderMismatchError,
+  type TransfersRepository,
+  type TransferWithScope,
+  type UserIdentityRecord,
+} from "./repository";
 import {
   createTransferRequest,
   decideTransferRequest,
@@ -17,15 +23,23 @@ const otherCoach: CurrentUser = { id: "coach-1", role: "COACH" };
 const admin: CurrentUser = { id: "admin-1", role: "ADMIN" };
 const superAdmin: CurrentUser = { id: "super-1", role: "SUPER_ADMIN" };
 
-const coachRecord: UserIdentityRecord = { id: "coach-2", role: "COACH", province: "TEHRAN", isActive: true, countyId: "county-1" };
-const oldCoachRecord: UserIdentityRecord = { id: "coach-1", role: "COACH", province: "TEHRAN", isActive: true, countyId: "county-2" };
-const adminRecord: UserIdentityRecord = { id: "admin-1", role: "ADMIN", province: "TEHRAN", isActive: true, countyId: null };
-const farsAdminRecord: UserIdentityRecord = { id: "admin-2", role: "ADMIN", province: "FARS", isActive: true, countyId: null };
-const superAdminRecord: UserIdentityRecord = { id: "super-1", role: "SUPER_ADMIN", province: null, isActive: true, countyId: null };
+const coachRecord: UserIdentityRecord = {
+  id: "coach-2",
+  role: "COACH",
+  province: "TEHRAN",
+  isActive: true,
+  countyId: "county-1",
+  gender: "MALE",
+};
+const oldCoachRecord: UserIdentityRecord = { ...coachRecord, id: "coach-1", countyId: "county-2" };
+const adminRecord: UserIdentityRecord = { id: "admin-1", role: "ADMIN", province: "TEHRAN", isActive: true, countyId: null, gender: null };
+const farsAdminRecord: UserIdentityRecord = { ...adminRecord, id: "admin-2", province: "FARS" };
+const superAdminRecord: UserIdentityRecord = { ...adminRecord, id: "super-1", province: null };
 
 const studentRow = {
   id: "student-1",
   fullName: "علی رضایی",
+  gender: "MALE" as const,
   coachId: "coach-1",
   coachName: "سعید احمدی",
   coachProvince: "TEHRAN" as const,
@@ -62,12 +76,13 @@ function repoWith(overrides: Partial<TransfersRepository> = {}): TransfersReposi
     findTransferById: vi.fn().mockResolvedValue(transferWith()),
     decideTransferFromPending: vi.fn().mockResolvedValue(transferWith({ status: "APPROVED" })),
     findCoachTargetById: vi.fn().mockImplementation(async (id: string) => {
-      if (id === "coach-1") return { id: "coach-1", fullName: "سعید احمدی", province: "TEHRAN", isActive: false };
-      if (id === "coach-2") return { id: "coach-2", fullName: "رضا کریمی", province: "TEHRAN", isActive: true };
+      if (id === "coach-1") return { id: "coach-1", fullName: "سعید احمدی", province: "TEHRAN", isActive: false, gender: "MALE" };
+      if (id === "coach-2") return { id: "coach-2", fullName: "رضا کریمی", province: "TEHRAN", isActive: true, gender: "MALE" };
 
       return null;
     }),
     countCoachStudents: vi.fn().mockResolvedValue(4),
+    countCoachStudentsNotOfGender: vi.fn().mockResolvedValue(0),
     countCoachTransfers: vi.fn().mockResolvedValue(1),
     reassignCoachStudents: vi.fn().mockResolvedValue(4),
     ...overrides,
@@ -135,6 +150,22 @@ describe("lookupTransferStudent", () => {
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
   });
+
+  it("blocks a student of the other gender with a Persian message", async () => {
+    const repo = repoWith({ findStudentByNationalCode: vi.fn().mockResolvedValue({ ...studentRow, gender: "FEMALE" as const }) });
+    const failure = await failureOf(lookupTransferStudent(repo, coach, "0499370899"));
+
+    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
+    expect((failure as AppError).message).toContain("جنسیت هنرجو باید با جنسیت شما یکسان باشد");
+  });
+
+  it("blocks a coach without gender with a Persian message", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue({ ...coachRecord, gender: null }) });
+    const failure = await failureOf(lookupTransferStudent(repo, coach, "0499370899"));
+
+    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect((failure as AppError).message).toContain("جنسیت شما ثبت نشده است");
+  });
 });
 
 describe("createTransferRequest", () => {
@@ -175,6 +206,14 @@ describe("createTransferRequest", () => {
     const failure = await failureOf(createTransferRequest(repo, auditWith(), coach, { nationalCode: "0499370899" }));
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect(repo.createTransfer).not.toHaveBeenCalled();
+  });
+
+  it("blocks a request for a student of the other gender before creating it", async () => {
+    const repo = repoWith({ findStudentByNationalCode: vi.fn().mockResolvedValue({ ...studentRow, gender: "FEMALE" as const }) });
+    const failure = await failureOf(createTransferRequest(repo, auditWith(), coach, { nationalCode: "0499370899" }));
+
+    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
     expect(repo.createTransfer).not.toHaveBeenCalled();
   });
 });
@@ -280,6 +319,17 @@ describe("decideTransferRequest", () => {
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
     expect((failure as AppError).message).toContain("مالکیت این هنرجو تغییر کرده");
   });
+
+  it("translates a gender mismatch in the approval transaction into a 409 with a Persian message", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      decideTransferFromPending: vi.fn().mockRejectedValue(new TransferGenderMismatchError()),
+    });
+    const failure = await failureOf(decideTransferRequest(repo, auditWith(), admin, "transfer-1", "APPROVED", null));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect((failure as AppError).message).toContain("جنسیت هنرجو با جنسیت مربی مقصد یکسان نیست");
+  });
 });
 
 describe("reassignCoachStudents", () => {
@@ -301,7 +351,9 @@ describe("reassignCoachStudents", () => {
   it("rejects an inactive target coach with a Persian message", async () => {
     const repo = repoWith({
       findUserById: vi.fn().mockResolvedValue(adminRecord),
-      findCoachTargetById: vi.fn().mockImplementation(async (id: string) => ({ id, fullName: "م", province: "TEHRAN", isActive: false })),
+      findCoachTargetById: vi
+        .fn()
+        .mockImplementation(async (id: string) => ({ id, fullName: "م", province: "TEHRAN", isActive: false, gender: "MALE" })),
     });
     const failure = await failureOf(reassignCoachStudents(repo, auditWith(), admin, "coach-1", { toCoachId: "coach-2" }));
 
@@ -316,8 +368,8 @@ describe("reassignCoachStudents", () => {
         .fn()
         .mockImplementation(async (id: string) =>
           id === "coach-1"
-            ? { id: "coach-1", fullName: "س", province: "TEHRAN", isActive: false }
-            : { id: "coach-2", fullName: "م", province: "FARS", isActive: true },
+            ? { id: "coach-1", fullName: "س", province: "TEHRAN", isActive: false, gender: "MALE" }
+            : { id: "coach-2", fullName: "م", province: "FARS", isActive: true, gender: "MALE" },
         ),
     });
     const failure = await failureOf(reassignCoachStudents(repo, auditWith(), admin, "coach-1", { toCoachId: "coach-2" }));
@@ -329,12 +381,48 @@ describe("reassignCoachStudents", () => {
   it("keeps another province source coach behind 404", async () => {
     const repo = repoWith({
       findUserById: vi.fn().mockResolvedValue(farsAdminRecord),
-      findCoachTargetById: vi.fn().mockResolvedValue({ id: "coach-1", fullName: "س", province: "TEHRAN", isActive: false }),
+      findCoachTargetById: vi.fn().mockResolvedValue({ id: "coach-1", fullName: "س", province: "TEHRAN", isActive: false, gender: "MALE" }),
     });
     const failure = await failureOf(
       reassignCoachStudents(repo, auditWith(), { id: "admin-2", role: "ADMIN" }, "coach-1", { toCoachId: "coach-2" }),
     );
 
     expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+  });
+
+  it("blocks a target coach without gender when the source has students", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findCoachTargetById: vi
+        .fn()
+        .mockImplementation(async (id: string) => ({ id, fullName: "م", province: "TEHRAN", isActive: true, gender: null })),
+      countCoachStudentsNotOfGender: vi.fn().mockResolvedValue(4),
+    });
+    const failure = await failureOf(reassignCoachStudents(repo, auditWith(), admin, "coach-1", { toCoachId: "coach-2" }));
+
+    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
+    expect((failure as AppError).message).toContain("جنسیت مربی مقصد ثبت نشده است");
+    expect(repo.countCoachStudentsNotOfGender).toHaveBeenCalledWith("coach-1", null);
+    expect(repo.reassignCoachStudents).not.toHaveBeenCalled();
+  });
+
+  it("blocks a target coach when students of the other gender would move", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      countCoachStudentsNotOfGender: vi.fn().mockResolvedValue(2),
+    });
+    const failure = await failureOf(reassignCoachStudents(repo, auditWith(), admin, "coach-1", { toCoachId: "coach-2" }));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect((failure as AppError).message).toContain("۲ هنرجو");
+    expect(repo.reassignCoachStudents).not.toHaveBeenCalled();
+  });
+
+  it("moves students only when every student matches the target gender", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
+    await reassignCoachStudents(repo, auditWith(), admin, "coach-1", { toCoachId: "coach-2" });
+
+    expect(repo.countCoachStudentsNotOfGender).toHaveBeenCalledWith("coach-1", "MALE");
+    expect(repo.reassignCoachStudents).toHaveBeenCalledWith("coach-1", "coach-2");
   });
 });

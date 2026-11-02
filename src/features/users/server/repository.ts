@@ -47,6 +47,7 @@ export type CoachUpdateData = {
   nationalCode?: string;
   isActive?: boolean;
   countyId?: string;
+  gender?: Gender;
 };
 
 export type CountyRecord = {
@@ -66,6 +67,7 @@ export type CoachRepository = {
   createCoach(data: NewCoachData): Promise<CoachRecord>;
   updateCoach(id: string, data: CoachUpdateData): Promise<CoachRecord>;
   updateCoachPassword(id: string, passwordHash: string): Promise<CoachRecord>;
+  countStudentsByGender(coachId: string, gender: Gender): Promise<number>;
 };
 
 const coachSelection = {
@@ -202,4 +204,8 @@ export async function updateCoachPassword(id: string, passwordHash: string): Pro
   const user = await getPrisma().user.update({ where: { id }, data: { passwordHash }, select: coachSelection });
 
   return toCoachRecord(user);
+}
+
+export async function countStudentsByGender(coachId: string, gender: Gender): Promise<number> {
+  return getPrisma().student.count({ where: { coachId, gender } });
 }

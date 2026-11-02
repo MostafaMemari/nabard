@@ -1,4 +1,5 @@
 import type { Province } from "@/generated/client";
+import type { Gender } from "@/generated/enums";
 import { getPrisma } from "@/lib/prisma";
 import type { TransferStatus } from "../types";
 
@@ -10,11 +11,13 @@ export type UserIdentityRecord = {
   province: Province | null;
   isActive: boolean;
   countyId: string | null;
+  gender: Gender | null;
 };
 
 export type StudentLookupRow = {
   id: string;
   fullName: string;
+  gender: Gender;
   coachId: string;
   coachName: string;
   coachProvince: Province | null;
@@ -25,6 +28,7 @@ export type CoachTargetRow = {
   fullName: string;
   province: Province | null;
   isActive: boolean;
+  gender: Gender | null;
 };
 
 export type TransferRow = {
@@ -79,6 +83,7 @@ export type TransfersRepository = {
   decideTransferFromPending(id: string, input: DecideTransferInput): Promise<TransferWithScope | null>;
   findCoachTargetById(id: string): Promise<CoachTargetRow | null>;
   countCoachStudents(coachId: string): Promise<number>;
+  countCoachStudentsNotOfGender(coachId: string, gender: Gender | null): Promise<number>;
   countCoachTransfers(coachId: string, filters: { status?: TransferStatus }): Promise<number>;
   findCoachTransfers(coachId: string, filters: { status?: TransferStatus }, skip: number, take: number): Promise<CoachTransferRow[]>;
   reassignCoachStudents(fromCoachId: string, toCoachId: string): Promise<number>;
@@ -127,20 +132,21 @@ function toTransferRow(row: TransferRowInput): TransferWithScope {
 export async function findUserById(id: string): Promise<UserIdentityRecord | null> {
   return getPrisma().user.findUnique({
     where: { id },
-    select: { id: true, role: true, province: true, isActive: true, countyId: true },
+    select: { id: true, role: true, province: true, isActive: true, countyId: true, gender: true },
   });
 }
 
 export async function findStudentByNationalCode(nationalCode: string): Promise<StudentLookupRow | null> {
   const row = await getPrisma().student.findUnique({
     where: { nationalCode },
-    select: { id: true, fullName: true, coach: { select: { id: true, fullName: true, province: true } } },
+    select: { id: true, fullName: true, gender: true, coach: { select: { id: true, fullName: true, province: true } } },
   });
   if (row === null) return null;
 
   return {
     id: row.id,
     fullName: row.fullName,
+    gender: row.gender,
     coachId: row.coach.id,
     coachName: row.coach.fullName,
     coachProvince: row.coach.province,
@@ -234,6 +240,12 @@ export class StudentOwnerChangedError extends Error {
   }
 }
 
+export class TransferGenderMismatchError extends Error {
+  constructor() {
+    super("student gender does not match the requesting coach gender");
+  }
+}
+
 export async function decideTransferFromPending(id: string, input: DecideTransferInput): Promise<TransferWithScope | null> {
   return getPrisma().$transaction(async (tx) => {
     const applied = await tx.studentTransfer.updateMany({
@@ -250,9 +262,19 @@ export async function decideTransferFromPending(id: string, input: DecideTransfe
     if (input.status === "APPROVED") {
       const row = await tx.studentTransfer.findUnique({
         where: { id },
-        select: { studentId: true, fromCoachId: true, toCoachId: true },
+        select: {
+          studentId: true,
+          fromCoachId: true,
+          toCoachId: true,
+          student: { select: { gender: true } },
+          toCoach: { select: { gender: true } },
+        },
       });
       if (row) {
+        if (row.toCoach.gender === null || row.student.gender !== row.toCoach.gender) {
+          throw new TransferGenderMismatchError();
+        }
+
         const moved = await tx.student.updateMany({
           where: { id: row.studentId, coachId: row.fromCoachId },
           data: { coachId: row.toCoachId },
@@ -273,12 +295,18 @@ export async function decideTransferFromPending(id: string, input: DecideTransfe
 export async function findCoachTargetById(id: string): Promise<CoachTargetRow | null> {
   return getPrisma().user.findUnique({
     where: { id },
-    select: { id: true, fullName: true, province: true, isActive: true },
+    select: { id: true, fullName: true, province: true, isActive: true, gender: true },
   });
 }
 
 export async function countCoachStudents(coachId: string): Promise<number> {
   return getPrisma().student.count({ where: { coachId } });
+}
+
+export async function countCoachStudentsNotOfGender(coachId: string, gender: Gender | null): Promise<number> {
+  const where = gender === null ? { coachId } : { coachId, NOT: { gender } };
+
+  return getPrisma().student.count({ where });
 }
 
 export async function reassignCoachStudents(fromCoachId: string, toCoachId: string): Promise<number> {

@@ -10,6 +10,7 @@ import { CoachReassignDialog } from "@/features/transfers";
 import { toPersianDigits } from "@/lib/format";
 import { useCoach, useCoaches } from "../hooks/use-coaches";
 import { CoachAccountSection } from "./coach-account-section";
+import { CoachEditSheet } from "./coach-edit-sheet";
 import { CoachResetPasswordDialog } from "./coach-reset-password-dialog";
 import { CoachStatusDialog } from "./coach-status-dialog";
 import { CoachStudentsTable } from "./coach-students-table";
@@ -21,6 +22,7 @@ export function CoachDetailScreen({ coachId }: { coachId: string }) {
   const [pendingStatus, setPendingStatus] = useState<boolean | null>(null);
   const [resetOpen, setResetOpen] = useState(false);
   const [reassignOpen, setReassignOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -46,6 +48,9 @@ export function CoachDetailScreen({ coachId }: { coachId: string }) {
         title={coach.fullName}
         action={
           <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={() => setEditOpen(true)}>
+              ویرایش
+            </Button>
             <Button variant="outline" onClick={() => setResetOpen(true)}>
               بازنشانی رمز
             </Button>
@@ -89,11 +94,14 @@ export function CoachDetailScreen({ coachId }: { coachId: string }) {
       </div>
 
       <CoachStatusDialog coach={coach} targetActive={pendingStatus} onDone={mutate} onClose={() => setPendingStatus(null)} />
+      <CoachEditSheet coach={editOpen ? coach : null} onOpenChange={setEditOpen} onSaved={() => void mutate()} />
       <CoachResetPasswordDialog coach={resetOpen ? coach : null} onDone={mutate} onClose={() => setResetOpen(false)} />
       <CoachReassignDialog
         coachId={coach.id}
         coachName={coach.fullName}
-        targets={coaches.filter((target) => target.id !== coach.id && target.isActive)}
+        targets={coaches.filter(
+          (target) => target.id !== coach.id && target.isActive && target.gender !== null && target.gender === coach.gender,
+        )}
         studentCount={coachStudents.length}
         open={reassignOpen}
         onOpenChange={setReassignOpen}

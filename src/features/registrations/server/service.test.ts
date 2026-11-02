@@ -29,6 +29,7 @@ const coachRecord = {
   province: "TEHRAN" as const,
   isActive: true,
   countyId: "county-tehran",
+  gender: "MALE" as const,
 };
 const adminRecord = {
   id: "admin-1",
@@ -285,6 +286,28 @@ describe("createRegistrations", () => {
     );
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect(repo.createRegistrationBundle).not.toHaveBeenCalled();
+  });
+
+  it("blocks a coach without gender with a Persian message", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue({ ...coachRecord, gender: null }) });
+    const failure = await failureOf(
+      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+    );
+
+    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect((failure as AppError).message).toContain("جنسیت شما ثبت نشده است");
+    expect(repo.findCompetitionById).not.toHaveBeenCalled();
+  });
+
+  it("hides a competition of the other gender behind 404", async () => {
+    const repo = repoWith({ findCompetitionById: vi.fn().mockResolvedValue({ ...competition, gender: "FEMALE" as const }) });
+    const failure = await failureOf(
+      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+    );
+
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+    expect(repo.findCoachStudentsByIds).not.toHaveBeenCalled();
     expect(repo.createRegistrationBundle).not.toHaveBeenCalled();
   });
 

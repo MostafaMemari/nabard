@@ -23,6 +23,14 @@ const updatedRow = {
   toCoach: { id: "coach-2", fullName: "رضا کریمی", province: "TEHRAN" as const },
 };
 
+const approvalRow = {
+  studentId: "student-1",
+  fromCoachId: "coach-1",
+  toCoachId: "coach-2",
+  student: { gender: "MALE" as const },
+  toCoach: { gender: "MALE" as const },
+};
+
 beforeEach(() => {
   vi.resetAllMocks();
 });
@@ -30,9 +38,7 @@ beforeEach(() => {
 describe("decideTransferFromPending", () => {
   it("applies the decision once and moves the student in the same transaction", async () => {
     tx.studentTransfer.updateMany.mockResolvedValue({ count: 1 });
-    tx.studentTransfer.findUnique
-      .mockResolvedValueOnce({ studentId: "student-1", fromCoachId: "coach-1", toCoachId: "coach-2" })
-      .mockResolvedValueOnce(updatedRow);
+    tx.studentTransfer.findUnique.mockResolvedValueOnce(approvalRow).mockResolvedValueOnce(updatedRow);
     tx.student.updateMany.mockResolvedValue({ count: 1 });
 
     const { decideTransferFromPending } = await import("./repository");
@@ -56,9 +62,7 @@ describe("decideTransferFromPending", () => {
 
   it("touches only the transfer and the student coach, never registrations", async () => {
     tx.studentTransfer.updateMany.mockResolvedValue({ count: 1 });
-    tx.studentTransfer.findUnique
-      .mockResolvedValueOnce({ studentId: "student-1", fromCoachId: "coach-1", toCoachId: "coach-2" })
-      .mockResolvedValueOnce(updatedRow);
+    tx.studentTransfer.findUnique.mockResolvedValueOnce(approvalRow).mockResolvedValueOnce(updatedRow);
     tx.student.updateMany.mockResolvedValue({ count: 1 });
 
     const { decideTransferFromPending } = await import("./repository");
@@ -81,7 +85,7 @@ describe("decideTransferFromPending", () => {
 
   it("rolls back when the student is no longer owned by the previous coach", async () => {
     tx.studentTransfer.updateMany.mockResolvedValue({ count: 1 });
-    tx.studentTransfer.findUnique.mockResolvedValueOnce({ studentId: "student-1", fromCoachId: "coach-1", toCoachId: "coach-2" });
+    tx.studentTransfer.findUnique.mockResolvedValueOnce(approvalRow);
     tx.student.updateMany.mockResolvedValue({ count: 0 });
 
     const { decideTransferFromPending } = await import("./repository");
@@ -91,6 +95,34 @@ describe("decideTransferFromPending", () => {
 
     expect(failure).toBeInstanceOf(StudentOwnerChangedError);
     expect(tx.studentTransfer.findUnique).toHaveBeenCalled();
+  });
+
+  it("rolls back when the student gender no longer matches the receiving coach", async () => {
+    tx.studentTransfer.updateMany.mockResolvedValue({ count: 1 });
+    tx.studentTransfer.findUnique
+      .mockResolvedValueOnce({ ...approvalRow, student: { gender: "FEMALE" as const } })
+      .mockResolvedValueOnce(updatedRow);
+
+    const { decideTransferFromPending, TransferGenderMismatchError } = await import("./repository");
+    const failure = await decideTransferFromPending("transfer-1", { status: "APPROVED", note: null, decidedById: "admin-1" }).catch(
+      (error: unknown) => error,
+    );
+
+    expect(failure).toBeInstanceOf(TransferGenderMismatchError);
+    expect(tx.student.updateMany).not.toHaveBeenCalled();
+  });
+
+  it("rolls back when the receiving coach has no gender on record", async () => {
+    tx.studentTransfer.updateMany.mockResolvedValue({ count: 1 });
+    tx.studentTransfer.findUnique.mockResolvedValueOnce({ ...approvalRow, toCoach: { gender: null } }).mockResolvedValueOnce(updatedRow);
+
+    const { decideTransferFromPending, TransferGenderMismatchError } = await import("./repository");
+    const failure = await decideTransferFromPending("transfer-1", { status: "APPROVED", note: null, decidedById: "admin-1" }).catch(
+      (error: unknown) => error,
+    );
+
+    expect(failure).toBeInstanceOf(TransferGenderMismatchError);
+    expect(tx.student.updateMany).not.toHaveBeenCalled();
   });
 });
 

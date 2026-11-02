@@ -1,6 +1,6 @@
 import { api } from "@/lib/http";
 import type { ListQuery, ListResult } from "@/lib/pagination";
-import type { CoachInput } from "./schemas";
+import type { CoachInput, UpdateCoachInput } from "./schemas";
 import type { User } from "./types";
 
 export type CoachListParams = ListQuery & {
@@ -31,6 +31,10 @@ export function createCoach(input: CoachInput): Promise<User> {
 
 export function updateCoachStatus(id: string, isActive: boolean): Promise<User> {
   return api<User>(`/api/v1/coaches/${id}`, { method: "PATCH", body: { isActive } });
+}
+
+export function updateCoach(id: string, input: UpdateCoachInput): Promise<User> {
+  return api<User>(`/api/v1/coaches/${id}`, { method: "PATCH", body: input });
 }
 
 export function resetCoachPassword(id: string, password: string): Promise<User> {

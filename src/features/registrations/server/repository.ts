@@ -14,6 +14,7 @@ export type UserIdentityRecord = {
   province: Province | null;
   isActive: boolean;
   countyId: string | null;
+  gender: Gender | null;
 };
 
 export type RegistrationStudentInfo = {
@@ -251,7 +252,7 @@ function registrationWhere(filters: RegistrationFilters) {
 export async function findUserById(id: string): Promise<UserIdentityRecord | null> {
   return getPrisma().user.findUnique({
     where: { id },
-    select: { id: true, role: true, province: true, isActive: true, countyId: true },
+    select: { id: true, role: true, province: true, isActive: true, countyId: true, gender: true },
   });
 }
 
