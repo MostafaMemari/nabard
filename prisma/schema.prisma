@@ -164,10 +164,10 @@ model User {
   fullName     String   @map("full_name") @db.VarChar(80)
   nationalCode String?  @unique @map("national_code") @db.VarChar(10)
   role         Role      @map("role")
-  gender       Gender?   @map("gender") // required for COACH (set at creation); students inherit it
-  province     Province? @map("province") // required for ADMIN and COACH, null for SUPER_ADMIN (enforced in services)
+  gender       Gender?   @map("gender") // required for COACH (set at creation, CHECK users_coach_gender_required); students inherit it
+  province     Province? @map("province") // required for ADMIN and COACH (CHECK users_coach_province_required), null for SUPER_ADMIN (enforced in services)
   isActive     Boolean   @default(true) @map("is_active")
-  countyId     String?   @map("county_id")
+  countyId     String?   @map("county_id") // required for COACH (CHECK users_coach_county_required), null for admins and super admin
   county       County?   @relation(fields: [countyId], references: [id])
 
   students             Student[]
