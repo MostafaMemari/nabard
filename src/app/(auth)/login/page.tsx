@@ -25,15 +25,6 @@ export default function LoginPage() {
           </div>
 
           <LoginForm />
-
-          {/* Dev-only entry point; remove when auth is built. */}
-          {process.env.NODE_ENV !== "production" ? (
-            <p className="text-center text-subtle text-muted-foreground">
-              <a href="/coach" className="font-medium text-primary underline-offset-4 hover:underline">
-                ورود به عنوان مربی (آزمایشی)
-              </a>
-            </p>
-          ) : null}
         </FormContainer>
       </div>
 
