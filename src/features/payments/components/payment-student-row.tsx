@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { useBelts } from "@/features/base-data";
 import type { Registration } from "@/features/registrations";
-import { formatNumber } from "@/lib/format";
 import { paymentBadgeStatus } from "../status";
 import type { PaymentStudentActions } from "./payment-student-actions";
 
@@ -25,9 +24,6 @@ export function PaymentStudentRow({ registration, actions }: { registration: Reg
         </div>
       </TableCell>
       <TableCell>{belt ? <BeltChip belt={belt} /> : "-"}</TableCell>
-      <TableCell className="text-subtle whitespace-nowrap text-muted-foreground tabular-nums">
-        {student.weightKg != null ? `${formatNumber(student.weightKg)} کیلوگرم` : "-"}
-      </TableCell>
       <TableCell>
         <StatusBadge status={paymentBadgeStatus(registration.status)} />
       </TableCell>

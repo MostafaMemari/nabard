@@ -6,6 +6,7 @@ export const registrationStatusSchema = z.enum(["PENDING", "APPROVED", "REJECTED
 export const registrationListQuerySchema = z.object({
   competitionId: z.string().min(1).optional(),
   paymentId: z.string().min(1).optional(),
+  studentId: z.string().min(1).optional(),
   province: z.enum(provinceValues).optional(),
   status: registrationStatusSchema.optional(),
   coachId: z.string().min(1).optional(),
@@ -13,8 +14,13 @@ export const registrationListQuerySchema = z.object({
   pageSize: z.coerce.number().int().min(1).max(100).optional(),
 });
 
+function isValidWeight(value: number): boolean {
+  return value > 0 && value <= 999.9 && /^\d+(\.\d)?$/.test(String(value));
+}
+
 export const createRegistrationsSchema = z.object({
   studentIds: z.array(z.string().min(1)).min(1, "حداقل یک هنرجو را انتخاب کنید.").max(50, "تعداد هنرجوهای انتخاب شده بیش از حد مجاز است."),
+  weights: z.record(z.string(), z.number().refine(isValidWeight, "وزن وارد شده معتبر نیست.")).optional(),
 });
 
 export const rejectRegistrationSchema = z.object({

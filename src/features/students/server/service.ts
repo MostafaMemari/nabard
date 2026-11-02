@@ -4,7 +4,7 @@ import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
 import { readReceiptImage } from "@/lib/storage/image";
 import type { Storage } from "@/lib/storage/types";
-import type { CreateStudentInput, PendingReviewQuery, StudentListQuery, UpdateStudentInput } from "../schemas";
+import type { CreateStudentInput, PendingReviewQuery, StudentListQuery, UpdateStudentBeltInput } from "../schemas";
 import type {
   NewStudentData,
   PendingReviewFilters,
@@ -15,13 +15,13 @@ import type {
   StudentFilters,
   StudentRecord,
   StudentRepository,
-  StudentUpdateData,
   StudentWithCoach,
   UserIdentityRecord,
 } from "./repository";
 import { isStudentDocumentType } from "./repository";
 
 const DEFAULT_PAGE_SIZE = 100;
+const DEFAULT_BELT_CODE = "white";
 
 function forbidden(): AppError {
   return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
@@ -45,8 +45,8 @@ function invalidBelt(): AppError {
   return new AppError(400, "VALIDATION_ERROR", "کمربند انتخاب شده معتبر نیست.");
 }
 
-function genderMismatch(): AppError {
-  return new AppError(400, "VALIDATION_ERROR", "جنسیت هنرجو باید با جنسیت مربی یکسان باشد.");
+function defaultBeltMissing(): AppError {
+  return new AppError(400, "VALIDATION_ERROR", "کمربند پیش فرض یافت نشد؛ با ادمین استان تماس بگیرید.");
 }
 
 function coachGenderMissing(): AppError {
@@ -68,7 +68,8 @@ function toStudentRecord(student: StudentWithCoach): StudentRecord {
     gender: student.gender,
     nationalCode: student.nationalCode,
     birthDate: student.birthDate,
-    weightKg: student.weightKg,
+    insuranceDate: student.insuranceDate,
+    tkdBankChargeDate: student.tkdBankChargeDate,
     beltId: student.beltId,
     coachId: student.coachId,
     profileStatus: student.profileStatus,
@@ -131,68 +132,42 @@ export async function createStudent(repo: StudentRepository, user: CurrentUser, 
   const identity = await requireActiveUser(repo, user);
   if (identity.role !== "COACH") throw forbidden();
   if (!identity.gender) throw coachGenderMissing();
-  if (input.gender !== identity.gender) throw genderMismatch();
 
-  if (!(await repo.beltExists(input.beltId))) throw invalidBelt();
+  if (await repo.findNationalCodeOwner(input.nationalCode)) throw duplicateNationalCode();
 
-  const owner = await repo.findNationalCodeOwner(input.nationalCode);
-  if (owner) throw duplicateNationalCode();
+  const beltId = await repo.findBeltIdByCode(DEFAULT_BELT_CODE);
+  if (!beltId) throw defaultBeltMissing();
 
   const data: NewStudentData = {
     fullName: input.fullName,
-    gender: input.gender,
+    gender: identity.gender,
     nationalCode: input.nationalCode,
     birthDate: new Date(input.birthDate),
-    weightKg: input.weightKg ?? null,
-    beltId: input.beltId,
+    insuranceDate: input.insuranceDate ? new Date(input.insuranceDate) : null,
+    tkdBankChargeDate: input.tkdBankChargeDate ? new Date(input.tkdBankChargeDate) : null,
+    beltId,
     coachId: user.id,
   };
 
   return repo.createStudent(data);
 }
 
-export async function updateStudent(
+// After registration the student profile is locked; the province admin can
+// only move the student between belts.
+export async function updateStudentBelt(
   repo: StudentRepository,
   user: CurrentUser,
   id: string,
-  input: UpdateStudentInput,
+  input: UpdateStudentBeltInput,
 ): Promise<StudentRecord> {
   const identity = await requireActiveUser(repo, user);
-  if (identity.role !== "COACH") throw forbidden();
+  if (identity.role !== "ADMIN") throw forbidden();
 
   const student = await repo.findStudentById(id);
-  if (!student || student.coachId !== user.id) throw studentNotFound();
-  if (input.gender !== undefined) {
-    if (!identity.gender) throw coachGenderMissing();
-    if (input.gender !== identity.gender) throw genderMismatch();
-  }
+  if (!student || student.coachProvince !== provinceOf(identity)) throw studentNotFound();
+  if (!(await repo.beltExists(input.beltId))) throw invalidBelt();
 
-  if (input.nationalCode !== undefined) {
-    const owner = await repo.findNationalCodeOwner(input.nationalCode);
-    if (owner && owner.id !== id) throw duplicateNationalCode();
-  }
-
-  if (input.beltId !== undefined && !(await repo.beltExists(input.beltId))) throw invalidBelt();
-
-  const identityChanged =
-    (input.fullName !== undefined && input.fullName !== student.fullName) ||
-    (input.nationalCode !== undefined && input.nationalCode !== student.nationalCode) ||
-    (input.birthDate !== undefined && new Date(input.birthDate).getTime() !== student.birthDate.getTime()) ||
-    (input.beltId !== undefined && input.beltId !== student.beltId);
-
-  const data: StudentUpdateData = {};
-  if (input.fullName !== undefined) data.fullName = input.fullName;
-  if (input.gender !== undefined) data.gender = input.gender;
-  if (input.nationalCode !== undefined) data.nationalCode = input.nationalCode;
-  if (input.birthDate !== undefined) data.birthDate = new Date(input.birthDate);
-  if (input.weightKg !== undefined) data.weightKg = input.weightKg;
-  if (input.beltId !== undefined) data.beltId = input.beltId;
-
-  if (identityChanged && student.profileStatus === "APPROVED") {
-    data.profileStatus = "PENDING";
-  }
-
-  return repo.updateStudent(id, data);
+  return repo.updateStudent(id, { beltId: input.beltId });
 }
 
 export async function deleteStudent(repo: StudentRepository, user: CurrentUser, id: string): Promise<{ id: string }> {
@@ -205,6 +180,12 @@ export async function deleteStudent(repo: StudentRepository, user: CurrentUser, 
   const registrations = await repo.countRegistrations(id);
   if (registrations > 0) {
     throw new AppError(409, "CONFLICT", "این هنرجو در مسابقات ثبت نام شده است و قابل حذف نیست.");
+  }
+
+  // Transfer rows are history (including rejected ones) and are never deleted.
+  const transfers = await repo.countStudentTransfers(id);
+  if (transfers > 0) {
+    throw new AppError(409, "CONFLICT", "این هنرجو سابقه درخواست انتقال دارد و قابل حذف نیست.");
   }
 
   await repo.deleteStudent(id);

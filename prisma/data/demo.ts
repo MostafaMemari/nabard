@@ -69,7 +69,6 @@ export type StudentSeed = {
   gender: Gender;
   nationalCode: string;
   birthDate: string;
-  weightKg: number | null;
   beltId: string;
   coachId: string;
   createdAt: string;
@@ -142,7 +141,6 @@ const lastNames = [
 
 const birthYears = [2019, 2016, 2013, 2010, 2007, 2000, 1982];
 const beltByCategory = ["belt-white", "belt-yellow", "belt-green", "belt-blue", "belt-red", "belt-poom_1", "belt-dan_1"];
-const weightBase = [22, 28, 36, 48, 58, 66, 72];
 
 function birthDate(index: number, categoryIndex: number): string {
   const year = birthYears[categoryIndex];
@@ -167,7 +165,6 @@ export const demoStudents: StudentSeed[] = Array.from({ length: 60 }, (_, index)
     gender,
     nationalCode: nationalCode(200000000 + index * 173),
     birthDate: birthDate(index, categoryIndex),
-    weightKg: Number((weightBase[categoryIndex] - (gender === "FEMALE" ? 4 : 0) + (index % 5) * 0.5).toFixed(1)),
     beltId: beltByCategory[categoryIndex],
     coachId: `coach-${(index % 8) + 1}`,
     createdAt: `2026-08-${String((index % 28) + 1).padStart(2, "0")}T09:15:00.000Z`,

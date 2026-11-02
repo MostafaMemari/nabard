@@ -21,12 +21,12 @@ export type RegistrationStudentInfo = {
   id: string;
   fullName: string;
   beltId: string;
-  weightKg: number | null;
 };
 
 export type RegistrationRecord = {
   id: string;
   competitionId: string;
+  competitionTitle: string;
   studentId: string;
   coachId: string;
   paymentId: string | null;
@@ -49,6 +49,7 @@ export type RegistrationFilters = {
   province?: Province;
   competitionId?: string;
   paymentId?: string;
+  studentId?: string;
   status?: RegistrationStatus;
 };
 
@@ -84,7 +85,6 @@ export type RegistrationStudentRow = {
   gender: Gender;
   birthDate: Date;
   beltId: string;
-  weightKg: number | null;
   profileStatus: "PENDING" | "APPROVED" | "REJECTED";
 };
 
@@ -199,7 +199,8 @@ const registrationSelection = {
   note: true,
   createdAt: true,
   updatedAt: true,
-  student: { select: { id: true, fullName: true, beltId: true, weightKg: true } },
+  competition: { select: { title: true } },
+  student: { select: { id: true, fullName: true, beltId: true } },
 } as const;
 
 type RegistrationRowInput = {
@@ -214,13 +215,15 @@ type RegistrationRowInput = {
   note: string | null;
   createdAt: Date;
   updatedAt: Date;
-  student: { id: string; fullName: string; beltId: string; weightKg: unknown };
+  competition: { title: string };
+  student: { id: string; fullName: string; beltId: string };
 };
 
 function toRegistrationRecord(row: RegistrationRowInput): RegistrationRecord {
   return {
     id: row.id,
     competitionId: row.competitionId,
+    competitionTitle: row.competition.title,
     studentId: row.studentId,
     coachId: row.coachId,
     paymentId: row.paymentId,
@@ -234,7 +237,6 @@ function toRegistrationRecord(row: RegistrationRowInput): RegistrationRecord {
       id: row.student.id,
       fullName: row.student.fullName,
       beltId: row.student.beltId,
-      weightKg: row.student.weightKg === null ? null : Number(row.student.weightKg),
     },
   };
 }
@@ -245,6 +247,7 @@ function registrationWhere(filters: RegistrationFilters) {
     ...(filters.province === undefined ? {} : { coach: { province: filters.province } }),
     ...(filters.competitionId === undefined ? {} : { competitionId: filters.competitionId }),
     ...(filters.paymentId === undefined ? {} : { paymentId: filters.paymentId }),
+    ...(filters.studentId === undefined ? {} : { studentId: filters.studentId }),
     ...(filters.status === undefined ? {} : { status: filters.status }),
   };
 }
@@ -325,12 +328,10 @@ export async function findAgeCategoryById(id: string): Promise<AgeCategoryRow | 
 }
 
 export async function findCoachStudentsByIds(coachId: string, studentIds: string[]): Promise<RegistrationStudentRow[]> {
-  const rows = await getPrisma().student.findMany({
+  return getPrisma().student.findMany({
     where: { coachId, id: { in: studentIds } },
-    select: { id: true, fullName: true, gender: true, birthDate: true, beltId: true, weightKg: true, profileStatus: true },
+    select: { id: true, fullName: true, gender: true, birthDate: true, beltId: true, profileStatus: true },
   });
-
-  return rows.map((row) => ({ ...row, weightKg: row.weightKg === null ? null : Number(row.weightKg) }));
 }
 
 export async function findAllBelts(): Promise<Belt[]> {
@@ -540,7 +541,7 @@ export async function transitionRegistrationFromPending(
         ...registrationSelection,
         coach: { select: { province: true } },
         payment: { select: { status: true } },
-        competition: { select: { feePerStudent: true } },
+        competition: { select: { title: true, feePerStudent: true } },
       },
     });
     if (row === null) return null;

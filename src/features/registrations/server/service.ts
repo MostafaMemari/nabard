@@ -25,6 +25,7 @@ import type {
 
 export type CreateRegistrationsInput = {
   studentIds: string[];
+  weights?: Record<string, number>;
   receipt: File;
 };
 
@@ -80,14 +81,14 @@ function expandBeltIds(row: { minBeltId: string; maxBeltId: string }, belts: Bel
   return belts.filter((belt) => belt.level >= minLevel && belt.level <= maxLevel).map((belt) => belt.id);
 }
 
-function toEligibilityStudent(row: RegistrationStudentRow): EligibilityStudent {
+function toEligibilityStudent(row: RegistrationStudentRow, weightKg: number | null): EligibilityStudent {
   return {
     id: row.id,
     fullName: row.fullName,
     gender: row.gender,
     birthDate: row.birthDate.toISOString(),
     beltId: row.beltId,
-    weightKg: row.weightKg,
+    weightKg,
     profileStatus: row.profileStatus,
   };
 }
@@ -126,6 +127,7 @@ function toRegistrationRecord(row: RegistrationWithScope): RegistrationRecord {
   return {
     id: row.id,
     competitionId: row.competitionId,
+    competitionTitle: row.competitionTitle,
     studentId: row.studentId,
     coachId: row.coachId,
     paymentId: row.paymentId,
@@ -143,6 +145,7 @@ function toFilters(user: CurrentUser, identity: UserIdentityRecord, query: Regis
   const shared = {
     competitionId: query.competitionId,
     paymentId: query.paymentId,
+    studentId: query.studentId,
     status: query.status,
   };
 
@@ -300,7 +303,7 @@ export async function createRegistrations(
 
   const results = students.map((student) => ({
     student,
-    eligibility: checkEligibility(toEligibilityStudent(student), eligibilityCompetition, belts),
+    eligibility: checkEligibility(toEligibilityStudent(student, input.weights?.[student.id] ?? null), eligibilityCompetition, belts),
   }));
 
   const ineligible = results.filter((result) => !result.eligibility.eligible);

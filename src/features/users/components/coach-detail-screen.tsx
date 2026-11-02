@@ -1,6 +1,7 @@
 "use client";
 
 import { UsersIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Avatar, DetailPageHeader, ErrorBanner, IconTile, StatusBadge } from "@/components/shared";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,7 @@ import { CoachStatusDialog } from "./coach-status-dialog";
 import { CoachStudentsTable } from "./coach-students-table";
 
 export function CoachDetailScreen({ coachId }: { coachId: string }) {
+  const router = useRouter();
   const { coach, isLoading, error, mutate } = useCoach(coachId);
   const { students, isLoading: studentsLoading, mutate: reloadStudents } = useStudents();
   const { coaches } = useCoaches();
@@ -85,7 +87,11 @@ export function CoachDetailScreen({ coachId }: { coachId: string }) {
             </div>
             <span className="text-subtle text-muted-foreground">{toPersianDigits(coachStudents.length)} هنرجو</span>
           </div>
-          <CoachStudentsTable students={coachStudents} isLoading={studentsLoading} />
+          <CoachStudentsTable
+            students={coachStudents}
+            isLoading={studentsLoading}
+            onOpen={(student) => router.push(`/admin/profiles/${student.id}`)}
+          />
         </section>
 
         <aside className="flex flex-col gap-6 lg:sticky lg:top-8">

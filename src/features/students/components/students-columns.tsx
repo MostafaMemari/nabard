@@ -5,7 +5,7 @@ import { Avatar, BeltChip, type DataTableColumn } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import type { Belt } from "@/features/base-data";
-import { formatJalaliDate, formatNumber, toPersianDigits } from "@/lib/format";
+import { formatJalaliDate, toPersianDigits } from "@/lib/format";
 import type { Student } from "../types";
 
 export function studentColumns(options: { belts: Belt[]; onDelete: (student: Student) => void }): DataTableColumn<Student>[] {
@@ -31,13 +31,6 @@ export function studentColumns(options: { belts: Belt[]; onDelete: (student: Stu
         const belt = belts.find((item) => item.id === row.beltId);
         return belt ? <BeltChip belt={belt} /> : "-";
       },
-    },
-    {
-      id: "weight",
-      header: "وزن",
-      cell: (row) => (row.weightKg !== null ? `${formatNumber(row.weightKg)} کیلوگرم` : "-"),
-      align: "end",
-      sortValue: (row) => row.weightKg ?? 0,
     },
     {
       id: "birthDate",

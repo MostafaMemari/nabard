@@ -196,7 +196,9 @@ model Student {
   gender       Gender   @map("gender")
   nationalCode String   @unique @map("national_code") @db.VarChar(10)
   birthDate    DateTime @map("birth_date") @db.Date
-  weightKg     Decimal? @map("weight_kg") @db.Decimal(5, 2) // declared by the coach
+
+  insuranceDate    DateTime? @map("insurance_date") @db.Date
+  tkdBankChargeDate DateTime? @map("tkd_bank_charge_date") @db.Date
 
   beltId  String @map("belt_id")
   belt    Belt   @relation(fields: [beltId], references: [id])

@@ -67,10 +67,16 @@ const REASONS = {
   gender: "جنسیت هنرجو با جنسیت مسابقه همخوانی ندارد.",
   birthDate: "تاریخ تولد هنرجو در بازه سنی این مسابقه نیست.",
   belt: "کمربند هنرجو در بازه کمربندهای مجاز این مسابقه نیست.",
-  weightRequired: "برای ثبت نام کیوروگی باید وزن هنرجو ثبت شده باشد.",
+  weightRequired: "برای ثبت نام کیوروگی، وزن هنرجو را وارد کنید.",
   weightNoMatch: "وزن اعلام شده هنرجو با هیچ یک از رده های وزنی همخوانی ندارد.",
   weightAmbiguous: "وزن اعلام شده هنرجو با بیش از یک رده وزنی همخوانی دارد.",
 } as const;
+
+export type EligibilityOptions = {
+  // The eligible-student counters only check age, gender and belt; the weight
+  // is declared per registration and must not zero the counter.
+  weightOptional?: boolean;
+};
 
 function isWeightInClass(weight: number, weightClass: WeightClass): boolean {
   const aboveMin = weightClass.excludeMin ? weight > weightClass.minWeightKg : weight >= weightClass.minWeightKg;
@@ -86,7 +92,12 @@ function isWeightInClass(weight: number, weightClass: WeightClass): boolean {
   return weightClass.excludeMax ? weight < weightClass.maxWeightKg : weight <= weightClass.maxWeightKg;
 }
 
-export function checkEligibility(student: EligibilityStudent, competition: EligibilityCompetition, belts: Belt[]): EligibilityResult {
+export function checkEligibility(
+  student: EligibilityStudent,
+  competition: EligibilityCompetition,
+  belts: Belt[],
+  options: EligibilityOptions = {},
+): EligibilityResult {
   if (student.profileStatus !== "APPROVED") {
     return { eligible: false, reason: REASONS.profile };
   }
@@ -127,6 +138,10 @@ export function checkEligibility(student: EligibilityStudent, competition: Eligi
   const weight = student.weightKg;
 
   if (weight === null) {
+    if (options.weightOptional) {
+      return { eligible: true, weightClass: null };
+    }
+
     return { eligible: false, reason: REASONS.weightRequired };
   }
 

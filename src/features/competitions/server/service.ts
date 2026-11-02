@@ -207,7 +207,6 @@ function toEligibilityStudent(row: {
   gender: EligibilityStudent["gender"];
   birthDate: Date;
   beltId: string;
-  weightKg: number | null;
   profileStatus: EligibilityStudent["profileStatus"];
 }): EligibilityStudent {
   return {
@@ -216,7 +215,7 @@ function toEligibilityStudent(row: {
     gender: row.gender,
     birthDate: row.birthDate.toISOString(),
     beltId: row.beltId,
-    weightKg: row.weightKg,
+    weightKg: null,
     profileStatus: row.profileStatus,
   };
 }
@@ -271,7 +270,8 @@ async function decorateForCoach(
   const eligible =
     competition === null
       ? 0
-      : students.filter((student) => checkEligibility(toEligibilityStudent(student), competition, belts).eligible).length;
+      : students.filter((student) => checkEligibility(toEligibilityStudent(student), competition, belts, { weightOptional: true }).eligible)
+          .length;
 
   return { state: registrationState(new Date(), row), eligibleStudentCount: eligible };
 }

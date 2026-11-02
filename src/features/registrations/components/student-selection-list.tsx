@@ -9,10 +9,16 @@ export function StudentSelectionList({
   rows,
   selectedIds,
   onToggle,
+  requiresWeight,
+  weights,
+  onWeightChange,
 }: {
   rows: SelectionRow[];
   selectedIds: string[];
   onToggle: (studentId: string) => void;
+  requiresWeight?: boolean;
+  weights?: Record<string, string>;
+  onWeightChange?: (studentId: string, value: string) => void;
 }) {
   const selectable = rows.filter((row) => row.eligibility.eligible);
   const ineligible = rows.filter((row) => !row.eligibility.eligible);
@@ -27,6 +33,11 @@ export function StudentSelectionList({
 
   return (
     <div className="flex flex-col gap-5">
+      {requiresWeight ? (
+        <p className="rounded-xl border border-border bg-muted/40 px-4 py-3 text-subtle text-muted-foreground">
+          برای ثبت نام کیوروگی، وزن هر هنرجو را وارد کنید تا رده وزنی او مشخص شود.
+        </p>
+      ) : null}
       {selectable.length > 0 ? (
         <SelectionGroup title="واجد شرایط" count={selectable.length}>
           {selectable.map((row) => (
@@ -35,6 +46,9 @@ export function StudentSelectionList({
               row={row}
               selected={selectedIds.includes(row.student.id)}
               onToggle={() => onToggle(row.student.id)}
+              requiresWeight={requiresWeight}
+              weight={weights?.[row.student.id] ?? ""}
+              onWeightChange={onWeightChange}
             />
           ))}
         </SelectionGroup>
@@ -42,7 +56,15 @@ export function StudentSelectionList({
       {ineligible.length > 0 ? (
         <SelectionGroup title="واجد شرایط نیستند" count={ineligible.length}>
           {ineligible.map((row) => (
-            <SelectionItem key={row.student.id} row={row} selected={false} onToggle={() => onToggle(row.student.id)} />
+            <SelectionItem
+              key={row.student.id}
+              row={row}
+              selected={false}
+              onToggle={() => onToggle(row.student.id)}
+              requiresWeight={requiresWeight}
+              weight={weights?.[row.student.id] ?? ""}
+              onWeightChange={onWeightChange}
+            />
           ))}
         </SelectionGroup>
       ) : null}

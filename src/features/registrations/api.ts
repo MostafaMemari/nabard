@@ -7,12 +7,14 @@ export type RegistrationListParams = ListQuery & {
   competitionId?: string;
   coachId?: string;
   paymentId?: string;
+  studentId?: string;
   status?: RegistrationStatus;
 };
 
 export type CreateRegistrationsInput = {
   competitionId: string;
   studentIds: string[];
+  weights?: Record<string, number>;
   receipt: File;
 };
 
@@ -26,6 +28,7 @@ export async function listRegistrations(params: RegistrationListParams = {}): Pr
   if (params.competitionId) query.set("competitionId", params.competitionId);
   if (params.coachId) query.set("coachId", params.coachId);
   if (params.paymentId) query.set("paymentId", params.paymentId);
+  if (params.studentId) query.set("studentId", params.studentId);
   if (params.status) query.set("status", params.status);
   if (params.page !== undefined) query.set("page", String(params.page));
   if (params.pageSize !== undefined) query.set("pageSize", String(params.pageSize));
@@ -42,6 +45,9 @@ export function createRegistrations(input: CreateRegistrationsInput): Promise<Cr
   const form = new FormData();
   for (const studentId of input.studentIds) {
     form.append("studentIds", studentId);
+  }
+  if (input.weights && Object.keys(input.weights).length > 0) {
+    form.append("weights", JSON.stringify(input.weights));
   }
   form.append("receipt", input.receipt);
 

@@ -18,7 +18,8 @@ export type Student = {
   gender: Gender;
   nationalCode: string;
   birthDate: string;
-  weightKg: number | null;
+  insuranceDate: string | null;
+  tkdBankChargeDate: string | null;
   beltId: string;
   coachId: string;
   profileStatus: ProfileStatus;
@@ -32,7 +33,13 @@ export type StudentDetail = Student & { coachName: string; documents: StudentDoc
 
 export type PendingReviewStudent = Student & { coachName: string; documents: StudentDocument[] };
 
-export type StudentInput = Omit<Student, "id" | "createdAt" | "updatedAt" | "coachId" | "profileStatus" | "profileNote" | "approvedAt">;
+export type StudentInput = {
+  fullName: string;
+  nationalCode: string;
+  birthDate: string;
+  insuranceDate?: string;
+  tkdBankChargeDate?: string;
+};
 
 export const requiredDocumentTypes: StudentDocumentType[] = ["PHOTO", "NATIONAL_ID_OR_BIRTH_CERTIFICATE"];
 

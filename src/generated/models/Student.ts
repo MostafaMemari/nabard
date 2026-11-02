@@ -20,18 +20,8 @@ export type StudentModel = runtime.Types.Result.DefaultSelection<Prisma.$Student
 
 export type AggregateStudent = {
   _count: StudentCountAggregateOutputType | null
-  _avg: StudentAvgAggregateOutputType | null
-  _sum: StudentSumAggregateOutputType | null
   _min: StudentMinAggregateOutputType | null
   _max: StudentMaxAggregateOutputType | null
-}
-
-export type StudentAvgAggregateOutputType = {
-  weightKg: runtime.Decimal | null
-}
-
-export type StudentSumAggregateOutputType = {
-  weightKg: runtime.Decimal | null
 }
 
 export type StudentMinAggregateOutputType = {
@@ -40,7 +30,8 @@ export type StudentMinAggregateOutputType = {
   gender: $Enums.Gender | null
   nationalCode: string | null
   birthDate: Date | null
-  weightKg: runtime.Decimal | null
+  insuranceDate: Date | null
+  tkdBankChargeDate: Date | null
   beltId: string | null
   coachId: string | null
   profileStatus: $Enums.ProfileStatus | null
@@ -57,7 +48,8 @@ export type StudentMaxAggregateOutputType = {
   gender: $Enums.Gender | null
   nationalCode: string | null
   birthDate: Date | null
-  weightKg: runtime.Decimal | null
+  insuranceDate: Date | null
+  tkdBankChargeDate: Date | null
   beltId: string | null
   coachId: string | null
   profileStatus: $Enums.ProfileStatus | null
@@ -74,7 +66,8 @@ export type StudentCountAggregateOutputType = {
   gender: number
   nationalCode: number
   birthDate: number
-  weightKg: number
+  insuranceDate: number
+  tkdBankChargeDate: number
   beltId: number
   coachId: number
   profileStatus: number
@@ -87,21 +80,14 @@ export type StudentCountAggregateOutputType = {
 }
 
 
-export type StudentAvgAggregateInputType = {
-  weightKg?: true
-}
-
-export type StudentSumAggregateInputType = {
-  weightKg?: true
-}
-
 export type StudentMinAggregateInputType = {
   id?: true
   fullName?: true
   gender?: true
   nationalCode?: true
   birthDate?: true
-  weightKg?: true
+  insuranceDate?: true
+  tkdBankChargeDate?: true
   beltId?: true
   coachId?: true
   profileStatus?: true
@@ -118,7 +104,8 @@ export type StudentMaxAggregateInputType = {
   gender?: true
   nationalCode?: true
   birthDate?: true
-  weightKg?: true
+  insuranceDate?: true
+  tkdBankChargeDate?: true
   beltId?: true
   coachId?: true
   profileStatus?: true
@@ -135,7 +122,8 @@ export type StudentCountAggregateInputType = {
   gender?: true
   nationalCode?: true
   birthDate?: true
-  weightKg?: true
+  insuranceDate?: true
+  tkdBankChargeDate?: true
   beltId?: true
   coachId?: true
   profileStatus?: true
@@ -185,18 +173,6 @@ export type StudentAggregateArgs<ExtArgs extends runtime.Types.Extensions.Intern
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
-   * Select which fields to average
-  **/
-  _avg?: StudentAvgAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
-   * Select which fields to sum
-  **/
-  _sum?: StudentSumAggregateInputType
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
-   * 
    * Select which fields to find the minimum value
   **/
   _min?: StudentMinAggregateInputType
@@ -227,8 +203,6 @@ export type StudentGroupByArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   _count?: StudentCountAggregateInputType | true
-  _avg?: StudentAvgAggregateInputType
-  _sum?: StudentSumAggregateInputType
   _min?: StudentMinAggregateInputType
   _max?: StudentMaxAggregateInputType
 }
@@ -239,7 +213,8 @@ export type StudentGroupByOutputType = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date
-  weightKg: runtime.Decimal | null
+  insuranceDate: Date | null
+  tkdBankChargeDate: Date | null
   beltId: string
   coachId: string
   profileStatus: $Enums.ProfileStatus
@@ -249,8 +224,6 @@ export type StudentGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   _count: StudentCountAggregateOutputType | null
-  _avg: StudentAvgAggregateOutputType | null
-  _sum: StudentSumAggregateOutputType | null
   _min: StudentMinAggregateOutputType | null
   _max: StudentMaxAggregateOutputType | null
 }
@@ -279,7 +252,8 @@ export type StudentWhereInput = {
   gender?: Prisma.EnumGenderFilter<"Student"> | $Enums.Gender
   nationalCode?: Prisma.StringFilter<"Student"> | string
   birthDate?: Prisma.DateTimeFilter<"Student"> | Date | string
-  weightKg?: Prisma.DecimalNullableFilter<"Student"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
+  tkdBankChargeDate?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   beltId?: Prisma.StringFilter<"Student"> | string
   coachId?: Prisma.StringFilter<"Student"> | string
   profileStatus?: Prisma.EnumProfileStatusFilter<"Student"> | $Enums.ProfileStatus
@@ -302,7 +276,8 @@ export type StudentOrderByWithRelationInput = {
   gender?: Prisma.SortOrder
   nationalCode?: Prisma.SortOrder
   birthDate?: Prisma.SortOrder
-  weightKg?: Prisma.SortOrderInput | Prisma.SortOrder
+  insuranceDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  tkdBankChargeDate?: Prisma.SortOrderInput | Prisma.SortOrder
   beltId?: Prisma.SortOrder
   coachId?: Prisma.SortOrder
   profileStatus?: Prisma.SortOrder
@@ -328,7 +303,8 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   fullName?: Prisma.StringFilter<"Student"> | string
   gender?: Prisma.EnumGenderFilter<"Student"> | $Enums.Gender
   birthDate?: Prisma.DateTimeFilter<"Student"> | Date | string
-  weightKg?: Prisma.DecimalNullableFilter<"Student"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
+  tkdBankChargeDate?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   beltId?: Prisma.StringFilter<"Student"> | string
   coachId?: Prisma.StringFilter<"Student"> | string
   profileStatus?: Prisma.EnumProfileStatusFilter<"Student"> | $Enums.ProfileStatus
@@ -351,7 +327,8 @@ export type StudentOrderByWithAggregationInput = {
   gender?: Prisma.SortOrder
   nationalCode?: Prisma.SortOrder
   birthDate?: Prisma.SortOrder
-  weightKg?: Prisma.SortOrderInput | Prisma.SortOrder
+  insuranceDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  tkdBankChargeDate?: Prisma.SortOrderInput | Prisma.SortOrder
   beltId?: Prisma.SortOrder
   coachId?: Prisma.SortOrder
   profileStatus?: Prisma.SortOrder
@@ -361,10 +338,8 @@ export type StudentOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.StudentCountOrderByAggregateInput
-  _avg?: Prisma.StudentAvgOrderByAggregateInput
   _max?: Prisma.StudentMaxOrderByAggregateInput
   _min?: Prisma.StudentMinOrderByAggregateInput
-  _sum?: Prisma.StudentSumOrderByAggregateInput
 }
 
 export type StudentScalarWhereWithAggregatesInput = {
@@ -376,7 +351,8 @@ export type StudentScalarWhereWithAggregatesInput = {
   gender?: Prisma.EnumGenderWithAggregatesFilter<"Student"> | $Enums.Gender
   nationalCode?: Prisma.StringWithAggregatesFilter<"Student"> | string
   birthDate?: Prisma.DateTimeWithAggregatesFilter<"Student"> | Date | string
-  weightKg?: Prisma.DecimalNullableWithAggregatesFilter<"Student"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Student"> | Date | string | null
+  tkdBankChargeDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Student"> | Date | string | null
   beltId?: Prisma.StringWithAggregatesFilter<"Student"> | string
   coachId?: Prisma.StringWithAggregatesFilter<"Student"> | string
   profileStatus?: Prisma.EnumProfileStatusWithAggregatesFilter<"Student"> | $Enums.ProfileStatus
@@ -393,7 +369,8 @@ export type StudentCreateInput = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date | string
-  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
   approvedAt?: Date | string | null
@@ -413,7 +390,8 @@ export type StudentUncheckedCreateInput = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date | string
-  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
   beltId: string
   coachId: string
   profileStatus?: $Enums.ProfileStatus
@@ -433,7 +411,8 @@ export type StudentUpdateInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -453,7 +432,8 @@ export type StudentUncheckedUpdateInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
@@ -473,7 +453,8 @@ export type StudentCreateManyInput = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date | string
-  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
   beltId: string
   coachId: string
   profileStatus?: $Enums.ProfileStatus
@@ -490,7 +471,8 @@ export type StudentUpdateManyMutationInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -504,7 +486,8 @@ export type StudentUncheckedUpdateManyInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
@@ -531,7 +514,8 @@ export type StudentCountOrderByAggregateInput = {
   gender?: Prisma.SortOrder
   nationalCode?: Prisma.SortOrder
   birthDate?: Prisma.SortOrder
-  weightKg?: Prisma.SortOrder
+  insuranceDate?: Prisma.SortOrder
+  tkdBankChargeDate?: Prisma.SortOrder
   beltId?: Prisma.SortOrder
   coachId?: Prisma.SortOrder
   profileStatus?: Prisma.SortOrder
@@ -542,17 +526,14 @@ export type StudentCountOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type StudentAvgOrderByAggregateInput = {
-  weightKg?: Prisma.SortOrder
-}
-
 export type StudentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   fullName?: Prisma.SortOrder
   gender?: Prisma.SortOrder
   nationalCode?: Prisma.SortOrder
   birthDate?: Prisma.SortOrder
-  weightKg?: Prisma.SortOrder
+  insuranceDate?: Prisma.SortOrder
+  tkdBankChargeDate?: Prisma.SortOrder
   beltId?: Prisma.SortOrder
   coachId?: Prisma.SortOrder
   profileStatus?: Prisma.SortOrder
@@ -569,7 +550,8 @@ export type StudentMinOrderByAggregateInput = {
   gender?: Prisma.SortOrder
   nationalCode?: Prisma.SortOrder
   birthDate?: Prisma.SortOrder
-  weightKg?: Prisma.SortOrder
+  insuranceDate?: Prisma.SortOrder
+  tkdBankChargeDate?: Prisma.SortOrder
   beltId?: Prisma.SortOrder
   coachId?: Prisma.SortOrder
   profileStatus?: Prisma.SortOrder
@@ -578,10 +560,6 @@ export type StudentMinOrderByAggregateInput = {
   approvedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-}
-
-export type StudentSumOrderByAggregateInput = {
-  weightKg?: Prisma.SortOrder
 }
 
 export type StudentScalarRelationFilter = {
@@ -677,20 +655,12 @@ export type EnumGenderFieldUpdateOperationsInput = {
   set?: $Enums.Gender
 }
 
-export type NullableDecimalFieldUpdateOperationsInput = {
-  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
-  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
-  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type EnumProfileStatusFieldUpdateOperationsInput = {
   set?: $Enums.ProfileStatus
-}
-
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
 }
 
 export type StudentCreateNestedManyWithoutBeltInput = {
@@ -783,7 +753,8 @@ export type StudentCreateWithoutCoachInput = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date | string
-  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
   approvedAt?: Date | string | null
@@ -802,7 +773,8 @@ export type StudentUncheckedCreateWithoutCoachInput = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date | string
-  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
   beltId: string
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
@@ -831,7 +803,8 @@ export type StudentCreateWithoutApprovedByInput = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date | string
-  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
   approvedAt?: Date | string | null
@@ -850,7 +823,8 @@ export type StudentUncheckedCreateWithoutApprovedByInput = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date | string
-  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
   beltId: string
   coachId: string
   profileStatus?: $Enums.ProfileStatus
@@ -898,7 +872,8 @@ export type StudentScalarWhereInput = {
   gender?: Prisma.EnumGenderFilter<"Student"> | $Enums.Gender
   nationalCode?: Prisma.StringFilter<"Student"> | string
   birthDate?: Prisma.DateTimeFilter<"Student"> | Date | string
-  weightKg?: Prisma.DecimalNullableFilter<"Student"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
+  tkdBankChargeDate?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   beltId?: Prisma.StringFilter<"Student"> | string
   coachId?: Prisma.StringFilter<"Student"> | string
   profileStatus?: Prisma.EnumProfileStatusFilter<"Student"> | $Enums.ProfileStatus
@@ -931,7 +906,8 @@ export type StudentCreateWithoutBeltInput = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date | string
-  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
   approvedAt?: Date | string | null
@@ -950,7 +926,8 @@ export type StudentUncheckedCreateWithoutBeltInput = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date | string
-  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
   coachId: string
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
@@ -995,7 +972,8 @@ export type StudentCreateWithoutTransfersInput = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date | string
-  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
   approvedAt?: Date | string | null
@@ -1014,7 +992,8 @@ export type StudentUncheckedCreateWithoutTransfersInput = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date | string
-  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
   beltId: string
   coachId: string
   profileStatus?: $Enums.ProfileStatus
@@ -1049,7 +1028,8 @@ export type StudentUpdateWithoutTransfersInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1068,7 +1048,8 @@ export type StudentUncheckedUpdateWithoutTransfersInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
@@ -1087,7 +1068,8 @@ export type StudentCreateWithoutDocumentsInput = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date | string
-  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
   approvedAt?: Date | string | null
@@ -1106,7 +1088,8 @@ export type StudentUncheckedCreateWithoutDocumentsInput = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date | string
-  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
   beltId: string
   coachId: string
   profileStatus?: $Enums.ProfileStatus
@@ -1141,7 +1124,8 @@ export type StudentUpdateWithoutDocumentsInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1160,7 +1144,8 @@ export type StudentUncheckedUpdateWithoutDocumentsInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
@@ -1179,7 +1164,8 @@ export type StudentCreateWithoutRegistrationsInput = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date | string
-  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
   approvedAt?: Date | string | null
@@ -1198,7 +1184,8 @@ export type StudentUncheckedCreateWithoutRegistrationsInput = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date | string
-  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
   beltId: string
   coachId: string
   profileStatus?: $Enums.ProfileStatus
@@ -1233,7 +1220,8 @@ export type StudentUpdateWithoutRegistrationsInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1252,7 +1240,8 @@ export type StudentUncheckedUpdateWithoutRegistrationsInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
@@ -1271,7 +1260,8 @@ export type StudentCreateManyCoachInput = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date | string
-  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
   beltId: string
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
@@ -1287,7 +1277,8 @@ export type StudentCreateManyApprovedByInput = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date | string
-  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
   beltId: string
   coachId: string
   profileStatus?: $Enums.ProfileStatus
@@ -1303,7 +1294,8 @@ export type StudentUpdateWithoutCoachInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1322,7 +1314,8 @@ export type StudentUncheckedUpdateWithoutCoachInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1341,7 +1334,8 @@ export type StudentUncheckedUpdateManyWithoutCoachInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1357,7 +1351,8 @@ export type StudentUpdateWithoutApprovedByInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1376,7 +1371,8 @@ export type StudentUncheckedUpdateWithoutApprovedByInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
@@ -1395,7 +1391,8 @@ export type StudentUncheckedUpdateManyWithoutApprovedByInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
@@ -1411,7 +1408,8 @@ export type StudentCreateManyBeltInput = {
   gender: $Enums.Gender
   nationalCode: string
   birthDate: Date | string
-  weightKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
   coachId: string
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
@@ -1427,7 +1425,8 @@ export type StudentUpdateWithoutBeltInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1446,7 +1445,8 @@ export type StudentUncheckedUpdateWithoutBeltInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1465,7 +1465,8 @@ export type StudentUncheckedUpdateManyWithoutBeltInput = {
   gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
   nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  weightKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1530,7 +1531,8 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   gender?: boolean
   nationalCode?: boolean
   birthDate?: boolean
-  weightKg?: boolean
+  insuranceDate?: boolean
+  tkdBankChargeDate?: boolean
   beltId?: boolean
   coachId?: boolean
   profileStatus?: boolean
@@ -1554,7 +1556,8 @@ export type StudentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   gender?: boolean
   nationalCode?: boolean
   birthDate?: boolean
-  weightKg?: boolean
+  insuranceDate?: boolean
+  tkdBankChargeDate?: boolean
   beltId?: boolean
   coachId?: boolean
   profileStatus?: boolean
@@ -1574,7 +1577,8 @@ export type StudentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   gender?: boolean
   nationalCode?: boolean
   birthDate?: boolean
-  weightKg?: boolean
+  insuranceDate?: boolean
+  tkdBankChargeDate?: boolean
   beltId?: boolean
   coachId?: boolean
   profileStatus?: boolean
@@ -1594,7 +1598,8 @@ export type StudentSelectScalar = {
   gender?: boolean
   nationalCode?: boolean
   birthDate?: boolean
-  weightKg?: boolean
+  insuranceDate?: boolean
+  tkdBankChargeDate?: boolean
   beltId?: boolean
   coachId?: boolean
   profileStatus?: boolean
@@ -1605,7 +1610,7 @@ export type StudentSelectScalar = {
   updatedAt?: boolean
 }
 
-export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "gender" | "nationalCode" | "birthDate" | "weightKg" | "beltId" | "coachId" | "profileStatus" | "profileNote" | "approvedById" | "approvedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
+export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "gender" | "nationalCode" | "birthDate" | "insuranceDate" | "tkdBankChargeDate" | "beltId" | "coachId" | "profileStatus" | "profileNote" | "approvedById" | "approvedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
 export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   belt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
   coach?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1642,7 +1647,8 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     gender: $Enums.Gender
     nationalCode: string
     birthDate: Date
-    weightKg: runtime.Decimal | null
+    insuranceDate: Date | null
+    tkdBankChargeDate: Date | null
     beltId: string
     coachId: string
     profileStatus: $Enums.ProfileStatus
@@ -2085,7 +2091,8 @@ export interface StudentFieldRefs {
   readonly gender: Prisma.FieldRef<"Student", 'Gender'>
   readonly nationalCode: Prisma.FieldRef<"Student", 'String'>
   readonly birthDate: Prisma.FieldRef<"Student", 'DateTime'>
-  readonly weightKg: Prisma.FieldRef<"Student", 'Decimal'>
+  readonly insuranceDate: Prisma.FieldRef<"Student", 'DateTime'>
+  readonly tkdBankChargeDate: Prisma.FieldRef<"Student", 'DateTime'>
   readonly beltId: Prisma.FieldRef<"Student", 'String'>
   readonly coachId: Prisma.FieldRef<"Student", 'String'>
   readonly profileStatus: Prisma.FieldRef<"Student", 'ProfileStatus'>

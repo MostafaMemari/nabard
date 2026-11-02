@@ -4,7 +4,6 @@ import { Trash2Icon } from "lucide-react";
 import { Avatar, BeltChip, MobileCard, MobileCardChips } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { useBelts } from "@/features/base-data";
-import { formatNumber } from "@/lib/format";
 import type { Student } from "../types";
 
 export function StudentCardList({
@@ -33,12 +32,7 @@ export function StudentCardList({
               <span className="min-w-0 flex-1 truncate text-sm font-medium">{student.fullName}</span>
             </button>
             <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border px-4 py-3">
-              <MobileCardChips>
-                {belt ? <BeltChip belt={belt} /> : null}
-                <span className="text-subtle text-muted-foreground tabular-nums">
-                  {student.weightKg !== null ? `${formatNumber(student.weightKg)} کیلوگرم` : "وزن ثبت نشده"}
-                </span>
-              </MobileCardChips>
+              <MobileCardChips>{belt ? <BeltChip belt={belt} /> : null}</MobileCardChips>
               <Button
                 type="button"
                 variant="ghost"

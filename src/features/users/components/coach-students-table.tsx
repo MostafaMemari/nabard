@@ -3,10 +3,18 @@
 import { Avatar, BeltChip, DataTable, type DataTableColumn, SkeletonRows } from "@/components/shared";
 import { useBelts } from "@/features/base-data";
 import type { Student } from "@/features/students";
-import { formatJalaliDate, formatNumber } from "@/lib/format";
+import { formatJalaliDate } from "@/lib/format";
 import { CoachStudentCard } from "./coach-student-card";
 
-export function CoachStudentsTable({ students, isLoading }: { students: Student[]; isLoading: boolean }) {
+export function CoachStudentsTable({
+  students,
+  isLoading,
+  onOpen,
+}: {
+  students: Student[];
+  isLoading: boolean;
+  onOpen: (student: Student) => void;
+}) {
   const { belts } = useBelts();
 
   const columns: DataTableColumn<Student>[] = [
@@ -28,18 +36,6 @@ export function CoachStudentsTable({ students, isLoading }: { students: Student[
         const belt = belts.find((item) => item.id === row.beltId);
         return belt ? <BeltChip belt={belt} /> : "-";
       },
-      minScreen: "lg",
-    },
-    {
-      id: "weight",
-      header: "وزن",
-      cell: (row) => (
-        <span className="text-subtle whitespace-nowrap text-muted-foreground tabular-nums">
-          {row.weightKg !== null ? `${formatNumber(row.weightKg)} کیلوگرم` : "-"}
-        </span>
-      ),
-      align: "end",
-      sortValue: (row) => row.weightKg ?? 0,
       minScreen: "lg",
     },
     {
@@ -66,6 +62,7 @@ export function CoachStudentsTable({ students, isLoading }: { students: Student[
       columns={columns}
       rows={students}
       getRowId={(row) => row.id}
+      onRowClick={onOpen}
       renderCard={(row) => <CoachStudentCard student={row} belts={belts} />}
     />
   );

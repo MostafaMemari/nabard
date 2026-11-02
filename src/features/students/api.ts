@@ -31,8 +31,8 @@ export function createStudent(input: StudentInput): Promise<Student> {
   return api<Student>("/api/v1/students", { method: "POST", body: input });
 }
 
-export function updateStudent(id: string, input: Partial<StudentInput>): Promise<Student> {
-  return api<Student>(`/api/v1/students/${id}`, { method: "PATCH", body: input });
+export function updateStudentBelt(id: string, beltId: string): Promise<Student> {
+  return api<Student>(`/api/v1/students/${id}`, { method: "PATCH", body: { beltId } });
 }
 
 export function deleteStudent(id: string): Promise<{ id: string }> {

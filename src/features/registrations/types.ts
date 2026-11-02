@@ -6,12 +6,12 @@ export type RegistrationStudent = {
   id: string;
   fullName: string;
   beltId: string;
-  weightKg: number | null;
 };
 
 export type Registration = {
   id: string;
   competitionId: string;
+  competitionTitle: string;
   studentId: string;
   coachId: string;
   paymentId: string | null;

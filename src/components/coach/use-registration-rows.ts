@@ -5,9 +5,9 @@ import { useBelts } from "@/features/base-data";
 import { useCompetition } from "@/features/competitions";
 import { checkEligibility, eligibilityCompetitionFromSnapshot, type SelectionRow, useRegistrations } from "@/features/registrations";
 import { useStudents } from "@/features/students";
-import { toPersianDigits } from "@/lib/format";
+import { parseDecimalInput, toPersianDigits } from "@/lib/format";
 
-export function useRegistrationRows(competitionId: string) {
+export function useRegistrationRows(competitionId: string, weights: Record<string, string> = {}) {
   const { competition, isLoading: competitionLoading, error, mutate } = useCompetition(competitionId);
   const { students, isLoading: studentsLoading } = useStudents();
   const { belts } = useBelts();
@@ -31,7 +31,20 @@ export function useRegistrationRows(competitionId: string) {
     }
 
     return students.map((student) => {
-      const eligibility = checkEligibility(student, eligibilityCompetition, belts);
+      const weightKg = parseDecimalInput(weights[student.id] ?? "");
+      const eligibility = checkEligibility(
+        {
+          id: student.id,
+          fullName: student.fullName,
+          gender: student.gender,
+          birthDate: student.birthDate,
+          beltId: student.beltId,
+          weightKg,
+          profileStatus: student.profileStatus,
+        },
+        eligibilityCompetition,
+        belts,
+      );
       const weightClassLabel =
         eligibility.eligible && eligibility.weightClass ? `رده وزنی ${toPersianDigits(eligibility.weightClass.label)} کیلوگرم` : null;
 
@@ -43,7 +56,7 @@ export function useRegistrationRows(competitionId: string) {
         weightClassLabel,
       };
     });
-  }, [competition, students, belts, registeredStudentIds]);
+  }, [competition, students, belts, registeredStudentIds, weights]);
 
   return {
     competition,

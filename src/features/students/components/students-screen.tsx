@@ -4,7 +4,7 @@ import { ArrowLeftRightIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { PageHeader, SearchInput } from "@/components/shared";
+import { FilterTabs, PageHeader, SearchInput } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { useBelts } from "@/features/base-data";
 import type { CoachTransferRequest } from "@/features/transfers";
@@ -22,12 +22,17 @@ export function StudentsScreen() {
   const { belts } = useBelts();
   const [pendingDelete, setPendingDelete] = useState<Student | null>(null);
   const [transferOpen, setTransferOpen] = useState(false);
+  const [beltId, setBeltId] = useState("all");
   const { result: transfers, isLoading: transfersLoading, error: transfersError, mutate: reloadTransfers } = useTransferRequests();
 
   const coachRequests = (transfers?.data ?? []).filter((request): request is CoachTransferRequest => "direction" in request);
 
   const query = search.value.trim();
-  const rows = students.filter((student) => query === "" || student.fullName.includes(query) || student.nationalCode.includes(query));
+  const rows = students.filter(
+    (student) =>
+      (query === "" || student.fullName.includes(query) || student.nationalCode.includes(query)) &&
+      (beltId === "all" || student.beltId === beltId),
+  );
 
   function openStudent(student: Student) {
     router.push(`/coach/students/${student.id}`);
@@ -53,6 +58,12 @@ export function StudentsScreen() {
       />
 
       <SearchInput value={search.input} onChange={search.setInput} placeholder="جستجوی هنرجو" label="جستجوی هنرجو" />
+
+      <FilterTabs
+        value={beltId}
+        onChange={setBeltId}
+        items={[{ id: "all", label: "همه کمربندها" }, ...belts.map((belt) => ({ id: belt.id, label: belt.label }))]}
+      />
 
       <StudentsResults
         rows={rows}

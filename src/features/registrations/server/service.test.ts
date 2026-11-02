@@ -99,17 +99,17 @@ const studentRow: RegistrationStudentRow = {
   gender: "MALE",
   birthDate: new Date("2013-05-10T00:00:00.000Z"),
   beltId: "belt-green",
-  weightKg: 35,
   profileStatus: "APPROVED",
 };
 
 const secondStudent: RegistrationStudentRow = { ...studentRow, id: "student-2", fullName: "سینا مرادی" };
 
-const studentInfo = { id: "student-1", fullName: "علی محمدی", beltId: "belt-green", weightKg: 35 };
+const studentInfo = { id: "student-1", fullName: "علی محمدی", beltId: "belt-green" };
 
 const registrationRow: RegistrationWithScope = {
   id: "reg-1",
   competitionId: "comp-1",
+  competitionTitle: "مسابقه قهرمانی استان",
   studentId: "student-1",
   coachId: "coach-1",
   paymentId: "pay-1",
@@ -198,7 +198,7 @@ describe("listRegistrations", () => {
     await listRegistrations(repo, coach, { coachId: "coach-2", competitionId: "comp-1" });
 
     expect(repo.findRegistrations).toHaveBeenCalledWith(
-      { coachId: "coach-1", competitionId: "comp-1", paymentId: undefined, status: undefined },
+      { coachId: "coach-1", competitionId: "comp-1", paymentId: undefined, studentId: undefined, status: undefined },
       0,
       100,
     );
@@ -206,6 +206,7 @@ describe("listRegistrations", () => {
       coachId: "coach-1",
       competitionId: "comp-1",
       paymentId: undefined,
+      studentId: undefined,
       status: undefined,
     });
   });
@@ -215,10 +216,39 @@ describe("listRegistrations", () => {
     await listRegistrations(repo, admin, { coachId: "coach-2", status: "APPROVED" });
 
     expect(repo.findRegistrations).toHaveBeenCalledWith(
-      { province: "TEHRAN", coachId: "coach-2", competitionId: undefined, paymentId: undefined, status: "APPROVED" },
+      { province: "TEHRAN", coachId: "coach-2", competitionId: undefined, paymentId: undefined, studentId: undefined, status: "APPROVED" },
       0,
       100,
     );
+  });
+
+  it("filters the registration history of an own student", async () => {
+    const repo = repoWith();
+    await listRegistrations(repo, coach, { studentId: "student-1" });
+
+    expect(repo.findRegistrations).toHaveBeenCalledWith(
+      { coachId: "coach-1", competitionId: undefined, paymentId: undefined, studentId: "student-1", status: undefined },
+      0,
+      100,
+    );
+  });
+
+  it("cannot reveal another coach student history because the forced coachId is combined with the studentId", async () => {
+    // The query is scoped to the session coach, so a foreign student id can
+    // never match: the repository answers with an empty page.
+    const repo = repoWith({
+      findRegistrations: vi.fn().mockResolvedValue([]),
+      countRegistrations: vi.fn().mockResolvedValue(0),
+    });
+    const result = await listRegistrations(repo, coach, { studentId: "student-of-coach-2" });
+
+    expect(repo.findRegistrations).toHaveBeenCalledWith(
+      { coachId: "coach-1", competitionId: undefined, paymentId: undefined, studentId: "student-of-coach-2", status: undefined },
+      0,
+      100,
+    );
+    expect(result.data).toEqual([]);
+    expect(result.meta.total).toBe(0);
   });
 
   it("rejects an inactive user with 403", async () => {
@@ -261,6 +291,7 @@ describe("createRegistrations", () => {
     const storage = storageWith();
     const result = await createRegistrations(repo, storage, coach, "comp-1", {
       studentIds: ["student-1", "student-2"],
+      weights: { "student-1": 35, "student-2": 35 },
       receipt: receiptFile(),
     });
 
@@ -282,7 +313,11 @@ describe("createRegistrations", () => {
   it("rejects an admin with 403", async () => {
     const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
     const failure = await failureOf(
-      createRegistrations(repo, storageWith(), admin, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+      createRegistrations(repo, storageWith(), admin, "comp-1", {
+        studentIds: ["student-1"],
+        weights: { "student-1": 35 },
+        receipt: receiptFile(),
+      }),
     );
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
@@ -292,7 +327,11 @@ describe("createRegistrations", () => {
   it("blocks a coach without gender with a Persian message", async () => {
     const repo = repoWith({ findUserById: vi.fn().mockResolvedValue({ ...coachRecord, gender: null }) });
     const failure = await failureOf(
-      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+      createRegistrations(repo, storageWith(), coach, "comp-1", {
+        studentIds: ["student-1"],
+        weights: { "student-1": 35 },
+        receipt: receiptFile(),
+      }),
     );
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
@@ -303,7 +342,11 @@ describe("createRegistrations", () => {
   it("hides a competition of the other gender behind 404", async () => {
     const repo = repoWith({ findCompetitionById: vi.fn().mockResolvedValue({ ...competition, gender: "FEMALE" as const }) });
     const failure = await failureOf(
-      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+      createRegistrations(repo, storageWith(), coach, "comp-1", {
+        studentIds: ["student-1"],
+        weights: { "student-1": 35 },
+        receipt: receiptFile(),
+      }),
     );
 
     expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
@@ -334,7 +377,11 @@ describe("createRegistrations", () => {
       findCoachStudentsByIds: vi.fn().mockResolvedValue([studentRow]),
     });
     const storage = storageWith();
-    await createRegistrations(repo, storage, coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() });
+    await createRegistrations(repo, storage, coach, "comp-1", {
+      studentIds: ["student-1"],
+      weights: { "student-1": 35 },
+      receipt: receiptFile(),
+    });
 
     expect(repo.createRegistrationBundle).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -363,7 +410,11 @@ describe("createRegistrations", () => {
     });
     // The live age category now covers 2013 birth dates, but the snapshot does not.
     const failure = await failureOf(
-      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+      createRegistrations(repo, storageWith(), coach, "comp-1", {
+        studentIds: ["student-1"],
+        weights: { "student-1": 35 },
+        receipt: receiptFile(),
+      }),
     );
 
     expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
@@ -373,7 +424,11 @@ describe("createRegistrations", () => {
   it("hides competitions of another province with 404", async () => {
     const repo = repoWith({ findCompetitionById: vi.fn().mockResolvedValue({ ...competition, province: "FARS" }) });
     const failure = await failureOf(
-      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+      createRegistrations(repo, storageWith(), coach, "comp-1", {
+        studentIds: ["student-1"],
+        weights: { "student-1": 35 },
+        receipt: receiptFile(),
+      }),
     );
 
     expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
@@ -384,7 +439,11 @@ describe("createRegistrations", () => {
       findCompetitionById: vi.fn().mockResolvedValue({ ...competition, level: "COUNTY", countyIds: ["county-ray"] }),
     });
     const failure = await failureOf(
-      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+      createRegistrations(repo, storageWith(), coach, "comp-1", {
+        studentIds: ["student-1"],
+        weights: { "student-1": 35 },
+        receipt: receiptFile(),
+      }),
     );
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
@@ -398,6 +457,7 @@ describe("createRegistrations", () => {
     });
     await createRegistrations(repo, storageWith(), coach, "comp-1", {
       studentIds: ["student-1", "student-2"],
+      weights: { "student-1": 35, "student-2": 35 },
       receipt: receiptFile(),
     });
 
@@ -410,7 +470,11 @@ describe("createRegistrations", () => {
       findCompetitionById: vi.fn().mockResolvedValue({ ...competition, level: "COUNTY", countyIds: ["county-ray"] }),
     });
     const failure = await failureOf(
-      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+      createRegistrations(repo, storageWith(), coach, "comp-1", {
+        studentIds: ["student-1"],
+        weights: { "student-1": 35 },
+        receipt: receiptFile(),
+      }),
     );
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
@@ -419,7 +483,11 @@ describe("createRegistrations", () => {
   it("blocks a draft competition", async () => {
     const repo = repoWith({ findCompetitionById: vi.fn().mockResolvedValue({ ...competition, status: "DRAFT" }) });
     const failure = await failureOf(
-      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+      createRegistrations(repo, storageWith(), coach, "comp-1", {
+        studentIds: ["student-1"],
+        weights: { "student-1": 35 },
+        receipt: receiptFile(),
+      }),
     );
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
@@ -430,7 +498,11 @@ describe("createRegistrations", () => {
       findCompetitionById: vi.fn().mockResolvedValue({ ...competition, registrationDeadline: new Date("2026-10-01T00:00:00.000Z") }),
     });
     const failure = await failureOf(
-      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+      createRegistrations(repo, storageWith(), coach, "comp-1", {
+        studentIds: ["student-1"],
+        weights: { "student-1": 35 },
+        receipt: receiptFile(),
+      }),
     );
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
@@ -442,7 +514,11 @@ describe("createRegistrations", () => {
       findCompetitionById: vi.fn().mockResolvedValue({ ...competition, createdAt: new Date("2300-01-01T00:00:00.000Z") }),
     });
     const failure = await failureOf(
-      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+      createRegistrations(repo, storageWith(), coach, "comp-1", {
+        studentIds: ["student-1"],
+        weights: { "student-1": 35 },
+        receipt: receiptFile(),
+      }),
     );
 
     expect((failure as AppError).message).toContain("آغاز");
@@ -471,7 +547,11 @@ describe("createRegistrations", () => {
   it("blocks duplicates with per-student reasons", async () => {
     const repo = repoWith({ findActiveRegisteredStudentIds: vi.fn().mockResolvedValue(["student-1"]) });
     const failure = await failureOf(
-      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1", "student-2"], receipt: receiptFile() }),
+      createRegistrations(repo, storageWith(), coach, "comp-1", {
+        studentIds: ["student-1", "student-2"],
+        weights: { "student-1": 35, "student-2": 35 },
+        receipt: receiptFile(),
+      }),
     );
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
@@ -489,7 +569,11 @@ describe("createRegistrations", () => {
         .mockResolvedValue([{ studentId: "student-1", rejectedAt: new Date("2026-10-25T10:00:00.000Z") }]),
     });
     const failure = await failureOf(
-      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+      createRegistrations(repo, storageWith(), coach, "comp-1", {
+        studentIds: ["student-1"],
+        weights: { "student-1": 35 },
+        receipt: receiptFile(),
+      }),
     );
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
@@ -513,7 +597,11 @@ describe("createRegistrations", () => {
       findLatestDeadlineExtension: vi.fn().mockResolvedValue({ reopenForRejected: false, createdAt: new Date("2026-10-26T10:00:00.000Z") }),
     });
     const failure = await failureOf(
-      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+      createRegistrations(repo, storageWith(), coach, "comp-1", {
+        studentIds: ["student-1"],
+        weights: { "student-1": 35 },
+        receipt: receiptFile(),
+      }),
     );
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
@@ -529,7 +617,11 @@ describe("createRegistrations", () => {
       findLatestDeadlineExtension: vi.fn().mockResolvedValue({ reopenForRejected: true, createdAt: new Date("2026-10-26T10:00:00.000Z") }),
     });
     const failure = await failureOf(
-      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+      createRegistrations(repo, storageWith(), coach, "comp-1", {
+        studentIds: ["student-1"],
+        weights: { "student-1": 35 },
+        receipt: receiptFile(),
+      }),
     );
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
@@ -546,6 +638,7 @@ describe("createRegistrations", () => {
     });
     await createRegistrations(repo, storageWith(), coach, "comp-1", {
       studentIds: ["student-1"],
+      weights: { "student-1": 35 },
       receipt: receiptFile(),
     });
 
@@ -565,7 +658,11 @@ describe("createRegistrations", () => {
       findLatestDeadlineExtension: vi.fn().mockResolvedValue({ reopenForRejected: true, createdAt: new Date("2026-10-26T10:00:00.000Z") }),
     });
     const failure = await failureOf(
-      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+      createRegistrations(repo, storageWith(), coach, "comp-1", {
+        studentIds: ["student-1"],
+        weights: { "student-1": 35 },
+        receipt: receiptFile(),
+      }),
     );
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
@@ -581,7 +678,11 @@ describe("createRegistrations", () => {
       findLatestDeadlineExtension: vi.fn().mockResolvedValue({ reopenForRejected: true, createdAt: new Date("2026-10-26T10:00:00.000Z") }),
     });
     const failure = await failureOf(
-      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+      createRegistrations(repo, storageWith(), coach, "comp-1", {
+        studentIds: ["student-1"],
+        weights: { "student-1": 35 },
+        receipt: receiptFile(),
+      }),
     );
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
@@ -592,7 +693,11 @@ describe("createRegistrations", () => {
 
   it("does not load the extension when no rejected registration exists", async () => {
     const repo = repoWith({ findCoachStudentsByIds: vi.fn().mockResolvedValue([studentRow]) });
-    await createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() });
+    await createRegistrations(repo, storageWith(), coach, "comp-1", {
+      studentIds: ["student-1"],
+      weights: { "student-1": 35 },
+      receipt: receiptFile(),
+    });
 
     expect(repo.findLatestDeadlineExtension).not.toHaveBeenCalled();
   });
@@ -604,7 +709,11 @@ describe("createRegistrations", () => {
         .mockResolvedValue([studentRow, { ...secondStudent, birthDate: new Date("2010-01-01T00:00:00.000Z") }]),
     });
     const failure = await failureOf(
-      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1", "student-2"], receipt: receiptFile() }),
+      createRegistrations(repo, storageWith(), coach, "comp-1", {
+        studentIds: ["student-1", "student-2"],
+        weights: { "student-1": 35, "student-2": 35 },
+        receipt: receiptFile(),
+      }),
     );
 
     expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
@@ -615,9 +724,41 @@ describe("createRegistrations", () => {
     expect(repo.createRegistrationBundle).not.toHaveBeenCalled();
   });
 
+  it("rejects a Kyorugi registration without declared weights with per-student reasons", async () => {
+    const repo = repoWith({ findCoachStudentsByIds: vi.fn().mockResolvedValue([studentRow]) });
+    const failure = await failureOf(
+      createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1"], receipt: receiptFile() }),
+    );
+
+    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
+    const details = (failure as AppError).details as Array<{ studentId: string; reason: string }>;
+    expect(details[0].reason).toContain("وزن");
+    expect(repo.createRegistrationBundle).not.toHaveBeenCalled();
+  });
+
+  it("rejects a Kyorugi registration whose weight matches no weight class", async () => {
+    const repo = repoWith({ findCoachStudentsByIds: vi.fn().mockResolvedValue([studentRow]) });
+    const failure = await failureOf(
+      createRegistrations(repo, storageWith(), coach, "comp-1", {
+        studentIds: ["student-1"],
+        weights: { "student-1": 12.5 },
+        receipt: receiptFile(),
+      }),
+    );
+
+    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
+    const details = (failure as AppError).details as Array<{ studentId: string; reason: string }>;
+    expect(details[0].reason).toContain("رده های وزنی");
+    expect(repo.createRegistrationBundle).not.toHaveBeenCalled();
+  });
+
   it("resolves no weight class for poomsae", async () => {
     const repo = repoWith({ findCompetitionById: vi.fn().mockResolvedValue({ ...competition, discipline: "POOMSAE" }) });
-    await createRegistrations(repo, storageWith(), coach, "comp-1", { studentIds: ["student-1", "student-2"], receipt: receiptFile() });
+    await createRegistrations(repo, storageWith(), coach, "comp-1", {
+      studentIds: ["student-1", "student-2"],
+      weights: { "student-1": 35, "student-2": 35 },
+      receipt: receiptFile(),
+    });
 
     expect(repo.createRegistrationBundle).toHaveBeenCalledWith(
       expect.objectContaining({

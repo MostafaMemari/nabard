@@ -43,6 +43,21 @@ export function normalizeDigits(value: string): string {
     .replace(/\D/g, "");
 }
 
+// Parses a decimal the user may type with Persian or Arabic digits and a
+// Persian decimal separator; returns null when nothing numeric remains.
+export function parseDecimalInput(value: string): number | null {
+  const normalized = value
+    .replace(/[۰-۹]/g, (digit) => String(persianDigits.indexOf(digit)))
+    .replace(/[٠-٩]/g, (digit) => String("٠١٢٣٤٥٦٧٨٩".indexOf(digit)))
+    .replace(/٫/g, ".")
+    .trim();
+  if (normalized === "" || !/^\d+(\.\d+)?$/.test(normalized)) {
+    return null;
+  }
+
+  return Number(normalized);
+}
+
 export function formatNumber(value: number): string {
   return numberFormatter.format(value);
 }

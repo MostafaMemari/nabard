@@ -98,7 +98,6 @@ const coachStudents = [
     gender: "MALE" as const,
     birthDate: new Date("2000-05-10T00:00:00.000Z"),
     beltId: "belt-blue",
-    weightKg: 60,
     profileStatus: "APPROVED" as const,
   },
   {
@@ -107,7 +106,6 @@ const coachStudents = [
     gender: "FEMALE" as const,
     birthDate: new Date("2000-05-10T00:00:00.000Z"),
     beltId: "belt-blue",
-    weightKg: 55,
     profileStatus: "APPROVED" as const,
   },
 ];

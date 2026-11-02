@@ -1840,7 +1840,8 @@ export const StudentScalarFieldEnum = {
   gender: 'gender',
   nationalCode: 'nationalCode',
   birthDate: 'birthDate',
-  weightKg: 'weightKg',
+  insuranceDate: 'insuranceDate',
+  tkdBankChargeDate: 'tkdBankChargeDate',
   beltId: 'beltId',
   coachId: 'coachId',
   profileStatus: 'profileStatus',
@@ -2200,20 +2201,6 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
- * Reference to a field of type 'Decimal'
- */
-export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
-    
-
-
-/**
- * Reference to a field of type 'Decimal[]'
- */
-export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
-    
-
-
-/**
  * Reference to a field of type 'ProfileStatus'
  */
 export type EnumProfileStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProfileStatus'>
@@ -2252,6 +2239,20 @@ export type EnumRankTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'RankType[]'
  */
 export type ListEnumRankTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RankType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal'
+ */
+export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
+    
+
+
+/**
+ * Reference to a field of type 'Decimal[]'
+ */
+export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
     
 
 

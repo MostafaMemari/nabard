@@ -2,6 +2,7 @@ export * from "./api";
 export * from "./components/admin-review-detail-screen";
 export * from "./components/admin-review-screen";
 export * from "./components/student-form-screen";
+export * from "./components/student-profile-screen";
 export * from "./components/students-screen";
 export * from "./hooks/use-pending-review";
 export * from "./hooks/use-profile-review";

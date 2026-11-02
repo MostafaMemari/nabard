@@ -4,7 +4,6 @@ import { Avatar, BeltChip, StatusBadge } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { useBelts } from "@/features/base-data";
 import type { Registration } from "@/features/registrations";
-import { formatNumber } from "@/lib/format";
 import { paymentBadgeStatus } from "../status";
 import type { PaymentStudentActions } from "./payment-student-actions";
 
@@ -22,12 +21,7 @@ export function PaymentStudentCard({ registration, actions }: { registration: Re
         <span className="min-w-0 flex-1 truncate text-sm font-medium">{student.fullName}</span>
         <StatusBadge status={paymentBadgeStatus(registration.status)} />
       </div>
-      <div className="flex items-center gap-2">
-        {belt ? <BeltChip belt={belt} /> : null}
-        {student.weightKg != null ? (
-          <span className="text-subtle text-muted-foreground tabular-nums">{formatNumber(student.weightKg)} کیلوگرم</span>
-        ) : null}
-      </div>
+      <div className="flex items-center gap-2">{belt ? <BeltChip belt={belt} /> : null}</div>
       <div className="flex items-center gap-2">
         <Button
           size="sm"

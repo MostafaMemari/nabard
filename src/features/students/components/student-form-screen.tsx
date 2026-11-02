@@ -1,80 +1,29 @@
 "use client";
 import { ImageIcon, UsersIcon } from "lucide-react";
 
-import Link from "next/link";
-import { EmptyState, FormActions, FormContainer, FormSection, PageHeader } from "@/components/shared";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useMe } from "@/features/auth";
-import { personGenderLabels } from "@/features/base-data";
-import { useStudentDocuments } from "../hooks/use-student-documents";
+import { ControlledDateField, ControlledTextField, FormActions, FormContainer, FormSection, PageHeader } from "@/components/shared";
 import { useStudentForm } from "../hooks/use-student-form";
-import { studentDocumentTypes } from "../labels";
-import { DocumentUploadCard } from "./document-upload-card";
-import { StudentBeltField, StudentBirthDateField, StudentSelectField, StudentTextField } from "./student-form-fields";
-import { StudentProfileStatus } from "./student-profile-status";
 
-export function StudentFormScreen({ studentId }: { studentId?: string }) {
-  const { user } = useMe();
-  const coachGender = user?.gender ?? null;
-  const { isEdit, form, belts, isLoading, error, student, submit, mutateStudent } = useStudentForm({ studentId, coachGender });
-  const documents = useStudentDocuments(studentId ?? "", mutateStudent);
-
-  if (isEdit && isLoading) {
-    return (
-      <FormContainer variant="student" className="flex flex-col gap-4">
-        <Skeleton className="h-8 w-32" />
-        <Skeleton className="h-96 w-full" />
-      </FormContainer>
-    );
-  }
-
-  if (isEdit && (error || !student)) {
-    return (
-      <FormContainer variant="student">
-        <PageHeader title="ویرایش هنرجو" />
-        <div className="mt-4 rounded-xl border border-border bg-card shadow-card">
-          <EmptyState
-            title="این هنرجو پیدا نشد یا به فهرست شما تعلق ندارد."
-            action={
-              <Button size="sm" variant="outline" render={<Link href="/coach/students" />}>
-                بازگشت به هنرجویان
-              </Button>
-            }
-          />
-        </div>
-      </FormContainer>
-    );
-  }
+export function StudentFormScreen() {
+  const { form, submit } = useStudentForm();
 
   return (
     <FormContainer variant="student">
       <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
         <PageHeader
-          title={isEdit ? "ویرایش هنرجو" : "هنرجوی جدید"}
-          description={isEdit ? "اطلاعات هنرجو را ویرایش کنید." : "اطلاعات هنرجو را وارد کنید تا در ثبت نام مسابقات قابل استفاده باشد."}
-          action={isEdit && student ? <StudentProfileStatus status={student.profileStatus} note={student.profileNote} /> : undefined}
+          title="هنرجوی جدید"
+          description="اطلاعات هنرجو را وارد کنید. پس از ثبت، اطلاعات قفل می شود و کمربند را ادمین استان ثبت می کند."
         />
 
         <FormSection title="اطلاعات هنرجو" icon={UsersIcon}>
-          <StudentTextField
+          <ControlledTextField
             control={form.control}
             name="fullName"
             label="نام و نام خانوادگی"
             placeholder="مثلاً علی رضایی"
             autoComplete="off"
           />
-          {coachGender ? (
-            <StudentSelectField
-              control={form.control}
-              name="gender"
-              label="جنسیت"
-              items={{ [coachGender]: personGenderLabels[coachGender] }}
-            />
-          ) : (
-            <StudentSelectField control={form.control} name="gender" label="جنسیت" items={personGenderLabels} />
-          )}
-          <StudentTextField
+          <ControlledTextField
             control={form.control}
             name="nationalCode"
             label="کد ملی"
@@ -84,36 +33,15 @@ export function StudentFormScreen({ studentId }: { studentId?: string }) {
             spellCheck={false}
             autoComplete="off"
           />
-          <StudentBirthDateField control={form.control} name="birthDate" label="تاریخ تولد" />
-          <StudentBeltField control={form.control} name="beltId" label="کمربند" belts={belts} />
-          <StudentTextField
-            control={form.control}
-            name="weightKg"
-            label="وزن (کیلوگرم)"
-            inputMode="decimal"
-            dir="ltr"
-            placeholder="مثلاً ۵۴٫۵"
-            autoComplete="off"
-          />
+          <ControlledDateField control={form.control} name="birthDate" label="تاریخ تولد" />
+          <ControlledDateField control={form.control} name="insuranceDate" label="تاریخ بیمه ورزشی" />
+          <ControlledDateField control={form.control} name="tkdBankChargeDate" label="تاریخ شارژ بانک اطلاعات تکواندو" />
         </FormSection>
 
-        {isEdit && student ? (
-          <FormSection title="مدارک هنرجو" icon={ImageIcon} description="عکس پرسنلی و کارت ملی برای بررسی پروفایل الزامی است.">
-            <div className="grid gap-3 sm:grid-cols-2">
-              {studentDocumentTypes.map((type) => (
-                <DocumentUploadCard
-                  key={type}
-                  studentId={student.id}
-                  type={type}
-                  uploaded={student.documents.some((document) => document.type === type)}
-                  working={documents.workingType === type}
-                  onUpload={documents.upload}
-                  onDelete={documents.remove}
-                />
-              ))}
-            </div>
-          </FormSection>
-        ) : null}
+        <p className="flex items-start gap-2 rounded-xl border border-border bg-muted/40 px-3 py-2.5 text-subtle text-muted-foreground">
+          <ImageIcon aria-hidden className="mt-0.5 size-4 shrink-0" />
+          مدارک (عکس پرسنلی، کارت ملی یا شناسنامه و بیمه ورزشی) را پس از ثبت، در صفحه هنرجو بارگذاری کنید.
+        </p>
 
         <FormActions cancelHref="/coach/students" submitLabel="ذخیره" submitting={form.formState.isSubmitting} />
       </form>

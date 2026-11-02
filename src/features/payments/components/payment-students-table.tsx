@@ -12,7 +12,6 @@ export function PaymentStudentsTable({ registrations, actions }: { registrations
         <TableRow>
           <TableHead>هنرجو</TableHead>
           <TableHead>کمربند</TableHead>
-          <TableHead>وزن</TableHead>
           <TableHead>وضعیت</TableHead>
           <TableHead className="text-end">عملیات</TableHead>
         </TableRow>

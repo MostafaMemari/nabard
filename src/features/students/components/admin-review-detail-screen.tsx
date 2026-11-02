@@ -9,6 +9,7 @@ import { useStudent } from "../hooks/use-student";
 import { RejectProfileDialog } from "./reject-profile-dialog";
 import { ReviewDocuments } from "./review-documents";
 import { ReviewSideSummary } from "./review-side-summary";
+import { StudentBeltEditor } from "./student-belt-editor";
 
 export function AdminReviewDetailScreen({ studentId }: { studentId: string }) {
   const { student, isLoading, error, mutate } = useStudent(studentId);
@@ -59,6 +60,7 @@ export function AdminReviewDetailScreen({ studentId }: { studentId: string }) {
           onApprove={() => void review.approve(student.id)}
           onReject={() => setRejectOpen(true)}
         />
+        <StudentBeltEditor key={student.id} student={student} belts={belts} onSaved={mutate} />
       </div>
 
       {rejectOpen ? (
