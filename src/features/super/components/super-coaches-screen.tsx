@@ -3,7 +3,7 @@
 import { UsersIcon } from "lucide-react";
 import { Avatar, DataTable, PageHeader, StatusBadge } from "@/components/shared";
 import type { User } from "@/features/users";
-import { useCoaches } from "@/features/users";
+import { GenderChip, useCoaches } from "@/features/users";
 import { toPersianDigits } from "@/lib/format";
 import { useSearchParam } from "@/lib/use-search-param";
 import { ProvinceFilter } from "./province-filter";
@@ -21,6 +21,7 @@ const columns = [
     sortValue: (row: User) => row.fullName,
   },
   { id: "mobile", header: "شماره همراه", cell: (row: User) => toPersianDigits(row.mobile) },
+  { id: "gender", header: "جنسیت", cell: (row: User) => <GenderChip gender={row.gender} /> },
   { id: "county", header: "شهرستان", cell: (row: User) => row.countyName ?? "نامشخص", minScreen: "lg" as const },
   { id: "status", header: "وضعیت", cell: (row: User) => <StatusBadge status={row.isActive ? "ACTIVE" : "INACTIVE"} /> },
 ];
@@ -36,6 +37,10 @@ function CoachCard({ coach }: { coach: User }) {
       <div className="mt-2 flex items-baseline justify-between gap-3">
         <span className="text-subtle text-muted-foreground">شماره همراه</span>
         <span className="text-sm tabular-nums">{toPersianDigits(coach.mobile)}</span>
+      </div>
+      <div className="mt-1 flex items-baseline justify-between gap-3">
+        <span className="text-subtle text-muted-foreground">جنسیت</span>
+        <GenderChip gender={coach.gender} />
       </div>
       <div className="mt-1 flex items-baseline justify-between gap-3">
         <span className="text-subtle text-muted-foreground">شهرستان</span>
