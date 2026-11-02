@@ -60,6 +60,7 @@ export const ModelName = {
   Competition: 'Competition',
   CompetitionCounty: 'CompetitionCounty',
   CoachCountyChangeRequest: 'CoachCountyChangeRequest',
+  StudentTransfer: 'StudentTransfer',
   AuditLog: 'AuditLog',
   DeadlineExtension: 'DeadlineExtension',
   StoredFile: 'StoredFile',
@@ -221,6 +222,22 @@ export const CoachCountyChangeRequestScalarFieldEnum = {
 } as const
 
 export type CoachCountyChangeRequestScalarFieldEnum = (typeof CoachCountyChangeRequestScalarFieldEnum)[keyof typeof CoachCountyChangeRequestScalarFieldEnum]
+
+
+export const StudentTransferScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  fromCoachId: 'fromCoachId',
+  toCoachId: 'toCoachId',
+  status: 'status',
+  note: 'note',
+  decidedById: 'decidedById',
+  decidedAt: 'decidedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentTransferScalarFieldEnum = (typeof StudentTransferScalarFieldEnum)[keyof typeof StudentTransferScalarFieldEnum]
 
 
 export const AuditLogScalarFieldEnum = {

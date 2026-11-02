@@ -1,9 +1,3 @@
-export const auditEntityTypes = {
-  admin: "admin",
-  county: "county",
-  ageCategory: "age_category",
-} as const;
-
 export const auditActions = {
   adminCreated: "admin.created",
   adminActivated: "admin.activated",
@@ -14,6 +8,18 @@ export const auditActions = {
   countyDeleted: "county.deleted",
   countyDefaultsAdded: "county.defaults_added",
   ageCategoryDatesChanged: "age_category.dates_changed",
+  transferRequested: "transfer.requested",
+  transferApproved: "transfer.approved",
+  transferRejected: "transfer.rejected",
+  studentsReassigned: "students.reassigned",
+} as const;
+
+export const auditEntityTypes = {
+  admin: "admin",
+  county: "county",
+  ageCategory: "age_category",
+  transfer: "transfer",
+  coach: "coach",
 } as const;
 
 export type AuditEntry = {

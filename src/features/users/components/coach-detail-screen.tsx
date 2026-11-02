@@ -6,8 +6,9 @@ import { Avatar, DetailPageHeader, ErrorBanner, IconTile, StatusBadge } from "@/
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useStudents } from "@/features/students";
+import { CoachReassignDialog } from "@/features/transfers";
 import { toPersianDigits } from "@/lib/format";
-import { useCoach } from "../hooks/use-coaches";
+import { useCoach, useCoaches } from "../hooks/use-coaches";
 import { CoachAccountSection } from "./coach-account-section";
 import { CoachResetPasswordDialog } from "./coach-reset-password-dialog";
 import { CoachStatusDialog } from "./coach-status-dialog";
@@ -15,9 +16,11 @@ import { CoachStudentsTable } from "./coach-students-table";
 
 export function CoachDetailScreen({ coachId }: { coachId: string }) {
   const { coach, isLoading, error, mutate } = useCoach(coachId);
-  const { students, isLoading: studentsLoading } = useStudents();
+  const { students, isLoading: studentsLoading, mutate: reloadStudents } = useStudents();
+  const { coaches } = useCoaches();
   const [pendingStatus, setPendingStatus] = useState<boolean | null>(null);
   const [resetOpen, setResetOpen] = useState(false);
+  const [reassignOpen, setReassignOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -45,6 +48,9 @@ export function CoachDetailScreen({ coachId }: { coachId: string }) {
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={() => setResetOpen(true)}>
               بازنشانی رمز
+            </Button>
+            <Button variant="outline" onClick={() => setReassignOpen(true)}>
+              انتقال هنرجویان
             </Button>
             <Button
               variant={coach.isActive ? "outline" : "default"}
@@ -84,6 +90,18 @@ export function CoachDetailScreen({ coachId }: { coachId: string }) {
 
       <CoachStatusDialog coach={coach} targetActive={pendingStatus} onDone={mutate} onClose={() => setPendingStatus(null)} />
       <CoachResetPasswordDialog coach={resetOpen ? coach : null} onDone={mutate} onClose={() => setResetOpen(false)} />
+      <CoachReassignDialog
+        coachId={coach.id}
+        coachName={coach.fullName}
+        targets={coaches.filter((target) => target.id !== coach.id && target.isActive)}
+        studentCount={coachStudents.length}
+        open={reassignOpen}
+        onOpenChange={setReassignOpen}
+        onDone={() => {
+          void mutate();
+          void reloadStudents();
+        }}
+      />
     </div>
   );
 }

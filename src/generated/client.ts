@@ -87,6 +87,11 @@ export type CompetitionCounty = Prisma.CompetitionCountyModel
  */
 export type CoachCountyChangeRequest = Prisma.CoachCountyChangeRequestModel
 /**
+ * Model StudentTransfer
+ * 
+ */
+export type StudentTransfer = Prisma.StudentTransferModel
+/**
  * Model AuditLog
  * 
  */

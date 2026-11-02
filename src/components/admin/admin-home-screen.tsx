@@ -47,6 +47,12 @@ export function AdminHomeScreen() {
               linkLabel="بررسی درخواست ها"
             />
             <SummaryCard
+              value={formatNumber(summary.pendingTransfersCount)}
+              label="درخواست های انتقال هنرجو"
+              href="/admin/transfer-requests?status=pending"
+              linkLabel="بررسی انتقال ها"
+            />
+            <SummaryCard
               value={formatNumber(summary.openCompetitionsCount)}
               label="مسابقات باز"
               href="/admin/competitions"

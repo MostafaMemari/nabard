@@ -34,6 +34,7 @@ export async function getAdminSummary(repo: SummaryRepository, user: CurrentUser
     pendingRefundsCount,
     pendingProfilesCount,
     pendingCountyChangesCount,
+    pendingTransfersCount,
     latestPendingPayments,
     upcomingCompetitions,
   ] = await Promise.all([
@@ -43,6 +44,7 @@ export async function getAdminSummary(repo: SummaryRepository, user: CurrentUser
     repo.countRefunds(provinceOf(identity), "PENDING"),
     repo.countPendingProfiles(provinceOf(identity)),
     repo.countPendingCountyChanges(provinceOf(identity)),
+    repo.countPendingTransfers(provinceOf(identity)),
     repo.findLatestPendingPayments(provinceOf(identity)),
     repo.findUpcomingCompetitions(provinceOf(identity)),
   ]);
@@ -54,6 +56,7 @@ export async function getAdminSummary(repo: SummaryRepository, user: CurrentUser
     pendingRefundsCount,
     pendingProfilesCount,
     pendingCountyChangesCount,
+    pendingTransfersCount,
     latestPendingPayments,
     upcomingCompetitions,
   };

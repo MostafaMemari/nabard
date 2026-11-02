@@ -80,8 +80,8 @@ The proxy (`src/proxy.ts`) redirects a visitor without a valid session to `/logi
 
 ### Roles
 
-- `ADMIN` — a province admin. Always has a `province`; manages coaches, competitions, registrations, payments and refunds of their own province.
-- `COACH` — belongs to a province and one of its counties; manages their own students and registrations.
+- `ADMIN` — a province admin. Always has a `province`; manages coaches, competitions, registrations, payments and refunds of their own province, and decides student transfers and coach reassignments within it.
+- `COACH` — belongs to a province and one of its counties; manages their own students and registrations and can request another coach's student of the same province into their own club.
 - `SUPER_ADMIN` — the super admin (ادمین کل). Has no `province` and works in `/super`: manages province admins and the age category dates, sees cross-province read-only lists (including the counties of all provinces), and never performs decision actions. `province` is required for `ADMIN` and `COACH` and stays `null` for `SUPER_ADMIN` (enforced in the services).
 
 
@@ -130,6 +130,17 @@ Every student carries a profile status (`PENDING`, `APPROVED`, `REJECTED`; new s
 - `GET /api/v1/students/pending-review?status=PENDING|REJECTED&page=&pageSize=` (admin only) returns `{ data, meta }` — the students of the admin's province whose profile is `PENDING` or `REJECTED` (newest change first), each row with the student fields, `coachName` and the uploaded `documents`. A coach session gets `403 FORBIDDEN`.
 - `POST /api/v1/students/:id/approve` (admin of the same province) approves a `PENDING` or `REJECTED` profile, clears the note and stamps the admin id and approval time in one conditional update inside a transaction, so an already approved profile can never be approved twice (`409 CONFLICT` with «این پروفایل قبلا بررسی شده است.»). Out-of-province students return `404 NOT_FOUND`.
 - `POST /api/v1/students/:id/reject` (admin of the same province) with `{ note }` (required, 3 to 500 characters) rejects the profile and stores the note; same conditional one-time transition and scoping as approve.
+
+## Student transfers
+
+A coach can request a student of another coach of the same province into their own club; the admin of the province decides. Cross-province transfers are blocked for now with «انتقال هنرجو بین استان ها فعلا امکان پذیر است.» — a later step will handle them. Every request keeps its full history: rows are never deleted or rewritten, they only move from `PENDING` once (a double decision returns `409 CONFLICT` with «این درخواست قبلا بررسی شده است.»).
+
+- `POST /api/v1/students/transfer-requests/lookup` (coach only) with `{ nationalCode }` looks a student up by their normalized national code and returns `{ maskedName, currentCoachName }` and nothing else. An unknown code returns `404 NOT_FOUND` with «هنرجویی با این کد ملی یافت نشد.», a student of the requester returns `409 CONFLICT` with «این هنرجو هم اکنون در باشگاه شما ثبت است.» and a student of another province returns `403 FORBIDDEN` with the cross-province message.
+- `POST /api/v1/students/transfer-requests` (coach only) with `{ nationalCode }` creates a `PENDING` request from the student's current coach to the requester. The same lookup rules apply first; a student that already has a `PENDING` transfer returns `409 CONFLICT` with «یک درخواست انتقال در انتظار بررسی برای این هنرجو وجود دارد.»
+- `GET /api/v1/transfer-requests?status=PENDING|APPROVED|REJECTED&page=&pageSize=` returns `{ data, meta }`. For an `ADMIN` session it lists the requests of their province (scoped by the previous coach's province), each row `{ id, studentId, studentName, fromCoachId, fromCoachName, toCoachId, toCoachName, status, note, decidedAt, createdAt }`. For a `COACH` session it lists the requests where the coach is the requester (full row, `direction: "incoming"`) or the previous coach — the old coach sees only `status`, the new coach's name (`toCoachName`) and nothing about the student (`studentName` and `note` are `null`, `direction: "outgoing"`). A `SUPER_ADMIN` session gets `403 FORBIDDEN`.
+- `POST /api/v1/transfer-requests/:id/approve` (admin of the same province) approves a `PENDING` request inside one transaction: a conditional update moves the request to `APPROVED` and another conditional update sets `student.coachId` to the requesting coach only while the student still belongs to the previous coach — if the ownership changed in the meantime the transaction rolls back with `409 CONFLICT` and «مالکیت این هنرجو تغییر کرده است و درخواست قابل تایید نیست.» Approving changes only the student's coach: existing registrations, payments, refunds, the profile status and the documents stay exactly as they are with the previous coach.
+- `POST /api/v1/transfer-requests/:id/reject` (admin of the same province) with `{ note }` (required, 3 to 500 characters) rejects the request under the same one-time guard and stores the note.
+- `POST /api/v1/coaches/:id/reassign-students` (admin of the same province) with `{ toCoachId }` moves all students of a coach to another active coach of the same province in one transaction and returns `{ moved }`. It is meant for deactivated coaches and never touches registrations, payments or refunds; a target of another province or an inactive target returns `400 VALIDATION_ERROR` with a Persian message.
 
 ## Counties
 
@@ -215,7 +226,7 @@ Belts and weight classes are read-only reference data. Age category date ranges 
 
 ## Summary
 
-- `GET /api/v1/summary` (admin only) returns the admin home dashboard for the admin's province in one query batch: `{ pendingPaymentsCount, openCompetitionsCount, weeklyRegistrationsCount, pendingRefundsCount, pendingProfilesCount, pendingCountyChangesCount, latestPendingPayments, upcomingCompetitions }`. `weeklyRegistrationsCount` counts registrations since the start of the current Jalali week (Saturday), `pendingRefundsCount` counts `PENDING` refunds, `pendingProfilesCount` counts `PENDING` student profiles of the province and `pendingCountyChangesCount` counts `PENDING` coach county change requests. `latestPendingPayments` are the five newest `PENDING` payments with `{ id, amount, createdAt, coachId, coachName }`; `upcomingCompetitions` are the five next `PUBLISHED` competitions by deadline with `{ id, title, discipline, registrationDeadline, registrationsCount }`. A coach session gets `403 FORBIDDEN`.
+- `GET /api/v1/summary` (admin only) returns the admin home dashboard for the admin's province in one query batch: `{ pendingPaymentsCount, openCompetitionsCount, weeklyRegistrationsCount, pendingRefundsCount, pendingProfilesCount, pendingCountyChangesCount, pendingTransfersCount, latestPendingPayments, upcomingCompetitions }`. `weeklyRegistrationsCount` counts registrations since the start of the current Jalali week (Saturday), `pendingRefundsCount` counts `PENDING` refunds, `pendingProfilesCount` counts `PENDING` student profiles of the province and `pendingCountyChangesCount` counts `PENDING` coach county change requests and `pendingTransfersCount` counts `PENDING` student transfers. `latestPendingPayments` are the five newest `PENDING` payments with `{ id, amount, createdAt, coachId, coachName }`; `upcomingCompetitions` are the five next `PUBLISHED` competitions by deadline with `{ id, title, discipline, registrationDeadline, registrationsCount }`. A coach session gets `403 FORBIDDEN`.
 
 ## Super admin
 
@@ -227,7 +238,7 @@ The super admin (ادمین کل) runs the `/super` section: province admins, ba
 
 ### Audit log
 
-Every schema-affecting action below writes an `AuditLog` row (`actorId`, `action`, `entityType`, `entityId`, `details`, `createdAt`). `details` carries no personal data (no names, mobiles or national codes): admin entries carry the province, county entries the province and county name (defaults entries the province and counts), and the age category entry the previous and next date range. Recorded actions: `admin.created`, `admin.activated`, `admin.deactivated`, `admin.password_reset`, `county.created`, `county.updated`, `county.deleted`, `county.defaults_added` (all county actions by a province admin) and `age_category.dates_changed`.
+Every schema-affecting action below writes an `AuditLog` row (`actorId`, `action`, `entityType`, `entityId`, `details`, `createdAt`). `details` carries no personal data (no names, mobiles or national codes): admin entries carry the province, county entries the province and county name (defaults entries the province and counts), and the age category entry the previous and next date range. Recorded actions: `admin.created`, `admin.activated`, `admin.deactivated`, `admin.password_reset`, `county.created`, `county.updated`, `county.deleted`, `county.defaults_added` (all county actions by a province admin), `age_category.dates_changed`, `transfer.requested` (by the requesting coach), `transfer.approved`, `transfer.rejected` (by the admin) and `students.reassigned`. Transfer entries carry the province only; the reassignment entry carries the province and the moved count.
 
 ### Province admins
 

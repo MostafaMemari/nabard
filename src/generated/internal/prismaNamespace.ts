@@ -406,6 +406,7 @@ export const ModelName = {
   Competition: 'Competition',
   CompetitionCounty: 'CompetitionCounty',
   CoachCountyChangeRequest: 'CoachCountyChangeRequest',
+  StudentTransfer: 'StudentTransfer',
   AuditLog: 'AuditLog',
   DeadlineExtension: 'DeadlineExtension',
   StoredFile: 'StoredFile',
@@ -429,7 +430,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "county" | "user" | "student" | "belt" | "ageCategory" | "weightClass" | "competition" | "competitionCounty" | "coachCountyChangeRequest" | "auditLog" | "deadlineExtension" | "storedFile" | "studentDocument" | "payment" | "loginFailure" | "registration" | "refund"
+    modelProps: "county" | "user" | "student" | "belt" | "ageCategory" | "weightClass" | "competition" | "competitionCounty" | "coachCountyChangeRequest" | "studentTransfer" | "auditLog" | "deadlineExtension" | "storedFile" | "studentDocument" | "payment" | "loginFailure" | "registration" | "refund"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1096,6 +1097,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.CoachCountyChangeRequestCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.CoachCountyChangeRequestCountAggregateOutputType> | number
+        }
+      }
+    }
+    StudentTransfer: {
+      payload: Prisma.$StudentTransferPayload<ExtArgs>
+      fields: Prisma.StudentTransferFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StudentTransferFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTransferPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StudentTransferFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTransferPayload>
+        }
+        findFirst: {
+          args: Prisma.StudentTransferFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTransferPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StudentTransferFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTransferPayload>
+        }
+        findMany: {
+          args: Prisma.StudentTransferFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTransferPayload>[]
+        }
+        create: {
+          args: Prisma.StudentTransferCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTransferPayload>
+        }
+        createMany: {
+          args: Prisma.StudentTransferCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StudentTransferCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTransferPayload>[]
+        }
+        delete: {
+          args: Prisma.StudentTransferDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTransferPayload>
+        }
+        update: {
+          args: Prisma.StudentTransferUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTransferPayload>
+        }
+        deleteMany: {
+          args: Prisma.StudentTransferDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StudentTransferUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StudentTransferUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTransferPayload>[]
+        }
+        upsert: {
+          args: Prisma.StudentTransferUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentTransferPayload>
+        }
+        aggregate: {
+          args: Prisma.StudentTransferAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStudentTransfer>
+        }
+        groupBy: {
+          args: Prisma.StudentTransferGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StudentTransferGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StudentTransferCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StudentTransferCountAggregateOutputType> | number
         }
       }
     }
@@ -1867,6 +1942,22 @@ export const CoachCountyChangeRequestScalarFieldEnum = {
 export type CoachCountyChangeRequestScalarFieldEnum = (typeof CoachCountyChangeRequestScalarFieldEnum)[keyof typeof CoachCountyChangeRequestScalarFieldEnum]
 
 
+export const StudentTransferScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  fromCoachId: 'fromCoachId',
+  toCoachId: 'toCoachId',
+  status: 'status',
+  note: 'note',
+  decidedById: 'decidedById',
+  decidedAt: 'decidedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentTransferScalarFieldEnum = (typeof StudentTransferScalarFieldEnum)[keyof typeof StudentTransferScalarFieldEnum]
+
+
 export const AuditLogScalarFieldEnum = {
   id: 'id',
   actorId: 'actorId',
@@ -2253,6 +2344,20 @@ export type ListEnumCountyChangeStatusFieldRefInput<$PrismaModel> = FieldRefInpu
 
 
 /**
+ * Reference to a field of type 'StudentTransferStatus'
+ */
+export type EnumStudentTransferStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentTransferStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'StudentTransferStatus[]'
+ */
+export type ListEnumStudentTransferStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentTransferStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Json'
  */
 export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
@@ -2523,6 +2628,7 @@ export type GlobalOmitConfig = {
   competition?: Prisma.CompetitionOmit
   competitionCounty?: Prisma.CompetitionCountyOmit
   coachCountyChangeRequest?: Prisma.CoachCountyChangeRequestOmit
+  studentTransfer?: Prisma.StudentTransferOmit
   auditLog?: Prisma.AuditLogOmit
   deadlineExtension?: Prisma.DeadlineExtensionOmit
   storedFile?: Prisma.StoredFileOmit

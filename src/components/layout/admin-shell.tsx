@@ -25,6 +25,7 @@ const navItems: SidebarNavItem[] = [
   { id: "payments", label: "بررسی پرداخت ها", shortLabel: "پرداخت ها", href: "/admin/payments", icon: ReceiptTextIcon },
   { id: "profiles", label: "بررسی پروفایل ها", shortLabel: "پروفایل ها", href: "/admin/profiles", icon: UserCheckIcon },
   { id: "county-changes", label: "درخواست های مربیان", shortLabel: "درخواست ها", href: "/admin/county-changes", icon: ArrowLeftRightIcon },
+  { id: "transfer-requests", label: "درخواست های انتقال", shortLabel: "انتقال ها", href: "/admin/transfer-requests", icon: UsersIcon },
   { id: "counties", label: "شهرستان ها", shortLabel: "شهرستان ها", href: "/admin/counties", icon: MapPinnedIcon },
   { id: "refunds", label: "بازپرداخت ها", shortLabel: "بازپرداخت", href: "/admin/refunds", icon: Undo2Icon },
   { id: "coaches", label: "مربیان", href: "/admin/coaches", icon: UsersIcon },

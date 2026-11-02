@@ -18,6 +18,9 @@ const statusStyles = {
   COUNTY_CHANGE_PENDING: { label: "در انتظار بررسی", className: "bg-warning-bg text-warning" },
   COUNTY_CHANGE_APPROVED: { label: "تایید شده", className: "bg-success-bg text-success" },
   COUNTY_CHANGE_REJECTED: { label: "رد شده", className: "bg-danger-bg text-danger" },
+  TRANSFER_PENDING: { label: "در انتظار بررسی", className: "bg-warning-bg text-warning" },
+  TRANSFER_APPROVED: { label: "تایید شده", className: "bg-success-bg text-success" },
+  TRANSFER_REJECTED: { label: "رد شده", className: "bg-danger-bg text-danger" },
 } as const;
 
 export type StatusKey = keyof typeof statusStyles;

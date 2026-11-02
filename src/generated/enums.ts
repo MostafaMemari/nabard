@@ -178,6 +178,15 @@ export const CountyChangeStatus = {
 export type CountyChangeStatus = (typeof CountyChangeStatus)[keyof typeof CountyChangeStatus]
 
 
+export const StudentTransferStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type StudentTransferStatus = (typeof StudentTransferStatus)[keyof typeof StudentTransferStatus]
+
+
 export const ProfileStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',
