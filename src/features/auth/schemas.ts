@@ -1,13 +1,16 @@
 import { z } from "zod";
 
-const toAsciiDigits = (value: string) => value.replace(/[۰-۹]/g, (digit) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit)));
+const toLatinDigits = (value: string) =>
+  value.replace(/[۰-۹]/g, (digit) => String("۰۱۲۳۴۵۶۷۸۹".indexOf(digit))).replace(/[٠-٩]/g, (digit) => String("٠١٢٣٤٥٦٧٨٩".indexOf(digit)));
+
+const normalizeInput = (value: string) => toLatinDigits(value).trim();
 
 export const loginSchema = z.object({
   mobile: z
     .string()
-    .transform(toAsciiDigits)
+    .transform(normalizeInput)
     .pipe(z.string().regex(/^09\d{9}$/, "شماره همراه باید ۱۱ رقم باشد و با ۰۹ شروع شود.")),
-  password: z.string().min(8, "رمز عبور باید حداقل ۸ کاراکتر باشد."),
+  password: z.string().transform(normalizeInput).pipe(z.string().min(8, "رمز عبور باید حداقل ۸ کاراکتر باشد.")),
 });
 
 export const changePasswordSchema = z.object({
