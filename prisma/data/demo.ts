@@ -24,24 +24,25 @@ export type UserSeed = {
   fullName: string;
   nationalCode: string | null;
   role: Role;
+  gender: Gender | null;
   province: Province;
   isActive: boolean;
   countyName: string | null;
   createdAt: string;
 };
 
-const userRows: Array<{ fullName: string; role: Role; active?: boolean; countyName?: string }> = [
+const userRows: Array<{ fullName: string; role: Role; active?: boolean; countyName?: string; gender?: Gender }> = [
   { fullName: "حمیدرضا کاظمی", role: "ADMIN" },
   { fullName: "مریم صادقی", role: "ADMIN" },
   { fullName: "علی رستمی", role: "ADMIN" },
-  { fullName: "رضا محمدی", role: "COACH", countyName: "تهران" },
-  { fullName: "سعید احمدی", role: "COACH", countyName: "تهران" },
-  { fullName: "مهدی کریمی", role: "COACH", countyName: "ری" },
-  { fullName: "حسین موسوی", role: "COACH", active: false, countyName: "ری" },
-  { fullName: "امیر حسین زاده", role: "COACH", countyName: "ری" },
-  { fullName: "محمد رضایی", role: "COACH", countyName: "شمیرانات" },
-  { fullName: "بابک نیک پور", role: "COACH", active: false, countyName: "اسلامشهر" },
-  { fullName: "کامران شریفی", role: "COACH", countyName: "پردیس" },
+  { fullName: "رضا محمدی", role: "COACH", gender: "MALE", countyName: "تهران" },
+  { fullName: "سعید احمدی", role: "COACH", gender: "FEMALE", countyName: "تهران" },
+  { fullName: "مهدی کریمی", role: "COACH", gender: "MALE", countyName: "ری" },
+  { fullName: "حسین موسوی", role: "COACH", gender: "FEMALE", active: false, countyName: "ری" },
+  { fullName: "امیر حسین زاده", role: "COACH", gender: "MALE", countyName: "ری" },
+  { fullName: "محمد رضایی", role: "COACH", gender: "FEMALE", countyName: "شمیرانات" },
+  { fullName: "بابک نیک پور", role: "COACH", gender: "MALE", active: false, countyName: "اسلامشهر" },
+  { fullName: "کامران شریفی", role: "COACH", gender: "FEMALE", countyName: "پردیس" },
 ];
 
 export const demoUsers: UserSeed[] = userRows.map((row, index) => {
@@ -54,6 +55,7 @@ export const demoUsers: UserSeed[] = userRows.map((row, index) => {
     fullName: row.fullName,
     nationalCode: nationalCode(100000000 + index * 137),
     role: row.role,
+    gender: row.gender ?? null,
     province: "TEHRAN",
     isActive: row.active ?? true,
     countyName: row.countyName ?? null,
@@ -151,7 +153,8 @@ function birthDate(index: number, categoryIndex: number): string {
 }
 
 export const demoStudents: StudentSeed[] = Array.from({ length: 60 }, (_, index) => {
-  const gender: Gender = index % 2 === 0 ? "MALE" : "FEMALE";
+  // students inherit the gender of their demo coach (coach-N: N odd = MALE, N even = FEMALE)
+  const gender: Gender = (index % 8) % 2 === 0 ? "MALE" : "FEMALE";
   const categoryIndex = index % 7;
   const nameIndex = Math.floor(index / 2);
   const firstName =

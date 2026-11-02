@@ -1,3 +1,5 @@
+import type { Gender } from "@/generated/enums";
+
 export type Role = "ADMIN" | "COACH";
 
 export type Province =
@@ -39,6 +41,7 @@ export type User = {
   fullName: string;
   nationalCode: string | null;
   role: Role;
+  gender: Gender | null;
   province: Province;
   isActive: boolean;
   countyId: string | null;

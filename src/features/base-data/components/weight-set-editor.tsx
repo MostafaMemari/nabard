@@ -91,6 +91,7 @@ export function WeightSetEditor({
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead className="w-14">وزن</TableHead>
             <TableHead className="w-32">برچسب</TableHead>
             <TableHead className="w-24">حداقل (کیلوگرم)</TableHead>
             <TableHead className="w-24">حداکثر (کیلوگرم)</TableHead>
@@ -104,6 +105,7 @@ export function WeightSetEditor({
         <TableBody>
           {editorRows.map((row, index) => (
             <TableRow key={row.key}>
+              <TableCell className="text-subtle font-medium text-muted-foreground">وزن {toPersianDigits(index + 1)}</TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
                   <Input

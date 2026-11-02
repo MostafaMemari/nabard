@@ -7,6 +7,7 @@ export type UserRole = "ADMIN" | "COACH" | "SUPER_ADMIN";
 export type UserIdentityRecord = {
   id: string;
   role: UserRole;
+  gender: Gender | null;
   province: Province | null;
   isActive: boolean;
 };
@@ -175,7 +176,7 @@ function toStudentRecord(row: {
 export async function findUserById(id: string): Promise<UserIdentityRecord | null> {
   return getPrisma().user.findUnique({
     where: { id },
-    select: { id: true, role: true, province: true, isActive: true },
+    select: { id: true, role: true, gender: true, province: true, isActive: true },
   });
 }
 

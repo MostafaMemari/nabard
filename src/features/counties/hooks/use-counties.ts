@@ -5,7 +5,7 @@ import { type CountyListParams, listCounties } from "../api";
 
 export function useCounties(params: CountyListParams = {}) {
   const key = ["counties", params.province ?? null];
-  const { data, error, isLoading, mutate } = useSWR(key, () => listCounties(params));
+  const { data, error, isLoading, mutate } = useSWR(key, () => listCounties(params), { keepPreviousData: true });
 
   return { counties: data ?? [], isLoading, error, mutate };
 }

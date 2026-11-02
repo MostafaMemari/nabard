@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { EmptyState, ErrorBanner, SkeletonRows } from "@/components/shared";
+import { EmptyState, ErrorBanner, ScreenSpinner } from "@/components/shared";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { AgeCategoryAdmin } from "../api-admin";
@@ -76,7 +76,7 @@ export function WeightClassesTab({ ageCategories }: { ageCategories: AgeCategory
         {!selected ? (
           <EmptyState title="یک رده سنی و جنسیت انتخاب کنید تا رده های وزنی آن نمایش داده شود." />
         ) : set.isLoading ? (
-          <SkeletonRows rows={5} />
+          <ScreenSpinner />
         ) : set.error ? (
           <ErrorBanner message="دریافت رده های وزنی انجام نشد." onRetry={() => void set.mutate()} />
         ) : (

@@ -326,6 +326,7 @@ export async function listCompetitions(
     province: provinceOf(identity),
     status: "PUBLISHED",
     discipline: query.discipline,
+    gender: identity.gender ?? undefined,
     search,
     coachCountyId: identity.countyId ?? "none",
   };

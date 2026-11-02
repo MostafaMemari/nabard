@@ -18,8 +18,15 @@ import {
 const admin: CurrentUser = { id: "admin-1", role: "ADMIN" };
 const coach: CurrentUser = { id: "coach-1", role: "COACH" };
 
-const adminRecord: UserIdentityRecord = { id: "admin-1", role: "ADMIN", province: "TEHRAN", isActive: true, countyId: null };
-const coachRecord: UserIdentityRecord = { id: "coach-1", role: "COACH", province: "TEHRAN", isActive: true, countyId: "county-tehran" };
+const adminRecord: UserIdentityRecord = { id: "admin-1", role: "ADMIN", gender: null, province: "TEHRAN", isActive: true, countyId: null };
+const coachRecord: UserIdentityRecord = {
+  id: "coach-1",
+  role: "COACH",
+  gender: "MALE",
+  province: "TEHRAN",
+  isActive: true,
+  countyId: "county-tehran",
+};
 const inactiveCoachRecord: UserIdentityRecord = { ...coachRecord, isActive: false };
 
 const DAY_MS = 86_400_000;
@@ -243,12 +250,24 @@ describe("listCompetitions", () => {
     const result = await listCompetitions(repo, coach, { status: "DRAFT" });
 
     expect(repo.findCompetitions).toHaveBeenCalledWith(
-      { province: "TEHRAN", status: "PUBLISHED", discipline: undefined, search: undefined, coachCountyId: "county-tehran" },
+      { province: "TEHRAN", status: "PUBLISHED", discipline: undefined, gender: "MALE", search: undefined, coachCountyId: "county-tehran" },
       0,
       100,
       "deadlineAsc",
     );
     expect(result.data[0]).toMatchObject({ id: "comp-1", state: "OPEN", eligibleStudentCount: 1 });
+  });
+
+  it("only lists competitions matching the coach gender", async () => {
+    const repo = repoWith({ findCompetitions: vi.fn().mockResolvedValue([]) });
+    await listCompetitions(repo, coach, {});
+
+    expect(repo.findCompetitions).toHaveBeenCalledWith(
+      { province: "TEHRAN", status: "PUBLISHED", discipline: undefined, gender: "MALE", search: undefined, coachCountyId: "county-tehran" },
+      0,
+      100,
+      "deadlineAsc",
+    );
   });
 
   it("marks a coach competition past its deadline as CLOSED", async () => {
@@ -878,7 +897,14 @@ describe("listDeadlineExtensions", () => {
 
 describe("SUPER_ADMIN", () => {
   const superAdmin: CurrentUser = { id: "super-1", role: "SUPER_ADMIN" };
-  const superAdminRecord: UserIdentityRecord = { id: "super-1", role: "SUPER_ADMIN", province: null, isActive: true, countyId: null };
+  const superAdminRecord: UserIdentityRecord = {
+    id: "super-1",
+    role: "SUPER_ADMIN",
+    gender: null,
+    province: null,
+    isActive: true,
+    countyId: null,
+  };
 
   it("lists competitions of every province without county scoping", async () => {
     const repo = repoWith({

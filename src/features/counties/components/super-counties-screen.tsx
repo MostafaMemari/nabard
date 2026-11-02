@@ -1,7 +1,7 @@
 "use client";
 
 import { MapPinnedIcon } from "lucide-react";
-import { EmptyState, ErrorBanner, PageHeader, SkeletonRows } from "@/components/shared";
+import { EmptyState, ErrorBanner, PageHeader, ScreenSpinner } from "@/components/shared";
 import { toPersianDigits } from "@/lib/format";
 import { provinceLabels, provinceValues } from "@/lib/provinces";
 import { useSearchParam } from "@/lib/use-search-param";
@@ -20,7 +20,7 @@ export function SuperCountiesScreen() {
       <PageHeader title="شهرستان ها" description="شهرستان های همه استان ها؛ فقط قابل مشاهده است." />
 
       {isLoading ? (
-        <SkeletonRows rows={6} />
+        <ScreenSpinner />
       ) : error ? (
         <ErrorBanner message="دریافت شهرستان ها انجام نشد." onRetry={() => mutate()} />
       ) : groups.length === 0 ? (

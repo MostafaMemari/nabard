@@ -4,7 +4,9 @@ import useSWR from "swr";
 import { type CompetitionListParams, getCompetition, listCompetitions, listDeadlineExtensions } from "../api";
 
 export function useCompetitions(params: CompetitionListParams = {}) {
-  const { data, error, isLoading, mutate } = useSWR(["competitions", params], () => listCompetitions(params));
+  const { data, error, isLoading, mutate } = useSWR(["competitions", params], () => listCompetitions(params), {
+    keepPreviousData: true,
+  });
 
   return { competitions: data?.data ?? [], meta: data?.meta, isLoading, error, mutate };
 }

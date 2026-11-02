@@ -114,6 +114,7 @@ export async function createCoach(repo: CoachRepository, user: CurrentUser, inpu
     passwordHash,
     province,
     countyId: input.countyId,
+    gender: input.gender,
   };
 
   return repo.createCoach(data);

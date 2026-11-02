@@ -105,6 +105,7 @@ export const UserScalarFieldEnum = {
   fullName: 'fullName',
   nationalCode: 'nationalCode',
   role: 'role',
+  gender: 'gender',
   province: 'province',
   isActive: 'isActive',
   countyId: 'countyId',

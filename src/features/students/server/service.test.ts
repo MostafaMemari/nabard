@@ -20,8 +20,8 @@ import {
 const admin: CurrentUser = { id: "admin-1", role: "ADMIN" };
 const coach: CurrentUser = { id: "coach-1", role: "COACH" };
 
-const adminRecord: UserIdentityRecord = { id: "admin-1", role: "ADMIN", province: "TEHRAN", isActive: true };
-const coachRecord: UserIdentityRecord = { id: "coach-1", role: "COACH", province: "TEHRAN", isActive: true };
+const adminRecord: UserIdentityRecord = { id: "admin-1", role: "ADMIN", gender: null, province: "TEHRAN", isActive: true };
+const coachRecord: UserIdentityRecord = { id: "coach-1", role: "COACH", gender: "MALE", province: "TEHRAN", isActive: true };
 const inactiveCoachRecord: UserIdentityRecord = { ...coachRecord, isActive: false };
 
 const createdAt = new Date("2026-08-01T09:15:00.000Z");
@@ -217,6 +217,15 @@ describe("createStudent", () => {
     await createStudent(repo, coach, { ...createInput, weightKg: null });
 
     expect(vi.mocked(repo.createStudent).mock.calls[0][0].weightKg).toBeNull();
+  });
+
+  it("rejects a student whose gender differs from the coach gender with 400", async () => {
+    const repo = repoWith();
+    const failure = (await failureOf(createStudent(repo, coach, { ...createInput, gender: "FEMALE" as const }))) as { message: string };
+
+    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
+    expect(failure?.message).toContain("جنسیت");
+    expect(repo.createStudent).not.toHaveBeenCalled();
   });
 
   it("rejects an admin with 403 without touching the repository", async () => {

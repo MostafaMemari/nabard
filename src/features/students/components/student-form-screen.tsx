@@ -5,6 +5,8 @@ import Link from "next/link";
 import { EmptyState, FormActions, FormContainer, FormSection, PageHeader } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useMe } from "@/features/auth";
+import { genderLabels } from "@/features/base-data";
 import { useStudentDocuments } from "../hooks/use-student-documents";
 import { useStudentForm } from "../hooks/use-student-form";
 import { studentDocumentTypes } from "../labels";
@@ -13,7 +15,9 @@ import { StudentBeltField, StudentBirthDateField, StudentSelectField, StudentTex
 import { StudentProfileStatus } from "./student-profile-status";
 
 export function StudentFormScreen({ studentId }: { studentId?: string }) {
-  const { isEdit, form, belts, isLoading, error, student, submit, mutateStudent } = useStudentForm({ studentId });
+  const { user } = useMe();
+  const coachGender = user?.gender ?? null;
+  const { isEdit, form, belts, isLoading, error, student, submit, mutateStudent } = useStudentForm({ studentId, coachGender });
   const documents = useStudentDocuments(studentId ?? "", mutateStudent);
 
   if (isEdit && isLoading) {
@@ -60,7 +64,11 @@ export function StudentFormScreen({ studentId }: { studentId?: string }) {
             placeholder="مثلاً علی رضایی"
             autoComplete="off"
           />
-          <StudentSelectField control={form.control} name="gender" label="جنسیت" items={{ MALE: "پسر", FEMALE: "دختر" }} />
+          {coachGender ? (
+            <StudentSelectField control={form.control} name="gender" label="جنسیت" items={{ [coachGender]: genderLabels[coachGender] }} />
+          ) : (
+            <StudentSelectField control={form.control} name="gender" label="جنسیت" items={genderLabels} />
+          )}
           <StudentTextField
             control={form.control}
             name="nationalCode"

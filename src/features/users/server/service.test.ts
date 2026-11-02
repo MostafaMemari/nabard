@@ -23,6 +23,7 @@ const tehranCoach: CoachRecord = {
   fullName: "رضا محمدی",
   nationalCode: "1234567890",
   role: "COACH",
+  gender: "MALE" as const,
   province: "TEHRAN",
   isActive: true,
   countyId: "county-tehran",
@@ -153,6 +154,7 @@ describe("createCoach", () => {
     nationalCode: "0987654321",
     initialPassword: "Secret!1234",
     countyId: "county-tehran",
+    gender: "MALE" as const,
   };
 
   it("creates an active coach in the admin province with a bcrypt hash", async () => {
@@ -374,6 +376,7 @@ describe("SUPER_ADMIN", () => {
         nationalCode: "0987654321",
         initialPassword: "Secret!1234",
         countyId: "county-tehran",
+        gender: "MALE" as const,
       }),
     );
 

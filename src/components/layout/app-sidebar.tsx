@@ -65,15 +65,19 @@ export function AppSidebar({
       <div className="h-px bg-sidebar-border" aria-hidden />
       <div className="p-3">
         {user ? (
-          <div className="flex items-center gap-2.5 rounded-lg p-2">
-            <Avatar id={user.id} name={user.name} size="md" />
-            <div className="flex min-w-0 flex-1 flex-col leading-tight">
-              <span className="truncate text-sm font-medium text-sidebar-accent-foreground">{user.name}</span>
-              <span className="truncate text-xs text-sidebar-foreground/80">{user.roleLabel}</span>
+          <div className="flex flex-col gap-2 rounded-lg p-2">
+            <div className="flex items-start gap-2.5">
+              <Avatar id={user.id} name={user.name} size="md" />
+              <div className="min-w-0 flex-1 leading-tight">
+                <span className="block text-sm font-medium text-sidebar-accent-foreground">{user.name}</span>
+                <span className="mt-0.5 block text-xs text-sidebar-foreground/80">{user.roleLabel}</span>
+              </div>
             </div>
-            <ChangePasswordButton className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" />
-            {userMenuExtra}
-            <LogoutButton className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" />
+            <div className="flex items-center gap-1 ps-11">
+              <ChangePasswordButton className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" />
+              {userMenuExtra}
+              <LogoutButton className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" />
+            </div>
           </div>
         ) : (
           <div aria-hidden className="flex items-center gap-2.5 rounded-lg p-2">

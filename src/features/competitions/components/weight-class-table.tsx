@@ -33,14 +33,16 @@ export function WeightClassTable({ classes, isLoading }: { classes: WeightClass[
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-24">رده وزنی</TableHead>
+            <TableHead className="w-28">رده وزنی</TableHead>
             <TableHead>بازه وزن</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {classes.map((weightClass) => (
+          {classes.map((weightClass, index) => (
             <TableRow key={weightClass.id}>
-              <TableCell className="font-medium">{toPersianDigits(weightClass.label)}</TableCell>
+              <TableCell className="font-medium">
+                وزن {toPersianDigits(index + 1)} · {toPersianDigits(weightClass.label)}
+              </TableCell>
               <TableCell className="text-subtle text-muted-foreground">{rangeLabel(weightClass)}</TableCell>
             </TableRow>
           ))}

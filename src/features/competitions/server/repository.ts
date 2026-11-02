@@ -9,6 +9,7 @@ export type UserRole = "ADMIN" | "COACH" | "SUPER_ADMIN";
 export type UserIdentityRecord = {
   id: string;
   role: UserRole;
+  gender: Gender | null;
   province: Province | null;
   isActive: boolean;
   countyId: string | null;
@@ -57,6 +58,7 @@ export type CompetitionFilters = {
   province?: Province;
   status?: CompetitionStatus;
   discipline?: Discipline;
+  gender?: Gender;
   search?: string;
   coachCountyId?: string;
 };
@@ -194,6 +196,7 @@ function competitionWhere(filters: CompetitionFilters) {
     ...(filters.province === undefined ? {} : { province: filters.province }),
     ...(filters.status === undefined ? {} : { status: filters.status }),
     ...(filters.discipline === undefined ? {} : { discipline: filters.discipline }),
+    ...(filters.gender === undefined ? {} : { gender: filters.gender }),
     ...(filters.search === undefined ? {} : { title: { contains: filters.search, mode: "insensitive" as const } }),
     ...(filters.coachCountyId === undefined
       ? {}
@@ -206,7 +209,7 @@ function competitionWhere(filters: CompetitionFilters) {
 export async function findUserById(id: string): Promise<UserIdentityRecord | null> {
   return getPrisma().user.findUnique({
     where: { id },
-    select: { id: true, role: true, province: true, isActive: true, countyId: true },
+    select: { id: true, role: true, gender: true, province: true, isActive: true, countyId: true },
   });
 }
 

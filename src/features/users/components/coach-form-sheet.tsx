@@ -10,7 +10,17 @@ import { createCoach } from "../api";
 import { type CoachFormValues, createCoachSchema } from "../schemas";
 import { CoachSelectField, CoachTextField } from "./coach-form-fields";
 
-const emptyForm: CoachFormValues = { fullName: "", mobile: "", nationalCode: "", initialPassword: "", countyId: "" };
+// gender starts as "" so the select shows its placeholder until the admin picks one.
+const emptyForm = {
+  fullName: "",
+  mobile: "",
+  nationalCode: "",
+  initialPassword: "",
+  countyId: "",
+  gender: "",
+} as unknown as CoachFormValues;
+
+const genderItems = { MALE: "مرد", FEMALE: "زن" };
 
 export function CoachFormSheet({
   open,
@@ -36,6 +46,7 @@ export function CoachFormSheet({
         nationalCode: values.nationalCode,
         initialPassword: values.initialPassword,
         countyId: values.countyId,
+        gender: values.gender,
       });
       toast.success("مربی اضافه شد.");
       form.reset(emptyForm);
@@ -74,6 +85,7 @@ export function CoachFormSheet({
             placeholder="۰۰۱۲۳۴۵۶۷۸۹"
           />
           <CoachSelectField control={form.control} name="countyId" label="شهرستان" items={countyItems} />
+          <CoachSelectField control={form.control} name="gender" label="جنسیت" items={genderItems} />
           <CoachTextField
             control={form.control}
             name="initialPassword"

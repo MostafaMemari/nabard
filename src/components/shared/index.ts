@@ -24,6 +24,7 @@ export * from "./list-toolbar";
 export * from "./mobile-card";
 export * from "./page-header";
 export * from "./rows-skeleton";
+export * from "./screen-spinner";
 export * from "./search-input";
 export * from "./status-badge";
 export * from "./summary-card";

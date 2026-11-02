@@ -11,11 +11,7 @@ export async function ensureSuperAdmin(): Promise<void> {
   const existing = await prisma.user.count({ where: { role: "SUPER_ADMIN" } });
   if (existing > 0) return;
 
-  const candidates = [
-    process.env.SUPER_ADMIN_MOBILE,
-    process.env.ADMIN_MOBILE,
-    FALLBACK_MOBILE,
-  ]
+  const candidates = [process.env.SUPER_ADMIN_MOBILE, process.env.ADMIN_MOBILE, FALLBACK_MOBILE]
     .filter((mobile): mobile is string => typeof mobile === "string" && mobile.trim().length > 0)
     .map((mobile) => normalizeDigits(mobile));
 

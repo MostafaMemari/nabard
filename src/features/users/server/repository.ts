@@ -1,4 +1,5 @@
 import type { Province } from "@/generated/client";
+import type { Gender } from "@/generated/enums";
 import { getPrisma } from "@/lib/prisma";
 
 export type UserRole = "ADMIN" | "COACH" | "SUPER_ADMIN";
@@ -16,6 +17,7 @@ export type CoachRecord = {
   fullName: string;
   nationalCode: string | null;
   role: UserRole;
+  gender: Gender | null;
   province: Province;
   isActive: boolean;
   countyId: string | null;
@@ -36,6 +38,7 @@ export type NewCoachData = {
   passwordHash: string;
   province: Province;
   countyId: string;
+  gender: Gender;
 };
 
 export type CoachUpdateData = {
@@ -71,6 +74,7 @@ const coachSelection = {
   fullName: true,
   nationalCode: true,
   role: true,
+  gender: true,
   province: true,
   isActive: true,
   county: { select: { id: true, name: true } },
@@ -84,6 +88,7 @@ type CoachRowInput = {
   fullName: string;
   nationalCode: string | null;
   role: UserRole;
+  gender: Gender | null;
   province: Province | null;
   isActive: boolean;
   county: { id: string; name: string } | null;
@@ -100,6 +105,7 @@ function toCoachRecord(row: CoachRowInput): CoachRecord {
     fullName: row.fullName,
     nationalCode: row.nationalCode,
     role: row.role,
+    gender: row.gender,
     province: row.province,
     isActive: row.isActive,
     countyId: row.county?.id ?? null,
@@ -175,6 +181,7 @@ export async function createCoach(data: NewCoachData): Promise<CoachRecord> {
       nationalCode: data.nationalCode,
       passwordHash: data.passwordHash,
       role: "COACH",
+      gender: data.gender,
       province: data.province,
       isActive: true,
       countyId: data.countyId,

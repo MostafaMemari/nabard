@@ -24,6 +24,7 @@ function toAuthUser(user: UserRecord): AuthUser {
     id: user.id,
     role: user.role,
     fullName: user.fullName,
+    gender: user.gender,
     province: user.province,
     countyId: user.countyId,
     countyName: user.countyName,

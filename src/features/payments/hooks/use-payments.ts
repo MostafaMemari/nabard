@@ -4,7 +4,9 @@ import useSWR from "swr";
 import { getPayment, listPayments, type PaymentListParams } from "../api";
 
 export function usePayments(params: PaymentListParams = {}) {
-  const { data, error, isLoading, mutate } = useSWR(["payments", params], () => listPayments(params));
+  const { data, error, isLoading, mutate } = useSWR(["payments", params], () => listPayments(params), {
+    keepPreviousData: true,
+  });
 
   return { payments: data?.data ?? [], meta: data?.meta, isLoading, error, mutate };
 }

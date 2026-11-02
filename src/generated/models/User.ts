@@ -31,6 +31,7 @@ export type UserMinAggregateOutputType = {
   fullName: string | null
   nationalCode: string | null
   role: $Enums.Role | null
+  gender: $Enums.Gender | null
   province: $Enums.Province | null
   isActive: boolean | null
   countyId: string | null
@@ -45,6 +46,7 @@ export type UserMaxAggregateOutputType = {
   fullName: string | null
   nationalCode: string | null
   role: $Enums.Role | null
+  gender: $Enums.Gender | null
   province: $Enums.Province | null
   isActive: boolean | null
   countyId: string | null
@@ -59,6 +61,7 @@ export type UserCountAggregateOutputType = {
   fullName: number
   nationalCode: number
   role: number
+  gender: number
   province: number
   isActive: number
   countyId: number
@@ -75,6 +78,7 @@ export type UserMinAggregateInputType = {
   fullName?: true
   nationalCode?: true
   role?: true
+  gender?: true
   province?: true
   isActive?: true
   countyId?: true
@@ -89,6 +93,7 @@ export type UserMaxAggregateInputType = {
   fullName?: true
   nationalCode?: true
   role?: true
+  gender?: true
   province?: true
   isActive?: true
   countyId?: true
@@ -103,6 +108,7 @@ export type UserCountAggregateInputType = {
   fullName?: true
   nationalCode?: true
   role?: true
+  gender?: true
   province?: true
   isActive?: true
   countyId?: true
@@ -190,6 +196,7 @@ export type UserGroupByOutputType = {
   fullName: string
   nationalCode: string | null
   role: $Enums.Role
+  gender: $Enums.Gender | null
   province: $Enums.Province | null
   isActive: boolean
   countyId: string | null
@@ -225,6 +232,7 @@ export type UserWhereInput = {
   fullName?: Prisma.StringFilter<"User"> | string
   nationalCode?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
+  gender?: Prisma.EnumGenderNullableFilter<"User"> | $Enums.Gender | null
   province?: Prisma.EnumProvinceNullableFilter<"User"> | $Enums.Province | null
   isActive?: Prisma.BoolFilter<"User"> | boolean
   countyId?: Prisma.StringNullableFilter<"User"> | string | null
@@ -253,6 +261,7 @@ export type UserOrderByWithRelationInput = {
   fullName?: Prisma.SortOrder
   nationalCode?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
   province?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   countyId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -284,6 +293,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   passwordHash?: Prisma.StringFilter<"User"> | string
   fullName?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
+  gender?: Prisma.EnumGenderNullableFilter<"User"> | $Enums.Gender | null
   province?: Prisma.EnumProvinceNullableFilter<"User"> | $Enums.Province | null
   isActive?: Prisma.BoolFilter<"User"> | boolean
   countyId?: Prisma.StringNullableFilter<"User"> | string | null
@@ -312,6 +322,7 @@ export type UserOrderByWithAggregationInput = {
   fullName?: Prisma.SortOrder
   nationalCode?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
   province?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   countyId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -332,6 +343,7 @@ export type UserScalarWhereWithAggregatesInput = {
   fullName?: Prisma.StringWithAggregatesFilter<"User"> | string
   nationalCode?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
+  gender?: Prisma.EnumGenderNullableWithAggregatesFilter<"User"> | $Enums.Gender | null
   province?: Prisma.EnumProvinceNullableWithAggregatesFilter<"User"> | $Enums.Province | null
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   countyId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -346,6 +358,7 @@ export type UserCreateInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   createdAt?: Date | string
@@ -373,6 +386,7 @@ export type UserUncheckedCreateInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
@@ -400,6 +414,7 @@ export type UserUpdateInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -427,6 +442,7 @@ export type UserUncheckedUpdateInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -454,6 +470,7 @@ export type UserCreateManyInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
@@ -468,6 +485,7 @@ export type UserUpdateManyMutationInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -481,6 +499,7 @@ export type UserUncheckedUpdateManyInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -505,6 +524,7 @@ export type UserCountOrderByAggregateInput = {
   fullName?: Prisma.SortOrder
   nationalCode?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
   province?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   countyId?: Prisma.SortOrder
@@ -519,6 +539,7 @@ export type UserMaxOrderByAggregateInput = {
   fullName?: Prisma.SortOrder
   nationalCode?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
   province?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   countyId?: Prisma.SortOrder
@@ -533,6 +554,7 @@ export type UserMinOrderByAggregateInput = {
   fullName?: Prisma.SortOrder
   nationalCode?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
   province?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   countyId?: Prisma.SortOrder
@@ -598,6 +620,10 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type EnumRoleFieldUpdateOperationsInput = {
   set?: $Enums.Role
+}
+
+export type NullableEnumGenderFieldUpdateOperationsInput = {
+  set?: $Enums.Gender | null
 }
 
 export type NullableEnumProvinceFieldUpdateOperationsInput = {
@@ -805,6 +831,7 @@ export type UserCreateWithoutCountyInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   createdAt?: Date | string
@@ -831,6 +858,7 @@ export type UserUncheckedCreateWithoutCountyInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   createdAt?: Date | string
@@ -886,6 +914,7 @@ export type UserScalarWhereInput = {
   fullName?: Prisma.StringFilter<"User"> | string
   nationalCode?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
+  gender?: Prisma.EnumGenderNullableFilter<"User"> | $Enums.Gender | null
   province?: Prisma.EnumProvinceNullableFilter<"User"> | $Enums.Province | null
   isActive?: Prisma.BoolFilter<"User"> | boolean
   countyId?: Prisma.StringNullableFilter<"User"> | string | null
@@ -900,6 +929,7 @@ export type UserCreateWithoutStudentsInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   createdAt?: Date | string
@@ -926,6 +956,7 @@ export type UserUncheckedCreateWithoutStudentsInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
@@ -957,6 +988,7 @@ export type UserCreateWithoutReviewedProfilesInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   createdAt?: Date | string
@@ -983,6 +1015,7 @@ export type UserUncheckedCreateWithoutReviewedProfilesInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
@@ -1025,6 +1058,7 @@ export type UserUpdateWithoutStudentsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1051,6 +1085,7 @@ export type UserUncheckedUpdateWithoutStudentsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1088,6 +1123,7 @@ export type UserUpdateWithoutReviewedProfilesInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1114,6 +1150,7 @@ export type UserUncheckedUpdateWithoutReviewedProfilesInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1140,6 +1177,7 @@ export type UserCreateWithoutCountyChangeRequestsInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   createdAt?: Date | string
@@ -1166,6 +1204,7 @@ export type UserUncheckedCreateWithoutCountyChangeRequestsInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
@@ -1197,6 +1236,7 @@ export type UserCreateWithoutDecidedCountyChangesInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   createdAt?: Date | string
@@ -1223,6 +1263,7 @@ export type UserUncheckedCreateWithoutDecidedCountyChangesInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
@@ -1265,6 +1306,7 @@ export type UserUpdateWithoutCountyChangeRequestsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1291,6 +1333,7 @@ export type UserUncheckedUpdateWithoutCountyChangeRequestsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1328,6 +1371,7 @@ export type UserUpdateWithoutDecidedCountyChangesInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1354,6 +1398,7 @@ export type UserUncheckedUpdateWithoutDecidedCountyChangesInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1380,6 +1425,7 @@ export type UserCreateWithoutTransfersFromInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   createdAt?: Date | string
@@ -1406,6 +1452,7 @@ export type UserUncheckedCreateWithoutTransfersFromInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
@@ -1437,6 +1484,7 @@ export type UserCreateWithoutTransfersToInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   createdAt?: Date | string
@@ -1463,6 +1511,7 @@ export type UserUncheckedCreateWithoutTransfersToInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
@@ -1494,6 +1543,7 @@ export type UserCreateWithoutDecidedTransfersInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   createdAt?: Date | string
@@ -1520,6 +1570,7 @@ export type UserUncheckedCreateWithoutDecidedTransfersInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
@@ -1562,6 +1613,7 @@ export type UserUpdateWithoutTransfersFromInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1588,6 +1640,7 @@ export type UserUncheckedUpdateWithoutTransfersFromInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1625,6 +1678,7 @@ export type UserUpdateWithoutTransfersToInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1651,6 +1705,7 @@ export type UserUncheckedUpdateWithoutTransfersToInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1688,6 +1743,7 @@ export type UserUpdateWithoutDecidedTransfersInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1714,6 +1770,7 @@ export type UserUncheckedUpdateWithoutDecidedTransfersInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1740,6 +1797,7 @@ export type UserCreateWithoutAuditLogsInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   createdAt?: Date | string
@@ -1766,6 +1824,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
@@ -1808,6 +1867,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1834,6 +1894,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1860,6 +1921,7 @@ export type UserCreateWithoutDeadlineExtensionsInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   createdAt?: Date | string
@@ -1886,6 +1948,7 @@ export type UserUncheckedCreateWithoutDeadlineExtensionsInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
@@ -1928,6 +1991,7 @@ export type UserUpdateWithoutDeadlineExtensionsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1954,6 +2018,7 @@ export type UserUncheckedUpdateWithoutDeadlineExtensionsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1980,6 +2045,7 @@ export type UserCreateWithoutPaymentsInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   createdAt?: Date | string
@@ -2006,6 +2072,7 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
@@ -2048,6 +2115,7 @@ export type UserUpdateWithoutPaymentsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2074,6 +2142,7 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2100,6 +2169,7 @@ export type UserCreateWithoutRegistrationsInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   createdAt?: Date | string
@@ -2126,6 +2196,7 @@ export type UserUncheckedCreateWithoutRegistrationsInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
@@ -2168,6 +2239,7 @@ export type UserUpdateWithoutRegistrationsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2194,6 +2266,7 @@ export type UserUncheckedUpdateWithoutRegistrationsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2220,6 +2293,7 @@ export type UserCreateWithoutRefundsInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   createdAt?: Date | string
@@ -2246,6 +2320,7 @@ export type UserUncheckedCreateWithoutRefundsInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
@@ -2277,6 +2352,7 @@ export type UserCreateWithoutProcessedRefundsInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   createdAt?: Date | string
@@ -2303,6 +2379,7 @@ export type UserUncheckedCreateWithoutProcessedRefundsInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
@@ -2345,6 +2422,7 @@ export type UserUpdateWithoutRefundsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2371,6 +2449,7 @@ export type UserUncheckedUpdateWithoutRefundsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2408,6 +2487,7 @@ export type UserUpdateWithoutProcessedRefundsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2434,6 +2514,7 @@ export type UserUncheckedUpdateWithoutProcessedRefundsInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2460,6 +2541,7 @@ export type UserCreateManyCountyInput = {
   fullName: string
   nationalCode?: string | null
   role: $Enums.Role
+  gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
   createdAt?: Date | string
@@ -2473,6 +2555,7 @@ export type UserUpdateWithoutCountyInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2499,6 +2582,7 @@ export type UserUncheckedUpdateWithoutCountyInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2525,6 +2609,7 @@ export type UserUncheckedUpdateManyWithoutCountyInput = {
   fullName?: Prisma.StringFieldUpdateOperationsInput | string
   nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2677,6 +2762,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   fullName?: boolean
   nationalCode?: boolean
   role?: boolean
+  gender?: boolean
   province?: boolean
   isActive?: boolean
   countyId?: boolean
@@ -2706,6 +2792,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   fullName?: boolean
   nationalCode?: boolean
   role?: boolean
+  gender?: boolean
   province?: boolean
   isActive?: boolean
   countyId?: boolean
@@ -2721,6 +2808,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   fullName?: boolean
   nationalCode?: boolean
   role?: boolean
+  gender?: boolean
   province?: boolean
   isActive?: boolean
   countyId?: boolean
@@ -2736,6 +2824,7 @@ export type UserSelectScalar = {
   fullName?: boolean
   nationalCode?: boolean
   role?: boolean
+  gender?: boolean
   province?: boolean
   isActive?: boolean
   countyId?: boolean
@@ -2743,7 +2832,7 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "mobile" | "passwordHash" | "fullName" | "nationalCode" | "role" | "province" | "isActive" | "countyId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "mobile" | "passwordHash" | "fullName" | "nationalCode" | "role" | "gender" | "province" | "isActive" | "countyId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   county?: boolean | Prisma.User$countyArgs<ExtArgs>
   students?: boolean | Prisma.User$studentsArgs<ExtArgs>
@@ -2793,6 +2882,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     fullName: string
     nationalCode: string | null
     role: $Enums.Role
+    gender: $Enums.Gender | null
     province: $Enums.Province | null
     isActive: boolean
     countyId: string | null
@@ -3241,6 +3331,7 @@ export interface UserFieldRefs {
   readonly fullName: Prisma.FieldRef<"User", 'String'>
   readonly nationalCode: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'Role'>
+  readonly gender: Prisma.FieldRef<"User", 'Gender'>
   readonly province: Prisma.FieldRef<"User", 'Province'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
   readonly countyId: Prisma.FieldRef<"User", 'String'>

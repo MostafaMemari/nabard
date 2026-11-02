@@ -1,4 +1,5 @@
 import type { Province } from "@/generated/client";
+import type { Gender } from "@/generated/enums";
 import { getPrisma } from "@/lib/prisma";
 import type { SessionRole } from "@/lib/session";
 import type { LoginThrottleRepository } from "./throttle";
@@ -9,6 +10,7 @@ export type UserRecord = {
   passwordHash: string;
   fullName: string;
   role: SessionRole;
+  gender: Gender | null;
   province: Province | null;
   isActive: boolean;
   countyId: string | null;
@@ -21,6 +23,7 @@ const userSelection = {
   passwordHash: true,
   fullName: true,
   role: true,
+  gender: true,
   province: true,
   isActive: true,
   county: { select: { id: true, name: true } },
@@ -32,6 +35,7 @@ function toRecord(user: {
   passwordHash: string;
   fullName: string;
   role: SessionRole;
+  gender: Gender | null;
   province: Province | null;
   isActive: boolean;
   county: { id: string; name: string } | null;
@@ -42,6 +46,7 @@ function toRecord(user: {
     passwordHash: user.passwordHash,
     fullName: user.fullName,
     role: user.role,
+    gender: user.gender,
     province: user.province,
     isActive: user.isActive,
     countyId: user.county?.id ?? null,

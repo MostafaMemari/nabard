@@ -17,6 +17,7 @@ export const createCoachSchema = z.object({
   nationalCode: nationalCodeField,
   initialPassword: passwordField,
   countyId: z.string().min(1, "شهرستان مربی را انتخاب کنید."),
+  gender: z.enum(["MALE", "FEMALE"], { message: "جنسیت مربی را انتخاب کنید." }),
 });
 
 export const updateCoachSchema = z

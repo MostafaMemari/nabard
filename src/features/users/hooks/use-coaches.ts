@@ -4,7 +4,9 @@ import useSWR from "swr";
 import { type CoachListParams, getCoach, listCoaches } from "../api";
 
 export function useCoaches(params: CoachListParams = {}) {
-  const { data, error, isLoading, mutate } = useSWR(["users", "coaches", params], () => listCoaches(params));
+  const { data, error, isLoading, mutate } = useSWR(["users", "coaches", params], () => listCoaches(params), {
+    keepPreviousData: true,
+  });
 
   return { coaches: data?.data ?? [], meta: data?.meta, isLoading, error, mutate };
 }

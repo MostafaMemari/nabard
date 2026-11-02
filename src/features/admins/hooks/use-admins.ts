@@ -4,7 +4,9 @@ import useSWR from "swr";
 import { type AdminListParams, getAdmin, listAdmins } from "../api";
 
 export function useAdmins(params: AdminListParams = {}) {
-  const { data, error, isLoading, mutate } = useSWR(["admins", params], () => listAdmins(params));
+  const { data, error, isLoading, mutate } = useSWR(["admins", params], () => listAdmins(params), {
+    keepPreviousData: true,
+  });
 
   return { admins: data?.data ?? [], meta: data?.meta, isLoading, error, mutate };
 }

@@ -11,7 +11,7 @@ import { useStudent } from "../hooks/use-student";
 import { emptyStudentForm, type StudentFormValues, studentSchema } from "../schemas";
 import type { StudentInput } from "../types";
 
-export function useStudentForm({ studentId }: { studentId?: string }) {
+export function useStudentForm({ studentId, coachGender }: { studentId?: string; coachGender?: Gender | null }) {
   const router = useRouter();
   const isEdit = studentId !== undefined;
   const { student, isLoading, error, mutate } = useStudent(studentId ?? "");
@@ -19,21 +19,25 @@ export function useStudentForm({ studentId }: { studentId?: string }) {
 
   const form = useForm<StudentFormValues, unknown, StudentFormValues>({
     resolver: zodResolver(studentSchema),
-    defaultValues: emptyStudentForm,
+    defaultValues: coachGender ? { ...emptyStudentForm, gender: coachGender } : emptyStudentForm,
   });
+
+  useEffect(() => {
+    if (!isEdit && coachGender) form.setValue("gender", coachGender);
+  }, [isEdit, coachGender, form]);
 
   useEffect(() => {
     if (isEdit && student) {
       form.reset({
         fullName: student.fullName,
-        gender: student.gender,
+        gender: coachGender ?? student.gender,
         nationalCode: student.nationalCode,
         birthDate: student.birthDate,
         beltId: student.beltId,
         weightKg: student.weightKg !== null ? String(student.weightKg) : "",
       });
     }
-  }, [isEdit, student, form]);
+  }, [isEdit, student, coachGender, form]);
 
   async function submit(values: StudentFormValues) {
     const input: StudentInput = {
