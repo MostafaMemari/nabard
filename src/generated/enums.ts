@@ -158,6 +158,14 @@ export const ProfileStatus = {
 export type ProfileStatus = (typeof ProfileStatus)[keyof typeof ProfileStatus]
 
 
+export const StoredFileProvider = {
+  DB: 'DB',
+  R2: 'R2'
+} as const
+
+export type StoredFileProvider = (typeof StoredFileProvider)[keyof typeof StoredFileProvider]
+
+
 export const StudentDocumentType = {
   PHOTO: 'PHOTO',
   NATIONAL_ID_OR_BIRTH_CERTIFICATE: 'NATIONAL_ID_OR_BIRTH_CERTIFICATE',

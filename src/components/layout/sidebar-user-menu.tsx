@@ -43,7 +43,7 @@ export function SidebarUserMenu({ user, coachProfile = false }: { user: SidebarU
             variant="ghost"
             className="h-auto w-full justify-start gap-3 rounded-lg p-3 text-start hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground aria-expanded:bg-sidebar-accent"
           >
-            <Avatar id={user.id} name={user.name} size="md" />
+            <Avatar id={user.id} name={user.name} size="md" src={user.photoUrl} />
             <span className="flex min-w-0 flex-1 flex-col leading-tight">
               <span className="truncate text-sm font-medium text-sidebar-accent-foreground">{user.name}</span>
               <span className="mt-0.5 truncate text-xs text-sidebar-foreground/80">{user.roleLabel}</span>
@@ -54,7 +54,7 @@ export function SidebarUserMenu({ user, coachProfile = false }: { user: SidebarU
       />
       <DropdownMenuContent side="top" align="start" sideOffset={8}>
         <div className="flex items-center gap-3 px-3 py-2">
-          <Avatar id={user.id} name={user.name} size="md" />
+          <Avatar id={user.id} name={user.name} size="md" src={user.photoUrl} />
           <span className="flex min-w-0 flex-col leading-tight">
             <span className="truncate text-sm font-semibold">{user.name}</span>
             <span className="mt-0.5 truncate text-xs text-muted-foreground">{user.roleLabel}</span>

@@ -35,6 +35,7 @@ export type UserMinAggregateOutputType = {
   province: $Enums.Province | null
   isActive: boolean | null
   countyId: string | null
+  photoFileId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,6 +51,7 @@ export type UserMaxAggregateOutputType = {
   province: $Enums.Province | null
   isActive: boolean | null
   countyId: string | null
+  photoFileId: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -65,6 +67,7 @@ export type UserCountAggregateOutputType = {
   province: number
   isActive: number
   countyId: number
+  photoFileId: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -82,6 +85,7 @@ export type UserMinAggregateInputType = {
   province?: true
   isActive?: true
   countyId?: true
+  photoFileId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -97,6 +101,7 @@ export type UserMaxAggregateInputType = {
   province?: true
   isActive?: true
   countyId?: true
+  photoFileId?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -112,6 +117,7 @@ export type UserCountAggregateInputType = {
   province?: true
   isActive?: true
   countyId?: true
+  photoFileId?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -200,6 +206,7 @@ export type UserGroupByOutputType = {
   province: $Enums.Province | null
   isActive: boolean
   countyId: string | null
+  photoFileId: string | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -236,9 +243,11 @@ export type UserWhereInput = {
   province?: Prisma.EnumProvinceNullableFilter<"User"> | $Enums.Province | null
   isActive?: Prisma.BoolFilter<"User"> | boolean
   countyId?: Prisma.StringNullableFilter<"User"> | string | null
+  photoFileId?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   county?: Prisma.XOR<Prisma.CountyNullableScalarRelationFilter, Prisma.CountyWhereInput> | null
+  photoFile?: Prisma.XOR<Prisma.StoredFileNullableScalarRelationFilter, Prisma.StoredFileWhereInput> | null
   students?: Prisma.StudentListRelationFilter
   registrations?: Prisma.RegistrationListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
@@ -265,9 +274,11 @@ export type UserOrderByWithRelationInput = {
   province?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   countyId?: Prisma.SortOrderInput | Prisma.SortOrder
+  photoFileId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   county?: Prisma.CountyOrderByWithRelationInput
+  photoFile?: Prisma.StoredFileOrderByWithRelationInput
   students?: Prisma.StudentOrderByRelationAggregateInput
   registrations?: Prisma.RegistrationOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
@@ -287,6 +298,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   mobile?: string
   nationalCode?: string
+  photoFileId?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
@@ -300,6 +312,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   county?: Prisma.XOR<Prisma.CountyNullableScalarRelationFilter, Prisma.CountyWhereInput> | null
+  photoFile?: Prisma.XOR<Prisma.StoredFileNullableScalarRelationFilter, Prisma.StoredFileWhereInput> | null
   students?: Prisma.StudentListRelationFilter
   registrations?: Prisma.RegistrationListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
@@ -313,7 +326,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   transfersTo?: Prisma.StudentTransferListRelationFilter
   decidedTransfers?: Prisma.StudentTransferListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
-}, "id" | "mobile" | "nationalCode">
+}, "id" | "mobile" | "nationalCode" | "photoFileId">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -326,6 +339,7 @@ export type UserOrderByWithAggregationInput = {
   province?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   countyId?: Prisma.SortOrderInput | Prisma.SortOrder
+  photoFileId?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -347,6 +361,7 @@ export type UserScalarWhereWithAggregatesInput = {
   province?: Prisma.EnumProvinceNullableWithAggregatesFilter<"User"> | $Enums.Province | null
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   countyId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  photoFileId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -364,6 +379,7 @@ export type UserCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  photoFile?: Prisma.StoredFileCreateNestedOneWithoutCoachPhotoInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
@@ -390,6 +406,7 @@ export type UserUncheckedCreateInput = {
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
+  photoFileId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -420,6 +437,7 @@ export type UserUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  photoFile?: Prisma.StoredFileUpdateOneWithoutCoachPhotoNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
@@ -446,6 +464,7 @@ export type UserUncheckedUpdateInput = {
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -474,6 +493,7 @@ export type UserCreateManyInput = {
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
+  photoFileId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -503,6 +523,7 @@ export type UserUncheckedUpdateManyInput = {
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -528,6 +549,7 @@ export type UserCountOrderByAggregateInput = {
   province?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   countyId?: Prisma.SortOrder
+  photoFileId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -543,6 +565,7 @@ export type UserMaxOrderByAggregateInput = {
   province?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   countyId?: Prisma.SortOrder
+  photoFileId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -558,6 +581,7 @@ export type UserMinOrderByAggregateInput = {
   province?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   countyId?: Prisma.SortOrder
+  photoFileId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -766,6 +790,38 @@ export type UserUpdateOneRequiredWithoutDeadlineExtensionsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutDeadlineExtensionsInput, Prisma.UserUpdateWithoutDeadlineExtensionsInput>, Prisma.UserUncheckedUpdateWithoutDeadlineExtensionsInput>
 }
 
+export type UserCreateNestedOneWithoutPhotoFileInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPhotoFileInput, Prisma.UserUncheckedCreateWithoutPhotoFileInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPhotoFileInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUncheckedCreateNestedOneWithoutPhotoFileInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPhotoFileInput, Prisma.UserUncheckedCreateWithoutPhotoFileInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPhotoFileInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutPhotoFileNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPhotoFileInput, Prisma.UserUncheckedCreateWithoutPhotoFileInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPhotoFileInput
+  upsert?: Prisma.UserUpsertWithoutPhotoFileInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPhotoFileInput, Prisma.UserUpdateWithoutPhotoFileInput>, Prisma.UserUncheckedUpdateWithoutPhotoFileInput>
+}
+
+export type UserUncheckedUpdateOneWithoutPhotoFileNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutPhotoFileInput, Prisma.UserUncheckedCreateWithoutPhotoFileInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutPhotoFileInput
+  upsert?: Prisma.UserUpsertWithoutPhotoFileInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutPhotoFileInput, Prisma.UserUpdateWithoutPhotoFileInput>, Prisma.UserUncheckedUpdateWithoutPhotoFileInput>
+}
+
 export type UserCreateNestedOneWithoutPaymentsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutPaymentsInput, Prisma.UserUncheckedCreateWithoutPaymentsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutPaymentsInput
@@ -836,6 +892,7 @@ export type UserCreateWithoutCountyInput = {
   isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  photoFile?: Prisma.StoredFileCreateNestedOneWithoutCoachPhotoInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
@@ -861,6 +918,7 @@ export type UserUncheckedCreateWithoutCountyInput = {
   gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
+  photoFileId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -918,6 +976,7 @@ export type UserScalarWhereInput = {
   province?: Prisma.EnumProvinceNullableFilter<"User"> | $Enums.Province | null
   isActive?: Prisma.BoolFilter<"User"> | boolean
   countyId?: Prisma.StringNullableFilter<"User"> | string | null
+  photoFileId?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
 }
@@ -935,6 +994,7 @@ export type UserCreateWithoutStudentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  photoFile?: Prisma.StoredFileCreateNestedOneWithoutCoachPhotoInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
@@ -960,6 +1020,7 @@ export type UserUncheckedCreateWithoutStudentsInput = {
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
+  photoFileId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCoachInput
@@ -994,6 +1055,7 @@ export type UserCreateWithoutReviewedProfilesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  photoFile?: Prisma.StoredFileCreateNestedOneWithoutCoachPhotoInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
@@ -1019,6 +1081,7 @@ export type UserUncheckedCreateWithoutReviewedProfilesInput = {
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
+  photoFileId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -1064,6 +1127,7 @@ export type UserUpdateWithoutStudentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  photoFile?: Prisma.StoredFileUpdateOneWithoutCoachPhotoNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
@@ -1089,6 +1153,7 @@ export type UserUncheckedUpdateWithoutStudentsInput = {
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCoachNestedInput
@@ -1129,6 +1194,7 @@ export type UserUpdateWithoutReviewedProfilesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  photoFile?: Prisma.StoredFileUpdateOneWithoutCoachPhotoNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
@@ -1154,6 +1220,7 @@ export type UserUncheckedUpdateWithoutReviewedProfilesInput = {
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -1183,6 +1250,7 @@ export type UserCreateWithoutCountyChangeRequestsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  photoFile?: Prisma.StoredFileCreateNestedOneWithoutCoachPhotoInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
@@ -1208,6 +1276,7 @@ export type UserUncheckedCreateWithoutCountyChangeRequestsInput = {
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
+  photoFileId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -1242,6 +1311,7 @@ export type UserCreateWithoutDecidedCountyChangesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  photoFile?: Prisma.StoredFileCreateNestedOneWithoutCoachPhotoInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
@@ -1267,6 +1337,7 @@ export type UserUncheckedCreateWithoutDecidedCountyChangesInput = {
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
+  photoFileId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -1312,6 +1383,7 @@ export type UserUpdateWithoutCountyChangeRequestsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  photoFile?: Prisma.StoredFileUpdateOneWithoutCoachPhotoNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
@@ -1337,6 +1409,7 @@ export type UserUncheckedUpdateWithoutCountyChangeRequestsInput = {
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -1377,6 +1450,7 @@ export type UserUpdateWithoutDecidedCountyChangesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  photoFile?: Prisma.StoredFileUpdateOneWithoutCoachPhotoNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
@@ -1402,6 +1476,7 @@ export type UserUncheckedUpdateWithoutDecidedCountyChangesInput = {
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -1431,6 +1506,7 @@ export type UserCreateWithoutTransfersFromInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  photoFile?: Prisma.StoredFileCreateNestedOneWithoutCoachPhotoInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
@@ -1456,6 +1532,7 @@ export type UserUncheckedCreateWithoutTransfersFromInput = {
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
+  photoFileId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -1490,6 +1567,7 @@ export type UserCreateWithoutTransfersToInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  photoFile?: Prisma.StoredFileCreateNestedOneWithoutCoachPhotoInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
@@ -1515,6 +1593,7 @@ export type UserUncheckedCreateWithoutTransfersToInput = {
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
+  photoFileId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -1549,6 +1628,7 @@ export type UserCreateWithoutDecidedTransfersInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  photoFile?: Prisma.StoredFileCreateNestedOneWithoutCoachPhotoInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
@@ -1574,6 +1654,7 @@ export type UserUncheckedCreateWithoutDecidedTransfersInput = {
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
+  photoFileId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -1619,6 +1700,7 @@ export type UserUpdateWithoutTransfersFromInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  photoFile?: Prisma.StoredFileUpdateOneWithoutCoachPhotoNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
@@ -1644,6 +1726,7 @@ export type UserUncheckedUpdateWithoutTransfersFromInput = {
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -1684,6 +1767,7 @@ export type UserUpdateWithoutTransfersToInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  photoFile?: Prisma.StoredFileUpdateOneWithoutCoachPhotoNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
@@ -1709,6 +1793,7 @@ export type UserUncheckedUpdateWithoutTransfersToInput = {
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -1749,6 +1834,7 @@ export type UserUpdateWithoutDecidedTransfersInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  photoFile?: Prisma.StoredFileUpdateOneWithoutCoachPhotoNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
@@ -1774,6 +1860,7 @@ export type UserUncheckedUpdateWithoutDecidedTransfersInput = {
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -1803,6 +1890,7 @@ export type UserCreateWithoutAuditLogsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  photoFile?: Prisma.StoredFileCreateNestedOneWithoutCoachPhotoInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
@@ -1828,6 +1916,7 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
+  photoFileId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -1873,6 +1962,7 @@ export type UserUpdateWithoutAuditLogsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  photoFile?: Prisma.StoredFileUpdateOneWithoutCoachPhotoNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
@@ -1898,6 +1988,7 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -1927,6 +2018,7 @@ export type UserCreateWithoutDeadlineExtensionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  photoFile?: Prisma.StoredFileCreateNestedOneWithoutCoachPhotoInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
@@ -1952,6 +2044,7 @@ export type UserUncheckedCreateWithoutDeadlineExtensionsInput = {
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
+  photoFileId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -1997,6 +2090,7 @@ export type UserUpdateWithoutDeadlineExtensionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  photoFile?: Prisma.StoredFileUpdateOneWithoutCoachPhotoNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
@@ -2022,11 +2116,140 @@ export type UserUncheckedUpdateWithoutDeadlineExtensionsInput = {
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutCoachNestedInput
+  refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
+  reviewedProfiles?: Prisma.StudentUncheckedUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+  transfersFrom?: Prisma.StudentTransferUncheckedUpdateManyWithoutFromCoachNestedInput
+  transfersTo?: Prisma.StudentTransferUncheckedUpdateManyWithoutToCoachNestedInput
+  decidedTransfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutDecidedByNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+}
+
+export type UserCreateWithoutPhotoFileInput = {
+  id?: string
+  mobile: string
+  passwordHash: string
+  fullName: string
+  nationalCode?: string | null
+  role: $Enums.Role
+  gender?: $Enums.Gender | null
+  province?: $Enums.Province | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  students?: Prisma.StudentCreateNestedManyWithoutCoachInput
+  registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
+  reviewedProfiles?: Prisma.StudentCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutDecidedByInput
+  transfersFrom?: Prisma.StudentTransferCreateNestedManyWithoutFromCoachInput
+  transfersTo?: Prisma.StudentTransferCreateNestedManyWithoutToCoachInput
+  decidedTransfers?: Prisma.StudentTransferCreateNestedManyWithoutDecidedByInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+}
+
+export type UserUncheckedCreateWithoutPhotoFileInput = {
+  id?: string
+  mobile: string
+  passwordHash: string
+  fullName: string
+  nationalCode?: string | null
+  role: $Enums.Role
+  gender?: $Enums.Gender | null
+  province?: $Enums.Province | null
+  isActive?: boolean
+  countyId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
+  registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCoachInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCoachInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
+  reviewedProfiles?: Prisma.StudentUncheckedCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
+  transfersFrom?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutFromCoachInput
+  transfersTo?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutToCoachInput
+  decidedTransfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutDecidedByInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+}
+
+export type UserCreateOrConnectWithoutPhotoFileInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutPhotoFileInput, Prisma.UserUncheckedCreateWithoutPhotoFileInput>
+}
+
+export type UserUpsertWithoutPhotoFileInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutPhotoFileInput, Prisma.UserUncheckedUpdateWithoutPhotoFileInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutPhotoFileInput, Prisma.UserUncheckedCreateWithoutPhotoFileInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutPhotoFileInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutPhotoFileInput, Prisma.UserUncheckedUpdateWithoutPhotoFileInput>
+}
+
+export type UserUpdateWithoutPhotoFileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mobile?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+  province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
+  registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
+  reviewedProfiles?: Prisma.StudentUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUpdateManyWithoutDecidedByNestedInput
+  transfersFrom?: Prisma.StudentTransferUpdateManyWithoutFromCoachNestedInput
+  transfersTo?: Prisma.StudentTransferUpdateManyWithoutToCoachNestedInput
+  decidedTransfers?: Prisma.StudentTransferUpdateManyWithoutDecidedByNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+}
+
+export type UserUncheckedUpdateWithoutPhotoFileInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mobile?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+  province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
+  registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCoachNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutCoachNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCreatedByNestedInput
   refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
   processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
   reviewedProfiles?: Prisma.StudentUncheckedUpdateManyWithoutApprovedByNestedInput
@@ -2051,6 +2274,7 @@ export type UserCreateWithoutPaymentsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  photoFile?: Prisma.StoredFileCreateNestedOneWithoutCoachPhotoInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
@@ -2076,6 +2300,7 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
+  photoFileId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -2121,6 +2346,7 @@ export type UserUpdateWithoutPaymentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  photoFile?: Prisma.StoredFileUpdateOneWithoutCoachPhotoNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
@@ -2146,6 +2372,7 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -2175,6 +2402,7 @@ export type UserCreateWithoutRegistrationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  photoFile?: Prisma.StoredFileCreateNestedOneWithoutCoachPhotoInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
   deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
@@ -2200,6 +2428,7 @@ export type UserUncheckedCreateWithoutRegistrationsInput = {
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
+  photoFileId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -2245,6 +2474,7 @@ export type UserUpdateWithoutRegistrationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  photoFile?: Prisma.StoredFileUpdateOneWithoutCoachPhotoNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
   deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
@@ -2270,6 +2500,7 @@ export type UserUncheckedUpdateWithoutRegistrationsInput = {
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -2299,6 +2530,7 @@ export type UserCreateWithoutRefundsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  photoFile?: Prisma.StoredFileCreateNestedOneWithoutCoachPhotoInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
@@ -2324,6 +2556,7 @@ export type UserUncheckedCreateWithoutRefundsInput = {
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
+  photoFileId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -2358,6 +2591,7 @@ export type UserCreateWithoutProcessedRefundsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  photoFile?: Prisma.StoredFileCreateNestedOneWithoutCoachPhotoInput
   students?: Prisma.StudentCreateNestedManyWithoutCoachInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
   payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
@@ -2383,6 +2617,7 @@ export type UserUncheckedCreateWithoutProcessedRefundsInput = {
   province?: $Enums.Province | null
   isActive?: boolean
   countyId?: string | null
+  photoFileId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
@@ -2428,6 +2663,7 @@ export type UserUpdateWithoutRefundsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  photoFile?: Prisma.StoredFileUpdateOneWithoutCoachPhotoNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
@@ -2453,6 +2689,7 @@ export type UserUncheckedUpdateWithoutRefundsInput = {
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -2493,6 +2730,7 @@ export type UserUpdateWithoutProcessedRefundsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  photoFile?: Prisma.StoredFileUpdateOneWithoutCoachPhotoNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
@@ -2518,6 +2756,7 @@ export type UserUncheckedUpdateWithoutProcessedRefundsInput = {
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -2544,6 +2783,7 @@ export type UserCreateManyCountyInput = {
   gender?: $Enums.Gender | null
   province?: $Enums.Province | null
   isActive?: boolean
+  photoFileId?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2560,6 +2800,7 @@ export type UserUpdateWithoutCountyInput = {
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  photoFile?: Prisma.StoredFileUpdateOneWithoutCoachPhotoNestedInput
   students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
@@ -2585,6 +2826,7 @@ export type UserUncheckedUpdateWithoutCountyInput = {
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
@@ -2612,6 +2854,7 @@ export type UserUncheckedUpdateManyWithoutCountyInput = {
   gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2766,9 +3009,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   province?: boolean
   isActive?: boolean
   countyId?: boolean
+  photoFileId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   county?: boolean | Prisma.User$countyArgs<ExtArgs>
+  photoFile?: boolean | Prisma.User$photoFileArgs<ExtArgs>
   students?: boolean | Prisma.User$studentsArgs<ExtArgs>
   registrations?: boolean | Prisma.User$registrationsArgs<ExtArgs>
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
@@ -2796,9 +3041,11 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   province?: boolean
   isActive?: boolean
   countyId?: boolean
+  photoFileId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   county?: boolean | Prisma.User$countyArgs<ExtArgs>
+  photoFile?: boolean | Prisma.User$photoFileArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -2812,9 +3059,11 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   province?: boolean
   isActive?: boolean
   countyId?: boolean
+  photoFileId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   county?: boolean | Prisma.User$countyArgs<ExtArgs>
+  photoFile?: boolean | Prisma.User$photoFileArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -2828,13 +3077,15 @@ export type UserSelectScalar = {
   province?: boolean
   isActive?: boolean
   countyId?: boolean
+  photoFileId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "mobile" | "passwordHash" | "fullName" | "nationalCode" | "role" | "gender" | "province" | "isActive" | "countyId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "mobile" | "passwordHash" | "fullName" | "nationalCode" | "role" | "gender" | "province" | "isActive" | "countyId" | "photoFileId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   county?: boolean | Prisma.User$countyArgs<ExtArgs>
+  photoFile?: boolean | Prisma.User$photoFileArgs<ExtArgs>
   students?: boolean | Prisma.User$studentsArgs<ExtArgs>
   registrations?: boolean | Prisma.User$registrationsArgs<ExtArgs>
   payments?: boolean | Prisma.User$paymentsArgs<ExtArgs>
@@ -2852,15 +3103,18 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   county?: boolean | Prisma.User$countyArgs<ExtArgs>
+  photoFile?: boolean | Prisma.User$photoFileArgs<ExtArgs>
 }
 export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   county?: boolean | Prisma.User$countyArgs<ExtArgs>
+  photoFile?: boolean | Prisma.User$photoFileArgs<ExtArgs>
 }
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
     county: Prisma.$CountyPayload<ExtArgs> | null
+    photoFile: Prisma.$StoredFilePayload<ExtArgs> | null
     students: Prisma.$StudentPayload<ExtArgs>[]
     registrations: Prisma.$RegistrationPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
@@ -2886,6 +3140,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     province: $Enums.Province | null
     isActive: boolean
     countyId: string | null
+    photoFileId: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -3283,6 +3538,7 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   county<T extends Prisma.User$countyArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$countyArgs<ExtArgs>>): Prisma.Prisma__CountyClient<runtime.Types.Result.GetResult<Prisma.$CountyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  photoFile<T extends Prisma.User$photoFileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$photoFileArgs<ExtArgs>>): Prisma.Prisma__StoredFileClient<runtime.Types.Result.GetResult<Prisma.$StoredFilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   students<T extends Prisma.User$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   registrations<T extends Prisma.User$registrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$registrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.User$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3335,6 +3591,7 @@ export interface UserFieldRefs {
   readonly province: Prisma.FieldRef<"User", 'Province'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
   readonly countyId: Prisma.FieldRef<"User", 'String'>
+  readonly photoFileId: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -3754,6 +4011,25 @@ export type User$countyArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
    */
   include?: Prisma.CountyInclude<ExtArgs> | null
   where?: Prisma.CountyWhereInput
+}
+
+/**
+ * User.photoFile
+ */
+export type User$photoFileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StoredFile
+   */
+  select?: Prisma.StoredFileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StoredFile
+   */
+  omit?: Prisma.StoredFileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoredFileInclude<ExtArgs> | null
+  where?: Prisma.StoredFileWhereInput
 }
 
 /**

@@ -15,7 +15,7 @@ export function StudentDocumentsSection({ student, documents }: { student: Stude
         <ImageIcon aria-hidden className="size-4" />
         مدارک هنرجو
       </h2>
-      <p className="text-subtle text-muted-foreground">عکس پرسنلی و کارت ملی برای بررسی پروفایل الزامی است.</p>
+      <p className="text-subtle text-muted-foreground">عکس پرسنلی برای بررسی پروفایل الزامی است.</p>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {studentDocumentTypes.map((type) => (
           <DocumentUploadCard

@@ -16,7 +16,9 @@ export type ProfileStatus = "PENDING" | "APPROVED" | "REJECTED";
 
 export type StudentDocumentType = "PHOTO" | "NATIONAL_ID_OR_BIRTH_CERTIFICATE" | "INSURANCE" | "BELT_CERTIFICATE";
 
-export const STUDENT_DOCUMENT_TYPES: StudentDocumentType[] = ["PHOTO", "NATIONAL_ID_OR_BIRTH_CERTIFICATE", "INSURANCE"];
+// Only the personal photo is offered any more; the older types stay valid so
+// existing rows keep rendering, but they can no longer be uploaded or deleted.
+export const STUDENT_DOCUMENT_TYPES: StudentDocumentType[] = ["PHOTO"];
 
 export function isStudentDocumentType(value: string): value is StudentDocumentType {
   return (STUDENT_DOCUMENT_TYPES as string[]).includes(value);
@@ -100,13 +102,13 @@ export type StudentRepository = {
   countStudentTransfers(studentId: string): Promise<number>;
   createStudent(data: NewStudentData): Promise<StudentRecord>;
   updateStudent(id: string, data: StudentUpdateData): Promise<StudentRecord>;
-  deleteStudent(id: string): Promise<void>;
+  deleteStudent(id: string): Promise<string[]>;
   countPendingReviewStudents(filters: PendingReviewFilters): Promise<number>;
   findPendingReviewStudents(filters: PendingReviewFilters, skip: number, take: number): Promise<PendingReviewStudent[]>;
   updateProfileStatusFromPendingOrRejected(id: string, input: ProfileReviewInput): Promise<StudentRecord | null>;
   upsertStudentDocument(studentId: string, type: StudentDocumentType, fileId: string): Promise<StudentDocumentRecord>;
   findStudentDocument(studentId: string, type: StudentDocumentType): Promise<StudentDocumentRecord | null>;
-  deleteStudentDocumentWithFile(studentId: string, type: StudentDocumentType): Promise<StudentDocumentRecord | null>;
+  deleteStudentDocument(studentId: string, type: StudentDocumentType): Promise<StudentDocumentRecord | null>;
 };
 
 const studentSelection = {
@@ -262,15 +264,16 @@ export async function updateStudent(id: string, data: StudentUpdateData): Promis
 }
 
 // Documents reference stored files with ON DELETE RESTRICT, so the document
-// rows, their stored files and the student must go in one transaction to keep
-// the database consistent. The file bytes live in the database too, so the
-// deletion is atomic with no orphaned files left behind.
-export async function deleteStudent(id: string): Promise<void> {
-  await getPrisma().$transaction(async (tx) => {
+// rows and the student must go in one transaction. The stored file metadata
+// rows (and the R2 objects behind them) are removed by the service after the
+// commit, dispatched on the file provider.
+export async function deleteStudent(id: string): Promise<string[]> {
+  return getPrisma().$transaction(async (tx) => {
     const documents = await tx.studentDocument.findMany({ where: { studentId: id }, select: { fileId: true } });
     await tx.studentDocument.deleteMany({ where: { studentId: id } });
-    await tx.storedFile.deleteMany({ where: { id: { in: documents.map((document) => document.fileId) } } });
     await tx.student.delete({ where: { id }, select: { id: true } });
+
+    return documents.map((document) => document.fileId);
   });
 }
 
@@ -352,13 +355,12 @@ export async function findStudentDocument(studentId: string, type: StudentDocume
   return row ? toDocumentRecord(row) : null;
 }
 
-export async function deleteStudentDocumentWithFile(studentId: string, type: StudentDocumentType): Promise<StudentDocumentRecord | null> {
+export async function deleteStudentDocument(studentId: string, type: StudentDocumentType): Promise<StudentDocumentRecord | null> {
   return getPrisma().$transaction(async (tx) => {
     const row = await tx.studentDocument.findUnique({ where: { studentId_type: { studentId, type } }, select: documentSelection });
     if (row === null) return null;
 
     await tx.studentDocument.delete({ where: { id: row.id } });
-    await tx.storedFile.delete({ where: { id: row.fileId } });
 
     return toDocumentRecord(row);
   });

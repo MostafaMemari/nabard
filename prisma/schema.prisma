@@ -128,6 +128,11 @@ enum ProfileStatus {
   REJECTED @map("rejected")
 }
 
+enum StoredFileProvider {
+  DB @map("db")
+  R2 @map("r2")
+}
+
 enum StudentDocumentType {
   PHOTO                            @map("photo")
   NATIONAL_ID_OR_BIRTH_CERTIFICATE @map("national_id_or_birth_certificate")
@@ -169,6 +174,8 @@ model User {
   isActive     Boolean   @default(true) @map("is_active")
   countyId     String?   @map("county_id") // required for COACH (CHECK users_coach_county_required), null for admins and super admin
   county       County?   @relation(fields: [countyId], references: [id])
+  photoFileId  String?   @unique @map("photo_file_id")
+  photoFile    StoredFile? @relation("CoachPhotoFile", fields: [photoFileId], references: [id])
 
   students             Student[]
   registrations        Registration[]
@@ -425,16 +432,19 @@ model DeadlineExtension {
 
 // ───────────── Registration and payment ─────────────
 
-// Private uploaded files (payment receipts). Rows live in PostgreSQL because
-// Vercel serverless has no persistent disk; files are served through an
-// authenticated endpoint only.
+// Private uploaded files (payment receipts and profile photos). New objects
+// live in a private Cloudflare R2 bucket (objectKey) and old rows keep their
+// bytes in PostgreSQL; both are served through authenticated endpoints only.
 model StoredFile {
-  id        String   @id @default(uuid()) @map("id")
-  mime      String   @map("mime") @db.VarChar(100)
-  size      Int      @map("size")
-  data      Bytes    @map("data")
-  createdAt DateTime @default(now()) @map("created_at")
+  id        String             @id @default(uuid()) @map("id")
+  mime      String             @map("mime") @db.VarChar(100)
+  size      Int                @map("size")
+  provider  StoredFileProvider @default(DB) @map("provider")
+  objectKey String?            @unique @map("object_key")
+  data      Bytes?             @map("data")
+  createdAt DateTime           @default(now()) @map("created_at")
 
+  coachPhoto       User?             @relation("CoachPhotoFile")
   studentDocuments StudentDocument[]
 
   @@map("stored_files")

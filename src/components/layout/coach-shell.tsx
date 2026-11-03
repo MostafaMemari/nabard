@@ -3,6 +3,7 @@
 import { ClipboardListIcon, HouseIcon, TrophyIcon, UsersIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { roleLabels, useMe } from "@/features/auth";
+import { buildApiUrl } from "@/lib/http";
 import { AppSidebar, type SidebarNavGroup, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
 import { MobileAccountMenu } from "./mobile-account-menu";
 import { MobileBottomNav } from "./mobile-bottom-nav";
@@ -24,7 +25,14 @@ const navGroups: SidebarNavGroup[] = [{ items: coachNavItems }];
 
 function useSidebarUser(): SidebarUser | null {
   const { user } = useMe();
-  return user ? { id: user.id, name: user.fullName, roleLabel: roleLabels[user.role] } : null;
+  return user
+    ? {
+        id: user.id,
+        name: user.fullName,
+        roleLabel: roleLabels[user.role],
+        photoUrl: user.hasPhoto ? buildApiUrl("/api/v1/coaches/me/photo") : undefined,
+      }
+    : null;
 }
 
 export function CoachShell({ active, children }: { active: string; children: ReactNode }) {

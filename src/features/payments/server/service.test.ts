@@ -50,7 +50,8 @@ function repoWith(overrides: Partial<PaymentsRepository> = {}): PaymentsReposito
 function storageWith(overrides: Partial<Storage> = {}): Storage {
   return {
     put: vi.fn().mockResolvedValue({ id: "file-2", mime: "image/png", size: PNG_BYTES.byteLength }),
-    get: vi.fn().mockResolvedValue({ id: "file-1", mime: "image/png", size: PNG_BYTES.byteLength, data: PNG_BYTES }),
+    get: vi.fn().mockResolvedValue({ mime: "image/png", size: PNG_BYTES.byteLength, stream: new Blob([PNG_BYTES]).stream() }),
+    delete: vi.fn().mockResolvedValue(undefined),
     ...overrides,
   };
 }
@@ -231,7 +232,7 @@ describe("readReceipt", () => {
     const repo = repoWith();
     const receipt = await readReceipt(repo, storageWith(), coach, "pay-1");
 
-    expect(receipt).toEqual({ data: PNG_BYTES, mime: "image/png" });
+    expect(receipt).toMatchObject({ mime: "image/png", size: PNG_BYTES.byteLength });
   });
 
   it("returns the receipt to an admin of the same province", async () => {
@@ -321,7 +322,7 @@ describe("uploadReceipt", () => {
     const storage = storageWith();
     const record = await uploadReceipt(repo, storage, coach, "pay-8", receiptFile());
 
-    expect(storage.put).toHaveBeenCalledWith({ data: PNG_BYTES, mime: "image/png" });
+    expect(storage.put).toHaveBeenCalledWith({ data: PNG_BYTES, mime: "image/png", folder: "receipts" });
     expect(repo.updatePayment).toHaveBeenCalledWith("pay-8", { receiptKey: "file-2", status: "PENDING", note: null });
     expect(record.receiptKey).toBe("file-2");
     expect(record.status).toBe("PENDING");

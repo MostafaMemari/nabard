@@ -28,6 +28,7 @@ function toAuthUser(user: UserRecord): AuthUser {
     province: user.province,
     countyId: user.countyId,
     countyName: user.countyName,
+    hasPhoto: user.role === "COACH" && user.photoFileId !== null,
   };
 }
 

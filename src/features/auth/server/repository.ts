@@ -15,6 +15,7 @@ export type UserRecord = {
   isActive: boolean;
   countyId: string | null;
   countyName: string | null;
+  photoFileId: string | null;
 };
 
 const userSelection = {
@@ -27,6 +28,7 @@ const userSelection = {
   province: true,
   isActive: true,
   county: { select: { id: true, name: true } },
+  photoFileId: true,
 } as const;
 
 function toRecord(user: {
@@ -39,6 +41,7 @@ function toRecord(user: {
   province: Province | null;
   isActive: boolean;
   county: { id: string; name: string } | null;
+  photoFileId: string | null;
 }): UserRecord {
   return {
     id: user.id,
@@ -51,6 +54,7 @@ function toRecord(user: {
     isActive: user.isActive,
     countyId: user.county?.id ?? null,
     countyName: user.county?.name ?? null,
+    photoFileId: user.photoFileId,
   };
 }
 

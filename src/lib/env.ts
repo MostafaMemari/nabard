@@ -52,7 +52,22 @@ const serverEnvSchema = z.object({
     .optional(),
   ADMIN_PASSWORD: z.string().min(8).optional(),
   ADMIN_PROVINCE: z.enum(provinces).optional(),
+  R2_PUBLIC_URL: z.string().optional(),
 });
+
+const r2EnvSchema = z.object({
+  R2_ACCOUNT_ID: z.string().min(1),
+  R2_ACCESS_KEY_ID: z.string().min(1),
+  R2_SECRET_ACCESS_KEY: z.string().min(1),
+  R2_BUCKET_NAME: z.string().min(1),
+});
+
+export type R2Env = z.infer<typeof r2EnvSchema>;
+
+export function getR2Env(): R2Env | null {
+  const parsed = r2EnvSchema.safeParse(process.env);
+  return parsed.success ? parsed.data : null;
+}
 
 export const env = clientEnvSchema.parse(process.env);
 

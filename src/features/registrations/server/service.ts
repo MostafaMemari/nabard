@@ -3,6 +3,7 @@ import type { Province } from "@/generated/client";
 import { AppError } from "@/lib/api";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
+import { deleteStorageFileQuietly } from "@/lib/storage";
 import { readReceiptImage } from "@/lib/storage/image";
 import type { Storage } from "@/lib/storage/types";
 import type { RegistrationListQuery } from "../schemas";
@@ -317,7 +318,6 @@ export async function createRegistrations(
     throw new AppError(400, "VALIDATION_ERROR", "برخی از هنرجوهای انتخاب شده واجد شرایط ثبت نام در این مسابقه نیستند.", problems);
   }
 
-  const stored = await storage.put(receipt);
   const studentsToRegister = results.map((result) => {
     const weightClass = result.eligibility.eligible ? result.eligibility.weightClass : null;
 
@@ -330,13 +330,20 @@ export async function createRegistrations(
     };
   });
 
-  return repo.createRegistrationBundle({
-    competitionId,
-    coachId: user.id,
-    amount: competition.feePerStudent * BigInt(studentsToRegister.length),
-    receiptKey: stored.id,
-    students: studentsToRegister,
-  });
+  const stored = await storage.put({ ...receipt, folder: "receipts" });
+
+  try {
+    return await repo.createRegistrationBundle({
+      competitionId,
+      coachId: user.id,
+      amount: competition.feePerStudent * BigInt(studentsToRegister.length),
+      receiptKey: stored.id,
+      students: studentsToRegister,
+    });
+  } catch (error) {
+    await deleteStorageFileQuietly(storage, stored.id);
+    throw error;
+  }
 }
 
 function compareParticipantRows(a: ParticipantRow, b: ParticipantRow): number {

@@ -33,14 +33,14 @@ export function MobileAccountMenu({ user, coachProfile = false }: { user: Sideba
         onClick={() => setOpen(true)}
         className="rounded-full transition-opacity duration-150 hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       >
-        <Avatar id={user.id} name={user.name} size="md" />
+        <Avatar id={user.id} name={user.name} size="md" src={user.photoUrl} />
       </button>
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent side="bottom" showCloseButton={false} className="mx-auto max-w-content gap-0 rounded-t-2xl p-0">
           <SheetTitle className="sr-only">حساب کاربری</SheetTitle>
           <SheetHandle onClose={() => setOpen(false)} />
           <div className="flex items-center gap-3 px-4 pb-3">
-            <Avatar id={user.id} name={user.name} size="lg" />
+            <Avatar id={user.id} name={user.name} size="lg" src={user.photoUrl} />
             <span className="flex min-w-0 flex-col leading-tight">
               <span className="truncate text-sm font-semibold">{user.name}</span>
               <span className="mt-0.5 truncate text-xs text-muted-foreground">{user.roleLabel}</span>

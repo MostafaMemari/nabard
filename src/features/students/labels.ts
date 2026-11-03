@@ -7,4 +7,4 @@ export const studentDocumentLabels: Record<StudentDocumentType, string> = {
   BELT_CERTIFICATE: "مدرک کمربند",
 };
 
-export const studentDocumentTypes: StudentDocumentType[] = ["PHOTO", "NATIONAL_ID_OR_BIRTH_CERTIFICATE", "INSURANCE"];
+export const studentDocumentTypes: StudentDocumentType[] = ["PHOTO"];

@@ -2,6 +2,7 @@ import type { Province } from "@/generated/client";
 import { AppError } from "@/lib/api";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
+import { deleteStorageFileQuietly } from "@/lib/storage";
 import { readReceiptImage } from "@/lib/storage/image";
 import type { Storage } from "@/lib/storage/types";
 import type { PaymentListQuery } from "../schemas";
@@ -143,7 +144,7 @@ export async function readReceipt(
   storage: Storage,
   user: CurrentUser,
   id: string,
-): Promise<{ data: Uint8Array; mime: string }> {
+): Promise<{ stream: ReadableStream<Uint8Array>; mime: string; size: number }> {
   const identity = await requireActiveUser(repo, user);
   const row = await repo.findPaymentById(id);
 
@@ -161,7 +162,7 @@ export async function readReceipt(
     throw new AppError(404, "NOT_FOUND", "فایل رسید یافت نشد.");
   }
 
-  return { data: file.data, mime: file.mime };
+  return { stream: file.stream, mime: file.mime, size: file.size };
 }
 
 export async function uploadReceipt(
@@ -186,8 +187,17 @@ export async function uploadReceipt(
   }
 
   const receipt = await readReceiptImage(receiptFile);
-  const stored = await storage.put(receipt);
-  const updated = await repo.updatePayment(id, { receiptKey: stored.id, status: "PENDING", note: null });
+  const stored = await storage.put({ ...receipt, folder: "receipts" });
 
-  return toRecord(updated);
+  try {
+    const updated = await repo.updatePayment(id, { receiptKey: stored.id, status: "PENDING", note: null });
+    if (row.receiptKey !== null && row.receiptKey !== stored.id) {
+      await deleteStorageFileQuietly(storage, row.receiptKey);
+    }
+
+    return toRecord(updated);
+  } catch (error) {
+    await deleteStorageFileQuietly(storage, stored.id);
+    throw error;
+  }
 }

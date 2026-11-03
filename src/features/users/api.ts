@@ -40,3 +40,13 @@ export function updateCoach(id: string, input: UpdateCoachInput): Promise<User> 
 export function resetCoachPassword(id: string, password: string): Promise<User> {
   return api<User>(`/api/v1/coaches/${id}/reset-password`, { method: "POST", body: { password } });
 }
+
+export function uploadCoachPhoto(file: File): Promise<null> {
+  const form = new FormData();
+  form.set("file", file);
+  return api<null>("/api/v1/coaches/me/photo", { method: "PUT", body: form });
+}
+
+export function deleteCoachPhoto(): Promise<null> {
+  return api<null>("/api/v1/coaches/me/photo", { method: "DELETE" });
+}

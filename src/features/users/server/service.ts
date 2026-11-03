@@ -5,6 +5,9 @@ import { AppError } from "@/lib/api";
 import { toPersianDigits } from "@/lib/format";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
+import { deleteStorageFileQuietly } from "@/lib/storage";
+import { readProfileImage } from "@/lib/storage/image";
+import type { Storage } from "@/lib/storage/types";
 import type { CoachInput, CoachListQuery, UpdateCoachInput } from "../schemas";
 import type {
   CoachFilters,
@@ -168,4 +171,75 @@ export async function resetCoachPassword(repo: CoachRepository, user: CurrentUse
   const passwordHash = await hash(password, 10);
 
   return repo.updateCoachPassword(coach.id, passwordHash);
+}
+
+async function requireActiveCoach(repo: CoachRepository, user: CurrentUser): Promise<UserIdentityRecord> {
+  const record = await repo.findUserById(user.id);
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record.isActive || record.role !== "COACH" || user.role !== "COACH") throw forbidden();
+
+  return record;
+}
+
+function photoNotFound(): AppError {
+  return new AppError(404, "NOT_FOUND", "عکسی بارگذاری نشده است.");
+}
+
+export async function uploadCoachPhoto(repo: CoachRepository, storage: Storage, user: CurrentUser, file: File): Promise<null> {
+  await requireActiveCoach(repo, user);
+
+  const image = await readProfileImage(file);
+  const stored = await storage.put({ ...image, folder: "coach-photos" });
+
+  try {
+    const previous = await repo.setPhotoFileId(user.id, stored.id);
+    if (previous !== null && previous !== stored.id) {
+      await deleteStorageFileQuietly(storage, previous);
+    }
+
+    return null;
+  } catch (error) {
+    await deleteStorageFileQuietly(storage, stored.id);
+    throw error;
+  }
+}
+
+export async function deleteCoachPhoto(repo: CoachRepository, storage: Storage, user: CurrentUser): Promise<null> {
+  await requireActiveCoach(repo, user);
+
+  const previous = await repo.findPhotoFileId(user.id);
+  if (previous === null) throw photoNotFound();
+
+  await repo.setPhotoFileId(user.id, null);
+  await deleteStorageFileQuietly(storage, previous);
+
+  return null;
+}
+
+export async function readCoachPhoto(
+  repo: CoachRepository,
+  storage: Storage,
+  user: CurrentUser,
+  coachId: string,
+): Promise<{ stream: ReadableStream<Uint8Array>; mime: string; size: number }> {
+  const identity = await repo.findUserById(user.id);
+  if (!identity || !identity.isActive) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+
+  const coach = await repo.findUserById(coachId);
+  const inScope =
+    coach !== null &&
+    coach.role === "COACH" &&
+    (identity.role === "SUPER_ADMIN" ||
+      (identity.role === "ADMIN"
+        ? coach.province !== null && coach.province === identity.province
+        : user.role === "COACH" && user.id === coachId));
+  if (!inScope) throw coachNotFound();
+
+  const fileId = await repo.findPhotoFileId(coachId);
+  if (fileId === null) throw photoNotFound();
+
+  const file = await storage.get(fileId);
+  if (!file) throw photoNotFound();
+
+  return { stream: file.stream, mime: file.mime, size: file.size };
 }

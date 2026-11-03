@@ -109,6 +109,7 @@ export const UserScalarFieldEnum = {
   province: 'province',
   isActive: 'isActive',
   countyId: 'countyId',
+  photoFileId: 'photoFileId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -279,6 +280,8 @@ export const StoredFileScalarFieldEnum = {
   id: 'id',
   mime: 'mime',
   size: 'size',
+  provider: 'provider',
+  objectKey: 'objectKey',
   data: 'data',
   createdAt: 'createdAt'
 } as const

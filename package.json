@@ -11,12 +11,14 @@
     "db:seed:dev": "tsx prisma/seed.dev.ts",
     "db:make-super-admin": "tsx prisma/make-super-admin.ts",
     "db:clean-demo": "tsx prisma/clean-demo.ts",
+    "storage:migrate-to-r2": "tsx prisma/storage-migrate-to-r2.ts",
     "check": "biome check",
     "fix": "biome check --write",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1161.0",
     "@base-ui/react": "^1.9.0",
     "@hookform/resolvers": "^6.0.2",
     "@neondatabase/serverless": "^1.2.0",

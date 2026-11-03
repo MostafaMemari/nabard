@@ -30,13 +30,22 @@ function tintOf(id: string): (typeof tints)[number] {
   return tints[sum % tints.length] ?? tints[0];
 }
 
-export function Avatar({ id, name, size = "md" }: { id: string; name: string; size?: "sm" | "md" | "lg" }) {
+export function Avatar({ id, name, size = "md", src }: { id: string; name: string; size?: "sm" | "md" | "lg"; src?: string }) {
   return (
     <span
       aria-hidden
-      className={cn("inline-flex shrink-0 items-center justify-center rounded-full font-medium select-none", tintOf(id), sizeStyles[size])}
+      className={cn(
+        "inline-flex shrink-0 items-center justify-center overflow-hidden rounded-full font-medium select-none",
+        tintOf(id),
+        sizeStyles[size],
+      )}
     >
-      {initialsOf(name)}
+      {src ? (
+        // biome-ignore lint/performance/noImgElement: private photo served by an authenticated endpoint
+        <img src={src} alt="" className="size-full object-cover" />
+      ) : (
+        initialsOf(name)
+      )}
     </span>
   );
 }

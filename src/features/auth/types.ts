@@ -10,4 +10,5 @@ export type AuthUser = {
   province: Province | null;
   countyId: string | null;
   countyName: string | null;
+  hasPhoto: boolean;
 };

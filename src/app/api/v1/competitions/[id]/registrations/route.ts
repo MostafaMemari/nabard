@@ -2,7 +2,7 @@ import { createRegistrationsSchema } from "@/features/registrations/schemas";
 import * as repository from "@/features/registrations/server/repository";
 import { createRegistrations } from "@/features/registrations/server/service";
 import { AppError, readFormData, route } from "@/lib/api";
-import { postgresStorage, RECEIPT_MAX_BYTES } from "@/lib/storage";
+import { RECEIPT_MAX_BYTES, storage } from "@/lib/storage";
 
 const FORM_MAX_BYTES = RECEIPT_MAX_BYTES + 128 * 1024;
 
@@ -37,5 +37,5 @@ export const POST = route({ roles: ["COACH"] }, async ({ request, user, params }
     weights: parseWeights(form.get("weights")),
   });
 
-  return createRegistrations(repository, postgresStorage, user, id, { studentIds, weights, receipt });
+  return createRegistrations(repository, storage, user, id, { studentIds, weights, receipt });
 });

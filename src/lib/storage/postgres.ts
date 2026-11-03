@@ -3,10 +3,14 @@ import type { Storage, StoredFileContent, StoredFileInfo, StoredFileInput } from
 
 const fileInfoSelection = { id: true, mime: true, size: true } as const;
 
+function bytesToStream(data: Uint8Array): ReadableStream<Uint8Array> {
+  return new Blob([data as BlobPart]).stream() as ReadableStream<Uint8Array>;
+}
+
 export const postgresStorage: Storage = {
   async put(input: StoredFileInput): Promise<StoredFileInfo> {
     return getPrisma().storedFile.create({
-      data: { mime: input.mime, size: input.data.byteLength, data: input.data },
+      data: { mime: input.mime, size: input.data.byteLength, data: input.data, provider: "DB" },
       select: fileInfoSelection,
     });
   },
@@ -17,6 +21,12 @@ export const postgresStorage: Storage = {
       select: { ...fileInfoSelection, data: true },
     });
 
-    return row === null ? null : { id: row.id, mime: row.mime, size: row.size, data: row.data };
+    if (!row?.data) return null;
+
+    return { mime: row.mime, size: row.size, stream: bytesToStream(row.data) };
+  },
+
+  async delete(id: string): Promise<void> {
+    await getPrisma().storedFile.delete({ where: { id } });
   },
 };

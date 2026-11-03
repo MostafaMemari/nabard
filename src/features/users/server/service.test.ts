@@ -2,8 +2,18 @@ import { compareSync } from "bcryptjs";
 import { describe, expect, it, vi } from "vitest";
 import { AppError } from "@/lib/api";
 import type { CurrentUser } from "@/lib/session";
+import type { Storage } from "@/lib/storage/types";
 import type { CoachRecord, CoachRepository, UserIdentityRecord } from "./repository";
-import { createCoach, getCoach, listCoaches, resetCoachPassword, updateCoach } from "./service";
+import {
+  createCoach,
+  deleteCoachPhoto,
+  getCoach,
+  listCoaches,
+  readCoachPhoto,
+  resetCoachPassword,
+  updateCoach,
+  uploadCoachPhoto,
+} from "./service";
 
 const admin: CurrentUser = { id: "admin-1", role: "ADMIN" };
 const coach: CurrentUser = { id: "coach-1", role: "COACH" };
@@ -52,6 +62,8 @@ function repoWith(overrides: Partial<CoachRepository> = {}): CoachRepository {
     updateCoach: vi.fn().mockResolvedValue(tehranCoach),
     updateCoachPassword: vi.fn().mockResolvedValue(tehranCoach),
     countStudentsByGender: vi.fn().mockResolvedValue(0),
+    findPhotoFileId: vi.fn().mockResolvedValue(null),
+    setPhotoFileId: vi.fn().mockResolvedValue(null),
     ...overrides,
   };
 }
@@ -424,5 +436,144 @@ describe("SUPER_ADMIN", () => {
     const updateFailure = await failureOf(updateCoach(repo, superAdmin, "coach-9", { isActive: false }));
     expect(updateFailure).toMatchObject({ status: 403, code: "FORBIDDEN" });
     expect(repo.updateCoach).not.toHaveBeenCalled();
+  });
+});
+
+const JPEG_BYTES = new Uint8Array([0xff, 0xd8, 0xff, 0xdb, 9, 9]);
+
+const activeCoachRecord: UserIdentityRecord = { id: "coach-1", role: "COACH", province: "TEHRAN", isActive: true };
+
+function photoFile(): File {
+  return new File([JPEG_BYTES], "photo.jpg", { type: "image/jpeg" });
+}
+
+function photoStorageWith(): Storage {
+  return {
+    put: vi.fn().mockResolvedValue({ id: "photo-file-2", mime: "image/jpeg", size: JPEG_BYTES.byteLength }),
+    get: vi.fn().mockResolvedValue({ mime: "image/jpeg", size: JPEG_BYTES.byteLength, stream: new Blob([JPEG_BYTES]).stream() }),
+    delete: vi.fn().mockResolvedValue(undefined),
+  };
+}
+
+describe("uploadCoachPhoto", () => {
+  it("stores the photo under the coach folder and replaces the old file", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(activeCoachRecord),
+      setPhotoFileId: vi.fn().mockResolvedValue("photo-file-1"),
+    });
+    const storage = photoStorageWith();
+    await uploadCoachPhoto(repo, storage, coach, photoFile());
+
+    expect(storage.put).toHaveBeenCalledWith({ data: JPEG_BYTES, mime: "image/jpeg", folder: "coach-photos" });
+    expect(repo.setPhotoFileId).toHaveBeenCalledWith("coach-1", "photo-file-2");
+    expect(storage.delete).toHaveBeenCalledWith("photo-file-1");
+  });
+
+  it("cleans the uploaded object when the update fails", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(activeCoachRecord),
+      setPhotoFileId: vi.fn().mockRejectedValue(new Error("db down")),
+    });
+    const storage = photoStorageWith();
+    await expect(uploadCoachPhoto(repo, storage, coach, photoFile())).rejects.toThrow("db down");
+
+    expect(storage.delete).toHaveBeenCalledWith("photo-file-2");
+  });
+
+  it("rejects an admin with 403", async () => {
+    const repo = repoWith();
+    await expect(uploadCoachPhoto(repo, photoStorageWith(), admin, photoFile())).rejects.toMatchObject({
+      status: 403,
+      code: "FORBIDDEN",
+    });
+    expect(repo.setPhotoFileId).not.toHaveBeenCalled();
+  });
+});
+
+describe("deleteCoachPhoto", () => {
+  it("removes the photo reference and the stored file", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(activeCoachRecord),
+      findPhotoFileId: vi.fn().mockResolvedValue("photo-file-1"),
+    });
+    const storage = photoStorageWith();
+    await deleteCoachPhoto(repo, storage, coach);
+
+    expect(repo.setPhotoFileId).toHaveBeenCalledWith("coach-1", null);
+    expect(storage.delete).toHaveBeenCalledWith("photo-file-1");
+  });
+
+  it("answers 404 when no photo is uploaded", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(activeCoachRecord) });
+    await expect(deleteCoachPhoto(repo, photoStorageWith(), coach)).rejects.toMatchObject({ status: 404, code: "NOT_FOUND" });
+  });
+});
+
+describe("readCoachPhoto", () => {
+  it("serves the photo to the owning coach", async () => {
+    const repo = repoWith({
+      findUserById: vi
+        .fn()
+        .mockImplementation(async (id: string) =>
+          id === "coach-1"
+            ? { id, role: "COACH", province: "TEHRAN", isActive: true }
+            : { id: "admin-1", role: "ADMIN", province: "TEHRAN", isActive: true },
+        ),
+      findPhotoFileId: vi.fn().mockResolvedValue("photo-file-1"),
+    });
+    const storage = photoStorageWith();
+    const photo = await readCoachPhoto(repo, storage, coach, "coach-1");
+
+    expect(storage.get).toHaveBeenCalledWith("photo-file-1");
+    expect(photo).toMatchObject({ mime: "image/jpeg", size: JPEG_BYTES.byteLength });
+  });
+
+  it("serves the photo to an admin of the same province and to a super admin", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockImplementation(async (id: string) => {
+        if (id === "admin-1") return { id, role: "ADMIN", province: "TEHRAN", isActive: true };
+        if (id === "super-1") return { id, role: "SUPER_ADMIN", province: null, isActive: true };
+        return { id, role: "COACH", province: "TEHRAN", isActive: true };
+      }),
+      findPhotoFileId: vi.fn().mockResolvedValue("photo-file-1"),
+    });
+
+    await readCoachPhoto(repo, photoStorageWith(), admin, "coach-1");
+    await readCoachPhoto(repo, photoStorageWith(), { id: "super-1", role: "SUPER_ADMIN" }, "coach-1");
+
+    expect(repo.findPhotoFileId).toHaveBeenCalledTimes(2);
+  });
+
+  it("hides coaches of another province behind 404", async () => {
+    const repo = repoWith({
+      findUserById: vi
+        .fn()
+        .mockImplementation(async (id: string) =>
+          id === "admin-1"
+            ? { id, role: "ADMIN", province: "TEHRAN", isActive: true }
+            : { id, role: "COACH", province: "FARS", isActive: true },
+        ),
+    });
+    await expect(readCoachPhoto(repo, photoStorageWith(), admin, "coach-1")).rejects.toMatchObject({
+      status: 404,
+      code: "NOT_FOUND",
+    });
+  });
+
+  it("blocks a coach reading another coach photo behind 404", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue({ id: "coach-2", role: "COACH", province: "TEHRAN", isActive: true }),
+    });
+    await expect(readCoachPhoto(repo, photoStorageWith(), { id: "coach-1", role: "COACH" }, "coach-2")).rejects.toMatchObject({
+      status: 404,
+      code: "NOT_FOUND",
+    });
+  });
+
+  it("answers 404 when the coach has no photo", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue({ id: "coach-1", role: "COACH", province: "TEHRAN", isActive: true }),
+    });
+    await expect(readCoachPhoto(repo, photoStorageWith(), coach, "coach-1")).rejects.toMatchObject({ status: 404, code: "NOT_FOUND" });
   });
 });

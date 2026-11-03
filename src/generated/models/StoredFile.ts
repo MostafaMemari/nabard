@@ -38,6 +38,8 @@ export type StoredFileMinAggregateOutputType = {
   id: string | null
   mime: string | null
   size: number | null
+  provider: $Enums.StoredFileProvider | null
+  objectKey: string | null
   data: runtime.Bytes | null
   createdAt: Date | null
 }
@@ -46,6 +48,8 @@ export type StoredFileMaxAggregateOutputType = {
   id: string | null
   mime: string | null
   size: number | null
+  provider: $Enums.StoredFileProvider | null
+  objectKey: string | null
   data: runtime.Bytes | null
   createdAt: Date | null
 }
@@ -54,6 +58,8 @@ export type StoredFileCountAggregateOutputType = {
   id: number
   mime: number
   size: number
+  provider: number
+  objectKey: number
   data: number
   createdAt: number
   _all: number
@@ -72,6 +78,8 @@ export type StoredFileMinAggregateInputType = {
   id?: true
   mime?: true
   size?: true
+  provider?: true
+  objectKey?: true
   data?: true
   createdAt?: true
 }
@@ -80,6 +88,8 @@ export type StoredFileMaxAggregateInputType = {
   id?: true
   mime?: true
   size?: true
+  provider?: true
+  objectKey?: true
   data?: true
   createdAt?: true
 }
@@ -88,6 +98,8 @@ export type StoredFileCountAggregateInputType = {
   id?: true
   mime?: true
   size?: true
+  provider?: true
+  objectKey?: true
   data?: true
   createdAt?: true
   _all?: true
@@ -183,7 +195,9 @@ export type StoredFileGroupByOutputType = {
   id: string
   mime: string
   size: number
-  data: runtime.Bytes
+  provider: $Enums.StoredFileProvider
+  objectKey: string | null
+  data: runtime.Bytes | null
   createdAt: Date
   _count: StoredFileCountAggregateOutputType | null
   _avg: StoredFileAvgAggregateOutputType | null
@@ -214,8 +228,11 @@ export type StoredFileWhereInput = {
   id?: Prisma.StringFilter<"StoredFile"> | string
   mime?: Prisma.StringFilter<"StoredFile"> | string
   size?: Prisma.IntFilter<"StoredFile"> | number
-  data?: Prisma.BytesFilter<"StoredFile"> | runtime.Bytes
+  provider?: Prisma.EnumStoredFileProviderFilter<"StoredFile"> | $Enums.StoredFileProvider
+  objectKey?: Prisma.StringNullableFilter<"StoredFile"> | string | null
+  data?: Prisma.BytesNullableFilter<"StoredFile"> | runtime.Bytes | null
   createdAt?: Prisma.DateTimeFilter<"StoredFile"> | Date | string
+  coachPhoto?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   studentDocuments?: Prisma.StudentDocumentListRelationFilter
 }
 
@@ -223,28 +240,36 @@ export type StoredFileOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   mime?: Prisma.SortOrder
   size?: Prisma.SortOrder
-  data?: Prisma.SortOrder
+  provider?: Prisma.SortOrder
+  objectKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  data?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  coachPhoto?: Prisma.UserOrderByWithRelationInput
   studentDocuments?: Prisma.StudentDocumentOrderByRelationAggregateInput
 }
 
 export type StoredFileWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  objectKey?: string
   AND?: Prisma.StoredFileWhereInput | Prisma.StoredFileWhereInput[]
   OR?: Prisma.StoredFileWhereInput[]
   NOT?: Prisma.StoredFileWhereInput | Prisma.StoredFileWhereInput[]
   mime?: Prisma.StringFilter<"StoredFile"> | string
   size?: Prisma.IntFilter<"StoredFile"> | number
-  data?: Prisma.BytesFilter<"StoredFile"> | runtime.Bytes
+  provider?: Prisma.EnumStoredFileProviderFilter<"StoredFile"> | $Enums.StoredFileProvider
+  data?: Prisma.BytesNullableFilter<"StoredFile"> | runtime.Bytes | null
   createdAt?: Prisma.DateTimeFilter<"StoredFile"> | Date | string
+  coachPhoto?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   studentDocuments?: Prisma.StudentDocumentListRelationFilter
-}, "id">
+}, "id" | "objectKey">
 
 export type StoredFileOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   mime?: Prisma.SortOrder
   size?: Prisma.SortOrder
-  data?: Prisma.SortOrder
+  provider?: Prisma.SortOrder
+  objectKey?: Prisma.SortOrderInput | Prisma.SortOrder
+  data?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.StoredFileCountOrderByAggregateInput
   _avg?: Prisma.StoredFileAvgOrderByAggregateInput
@@ -260,7 +285,9 @@ export type StoredFileScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"StoredFile"> | string
   mime?: Prisma.StringWithAggregatesFilter<"StoredFile"> | string
   size?: Prisma.IntWithAggregatesFilter<"StoredFile"> | number
-  data?: Prisma.BytesWithAggregatesFilter<"StoredFile"> | runtime.Bytes
+  provider?: Prisma.EnumStoredFileProviderWithAggregatesFilter<"StoredFile"> | $Enums.StoredFileProvider
+  objectKey?: Prisma.StringNullableWithAggregatesFilter<"StoredFile"> | string | null
+  data?: Prisma.BytesNullableWithAggregatesFilter<"StoredFile"> | runtime.Bytes | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"StoredFile"> | Date | string
 }
 
@@ -268,8 +295,11 @@ export type StoredFileCreateInput = {
   id?: string
   mime: string
   size: number
-  data: runtime.Bytes
+  provider?: $Enums.StoredFileProvider
+  objectKey?: string | null
+  data?: runtime.Bytes | null
   createdAt?: Date | string
+  coachPhoto?: Prisma.UserCreateNestedOneWithoutPhotoFileInput
   studentDocuments?: Prisma.StudentDocumentCreateNestedManyWithoutFileInput
 }
 
@@ -277,8 +307,11 @@ export type StoredFileUncheckedCreateInput = {
   id?: string
   mime: string
   size: number
-  data: runtime.Bytes
+  provider?: $Enums.StoredFileProvider
+  objectKey?: string | null
+  data?: runtime.Bytes | null
   createdAt?: Date | string
+  coachPhoto?: Prisma.UserUncheckedCreateNestedOneWithoutPhotoFileInput
   studentDocuments?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutFileInput
 }
 
@@ -286,8 +319,11 @@ export type StoredFileUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   mime?: Prisma.StringFieldUpdateOperationsInput | string
   size?: Prisma.IntFieldUpdateOperationsInput | number
-  data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  provider?: Prisma.EnumStoredFileProviderFieldUpdateOperationsInput | $Enums.StoredFileProvider
+  objectKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  coachPhoto?: Prisma.UserUpdateOneWithoutPhotoFileNestedInput
   studentDocuments?: Prisma.StudentDocumentUpdateManyWithoutFileNestedInput
 }
 
@@ -295,8 +331,11 @@ export type StoredFileUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   mime?: Prisma.StringFieldUpdateOperationsInput | string
   size?: Prisma.IntFieldUpdateOperationsInput | number
-  data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  provider?: Prisma.EnumStoredFileProviderFieldUpdateOperationsInput | $Enums.StoredFileProvider
+  objectKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  coachPhoto?: Prisma.UserUncheckedUpdateOneWithoutPhotoFileNestedInput
   studentDocuments?: Prisma.StudentDocumentUncheckedUpdateManyWithoutFileNestedInput
 }
 
@@ -304,7 +343,9 @@ export type StoredFileCreateManyInput = {
   id?: string
   mime: string
   size: number
-  data: runtime.Bytes
+  provider?: $Enums.StoredFileProvider
+  objectKey?: string | null
+  data?: runtime.Bytes | null
   createdAt?: Date | string
 }
 
@@ -312,7 +353,9 @@ export type StoredFileUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   mime?: Prisma.StringFieldUpdateOperationsInput | string
   size?: Prisma.IntFieldUpdateOperationsInput | number
-  data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  provider?: Prisma.EnumStoredFileProviderFieldUpdateOperationsInput | $Enums.StoredFileProvider
+  objectKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -320,14 +363,23 @@ export type StoredFileUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   mime?: Prisma.StringFieldUpdateOperationsInput | string
   size?: Prisma.IntFieldUpdateOperationsInput | number
-  data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  provider?: Prisma.EnumStoredFileProviderFieldUpdateOperationsInput | $Enums.StoredFileProvider
+  objectKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type StoredFileNullableScalarRelationFilter = {
+  is?: Prisma.StoredFileWhereInput | null
+  isNot?: Prisma.StoredFileWhereInput | null
 }
 
 export type StoredFileCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   mime?: Prisma.SortOrder
   size?: Prisma.SortOrder
+  provider?: Prisma.SortOrder
+  objectKey?: Prisma.SortOrder
   data?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -340,6 +392,8 @@ export type StoredFileMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   mime?: Prisma.SortOrder
   size?: Prisma.SortOrder
+  provider?: Prisma.SortOrder
+  objectKey?: Prisma.SortOrder
   data?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -348,6 +402,8 @@ export type StoredFileMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   mime?: Prisma.SortOrder
   size?: Prisma.SortOrder
+  provider?: Prisma.SortOrder
+  objectKey?: Prisma.SortOrder
   data?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
@@ -361,8 +417,28 @@ export type StoredFileScalarRelationFilter = {
   isNot?: Prisma.StoredFileWhereInput
 }
 
-export type BytesFieldUpdateOperationsInput = {
-  set?: runtime.Bytes
+export type StoredFileCreateNestedOneWithoutCoachPhotoInput = {
+  create?: Prisma.XOR<Prisma.StoredFileCreateWithoutCoachPhotoInput, Prisma.StoredFileUncheckedCreateWithoutCoachPhotoInput>
+  connectOrCreate?: Prisma.StoredFileCreateOrConnectWithoutCoachPhotoInput
+  connect?: Prisma.StoredFileWhereUniqueInput
+}
+
+export type StoredFileUpdateOneWithoutCoachPhotoNestedInput = {
+  create?: Prisma.XOR<Prisma.StoredFileCreateWithoutCoachPhotoInput, Prisma.StoredFileUncheckedCreateWithoutCoachPhotoInput>
+  connectOrCreate?: Prisma.StoredFileCreateOrConnectWithoutCoachPhotoInput
+  upsert?: Prisma.StoredFileUpsertWithoutCoachPhotoInput
+  disconnect?: Prisma.StoredFileWhereInput | boolean
+  delete?: Prisma.StoredFileWhereInput | boolean
+  connect?: Prisma.StoredFileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StoredFileUpdateToOneWithWhereWithoutCoachPhotoInput, Prisma.StoredFileUpdateWithoutCoachPhotoInput>, Prisma.StoredFileUncheckedUpdateWithoutCoachPhotoInput>
+}
+
+export type EnumStoredFileProviderFieldUpdateOperationsInput = {
+  set?: $Enums.StoredFileProvider
+}
+
+export type NullableBytesFieldUpdateOperationsInput = {
+  set?: runtime.Bytes | null
 }
 
 export type StoredFileCreateNestedOneWithoutStudentDocumentsInput = {
@@ -379,20 +455,86 @@ export type StoredFileUpdateOneRequiredWithoutStudentDocumentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StoredFileUpdateToOneWithWhereWithoutStudentDocumentsInput, Prisma.StoredFileUpdateWithoutStudentDocumentsInput>, Prisma.StoredFileUncheckedUpdateWithoutStudentDocumentsInput>
 }
 
+export type StoredFileCreateWithoutCoachPhotoInput = {
+  id?: string
+  mime: string
+  size: number
+  provider?: $Enums.StoredFileProvider
+  objectKey?: string | null
+  data?: runtime.Bytes | null
+  createdAt?: Date | string
+  studentDocuments?: Prisma.StudentDocumentCreateNestedManyWithoutFileInput
+}
+
+export type StoredFileUncheckedCreateWithoutCoachPhotoInput = {
+  id?: string
+  mime: string
+  size: number
+  provider?: $Enums.StoredFileProvider
+  objectKey?: string | null
+  data?: runtime.Bytes | null
+  createdAt?: Date | string
+  studentDocuments?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutFileInput
+}
+
+export type StoredFileCreateOrConnectWithoutCoachPhotoInput = {
+  where: Prisma.StoredFileWhereUniqueInput
+  create: Prisma.XOR<Prisma.StoredFileCreateWithoutCoachPhotoInput, Prisma.StoredFileUncheckedCreateWithoutCoachPhotoInput>
+}
+
+export type StoredFileUpsertWithoutCoachPhotoInput = {
+  update: Prisma.XOR<Prisma.StoredFileUpdateWithoutCoachPhotoInput, Prisma.StoredFileUncheckedUpdateWithoutCoachPhotoInput>
+  create: Prisma.XOR<Prisma.StoredFileCreateWithoutCoachPhotoInput, Prisma.StoredFileUncheckedCreateWithoutCoachPhotoInput>
+  where?: Prisma.StoredFileWhereInput
+}
+
+export type StoredFileUpdateToOneWithWhereWithoutCoachPhotoInput = {
+  where?: Prisma.StoredFileWhereInput
+  data: Prisma.XOR<Prisma.StoredFileUpdateWithoutCoachPhotoInput, Prisma.StoredFileUncheckedUpdateWithoutCoachPhotoInput>
+}
+
+export type StoredFileUpdateWithoutCoachPhotoInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mime?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.IntFieldUpdateOperationsInput | number
+  provider?: Prisma.EnumStoredFileProviderFieldUpdateOperationsInput | $Enums.StoredFileProvider
+  objectKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentDocuments?: Prisma.StudentDocumentUpdateManyWithoutFileNestedInput
+}
+
+export type StoredFileUncheckedUpdateWithoutCoachPhotoInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mime?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.IntFieldUpdateOperationsInput | number
+  provider?: Prisma.EnumStoredFileProviderFieldUpdateOperationsInput | $Enums.StoredFileProvider
+  objectKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentDocuments?: Prisma.StudentDocumentUncheckedUpdateManyWithoutFileNestedInput
+}
+
 export type StoredFileCreateWithoutStudentDocumentsInput = {
   id?: string
   mime: string
   size: number
-  data: runtime.Bytes
+  provider?: $Enums.StoredFileProvider
+  objectKey?: string | null
+  data?: runtime.Bytes | null
   createdAt?: Date | string
+  coachPhoto?: Prisma.UserCreateNestedOneWithoutPhotoFileInput
 }
 
 export type StoredFileUncheckedCreateWithoutStudentDocumentsInput = {
   id?: string
   mime: string
   size: number
-  data: runtime.Bytes
+  provider?: $Enums.StoredFileProvider
+  objectKey?: string | null
+  data?: runtime.Bytes | null
   createdAt?: Date | string
+  coachPhoto?: Prisma.UserUncheckedCreateNestedOneWithoutPhotoFileInput
 }
 
 export type StoredFileCreateOrConnectWithoutStudentDocumentsInput = {
@@ -415,16 +557,22 @@ export type StoredFileUpdateWithoutStudentDocumentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   mime?: Prisma.StringFieldUpdateOperationsInput | string
   size?: Prisma.IntFieldUpdateOperationsInput | number
-  data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  provider?: Prisma.EnumStoredFileProviderFieldUpdateOperationsInput | $Enums.StoredFileProvider
+  objectKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  coachPhoto?: Prisma.UserUpdateOneWithoutPhotoFileNestedInput
 }
 
 export type StoredFileUncheckedUpdateWithoutStudentDocumentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   mime?: Prisma.StringFieldUpdateOperationsInput | string
   size?: Prisma.IntFieldUpdateOperationsInput | number
-  data?: Prisma.BytesFieldUpdateOperationsInput | runtime.Bytes
+  provider?: Prisma.EnumStoredFileProviderFieldUpdateOperationsInput | $Enums.StoredFileProvider
+  objectKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  coachPhoto?: Prisma.UserUncheckedUpdateOneWithoutPhotoFileNestedInput
 }
 
 
@@ -462,8 +610,11 @@ export type StoredFileSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   id?: boolean
   mime?: boolean
   size?: boolean
+  provider?: boolean
+  objectKey?: boolean
   data?: boolean
   createdAt?: boolean
+  coachPhoto?: boolean | Prisma.StoredFile$coachPhotoArgs<ExtArgs>
   studentDocuments?: boolean | Prisma.StoredFile$studentDocumentsArgs<ExtArgs>
   _count?: boolean | Prisma.StoredFileCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["storedFile"]>
@@ -472,6 +623,8 @@ export type StoredFileSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   id?: boolean
   mime?: boolean
   size?: boolean
+  provider?: boolean
+  objectKey?: boolean
   data?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["storedFile"]>
@@ -480,6 +633,8 @@ export type StoredFileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   id?: boolean
   mime?: boolean
   size?: boolean
+  provider?: boolean
+  objectKey?: boolean
   data?: boolean
   createdAt?: boolean
 }, ExtArgs["result"]["storedFile"]>
@@ -488,12 +643,15 @@ export type StoredFileSelectScalar = {
   id?: boolean
   mime?: boolean
   size?: boolean
+  provider?: boolean
+  objectKey?: boolean
   data?: boolean
   createdAt?: boolean
 }
 
-export type StoredFileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "mime" | "size" | "data" | "createdAt", ExtArgs["result"]["storedFile"]>
+export type StoredFileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "mime" | "size" | "provider" | "objectKey" | "data" | "createdAt", ExtArgs["result"]["storedFile"]>
 export type StoredFileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  coachPhoto?: boolean | Prisma.StoredFile$coachPhotoArgs<ExtArgs>
   studentDocuments?: boolean | Prisma.StoredFile$studentDocumentsArgs<ExtArgs>
   _count?: boolean | Prisma.StoredFileCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -503,13 +661,16 @@ export type StoredFileIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.E
 export type $StoredFilePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "StoredFile"
   objects: {
+    coachPhoto: Prisma.$UserPayload<ExtArgs> | null
     studentDocuments: Prisma.$StudentDocumentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     mime: string
     size: number
-    data: runtime.Bytes
+    provider: $Enums.StoredFileProvider
+    objectKey: string | null
+    data: runtime.Bytes | null
     createdAt: Date
   }, ExtArgs["result"]["storedFile"]>
   composites: {}
@@ -905,6 +1066,7 @@ readonly fields: StoredFileFieldRefs;
  */
 export interface Prisma__StoredFileClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  coachPhoto<T extends Prisma.StoredFile$coachPhotoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StoredFile$coachPhotoArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   studentDocuments<T extends Prisma.StoredFile$studentDocumentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StoredFile$studentDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -938,6 +1100,8 @@ export interface StoredFileFieldRefs {
   readonly id: Prisma.FieldRef<"StoredFile", 'String'>
   readonly mime: Prisma.FieldRef<"StoredFile", 'String'>
   readonly size: Prisma.FieldRef<"StoredFile", 'Int'>
+  readonly provider: Prisma.FieldRef<"StoredFile", 'StoredFileProvider'>
+  readonly objectKey: Prisma.FieldRef<"StoredFile", 'String'>
   readonly data: Prisma.FieldRef<"StoredFile", 'Bytes'>
   readonly createdAt: Prisma.FieldRef<"StoredFile", 'DateTime'>
 }
@@ -1330,6 +1494,25 @@ export type StoredFileDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Limit how many StoredFiles to delete.
    */
   limit?: number
+}
+
+/**
+ * StoredFile.coachPhoto
+ */
+export type StoredFile$coachPhotoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

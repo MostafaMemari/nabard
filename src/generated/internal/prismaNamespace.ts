@@ -1827,6 +1827,7 @@ export const UserScalarFieldEnum = {
   province: 'province',
   isActive: 'isActive',
   countyId: 'countyId',
+  photoFileId: 'photoFileId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -1997,6 +1998,8 @@ export const StoredFileScalarFieldEnum = {
   id: 'id',
   mime: 'mime',
   size: 'size',
+  provider: 'provider',
+  objectKey: 'objectKey',
   data: 'data',
   createdAt: 'createdAt'
 } as const
@@ -2351,6 +2354,20 @@ export type EnumStudentTransferStatusFieldRefInput<$PrismaModel> = FieldRefInput
  * Reference to a field of type 'StudentTransferStatus[]'
  */
 export type ListEnumStudentTransferStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentTransferStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'StoredFileProvider'
+ */
+export type EnumStoredFileProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StoredFileProvider'>
+    
+
+
+/**
+ * Reference to a field of type 'StoredFileProvider[]'
+ */
+export type ListEnumStoredFileProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StoredFileProvider[]'>
     
 
 

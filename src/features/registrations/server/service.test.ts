@@ -184,6 +184,7 @@ function storageWith(overrides: Partial<Storage> = {}): Storage {
   return {
     put: vi.fn().mockResolvedValue({ id: "file-1", mime: "image/png", size: PNG_BYTES.byteLength }),
     get: vi.fn().mockResolvedValue(null),
+    delete: vi.fn().mockResolvedValue(undefined),
     ...overrides,
   };
 }
@@ -295,7 +296,7 @@ describe("createRegistrations", () => {
       receipt: receiptFile(),
     });
 
-    expect(storage.put).toHaveBeenCalledWith({ data: PNG_BYTES, mime: "image/png" });
+    expect(storage.put).toHaveBeenCalledWith({ data: PNG_BYTES, mime: "image/png", folder: "receipts" });
     expect(repo.createRegistrationBundle).toHaveBeenCalledWith({
       competitionId: "comp-1",
       coachId: "coach-1",

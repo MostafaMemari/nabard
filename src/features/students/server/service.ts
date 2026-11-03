@@ -2,7 +2,8 @@ import type { Province } from "@/generated/client";
 import { AppError } from "@/lib/api";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
-import { readReceiptImage } from "@/lib/storage/image";
+import { deleteStorageFileQuietly } from "@/lib/storage";
+import { readProfileImage } from "@/lib/storage/image";
 import type { Storage } from "@/lib/storage/types";
 import type { CreateStudentInput, PendingReviewQuery, StudentListQuery, UpdateStudentBeltInput } from "../schemas";
 import type {
@@ -170,7 +171,7 @@ export async function updateStudentBelt(
   return repo.updateStudent(id, { beltId: input.beltId });
 }
 
-export async function deleteStudent(repo: StudentRepository, user: CurrentUser, id: string): Promise<{ id: string }> {
+export async function deleteStudent(repo: StudentRepository, storage: Storage, user: CurrentUser, id: string): Promise<{ id: string }> {
   const identity = await requireActiveUser(repo, user);
   if (identity.role !== "COACH") throw forbidden();
 
@@ -188,7 +189,10 @@ export async function deleteStudent(repo: StudentRepository, user: CurrentUser, 
     throw new AppError(409, "CONFLICT", "این هنرجو سابقه درخواست انتقال دارد و قابل حذف نیست.");
   }
 
-  await repo.deleteStudent(id);
+  const fileIds = await repo.deleteStudent(id);
+  for (const fileId of fileIds) {
+    await deleteStorageFileQuietly(storage, fileId);
+  }
 
   return { id };
 }
@@ -215,10 +219,21 @@ export async function uploadStudentDocument(
   if (!isStudentDocumentType(type)) throw documentNotFound();
   await requireOwnedStudent(repo, user, studentId);
 
-  const image = await readReceiptImage(file);
-  const stored = await storage.put(image);
+  const image = await readProfileImage(file);
+  const existing = await repo.findStudentDocument(studentId, type);
+  const stored = await storage.put({ ...image, folder: "student-photos" });
 
-  return repo.upsertStudentDocument(studentId, type, stored.id);
+  try {
+    const record = await repo.upsertStudentDocument(studentId, type, stored.id);
+    if (existing && existing.fileId !== stored.id) {
+      await deleteStorageFileQuietly(storage, existing.fileId);
+    }
+
+    return record;
+  } catch (error) {
+    await deleteStorageFileQuietly(storage, stored.id);
+    throw error;
+  }
 }
 
 export async function readStudentDocument(
@@ -227,7 +242,7 @@ export async function readStudentDocument(
   user: CurrentUser,
   studentId: string,
   type: string,
-): Promise<{ data: Uint8Array; mime: string }> {
+): Promise<{ stream: ReadableStream<Uint8Array>; mime: string; size: number }> {
   const identity = await requireActiveUser(repo, user);
   if (!isStudentDocumentType(type)) throw documentNotFound();
 
@@ -244,11 +259,12 @@ export async function readStudentDocument(
   const file = await storage.get(document.fileId);
   if (!file) throw new AppError(404, "NOT_FOUND", "فایل مدرک یافت نشد.");
 
-  return { data: file.data, mime: file.mime };
+  return { stream: file.stream, mime: file.mime, size: file.size };
 }
 
 export async function deleteStudentDocument(
   repo: StudentRepository,
+  storage: Storage,
   user: CurrentUser,
   studentId: string,
   type: string,
@@ -258,8 +274,10 @@ export async function deleteStudentDocument(
   if (!isStudentDocumentType(type)) throw documentNotFound();
   await requireOwnedStudent(repo, user, studentId);
 
-  const deleted = await repo.deleteStudentDocumentWithFile(studentId, type);
+  const deleted = await repo.deleteStudentDocument(studentId, type);
   if (!deleted) throw documentNotFound();
+
+  await deleteStorageFileQuietly(storage, deleted.fileId);
 
   return { type };
 }

@@ -68,6 +68,8 @@ export type CoachRepository = {
   updateCoach(id: string, data: CoachUpdateData): Promise<CoachRecord>;
   updateCoachPassword(id: string, passwordHash: string): Promise<CoachRecord>;
   countStudentsByGender(coachId: string, gender: Gender): Promise<number>;
+  findPhotoFileId(id: string): Promise<string | null>;
+  setPhotoFileId(id: string, fileId: string | null): Promise<string | null>;
 };
 
 const coachSelection = {
@@ -208,4 +210,20 @@ export async function updateCoachPassword(id: string, passwordHash: string): Pro
 
 export async function countStudentsByGender(coachId: string, gender: Gender): Promise<number> {
   return getPrisma().student.count({ where: { coachId, gender } });
+}
+
+export async function findPhotoFileId(id: string): Promise<string | null> {
+  const row = await getPrisma().user.findUnique({ where: { id }, select: { photoFileId: true } });
+  return row?.photoFileId ?? null;
+}
+
+export async function setPhotoFileId(id: string, fileId: string | null): Promise<string | null> {
+  return getPrisma().$transaction(async (tx) => {
+    const row = await tx.user.findUnique({ where: { id }, select: { photoFileId: true } });
+    if (row === null) return null;
+
+    await tx.user.update({ where: { id }, data: { photoFileId: fileId }, select: { id: true } });
+
+    return row.photoFileId;
+  });
 }

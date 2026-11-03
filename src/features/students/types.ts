@@ -41,7 +41,7 @@ export type StudentInput = {
   tkdBankChargeDate?: string;
 };
 
-export const requiredDocumentTypes: StudentDocumentType[] = ["PHOTO", "NATIONAL_ID_OR_BIRTH_CERTIFICATE"];
+export const requiredDocumentTypes: StudentDocumentType[] = ["PHOTO"];
 
 export function profileStatusKey(status: ProfileStatus): "PROFILE_PENDING" | "PROFILE_APPROVED" | "PROFILE_REJECTED" {
   return status === "PENDING" ? "PROFILE_PENDING" : status === "APPROVED" ? "PROFILE_APPROVED" : "PROFILE_REJECTED";

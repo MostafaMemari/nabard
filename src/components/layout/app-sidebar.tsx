@@ -22,6 +22,7 @@ export type SidebarUser = {
   id: string;
   name: string;
   roleLabel: string;
+  photoUrl?: string;
 };
 
 // Three zones: fixed brand header, scrollable nav, user block pinned to the

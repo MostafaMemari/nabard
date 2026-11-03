@@ -40,7 +40,7 @@ export function StudentFormScreen() {
 
         <p className="flex items-start gap-2 rounded-xl border border-border bg-muted/40 px-3 py-2.5 text-subtle text-muted-foreground">
           <ImageIcon aria-hidden className="mt-0.5 size-4 shrink-0" />
-          مدارک (عکس پرسنلی، کارت ملی یا شناسنامه و بیمه ورزشی) را پس از ثبت، در صفحه هنرجو بارگذاری کنید.
+          عکس پرسنلی را پس از ثبت، در صفحه هنرجو بارگذاری کنید.
         </p>
 
         <FormActions cancelHref="/coach/students" submitLabel="ذخیره" submitting={form.formState.isSubmitting} />

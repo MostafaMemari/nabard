@@ -17,6 +17,7 @@ const activeAdmin: UserRecord = {
   isActive: true,
   countyId: null,
   countyName: null,
+  photoFileId: null,
 };
 
 const inactiveAdmin: UserRecord = { ...activeAdmin, isActive: false };
@@ -53,6 +54,7 @@ describe("login", () => {
       province: "TEHRAN",
       countyId: null,
       countyName: null,
+      hasPhoto: false,
     });
   });
 
@@ -157,6 +159,7 @@ describe("getProfile with a nullable province", () => {
     isActive: true,
     countyId: null,
     countyName: null,
+    photoFileId: null,
   };
 
   it("returns a super admin with a null province and county", async () => {
@@ -170,6 +173,7 @@ describe("getProfile with a nullable province", () => {
       province: null,
       countyId: null,
       countyName: null,
+      hasPhoto: false,
     });
   });
 

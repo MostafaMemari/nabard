@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { roleLabels, useMe } from "@/features/auth";
 import { useCounties } from "@/features/counties";
+import { CoachPhotoField } from "@/features/users";
 import { formatJalaliDate } from "@/lib/format";
 import { useCountyChangeRequest, useMyCountyChange } from "../hooks/use-county-changes";
 import { countyChangeStatusKey, countyChangeStatusLabels } from "../labels";
@@ -70,12 +71,16 @@ export function CoachProfileDialog({ open, onOpenChange }: { open: boolean; onOp
           <DialogTitle>پروفایل مربی</DialogTitle>
           <DialogDescription>شهرستان فعلی شما و وضعیت درخواست تغییر شهرستان.</DialogDescription>
         </DialogHeader>
-        <div className="flex flex-col gap-2 text-sm">
-          <p className="font-medium">{user?.fullName}</p>
-          <p className="text-subtle text-muted-foreground">{user ? roleLabels[user.role] : ""}</p>
-          <div className="flex items-center justify-between rounded-lg border border-border px-3 py-2">
-            <span className="text-subtle text-muted-foreground">شهرستان فعلی</span>
-            <span className="font-medium">{user?.countyName ?? "نامشخص"}</span>
+        <div className="flex flex-col gap-3 text-sm">
+          {user ? <CoachPhotoField userId={user.id} fullName={user.fullName} hasPhoto={user.hasPhoto} /> : null}
+          <div className="h-px bg-border" aria-hidden />
+          <div className="flex flex-col gap-2">
+            <p className="font-medium">{user?.fullName}</p>
+            <p className="text-subtle text-muted-foreground">{user ? roleLabels[user.role] : ""}</p>
+            <div className="flex items-center justify-between rounded-lg border border-border px-3 py-2">
+              <span className="text-subtle text-muted-foreground">شهرستان فعلی</span>
+              <span className="font-medium">{user?.countyName ?? "نامشخص"}</span>
+            </div>
           </div>
         </div>
         <div className="flex flex-col gap-3 border-t border-border pt-4">

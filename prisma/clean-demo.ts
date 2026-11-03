@@ -1,5 +1,8 @@
 import "dotenv/config";
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { getR2Env } from "../src/lib/env";
 import { getPrisma } from "../src/lib/prisma";
+import { createR2Client } from "../src/lib/storage/r2";
 import { planUserDeletions } from "./cleanup-plan";
 import { demoUsers } from "./data/demo";
 
@@ -69,6 +72,8 @@ async function main() {
     const changeRequests = await tx.coachCountyChangeRequest.deleteMany({});
     const auditLogs = await tx.auditLog.deleteMany({});
     const loginFailures = await tx.loginFailure.deleteMany({});
+
+    const fileRows = await tx.storedFile.findMany({ select: { objectKey: true } });
     const storedFiles = await tx.storedFile.deleteMany({});
 
     const userRows = await tx.user.findMany({ select: { id: true, mobile: true, role: true } });
@@ -89,10 +94,25 @@ async function main() {
       auditLogs,
       loginFailures,
       storedFiles,
+      fileObjectKeys: fileRows.map((row) => row.objectKey).filter((key) => key !== null),
       users,
       keptUsers: plan.keepIds.length,
     };
   });
+
+  let r2Objects = 0;
+  const env = getR2Env();
+  if (env && result.fileObjectKeys.length > 0) {
+    const client = createR2Client(env);
+    for (const key of result.fileObjectKeys) {
+      try {
+        await client.send(new DeleteObjectCommand({ Bucket: env.R2_BUCKET_NAME, Key: key }));
+        r2Objects += 1;
+      } catch (error) {
+        console.error("حذف شی R2 انجام نشد:", error instanceof Error ? error.message : error);
+      }
+    }
+  }
 
   console.log(
     [
@@ -109,6 +129,7 @@ async function main() {
       `لاگ های حسابرسی حذف شده: ${result.auditLogs.count}`,
       `تلاش های ناموفق ورود حذف شده: ${result.loginFailures.count}`,
       `فایل های حذف شده: ${result.storedFiles.count}`,
+      `اشیای R2 حذف شده: ${r2Objects}`,
       `حساب های حذف شده: ${result.users.count}`,
       "داده های پایه (کمربند، رده سنی، رده وزنی)، شهرستان ها و مدیران واقعی حفظ شدند.",
     ].join("\n"),
