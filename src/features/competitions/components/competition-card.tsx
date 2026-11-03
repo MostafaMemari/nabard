@@ -1,11 +1,12 @@
 "use client";
 
-import { CountdownChip, IconTile, MobileCardChips, MobileCardLine, MobileCardLink, MobileCardTop, StatusBadge } from "@/components/shared";
-import { type Belt, genderLabels } from "@/features/base-data";
+import { CountdownChip, IconTile, MobileCardChips, MobileCardLink, MobileCardTop, StatusBadge } from "@/components/shared";
+import type { Belt } from "@/features/base-data";
 import { formatNumber } from "@/lib/format";
-import { disciplineIcons, disciplineLabels } from "../labels";
+import { disciplineIcons } from "../labels";
 import type { Competition } from "../types";
 import { BeltChips } from "./belt-chips";
+import { CompetitionMetaChips } from "./competition-meta-chips";
 import { CountyChip } from "./county-chip";
 
 export function CompetitionCard({
@@ -22,16 +23,17 @@ export function CompetitionCard({
       <MobileCardTop
         leading={<IconTile icon={disciplineIcons[competition.discipline]} size="sm" />}
         title={competition.title}
-        subtitle={disciplineLabels[competition.discipline]}
         end={<StatusBadge status={competition.status} />}
       />
-      <MobileCardLine label="رده سنی" value={`${competition.ageCategoryLabel} · ${genderLabels[competition.gender]}`} />
-      <MobileCardLine label="ثبت نام ها" value={`${formatNumber(registrationCount)} هنرجو`} />
+      <CompetitionMetaChips competition={competition} />
       <MobileCardChips>
         <BeltChips belts={belts} ids={competition.beltIds} />
         {competition.level === "COUNTY" ? competition.countyNames.map((name) => <CountyChip key={name} name={name} />) : null}
       </MobileCardChips>
-      <CountdownChip deadline={competition.registrationDeadline} className="self-start" />
+      <MobileCardChips>
+        <CountdownChip deadline={competition.registrationDeadline} />
+        <span className="text-subtle text-muted-foreground tabular-nums">{formatNumber(registrationCount)} ثبت نام</span>
+      </MobileCardChips>
     </MobileCardLink>
   );
 }

@@ -1,8 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { genderLabels } from "@/features/base-data";
-import { disciplineLabels } from "@/features/competitions";
+import { useBelts } from "@/features/base-data";
 import { CompetitionSummaryCard, PaymentStep, SelectionSummaryBar, StudentSelectionList } from "@/features/registrations";
 import { formatRialsAsToman, parseDecimalInput } from "@/lib/format";
 import { RegistrationFlowStates } from "./registration-flow-states";
@@ -14,6 +13,7 @@ export function RegistrationFlow({ competitionId }: { competitionId: string }) {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [weights, setWeights] = useState<Record<string, string>>({});
   const { competition, rows, ready, error, retry } = useRegistrationRows(competitionId, weights);
+  const { belts } = useBelts();
   const requiresWeight = competition?.discipline === "KYORUGI";
 
   const selectedRows = useMemo(
@@ -45,13 +45,7 @@ export function RegistrationFlow({ competitionId }: { competitionId: string }) {
   }
 
   const summary = (
-    <CompetitionSummaryCard
-      title={competition.title}
-      meta={`${disciplineLabels[competition.discipline]} · ${competition.ageCategoryLabel} · ${genderLabels[competition.gender]}`}
-      deadline={competition.registrationDeadline}
-      feeLabel={formatRialsAsToman(Number(competition.feePerStudent))}
-      discipline={competition.discipline}
-    />
+    <CompetitionSummaryCard competition={competition} feeLabel={formatRialsAsToman(Number(competition.feePerStudent))} belts={belts} />
   );
 
   if (step === "payment") {

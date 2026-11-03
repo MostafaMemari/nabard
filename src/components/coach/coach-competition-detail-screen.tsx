@@ -63,10 +63,12 @@ export function CoachCompetitionDetailScreen({ competitionId }: { competitionId:
             { term: "هزینه هر هنرجو", value: formatRialsAsToman(Number(competition.feePerStudent)) },
           ]}
         />
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="text-subtle text-muted-foreground">کمربندها:</span>
-          <BeltChips belts={belts} ids={competition.beltIds} />
-        </div>
+        {competition.beltIds.some((id) => belts.some((belt) => belt.id === id)) ? (
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-subtle text-muted-foreground">کمربندها:</span>
+            <BeltChips belts={belts} ids={competition.beltIds} />
+          </div>
+        ) : null}
       </SectionCard>
     </div>
   );

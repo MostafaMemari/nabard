@@ -1,24 +1,30 @@
 "use client";
 
 import { CountdownChip, SectionCard } from "@/components/shared";
-import { type Discipline, disciplineIcons } from "@/features/competitions";
+import type { Belt } from "@/features/base-data";
+import { BeltChips, type Competition, CompetitionMetaChips, disciplineIcons } from "@/features/competitions";
 
 export function CompetitionSummaryCard({
-  title,
-  meta,
-  deadline,
+  competition,
   feeLabel,
-  discipline,
+  belts,
 }: {
-  title: string;
-  meta: string;
-  deadline: string;
+  competition: Pick<Competition, "title" | "discipline" | "ageCategoryLabel" | "gender" | "beltIds" | "registrationDeadline">;
   feeLabel: string;
-  discipline: Discipline;
+  belts: Belt[];
 }) {
   return (
-    <SectionCard title={title} icon={disciplineIcons[discipline]} action={<CountdownChip deadline={deadline} />}>
-      <p className="text-subtle text-muted-foreground">{meta}</p>
+    <SectionCard
+      title={competition.title}
+      icon={disciplineIcons[competition.discipline]}
+      action={<CountdownChip deadline={competition.registrationDeadline} />}
+    >
+      <CompetitionMetaChips competition={competition} />
+      {competition.beltIds.length > 0 ? (
+        <div className="flex flex-wrap items-center gap-1.5">
+          <BeltChips belts={belts} ids={competition.beltIds} />
+        </div>
+      ) : null}
       <p className="text-subtle text-muted-foreground">هزینه هر هنرجو: {feeLabel}</p>
     </SectionCard>
   );

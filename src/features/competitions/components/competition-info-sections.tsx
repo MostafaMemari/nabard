@@ -18,6 +18,8 @@ export function CompetitionInfoSections({
   belts: Belt[];
   weightClassCount: number;
 }) {
+  const hasBelts = competition.beltIds.some((id) => belts.some((belt) => belt.id === id));
+
   return (
     <div className="grid items-start gap-4 lg:grid-cols-2 print:hidden">
       <FormSection title="شرکت کنندگان" icon={UsersRoundIcon}>
@@ -41,7 +43,7 @@ export function CompetitionInfoSections({
                 ]
               : []),
             { term: "رده های وزنی", value: `${toPersianDigits(weightClassCount)} رده` },
-            { term: "کمربندها", value: <BeltChips belts={belts} ids={competition.beltIds} /> },
+            ...(hasBelts ? [{ term: "کمربندها", value: <BeltChips belts={belts} ids={competition.beltIds} /> }] : []),
           ]}
         />
       </FormSection>
