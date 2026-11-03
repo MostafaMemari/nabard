@@ -108,6 +108,7 @@ Admins manage the coaches of their own province; a `COACH` session gets `403 FOR
 The coach photo is a private image (same rules as receipts: real JPEG/PNG/WebP signature, max 2 MB) stored under `coach-photos/` in Cloudflare R2, or PostgreSQL while the R2 variables are unset. It is never public: it is served only through the authenticated endpoint below.
 
 - `PUT /api/v1/coaches/me/photo` (coach only) with `multipart/form-data` and one `file` image uploads or replaces the coach's own photo; the previous object is deleted after the commit (best effort). The same file rules apply (`400 INVALID_FILE_TYPE` / `400 FILE_TOO_LARGE` / `400 INVALID_FILE`, and `413 PAYLOAD_TOO_LARGE` for an oversized request body). Returns `{ data: null }`.
+- `GET /api/v1/coaches/me/photo` (coach only) serves the coach's own photo inline with `Cache-Control: private, no-cache` and `X-Content-Type-Options: nosniff`; `404 NOT_FOUND` when no photo is uploaded. This is the URL the avatar images use.
 - `DELETE /api/v1/coaches/me/photo` (coach only) removes the photo reference and the stored object; `404 NOT_FOUND` when no photo is uploaded. Returns `{ data: null }`.
 - `GET /api/v1/coaches/:id/photo` serves the photo inline only to the coach itself, an admin of the coach's province or a `SUPER_ADMIN`; anyone else gets `404 NOT_FOUND`. The response carries `Cache-Control: private, no-cache` and `X-Content-Type-Options: nosniff`.
 
