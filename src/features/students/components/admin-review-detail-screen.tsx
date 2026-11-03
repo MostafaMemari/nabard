@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { DetailPageHeader, ErrorBanner } from "@/components/shared";
-import { SkeletonRows } from "@/components/shared/rows-skeleton";
+import { DetailPageHeader, ErrorBanner, SkeletonRows, StateCard } from "@/components/shared";
 import { useBelts } from "@/features/base-data";
 import { useProfileReview } from "../hooks/use-profile-review";
 import { useStudent } from "../hooks/use-student";
@@ -21,9 +20,9 @@ export function AdminReviewDetailScreen({ studentId }: { studentId: string }) {
     return (
       <div className="flex flex-col gap-4">
         <SkeletonRows rows={1} className="h-8" />
-        <div className="rounded-xl border border-border bg-card p-5 shadow-card">
+        <StateCard className="p-4">
           <SkeletonRows rows={4} />
-        </div>
+        </StateCard>
       </div>
     );
   }

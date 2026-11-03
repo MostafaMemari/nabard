@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SkeletonRows } from "@/components/shared/rows-skeleton";
+import { SectionCard, SkeletonRows } from "@/components/shared";
 import type { Registration } from "@/features/registrations";
 import { toPersianDigits } from "@/lib/format";
 import { PaymentRegistrationRejectDialog } from "./payment-registration-reject-dialog";
@@ -34,12 +34,10 @@ export function PaymentStudentsSection({
   };
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-card md:p-6">
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="text-base font-semibold">هنرجویان ثبت نام شده</h2>
-        <span className="text-subtle text-muted-foreground">{toPersianDigits(registrations.length)} هنرجو</span>
-      </div>
-
+    <SectionCard
+      title="هنرجویان ثبت نام شده"
+      action={<span className="text-subtle text-muted-foreground">{toPersianDigits(registrations.length)} هنرجو</span>}
+    >
       {!canApprove ? (
         <p className="rounded-lg border border-border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
           تأیید ثبت نام ها پس از تأیید رسید فعال می شود؛ رد کردن هر ثبت نام همیشه امکان پذیر است.
@@ -72,6 +70,6 @@ export function PaymentStudentsSection({
           void onReject(registration, note);
         }}
       />
-    </section>
+    </SectionCard>
   );
 }

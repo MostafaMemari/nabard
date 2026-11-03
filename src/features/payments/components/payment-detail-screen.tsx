@@ -1,7 +1,6 @@
 "use client";
 
-import { DetailPageHeader, ErrorBanner } from "@/components/shared";
-import { SkeletonRows } from "@/components/shared/rows-skeleton";
+import { DetailPageHeader, ErrorBanner, SkeletonRows, StateCard } from "@/components/shared";
 import { usePaymentDecisions } from "../hooks/use-payment-decisions";
 import { PaymentDetailContent } from "./payment-detail-content";
 
@@ -13,9 +12,9 @@ export function PaymentDetailScreen({ paymentId }: { paymentId: string }) {
     return (
       <div className="flex flex-col gap-4">
         <SkeletonRows rows={1} className="h-8" />
-        <div className="rounded-xl border border-border bg-card p-5 shadow-card">
+        <StateCard className="p-4">
           <SkeletonRows rows={4} />
-        </div>
+        </StateCard>
       </div>
     );
   }

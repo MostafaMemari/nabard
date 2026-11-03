@@ -2,12 +2,11 @@
 
 import { PlusIcon, ReceiptTextIcon, TrophyIcon } from "lucide-react";
 import Link from "next/link";
-import { EmptyState, HomeListSection, PageHeader, SummaryCard } from "@/components/shared";
+import { EmptyState, HomeListSection, PageHeader } from "@/components/shared";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useSummary } from "@/features/summary";
-import { formatNumber } from "@/lib/format";
 import { AdminActionList } from "./admin-action-list";
+import { AdminSummaryCards } from "./admin-summary-cards";
 import { AdminUpcomingList } from "./admin-upcoming-list";
 
 export function AdminHomeScreen() {
@@ -17,51 +16,7 @@ export function AdminHomeScreen() {
     <>
       <PageHeader title="خانه" description="رسیدهای در انتظار بررسی و مسابقات پیش رو." />
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {isLoading || !summary ? (
-          [1, 2, 3, 4, 5, 6].map((key) => <Skeleton key={key} className="h-32 w-full" />)
-        ) : (
-          <>
-            <SummaryCard
-              value={formatNumber(summary.pendingPaymentsCount)}
-              label="رسیدهای در انتظار بررسی"
-              href="/admin/payments?status=pending"
-              linkLabel="مشاهده پرداخت ها"
-            />
-            <SummaryCard
-              value={formatNumber(summary.pendingProfilesCount)}
-              label="پروفایل های در انتظار تایید"
-              href="/admin/profiles"
-              linkLabel="بررسی پروفایل ها"
-            />
-            <SummaryCard
-              value={formatNumber(summary.pendingRefundsCount)}
-              label="بازپرداخت های در انتظار"
-              href="/admin/refunds?status=pending"
-              linkLabel="مشاهده بازپرداخت ها"
-            />
-            <SummaryCard
-              value={formatNumber(summary.pendingCountyChangesCount)}
-              label="درخواست های تغییر شهرستان"
-              href="/admin/county-changes?status=pending"
-              linkLabel="بررسی درخواست ها"
-            />
-            <SummaryCard
-              value={formatNumber(summary.pendingTransfersCount)}
-              label="درخواست های انتقال هنرجو"
-              href="/admin/transfer-requests?status=pending"
-              linkLabel="بررسی انتقال ها"
-            />
-            <SummaryCard
-              value={formatNumber(summary.openCompetitionsCount)}
-              label="مسابقات باز"
-              href="/admin/competitions"
-              linkLabel="مشاهده مسابقات"
-            />
-            <SummaryCard value={formatNumber(summary.weeklyRegistrationsCount)} label="ثبت نام های این هفته" />
-          </>
-        )}
-      </div>
+      <AdminSummaryCards summary={summary} isLoading={isLoading} />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <HomeListSection

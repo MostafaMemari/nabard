@@ -1,5 +1,6 @@
 "use client";
 
+import { SectionCard } from "@/components/shared";
 import type { Gender } from "@/features/base-data";
 import { useRegistrations } from "@/features/registrations";
 import { toPersianDigits } from "@/lib/format";
@@ -17,12 +18,12 @@ export function CompetitionRegistrations({
   const { registrations } = useRegistrations({ competitionId });
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-card md:p-6 print:hidden">
-      <div className="flex items-center justify-between gap-3">
-        <h2 className="text-base font-semibold">ثبت نام ها</h2>
-        <span className="text-subtle text-muted-foreground">{toPersianDigits(registrations.length)} هنرجو</span>
-      </div>
+    <SectionCard
+      title="ثبت نام ها"
+      className="print:hidden"
+      action={<span className="text-subtle text-muted-foreground">{toPersianDigits(registrations.length)} هنرجو</span>}
+    >
       <CompetitionRegistrationsTable competitionId={competitionId} ageCategoryId={ageCategoryId} gender={gender} />
-    </section>
+    </SectionCard>
   );
 }

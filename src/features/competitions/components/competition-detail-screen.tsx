@@ -5,15 +5,15 @@ import Link from "next/link";
 import { CountdownChip, DetailPageHeader, ErrorBanner, IconTile, StatusBadge } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { genderLabels, useBelts, useWeightClasses, type WeightClass } from "@/features/base-data";
+import { genderLabels, useBelts } from "@/features/base-data";
 import { useRegistrations } from "@/features/registrations";
 import { useCompetition } from "../hooks/use-competitions";
 import { disciplineIcons, disciplineLabels } from "../labels";
-import type { Competition } from "../types";
 import { CompetitionInfoSections } from "./competition-info-sections";
 import { CompetitionParticipants } from "./competition-participants";
 import { CompetitionRegistrations } from "./competition-registrations";
 import { CompetitionStatusActions } from "./competition-status-actions";
+import { useWeightClassesFor } from "./use-weight-classes-for";
 
 export function CompetitionDetailScreen({ competitionId }: { competitionId: string }) {
   const { competition, isLoading, error, mutate } = useCompetition(competitionId);
@@ -58,7 +58,7 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
         }
       />
 
-      <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5 shadow-card md:flex-row md:items-center md:justify-between md:p-6 print:hidden">
+      <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 shadow-card md:flex-row md:items-center md:justify-between md:p-6 print:hidden">
         <div className="flex flex-wrap items-center gap-3">
           <IconTile icon={disciplineIcons[competition.discipline]} />
           <div className="flex flex-wrap items-center gap-2">
@@ -76,36 +76,4 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
       <CompetitionParticipants competitionId={competitionId} />
     </div>
   );
-}
-
-function useWeightClassesFor(competition: Competition | undefined): { weightClasses: WeightClass[] } {
-  const live = useWeightClasses(
-    competition && !competition.rules ? { ageCategoryId: competition.ageCategoryId, gender: competition.gender } : {},
-  );
-
-  if (!competition) return { weightClasses: [] };
-
-  return {
-    weightClasses: competition.rules
-      ? competition.rules.weightClasses.map((item) => toWeightClass(item, competition.gender))
-      : live.weightClasses,
-  };
-}
-
-function toWeightClass(
-  weightClass: NonNullable<Competition["rules"]>["weightClasses"][number],
-  gender: Competition["gender"],
-): WeightClass {
-  return {
-    id: weightClass.id,
-    ageCategoryId: "",
-    gender,
-    label: weightClass.label,
-    minWeightKg: weightClass.min,
-    maxWeightKg: weightClass.max,
-    order: weightClass.order,
-    excludeMin: weightClass.excludeMin,
-    excludeMax: weightClass.excludeMax,
-    isActive: true,
-  };
 }
