@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { mutate } from "swr";
-import { compressReceiptImage } from "@/features/registrations";
+import { compressProfileImage } from "@/lib/compress-image";
 import { deleteCoachPhoto, uploadCoachPhoto } from "../api";
 
 export function useCoachPhoto() {
@@ -13,7 +13,7 @@ export function useCoachPhoto() {
     setWorking(true);
 
     try {
-      const compressed = await compressReceiptImage(file);
+      const compressed = await compressProfileImage(file);
       await uploadCoachPhoto(compressed);
       toast.success("عکس پروفایل ذخیره شد.");
       await mutate("me");

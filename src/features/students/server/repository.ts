@@ -39,6 +39,8 @@ export type StudentRecord = {
   approvedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
+  // Only populated by list queries; absent when the caller does not need it.
+  hasPhoto?: boolean;
 };
 
 export type StudentDocumentRecord = {
@@ -190,13 +192,16 @@ export async function countStudents(filters: StudentFilters): Promise<number> {
 export async function findStudents(filters: StudentFilters, skip: number, take: number): Promise<StudentRecord[]> {
   const rows = await getPrisma().student.findMany({
     where: studentWhere(filters),
-    select: studentSelection,
+    select: {
+      ...studentSelection,
+      documents: { where: { type: "PHOTO" }, select: { id: true }, take: 1 },
+    },
     orderBy: { createdAt: "asc" },
     skip,
     take,
   });
 
-  return rows.map(toStudentRecord);
+  return rows.map((row) => ({ ...toStudentRecord(row), hasPhoto: row.documents.length > 0 }));
 }
 
 export async function findStudentById(id: string): Promise<StudentWithCoach | null> {
@@ -318,6 +323,7 @@ export async function findPendingReviewStudents(
     ...toStudentRecord(row),
     coachName: row.coach.fullName,
     documents: row.documents.map(toDocumentRecord),
+    hasPhoto: row.documents.some((document) => document.type === "PHOTO"),
   }));
 }
 

@@ -2,7 +2,7 @@
 
 import { Avatar, BeltChip, DataTable, type DataTableColumn, SkeletonRows } from "@/components/shared";
 import { useBelts } from "@/features/base-data";
-import type { Student } from "@/features/students";
+import { type Student, studentPhotoUrl } from "@/features/students";
 import { formatJalaliDate } from "@/lib/format";
 import { CoachStudentCard } from "./coach-student-card";
 
@@ -23,7 +23,7 @@ export function CoachStudentsTable({
       header: "هنرجو",
       cell: (row) => (
         <div className="flex items-center gap-2.5">
-          <Avatar id={row.id} name={row.fullName} size="sm" />
+          <Avatar id={row.id} name={row.fullName} size="sm" src={row.hasPhoto ? studentPhotoUrl(row.id) : undefined} />
           <span className="font-medium">{row.fullName}</span>
         </div>
       ),

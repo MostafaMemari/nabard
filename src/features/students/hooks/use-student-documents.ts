@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { compressReceiptImage } from "@/features/registrations";
+import { compressProfileImage } from "@/lib/compress-image";
 import { deleteStudentDocument, uploadStudentDocument } from "../api";
 import type { StudentDocumentType } from "../types";
 
@@ -13,7 +13,7 @@ export function useStudentDocuments(studentId: string, mutate: () => Promise<unk
     setWorkingType(type);
 
     try {
-      const compressed = await compressReceiptImage(file);
+      const compressed = await compressProfileImage(file);
       await uploadStudentDocument(studentId, type, compressed);
       toast.success("مدرک ذخیره شد.");
       await mutate();

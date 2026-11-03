@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import type { Belt } from "@/features/base-data";
 import { formatJalaliDate, toPersianDigits } from "@/lib/format";
+import { studentPhotoUrl } from "../api";
 import type { Student } from "../types";
 
 export function studentColumns(options: { belts: Belt[]; onDelete: (student: Student) => void }): DataTableColumn<Student>[] {
@@ -17,7 +18,7 @@ export function studentColumns(options: { belts: Belt[]; onDelete: (student: Stu
       header: "هنرجو",
       cell: (row) => (
         <div className="flex items-center gap-2.5">
-          <Avatar id={row.id} name={row.fullName} size="sm" />
+          <Avatar id={row.id} name={row.fullName} size="sm" src={row.hasPhoto ? studentPhotoUrl(row.id) : undefined} />
           <span className="font-medium">{row.fullName}</span>
         </div>
       ),

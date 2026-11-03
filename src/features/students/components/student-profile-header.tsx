@@ -4,12 +4,12 @@ import { LockIcon, UserIcon } from "lucide-react";
 import { SectionCard, StatusBadge } from "@/components/shared";
 import { personGenderLabels } from "@/features/base-data";
 import { formatJalaliDate } from "@/lib/format";
-import { buildApiUrl } from "@/lib/http";
+import { studentPhotoUrl } from "../api";
 import { profileStatusKey, type StudentDetail } from "../types";
 
 export function StudentProfileHeader({ student }: { student: StudentDetail }) {
   const hasPhoto = student.documents.some((document) => document.type === "PHOTO");
-  const photoUrl = buildApiUrl(`/api/v1/students/${student.id}/documents/PHOTO/file`);
+  const photoUrl = studentPhotoUrl(student.id);
 
   return (
     <SectionCard>

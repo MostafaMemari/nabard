@@ -27,6 +27,9 @@ export type Student = {
   approvedAt: string | null;
   createdAt: string;
   updatedAt: string;
+  // Present on list responses; the profile photo endpoint only returns data
+  // when a PHOTO document exists.
+  hasPhoto?: boolean;
 };
 
 export type StudentDetail = Student & { coachName: string; documents: StudentDocument[] };
