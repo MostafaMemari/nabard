@@ -52,7 +52,7 @@ export function TransferRequestDialog({
             </div>
           ) : null}
           <p className="text-subtle text-muted-foreground">
-            با تایید مدیر استان فقط مربی هنرجو تغییر می کند و ثبت نام ها و پرداخت های قبلی دست نخورده می مانند.
+            با تأیید مدیر استان فقط مربی هنرجو تغییر می کند و ثبت نام ها و پرداخت های قبلی دست نخورده می مانند.
           </p>
           <div className="flex items-center justify-end gap-3">
             <Button type="button" variant="ghost" onClick={close}>

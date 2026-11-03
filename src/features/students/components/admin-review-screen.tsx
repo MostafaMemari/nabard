@@ -26,7 +26,7 @@ export function AdminReviewScreen() {
 
   return (
     <>
-      <PageHeader title="بررسی پروفایل ها" description="بررسی مدارک و تایید پروفایل هنرجویان." />
+      <PageHeader title="بررسی پروفایل ها" description="بررسی مدارک و تأیید پروفایل هنرجویان." />
 
       <DataTable
         columns={columns}

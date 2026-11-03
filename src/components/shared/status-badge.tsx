@@ -12,14 +12,14 @@ const statusStyles = {
   INACTIVE: { label: "غیرفعال", className: "bg-pending-bg text-pending" },
   REFUND_PENDING: { label: "در انتظار بازپرداخت", className: "bg-warning-bg text-warning" },
   REFUND_COMPLETED: { label: "بازپرداخت شده", className: "bg-success-bg text-success" },
-  PROFILE_PENDING: { label: "در انتظار تایید", className: "bg-warning-bg text-warning" },
-  PROFILE_APPROVED: { label: "پروفایل تایید شده", className: "bg-success-bg text-success" },
+  PROFILE_PENDING: { label: "در انتظار تأیید", className: "bg-warning-bg text-warning" },
+  PROFILE_APPROVED: { label: "پروفایل تأیید شده", className: "bg-success-bg text-success" },
   PROFILE_REJECTED: { label: "پروفایل رد شده", className: "bg-danger-bg text-danger" },
   COUNTY_CHANGE_PENDING: { label: "در انتظار بررسی", className: "bg-warning-bg text-warning" },
-  COUNTY_CHANGE_APPROVED: { label: "تایید شده", className: "bg-success-bg text-success" },
+  COUNTY_CHANGE_APPROVED: { label: "تأیید شده", className: "bg-success-bg text-success" },
   COUNTY_CHANGE_REJECTED: { label: "رد شده", className: "bg-danger-bg text-danger" },
   TRANSFER_PENDING: { label: "در انتظار بررسی", className: "bg-warning-bg text-warning" },
-  TRANSFER_APPROVED: { label: "تایید شده", className: "bg-success-bg text-success" },
+  TRANSFER_APPROVED: { label: "تأیید شده", className: "bg-success-bg text-success" },
   TRANSFER_REJECTED: { label: "رد شده", className: "bg-danger-bg text-danger" },
 } as const;
 

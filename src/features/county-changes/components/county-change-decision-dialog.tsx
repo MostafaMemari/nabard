@@ -62,7 +62,7 @@ export function CountyChangeDecisionDialog({
     >
       <DialogContent showCloseButton={false} className="max-w-md">
         <DialogHeader>
-          <DialogTitle>{approving ? "تایید درخواست" : "رد درخواست"}</DialogTitle>
+          <DialogTitle>{approving ? "تأیید درخواست" : "رد درخواست"}</DialogTitle>
           <DialogDescription>
             {approving
               ? `شهرستان مربی «${request?.coachName ?? ""}» به «${request?.toCountyName ?? ""}» تغییر می کند.`
@@ -101,7 +101,7 @@ export function CountyChangeDecisionDialog({
               انصراف
             </Button>
             <Button type="button" onClick={() => void approve()}>
-              تایید درخواست
+              تأیید درخواست
             </Button>
           </DialogFooter>
         ) : null}

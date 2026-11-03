@@ -49,8 +49,8 @@ export function ReceiptLightbox({ open, onOpenChange, src }: { open: boolean; on
                 className={toolButton}
                 onClick={zoom.zoomOut}
                 disabled={zoom.atMin}
-                aria-label="کوچک‌نمایی"
-                title="کوچک‌نمایی"
+                aria-label="کوچک نمایی"
+                title="کوچک نمایی"
               >
                 <MinusIcon className="size-4" />
               </button>
@@ -62,8 +62,8 @@ export function ReceiptLightbox({ open, onOpenChange, src }: { open: boolean; on
                 className={toolButton}
                 onClick={zoom.zoomIn}
                 disabled={zoom.atMax}
-                aria-label="بزرگ‌نمایی"
-                title="بزرگ‌نمایی"
+                aria-label="بزرگ نمایی"
+                title="بزرگ نمایی"
               >
                 <PlusIcon className="size-4" />
               </button>

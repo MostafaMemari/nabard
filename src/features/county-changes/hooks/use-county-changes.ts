@@ -39,7 +39,7 @@ export function useCountyChangeDecision(onDecided: () => void) {
     try {
       if (decision === "approve") {
         await approveCountyChange(id);
-        toast.success("درخواست تایید شد و شهرستان مربی به روز شد.");
+        toast.success("درخواست تأیید شد و شهرستان مربی به روز شد.");
       } else {
         await rejectCountyChange(id, note ?? "");
         toast.success("درخواست رد شد.");

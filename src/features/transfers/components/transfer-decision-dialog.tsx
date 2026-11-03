@@ -62,7 +62,7 @@ export function TransferDecisionDialog({
     >
       <DialogContent showCloseButton={false} className="max-w-md">
         <DialogHeader>
-          <DialogTitle>{approving ? "تایید انتقال هنرجو" : "رد درخواست انتقال"}</DialogTitle>
+          <DialogTitle>{approving ? "تأیید انتقال هنرجو" : "رد درخواست انتقال"}</DialogTitle>
           <DialogDescription>
             {approving
               ? `هنرجو «${request?.studentName ?? ""}» از «${request?.fromCoachName ?? ""}» به «${request?.toCoachName ?? ""}» منتقل می شود.`
@@ -101,7 +101,7 @@ export function TransferDecisionDialog({
               انصراف
             </Button>
             <Button type="button" onClick={() => void approve()}>
-              تایید انتقال
+              تأیید انتقال
             </Button>
           </DialogFooter>
         ) : null}

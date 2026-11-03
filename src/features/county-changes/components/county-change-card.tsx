@@ -26,7 +26,7 @@ export function CountyChangeCard({
             className="h-11 flex-1 text-success hover:text-success sm:h-9"
             onClick={() => onDecide(request, "approve")}
           >
-            تایید
+            تأیید
           </Button>
           <Button
             variant="outline"

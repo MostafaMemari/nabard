@@ -63,7 +63,7 @@ export function eligibilityCompetitionFromSnapshot(
 }
 
 const REASONS = {
-  profile: "پروفایل هنرجو هنوز تایید نشده است",
+  profile: "پروفایل هنرجو هنوز تأیید نشده است",
   gender: "جنسیت هنرجو با جنسیت مسابقه همخوانی ندارد.",
   birthDate: "تاریخ تولد هنرجو در بازه سنی این مسابقه نیست.",
   belt: "کمربند هنرجو در بازه کمربندهای مجاز این مسابقه نیست.",

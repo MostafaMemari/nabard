@@ -399,7 +399,7 @@ async function transitionRegistration(
   if (result.reason === "REVIEWED") {
     throw new AppError(409, "CONFLICT", "این ثبت نام قبلا بررسی شده است.");
   }
-  throw new AppError(409, "CONFLICT", "برای بررسی ثبت نام، ابتدا رسید پرداخت باید تایید شود.");
+  throw new AppError(409, "CONFLICT", "برای بررسی ثبت نام، ابتدا رسید پرداخت باید تأیید شود.");
 }
 
 export async function approveRegistration(repo: RegistrationRepository, user: CurrentUser, id: string): Promise<RegistrationRecord> {

@@ -17,7 +17,7 @@ export function CompetitionParticipants({ competitionId }: { competitionId: stri
     <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-card print:rounded-none print:border-0 print:bg-white print:p-0 print:shadow-none">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <h2 className="text-base font-semibold">شرکت کنندگان تایید شده</h2>
+          <h2 className="text-base font-semibold">شرکت کنندگان تأیید شده</h2>
           <span className="text-subtle text-muted-foreground">({toPersianDigits(participants.length)} نفر)</span>
         </div>
         <div className="flex items-center gap-2 print:hidden">
@@ -43,7 +43,7 @@ export function CompetitionParticipants({ competitionId }: { competitionId: stri
       ) : isLoading ? (
         <SkeletonRows rows={3} className="h-12" />
       ) : participants.length === 0 ? (
-        <EmptyState icon={UsersRoundIcon} title="هنوز شرکت کننده تایید شده‌ای برای این مسابقه وجود ندارد." tone="primary" />
+        <EmptyState icon={UsersRoundIcon} title="هنوز شرکت کننده تأیید شده ای برای این مسابقه وجود ندارد." tone="primary" />
       ) : (
         <ParticipantsGroups participants={participants} />
       )}

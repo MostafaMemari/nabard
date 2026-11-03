@@ -219,10 +219,10 @@ export async function decideTransferRequest(
     });
   } catch (error) {
     if (error instanceof StudentOwnerChangedError) {
-      throw new AppError(409, "CONFLICT", "مالکیت این هنرجو تغییر کرده است و درخواست قابل تایید نیست.");
+      throw new AppError(409, "CONFLICT", "مالکیت این هنرجو تغییر کرده است و درخواست قابل تأیید نیست.");
     }
     if (error instanceof TransferGenderMismatchError) {
-      throw new AppError(409, "CONFLICT", "جنسیت هنرجو با جنسیت مربی مقصد یکسان نیست و درخواست قابل تایید نیست.");
+      throw new AppError(409, "CONFLICT", "جنسیت هنرجو با جنسیت مربی مقصد یکسان نیست و درخواست قابل تأیید نیست.");
     }
 
     throw error;

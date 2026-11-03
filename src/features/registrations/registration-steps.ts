@@ -29,7 +29,7 @@ export function buildRegistrationSteps(registration: Registration, paymentStatus
             ? "در انتظار بررسی مدیریت استان"
             : paymentStatus === "REJECTED"
               ? "رسید رد شد؛ رسید جدید بارگذاری کنید."
-              : "رسید تایید شد",
+              : "رسید تأیید شد",
       state: receiptState,
     },
     {

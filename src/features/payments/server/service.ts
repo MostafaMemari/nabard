@@ -117,14 +117,14 @@ async function decidePayment(
     throw new AppError(
       409,
       "CONFLICT",
-      input.status === "CONFIRMED" ? "این پرداخت قبلا تایید شده است." : "این پرداخت تایید شده و قابل رد کردن نیست.",
+      input.status === "CONFIRMED" ? "این پرداخت قبلا تأیید شده است." : "این پرداخت تأیید شده و قابل رد کردن نیست.",
     );
   }
   if (row.status === "REJECTED") {
     throw new AppError(
       409,
       "CONFLICT",
-      input.status === "CONFIRMED" ? "این پرداخت رد شده است؛ پس از بارگذاری رسید جدید قابل تایید است." : "این پرداخت قبلا رد شده است.",
+      input.status === "CONFIRMED" ? "این پرداخت رد شده است؛ پس از بارگذاری رسید جدید قابل تأیید است." : "این پرداخت قبلا رد شده است.",
     );
   }
   throw new AppError(409, "CONFLICT", "این پرداخت قبلا بررسی شده است.");

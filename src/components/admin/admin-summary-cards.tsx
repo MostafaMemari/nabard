@@ -16,7 +16,7 @@ type Summary = {
 
 const cards: { key: keyof Summary; label: string; href?: string; linkLabel?: string }[] = [
   { key: "pendingPaymentsCount", label: "رسیدهای در انتظار بررسی", href: "/admin/payments?status=pending", linkLabel: "مشاهده پرداخت ها" },
-  { key: "pendingProfilesCount", label: "پروفایل های در انتظار تایید", href: "/admin/profiles", linkLabel: "بررسی پروفایل ها" },
+  { key: "pendingProfilesCount", label: "پروفایل های در انتظار تأیید", href: "/admin/profiles", linkLabel: "بررسی پروفایل ها" },
   { key: "pendingRefundsCount", label: "بازپرداخت های در انتظار", href: "/admin/refunds?status=pending", linkLabel: "مشاهده بازپرداخت ها" },
   {
     key: "pendingCountyChangesCount",

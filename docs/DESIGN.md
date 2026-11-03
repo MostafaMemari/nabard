@@ -47,7 +47,7 @@ Avatar tints (deterministic by id, soft background with darker text of the same 
 Sizes and depth:
 
 - Radius: 8px inputs and buttons, 12px cards, 16px dialogs and sheets.
-- Cards: white, 1px border, shadow `0 1px 2px rgba(16,24,40,0.04), 0 1px 3px rgba(16,24,40,0.06)`. Overlays: `0 8px 24px rgba(16,24,40,0.12)`.
+- Cards: white, 1px border, shadow `0 1px 2px rgba(16,24,40,0.04), 0 1px 3px rgba(16,24,40,0.06)`, padding 16px mobile and 24px desktop (same scale for Card, FormSection and dialogs). Overlays: `0 8px 24px rgba(16,24,40,0.12)`.
 - Controls (inputs, buttons, selects): 40px high, 44px on coach mobile screens.
 - Table row 52px with comfortable padding, header 44px. Sidebar 256px. Page padding 32px desktop, 16px mobile. Max content width 1200px.
 - Typography: Vazirmatn. Base 14.5px, table text 14px, secondary 13px muted, page title 24px semibold, section title 16px semibold, large numbers 28px semibold. Line height about 1.7.

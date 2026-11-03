@@ -9,7 +9,7 @@ export function StudentFormScreen() {
 
   return (
     <FormContainer variant="student">
-      <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
+      <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-6">
         <PageHeader
           title="هنرجوی جدید"
           description="اطلاعات هنرجو را وارد کنید. پس از ثبت، اطلاعات قفل می شود و کمربند را ادمین استان ثبت می کند."

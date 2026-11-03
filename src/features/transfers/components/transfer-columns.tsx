@@ -64,7 +64,7 @@ export function useTransferColumns({
                 onDecide(row, "approve");
               }}
             >
-              تایید
+              تأیید
             </Button>
             <Button
               size="sm"

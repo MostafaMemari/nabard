@@ -12,11 +12,11 @@ export function useProfileReview(onReviewed: () => Promise<unknown>) {
 
     try {
       await approveStudentProfile(id);
-      toast.success("پروفایل هنرجو تایید شد.");
+      toast.success("پروفایل هنرجو تأیید شد.");
       await onReviewed();
       return true;
     } catch {
-      toast.error("تایید پروفایل انجام نشد. دوباره تلاش کنید.");
+      toast.error("تأیید پروفایل انجام نشد. دوباره تلاش کنید.");
       return false;
     } finally {
       setWorking(false);

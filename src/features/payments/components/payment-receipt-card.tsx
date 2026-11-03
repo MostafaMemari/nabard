@@ -42,7 +42,7 @@ export function PaymentReceiptCard({ payment }: { payment: Payment }) {
               />
               <span className="absolute bottom-2 end-2 flex items-center gap-1 rounded-full bg-black/55 px-2.5 py-1 text-xs text-white">
                 <ZoomInIcon aria-hidden className="size-3.5" />
-                بزرگ‌نمایی
+                بزرگ نمایی
               </span>
             </button>
           </div>

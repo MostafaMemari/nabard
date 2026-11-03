@@ -37,7 +37,7 @@ export function DeadlineExtensionHistory({ competitionId, open }: { competitionI
                 </span>
                 {extension.reopenForRejected ? (
                   <span className="inline-flex h-6 items-center rounded-full bg-primary-subtle px-2.5 text-primary text-xs font-medium">
-                    بازگشایی برای رد شده‌ها
+                    بازگشایی برای رد شده ها
                   </span>
                 ) : null}
               </div>

@@ -36,7 +36,7 @@ export function StudentRegistrationHistory({ studentId }: { studentId: string })
             <Link
               key={registration.id}
               href={`/coach/registrations/${registration.id}`}
-              className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card px-4 py-3 shadow-card transition-colors duration-150 hover:border-ring/40"
+              className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card px-4 py-3 shadow-card transition-colors duration-150 hover:border-ring/40 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:border-ring/60"
             >
               <span className="min-w-0 flex-1 truncate text-sm font-medium">{registration.competitionTitle}</span>
               {registration.weightClassLabel ? (

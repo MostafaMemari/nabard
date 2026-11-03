@@ -45,7 +45,7 @@ export function useTransferDecision(onDecided: () => void) {
     try {
       if (decision === "approve") {
         await approveTransferRequest(id);
-        toast.success("درخواست تایید شد و هنرجو به مربی جدید منتقل شد.");
+        toast.success("درخواست تأیید شد و هنرجو به مربی جدید منتقل شد.");
       } else {
         await rejectTransferRequest(id, note ?? "");
         toast.success("درخواست رد شد.");

@@ -50,7 +50,7 @@ export function CompetitionFormScreen({ competitionId }: { competitionId?: strin
 
   return (
     <FormContainer variant="standard">
-      <form onSubmit={form.handleSubmit(submit)} className="flex flex-col gap-4" noValidate>
+      <form onSubmit={form.handleSubmit(submit)} className="flex flex-col gap-6" noValidate>
         <PageHeader
           title={isEdit ? "ویرایش مسابقه" : "مسابقه جدید"}
           description={

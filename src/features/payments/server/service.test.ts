@@ -149,7 +149,7 @@ describe("confirmPayment", () => {
     const failure = await failureOf(confirmPayment(repo, admin, "pay-1"));
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
-    expect((failure as AppError).message).toContain("قبلا تایید شده");
+    expect((failure as AppError).message).toContain("قبلا تأیید شده");
   });
 
   it("blocks confirming a rejected payment until a new receipt arrives", async () => {

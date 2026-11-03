@@ -14,7 +14,7 @@ export function MobileCardLink({ href, children, className }: { href: string; ch
       href={href}
       className={cn(
         cardClass,
-        "flex min-h-11 flex-col gap-2.5 p-4 transition-colors duration-150 hover:border-ring/40 active:bg-muted/50",
+        "flex min-h-11 flex-col gap-2.5 p-4 transition-colors duration-150 hover:border-ring/40 active:bg-muted/50 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:border-ring/60",
         className,
       )}
     >

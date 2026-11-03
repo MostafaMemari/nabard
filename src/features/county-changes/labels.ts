@@ -3,7 +3,7 @@ import type { CountyChangeStatus } from "./types";
 
 export const countyChangeStatusLabels: Record<CountyChangeStatus, string> = {
   PENDING: "در انتظار بررسی",
-  APPROVED: "تایید شده",
+  APPROVED: "تأیید شده",
   REJECTED: "رد شده",
 };
 

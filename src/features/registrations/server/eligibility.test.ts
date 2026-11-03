@@ -73,7 +73,7 @@ describe("checkEligibility", () => {
     expect(pending.eligible).toBe(false);
     expect(rejected.eligible).toBe(false);
     if (!pending.eligible) {
-      expect(pending.reason).toBe("پروفایل هنرجو هنوز تایید نشده است");
+      expect(pending.reason).toBe("پروفایل هنرجو هنوز تأیید نشده است");
     }
   });
 

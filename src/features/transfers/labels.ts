@@ -3,7 +3,7 @@ import type { TransferStatus } from "./types";
 
 export const transferStatusLabels: Record<TransferStatus, string> = {
   PENDING: "در انتظار بررسی",
-  APPROVED: "تایید شده",
+  APPROVED: "تأیید شده",
   REJECTED: "رد شده",
 };
 
