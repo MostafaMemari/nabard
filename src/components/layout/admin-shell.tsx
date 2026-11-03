@@ -13,6 +13,7 @@ import {
 import type { ReactNode } from "react";
 import { roleLabels, useMe } from "@/features/auth";
 import { AppSidebar, type SidebarNavGroup, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
+import { MobileAccountMenu } from "./mobile-account-menu";
 import { MobileBottomNav } from "./mobile-bottom-nav";
 
 const home: SidebarNavItem = { id: "home", label: "خانه", href: "/admin", icon: HouseIcon };
@@ -86,8 +87,9 @@ export function AdminShell({ active, children }: { active: string; children: Rea
       <AppSidebar groups={navGroups} active={active} user={sidebarUser} groupLabel="ناوبری مدیریت" />
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-20 border-b border-border bg-card lg:hidden print:hidden">
-          <div className="flex h-14 items-center px-4">
-            <span className="truncate text-base font-semibold">{title ? (title.shortLabel ?? title.label) : ""}</span>
+          <div className="flex h-14 items-center justify-between gap-3 px-4">
+            <span className="min-w-0 truncate text-base font-semibold">{title ? (title.shortLabel ?? title.label) : ""}</span>
+            <MobileAccountMenu user={sidebarUser} />
           </div>
         </header>
         <main id="admin-main" className="flex-1">
@@ -96,8 +98,8 @@ export function AdminShell({ active, children }: { active: string; children: Rea
         <MobileBottomNav
           items={mobilePrimary}
           moreItems={mobileMore}
+          groups={navGroups}
           active={active}
-          user={sidebarUser}
           label="ناوبری مدیریت"
           className="lg:hidden"
         />

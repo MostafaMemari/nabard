@@ -87,10 +87,11 @@ Shared rules for all three shells (admin, coach, super). Navigation is UI only; 
 
 ### Mobile (below 768px)
 
-- The top bar shows only the page title (the active section name), no hamburger, no avatar. Sticky, white, hairline bottom border, 56px.
-- The bottom bar is sticky, white with a top hairline border, 64px high plus the safe-area inset. Four primary destinations plus «بیشتر»: coach خانه، مسابقات، هنرجویان، ثبت نام ها; admin خانه، مسابقات، پرداخت ها، مربیان; super خانه، ادمین ها، اطلاعات پایه، مسابقات.
+- The top bar shows the page title (the active section name) on the start edge and the account avatar on the end edge. No hamburger. Sticky, white, hairline bottom border, 56px.
+- The bottom bar is sticky, white with a top hairline border, 64px high plus the safe-area inset. Four primary destinations plus «میز کار» when the panel has further destinations: coach خانه، مسابقات، هنرجویان، ثبت نام ها (no workspace button); admin خانه، مسابقات، پرداخت ها، مربیان؛ super خانه، ادمین ها، اطلاعات پایه، مسابقات.
 - Bar items: 22px icon over an 11 to 12px label, minimum 44px touch area, active item in primary color with a primary-subtle pill behind the icon.
-- «بیشتر» opens a bottom sheet: drag handle, user header (avatar, name, role), the remaining nav items as a 2-column grid of cards (icon, label, 12px radius, hairline border, card shadow, 48px high, active card primary-subtle), then «تغییر رمز عبور», «پروفایل و شهرستان» (coach only) and «خروج از حساب» as 44px rows. The sheet closes on outside tap, Escape and a downward swipe on the handle; tall content scrolls inside with a max height of 85dvh and contained overscroll.
+- «میز کار» opens a full-height bottom sheet (92dvh, 16px top radius, max content width) styled like a mobile workspace menu: a 56px header with the title and a round close button, then one section per sidebar group with a small muted label and a 2-column grid of square icon cards (48px round primary-subtle tile with the 22px icon, 14px label under it, 12px radius, hairline border, card shadow). Every destination of the panel appears in the sheet, grouped; the active one is highlighted (primary-subtle card with a solid primary tile). It closes on outside tap, Escape and the close button; the content scrolls inside with contained overscroll. Account actions are never part of it.
+- The top bar avatar opens the account sheet: drag handle, identity header (avatar 40px, name, role), then «پروفایل و شهرستان» (coach only), «تغییر رمز عبور» and «خروج از حساب» as 44px rows with a hairline separator before the destructive one. It closes on outside tap, Escape and a downward swipe on the handle.
 - Because the bar is sticky (not fixed), page content needs no extra bottom padding.
 
 ## Components

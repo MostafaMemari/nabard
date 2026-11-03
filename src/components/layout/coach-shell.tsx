@@ -4,6 +4,7 @@ import { ClipboardListIcon, HouseIcon, TrophyIcon, UsersIcon } from "lucide-reac
 import type { ReactNode } from "react";
 import { roleLabels, useMe } from "@/features/auth";
 import { AppSidebar, type SidebarNavGroup, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
+import { MobileAccountMenu } from "./mobile-account-menu";
 import { MobileBottomNav } from "./mobile-bottom-nav";
 
 const home: SidebarNavItem = { id: "home", label: "خانه", href: "/coach", icon: HouseIcon };
@@ -41,21 +42,15 @@ export function CoachShell({ active, children }: { active: string; children: Rea
       <AppSidebar groups={navGroups} active={active} user={sidebarUser} groupLabel="ناوبری مربی" coachProfile breakpoint="@5xl" />
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-20 border-b border-border bg-card @5xl:hidden print:hidden">
-          <div className="flex h-14 items-center px-4">
-            <span className="truncate text-base font-semibold">{title ? (title.shortLabel ?? title.label) : ""}</span>
+          <div className="flex h-14 items-center justify-between gap-3 px-4">
+            <span className="min-w-0 truncate text-base font-semibold">{title ? (title.shortLabel ?? title.label) : ""}</span>
+            <MobileAccountMenu user={sidebarUser} coachProfile />
           </div>
         </header>
         <main id="coach-main" className="flex-1">
           <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 @5xl:p-8">{children}</div>
         </main>
-        <MobileBottomNav
-          items={coachNavItems}
-          active={active}
-          user={sidebarUser}
-          coachProfile
-          label="ناوبری مربی"
-          className="@5xl:hidden"
-        />
+        <MobileBottomNav items={coachNavItems} groups={navGroups} active={active} label="ناوبری مربی" className="@5xl:hidden" />
       </div>
     </div>
   );
