@@ -91,8 +91,9 @@ export function MobileBottomNav({
             style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 1rem)" }}
           >
             <div
-              className="touch-none pt-2 pb-1 select-none"
+              className="touch-none pt-3 pb-2 select-none"
               onPointerDown={(event) => {
+                event.currentTarget.setPointerCapture(event.pointerId);
                 dragStartY.current = event.clientY;
               }}
               onPointerMove={(event) => {
