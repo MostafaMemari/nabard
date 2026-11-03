@@ -33,6 +33,13 @@ const state = vi.hoisted(() => {
   };
 });
 
+// Signing is computed locally by the presigner; the fake client cannot
+// provide a real endpoint provider, so the url is stubbed deterministically.
+vi.mock("@aws-sdk/s3-request-presigner", () => ({
+  getSignedUrl: async (_client: unknown, command: { input: { Bucket?: string; Key?: string } }, options?: { expiresIn?: number }) =>
+    `https://presigned.test/${command.input.Bucket}/${command.input.Key}?expires=${options?.expiresIn ?? 0}`,
+}));
+
 vi.mock("@/lib/prisma", () => ({
   getPrisma: () => ({
     storedFile: {
@@ -73,20 +80,28 @@ vi.mock("@/lib/prisma", () => ({
 import { createR2Storage } from "./r2";
 
 class FakeS3 {
+  // Objects are keyed by "<bucket>/<key>" so tests can tell the public
+  // bucket from the private receipts bucket.
   objects = new Map<string, Uint8Array>();
   contentTypes = new Map<string, string>();
+  cacheControls = new Map<string, string>();
+
+  static ref(bucket: string, key: string): string {
+    return `${bucket}/${key}`;
+  }
 
   async send(command: unknown): Promise<unknown> {
     if (command instanceof PutObjectCommand) {
-      const key = command.input.Key as string;
-      this.objects.set(key, new Uint8Array(command.input.Body as Uint8Array));
-      if (command.input.ContentType) this.contentTypes.set(key, command.input.ContentType);
+      const ref = FakeS3.ref(command.input.Bucket as string, command.input.Key as string);
+      this.objects.set(ref, new Uint8Array(command.input.Body as Uint8Array));
+      if (command.input.ContentType) this.contentTypes.set(ref, command.input.ContentType);
+      if (command.input.CacheControl) this.cacheControls.set(ref, command.input.CacheControl);
       return {};
     }
 
     if (command instanceof GetObjectCommand) {
-      const key = command.input.Key as string;
-      const data = this.objects.get(key);
+      const ref = FakeS3.ref(command.input.Bucket as string, command.input.Key as string);
+      const data = this.objects.get(ref);
       if (!data) throw new Error("NoSuchKey");
 
       return {
@@ -98,7 +113,7 @@ class FakeS3 {
     }
 
     if (command instanceof DeleteObjectCommand) {
-      this.objects.delete(command.input.Key as string);
+      this.objects.delete(FakeS3.ref(command.input.Bucket as string, command.input.Key as string));
       return {};
     }
 
@@ -112,6 +127,8 @@ const env: R2Env = {
   R2_SECRET_ACCESS_KEY: "secret",
   R2_BUCKET_NAME: "bucket",
 };
+
+const envWithReceipts: R2Env = { ...env, R2_RECEIPTS_BUCKET: "receipts-private" };
 
 const bytes = new Uint8Array([0x89, 0x50, 0x4e, 0x47]);
 
@@ -153,8 +170,8 @@ describe("r2 storage", () => {
     expect(objectKey).toMatch(/^student-photos\/.+\.png$/);
 
     const s3 = client as unknown as FakeS3;
-    expect(s3.objects.get(objectKey)).toEqual(bytes);
-    expect(s3.contentTypes.get(objectKey)).toBe("image/png");
+    expect(s3.objects.get(FakeS3.ref("bucket", objectKey))).toEqual(bytes);
+    expect(s3.contentTypes.get(FakeS3.ref("bucket", objectKey))).toBe("image/png");
 
     const row = state.rows.get(info.id);
     expect(row).toMatchObject({ provider: "R2", data: null, mime: "image/png", size: bytes.byteLength });
@@ -178,9 +195,73 @@ describe("r2 storage", () => {
     }
   });
 
-  it("removes the uploaded object when the metadata row cannot be created", async () => {
+  it("stores receipts in the private receipts bucket with private caching", async () => {
+    const client = fakeClient();
+    const storage = createR2Storage(envWithReceipts, client);
+    const info = await storage.put({ data: bytes, mime: "image/png", folder: "receipts" });
+
+    const objectKey = state.rows.get(info.id)?.objectKey ?? "";
+    expect(objectKey).toMatch(/^receipts\/.+\.png$/);
+
+    const s3 = client as unknown as FakeS3;
+    const ref = FakeS3.ref("receipts-private", objectKey);
+    expect(s3.objects.has(ref)).toBe(true);
+    expect(s3.cacheControls.get(ref)).toBe("private, max-age=31536000, immutable");
+    // Nothing leaks into the public bucket.
+    expect(s3.objects.has(FakeS3.ref("bucket", objectKey))).toBe(false);
+  });
+
+  it("reads and deletes receipts from the private receipts bucket", async () => {
+    const client = fakeClient();
+    const storage = createR2Storage(envWithReceipts, client);
+    const info = await storage.put({ data: bytes, mime: "image/png", folder: "receipts" });
+
+    const content = await storage.get(info.id);
+    if (!content) throw new Error("content missing");
+    expect(await readStream(content.stream)).toEqual(bytes);
+
+    await storage.delete(info.id);
+    expect((client as unknown as FakeS3).objects.size).toBe(0);
+  });
+
+  it("never hands out a public url for a receipt, even with R2_PUBLIC_URL set", async () => {
+    process.env.R2_PUBLIC_URL = "https://pub-abc123.r2.dev/";
+    try {
+      const client = fakeClient();
+      const storage = createR2Storage(envWithReceipts, client);
+      const receipt = await storage.put({ data: bytes, mime: "image/png", folder: "receipts" });
+      const photo = await storage.put({ data: bytes, mime: "image/png", folder: "student-photos" });
+
+      const urls = await storage.getUrls([receipt.id, photo.id]);
+
+      const receiptKey = state.rows.get(receipt.id)?.objectKey ?? "";
+      const receiptUrl = urls.get(receipt.id) ?? "";
+      expect(receiptUrl).not.toContain("pub-abc123.r2.dev");
+      expect(receiptUrl).toContain("/receipts-private/");
+      expect(receiptUrl).toContain(receiptKey);
+      expect(urls.get(photo.id)).toBe(`https://pub-abc123.r2.dev/${state.rows.get(photo.id)?.objectKey}`);
+    } finally {
+      delete process.env.R2_PUBLIC_URL;
+    }
+  });
+
+  it("falls back to the main bucket for receipts when no receipts bucket is set", async () => {
     const client = fakeClient();
     const storage = createR2Storage(env, client);
+    const info = await storage.put({ data: bytes, mime: "image/png", folder: "receipts" });
+
+    const objectKey = state.rows.get(info.id)?.objectKey ?? "";
+    const s3 = client as unknown as FakeS3;
+    expect(s3.objects.has(FakeS3.ref("bucket", objectKey))).toBe(true);
+
+    const content = await storage.get(info.id);
+    if (!content) throw new Error("content missing");
+    expect(await readStream(content.stream)).toEqual(bytes);
+  });
+
+  it("removes the uploaded object when the metadata row cannot be created", async () => {
+    const client = fakeClient();
+    const storage = createR2Storage(envWithReceipts, client);
     state.failNextCreate("boom");
 
     await expect(storage.put({ data: bytes, mime: "image/png", folder: "receipts" })).rejects.toThrow("boom");
@@ -191,7 +272,7 @@ describe("r2 storage", () => {
   it("gets the object stream and mime for an r2 row", async () => {
     const client = fakeClient();
     const storage = createR2Storage(env, client);
-    const info = await storage.put({ data: bytes, mime: "image/png", folder: "receipts" });
+    const info = await storage.put({ data: bytes, mime: "image/png", folder: "coach-photos" });
 
     const content = await storage.get(info.id);
     if (!content) throw new Error("content missing");
@@ -213,7 +294,7 @@ describe("r2 storage", () => {
 
     await storage.delete(info.id);
 
-    expect((client as unknown as FakeS3).objects.has(objectKey)).toBe(false);
+    expect((client as unknown as FakeS3).objects.has(FakeS3.ref("bucket", objectKey))).toBe(false);
     expect(state.rows.has(info.id)).toBe(false);
   });
 

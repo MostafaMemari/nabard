@@ -17,21 +17,14 @@ import type {
 
 const DEFAULT_PAGE_SIZE = 100;
 
-// Receipts live in R2 and are displayed straight from its public endpoint;
-// receiptUrl is null when the file is not on R2 (local development without
-// R2 env vars) or the payment has no receipt at all.
+// Receipt urls stay same-origin: the payments file route checks the session
+// on every request, so the bytes reach only the uploading coach, the admin of
+// the coach's province and the super admin. Receipts live in a private R2
+// bucket with no public endpoint, so no direct url exists to leak.
 type PaymentPayload = PaymentRecord & { receiptUrl: string | null };
 
-async function withReceiptUrls(storage: Storage, records: PaymentRecord[]): Promise<PaymentPayload[]> {
-  if (records.length === 0) return [];
-
-  const ids = [...new Set(records.map((record) => record.receiptKey).filter((key): key is string => key !== null))];
-  const urls = ids.length > 0 ? await storage.getUrls(ids) : new Map<string, string>();
-
-  return records.map((record) => ({
-    ...record,
-    receiptUrl: record.receiptKey === null ? null : (urls.get(record.receiptKey) ?? null),
-  }));
+function toPayload(record: PaymentRecord): PaymentPayload {
+  return { ...record, receiptUrl: record.receiptKey === null ? null : `/api/v1/payments/${record.id}/receipt` };
 }
 
 function forbidden(): AppError {
@@ -89,7 +82,6 @@ function toFilters(user: CurrentUser, identity: UserIdentityRecord, query: Payme
 
 export async function listPayments(
   repo: PaymentsRepository,
-  storage: Storage,
   user: CurrentUser,
   query: PaymentListQuery,
 ): Promise<ListResult<PaymentPayload>> {
@@ -100,10 +92,10 @@ export async function listPayments(
 
   const [total, rows] = await Promise.all([repo.countPayments(filters), repo.findPayments(filters, (page - 1) * pageSize, pageSize)]);
 
-  return { data: await withReceiptUrls(storage, rows.map(toRecord)), meta: { page, pageSize, total } };
+  return { data: rows.map(toRecord).map(toPayload), meta: { page, pageSize, total } };
 }
 
-export async function getPayment(repo: PaymentsRepository, storage: Storage, user: CurrentUser, id: string): Promise<PaymentPayload> {
+export async function getPayment(repo: PaymentsRepository, user: CurrentUser, id: string): Promise<PaymentPayload> {
   const identity = await requireActiveUser(repo, user);
   const row = await repo.findPaymentById(id);
   if (!row) throw paymentNotFound();
@@ -112,13 +104,11 @@ export async function getPayment(repo: PaymentsRepository, storage: Storage, use
     identity.role === "SUPER_ADMIN" || (identity.role === "ADMIN" ? row.coachProvince === provinceOf(identity) : row.coachId === user.id);
   if (!inScope) throw paymentNotFound();
 
-  const [record] = await withReceiptUrls(storage, [toRecord(row)]);
-  return record;
+  return toPayload(toRecord(row));
 }
 
 async function decidePayment(
   repo: PaymentsRepository,
-  storage: Storage,
   user: CurrentUser,
   id: string,
   input: PaymentTransitionInput,
@@ -130,10 +120,7 @@ async function decidePayment(
   if (!current || current.coachProvince !== identity.province) throw paymentNotFound();
 
   const updated = await repo.transitionPaymentFromPending(id, input);
-  if (updated) {
-    const [record] = await withReceiptUrls(storage, [toRecord(updated)]);
-    return record;
-  }
+  if (updated) return toPayload(toRecord(updated));
 
   const row = await repo.findPaymentById(id);
   if (row === null) throw paymentNotFound();
@@ -154,18 +141,12 @@ async function decidePayment(
   throw new AppError(409, "CONFLICT", "این پرداخت قبلا بررسی شده است.");
 }
 
-export async function confirmPayment(repo: PaymentsRepository, storage: Storage, user: CurrentUser, id: string): Promise<PaymentPayload> {
-  return decidePayment(repo, storage, user, id, { status: "CONFIRMED", note: null });
+export async function confirmPayment(repo: PaymentsRepository, user: CurrentUser, id: string): Promise<PaymentPayload> {
+  return decidePayment(repo, user, id, { status: "CONFIRMED", note: null });
 }
 
-export async function rejectPayment(
-  repo: PaymentsRepository,
-  storage: Storage,
-  user: CurrentUser,
-  id: string,
-  note: string,
-): Promise<PaymentPayload> {
-  return decidePayment(repo, storage, user, id, { status: "REJECTED", note });
+export async function rejectPayment(repo: PaymentsRepository, user: CurrentUser, id: string, note: string): Promise<PaymentPayload> {
+  return decidePayment(repo, user, id, { status: "REJECTED", note });
 }
 
 export async function readReceipt(
@@ -224,8 +205,7 @@ export async function uploadReceipt(
       await deleteStorageFileQuietly(storage, row.receiptKey);
     }
 
-    const [record] = await withReceiptUrls(storage, [toRecord(updated)]);
-    return record;
+    return toPayload(toRecord(updated));
   } catch (error) {
     await deleteStorageFileQuietly(storage, stored.id);
     throw error;

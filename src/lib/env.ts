@@ -60,6 +60,9 @@ const r2EnvSchema = z.object({
   R2_ACCESS_KEY_ID: z.string().min(1),
   R2_SECRET_ACCESS_KEY: z.string().min(1),
   R2_BUCKET_NAME: z.string().min(1),
+  // Private bucket for payment receipts (no public endpoint). Optional: when
+  // unset, receipts fall back to R2_BUCKET_NAME (single-bucket setups).
+  R2_RECEIPTS_BUCKET: z.string().min(1).optional(),
 });
 
 export type R2Env = z.infer<typeof r2EnvSchema>;

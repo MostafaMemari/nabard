@@ -62,47 +62,43 @@ function failureOf(promise: Promise<unknown>): Promise<unknown> {
 }
 
 describe("receipt urls", () => {
-  it("attaches the public R2 receipt url to payment payloads", async () => {
+  it("points the receipt url at the authenticated payments file route", async () => {
     const repo = repoWith();
-    const storage = storageWith({
-      getUrls: vi.fn().mockResolvedValue(new Map([["file-1", "https://r2.example/receipts/a.webp"]])),
-    });
+    const record = await getPayment(repo, coach, "pay-1");
 
-    const record = await getPayment(repo, storage, coach, "pay-1");
-
-    expect(record.receiptUrl).toBe("https://r2.example/receipts/a.webp");
+    expect(record.receiptUrl).toBe("/api/v1/payments/pay-1/receipt");
   });
 
-  it("leaves the receipt url null when the receipt is missing or not on R2", async () => {
+  it("leaves the receipt url null when the payment has no receipt", async () => {
     const repo = repoWith();
-    const record = await getPayment(repo, storageWith(), coach, "pay-1");
-    expect(record.receiptUrl).toBeNull();
+    const record = await getPayment(repo, coach, "pay-1");
+    expect(record.receiptUrl).toBe("/api/v1/payments/pay-1/receipt");
 
     const noReceipt = repoWith({ findPaymentById: vi.fn().mockResolvedValue({ ...paymentRow, receiptKey: null }) });
-    const none = await getPayment(noReceipt, storageWith(), coach, "pay-1");
+    const none = await getPayment(noReceipt, coach, "pay-1");
     expect(none.receiptUrl).toBeNull();
   });
 
-  it("resolves receipt urls for the whole list page in one lookup", async () => {
+  it("resolves receipt urls for the whole list page without touching storage", async () => {
     const repo = repoWith({
       findUserById: vi.fn().mockResolvedValue(adminRecord),
       findPayments: vi.fn().mockResolvedValue([paymentRow, rejectedPayment]),
       countPayments: vi.fn().mockResolvedValue(2),
     });
-    const getUrls = vi.fn().mockResolvedValue(new Map([["file-1", "https://r2.example/receipts/a.webp"]]));
+    const storage = storageWith();
 
-    const result = await listPayments(repo, { ...storageWith(), getUrls }, admin, {});
+    const result = await listPayments(repo, admin, {});
 
-    expect(getUrls).toHaveBeenCalledTimes(1);
-    expect(getUrls).toHaveBeenCalledWith(["file-1"]);
-    expect(result.data[0]).toMatchObject({ id: "pay-1", receiptUrl: "https://r2.example/receipts/a.webp" });
+    expect(storage.getUrls).not.toHaveBeenCalled();
+    expect(result.data[0]).toMatchObject({ id: "pay-1", receiptUrl: "/api/v1/payments/pay-1/receipt" });
+    expect(result.data[1]).toMatchObject({ id: "pay-8", receiptUrl: "/api/v1/payments/pay-8/receipt" });
   });
 });
 
 describe("listPayments", () => {
   it("forces a coach to its own payments and ignores the coachId param", async () => {
     const repo = repoWith();
-    await listPayments(repo, storageWith(), coach, { coachId: "coach-2", status: "PENDING" });
+    await listPayments(repo, coach, { coachId: "coach-2", status: "PENDING" });
 
     expect(repo.findPayments).toHaveBeenCalledWith({ coachId: "coach-1", status: "PENDING", competitionId: undefined }, 0, 100);
     expect(repo.countPayments).toHaveBeenCalledWith({ coachId: "coach-1", status: "PENDING", competitionId: undefined });
@@ -110,7 +106,7 @@ describe("listPayments", () => {
 
   it("scopes an admin to its province and keeps the coachId filter", async () => {
     const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    await listPayments(repo, storageWith(), admin, { coachId: "coach-2" });
+    await listPayments(repo, admin, { coachId: "coach-2" });
 
     expect(repo.findPayments).toHaveBeenCalledWith(
       { province: "TEHRAN", coachId: "coach-2", status: undefined, competitionId: undefined },
@@ -123,7 +119,7 @@ describe("listPayments", () => {
 describe("getPayment", () => {
   it("returns an own payment to the coach", async () => {
     const repo = repoWith();
-    const record = await getPayment(repo, storageWith(), coach, "pay-1");
+    const record = await getPayment(repo, coach, "pay-1");
 
     expect(record.amount).toBe("5000000");
     expect(record.receiptKey).toBe("file-1");
@@ -131,20 +127,20 @@ describe("getPayment", () => {
 
   it("hides another coach payment from a coach with 404", async () => {
     const repo = repoWith({ findPaymentById: vi.fn().mockResolvedValue({ ...paymentRow, coachId: "coach-2" }) });
-    const failure = await failureOf(getPayment(repo, storageWith(), coach, "pay-1"));
+    const failure = await failureOf(getPayment(repo, coach, "pay-1"));
 
     expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
   });
 
   it("returns a province payment to the admin and hides other provinces", async () => {
     const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    const record = await getPayment(repo, storageWith(), admin, "pay-1");
+    const record = await getPayment(repo, admin, "pay-1");
     expect(record.id).toBe("pay-1");
 
     const otherProvince = repoWith({
       findUserById: vi.fn().mockResolvedValue({ ...adminRecord, province: "FARS" }),
     });
-    const failure = await failureOf(getPayment(otherProvince, storageWith(), { id: "admin-1", role: "ADMIN" }, "pay-1"));
+    const failure = await failureOf(getPayment(otherProvince, { id: "admin-1", role: "ADMIN" }, "pay-1"));
 
     expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
   });
@@ -153,7 +149,7 @@ describe("getPayment", () => {
 describe("confirmPayment", () => {
   it("rejects a coach with 403", async () => {
     const repo = repoWith();
-    const failure = await failureOf(confirmPayment(repo, storageWith(), coach, "pay-1"));
+    const failure = await failureOf(confirmPayment(repo, coach, "pay-1"));
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
     expect(repo.transitionPaymentFromPending).not.toHaveBeenCalled();
@@ -161,7 +157,7 @@ describe("confirmPayment", () => {
 
   it("hides payments of another province from the admin with 404", async () => {
     const repo = repoWith({ findUserById: vi.fn().mockResolvedValue({ ...adminRecord, province: "FARS" }) });
-    const failure = await failureOf(confirmPayment(repo, storageWith(), admin, "pay-1"));
+    const failure = await failureOf(confirmPayment(repo, admin, "pay-1"));
 
     expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
     expect(repo.transitionPaymentFromPending).not.toHaveBeenCalled();
@@ -172,7 +168,7 @@ describe("confirmPayment", () => {
       findUserById: vi.fn().mockResolvedValue(adminRecord),
       transitionPaymentFromPending: vi.fn().mockResolvedValue({ ...paymentRow, status: "CONFIRMED", note: null }),
     });
-    const record = await confirmPayment(repo, storageWith(), admin, "pay-1");
+    const record = await confirmPayment(repo, admin, "pay-1");
 
     expect(repo.transitionPaymentFromPending).toHaveBeenCalledWith("pay-1", { status: "CONFIRMED", note: null });
     expect(record.status).toBe("CONFIRMED");
@@ -186,7 +182,7 @@ describe("confirmPayment", () => {
       transitionPaymentFromPending: vi.fn().mockResolvedValue(null),
       findPaymentById: vi.fn().mockResolvedValue(confirmed),
     });
-    const failure = await failureOf(confirmPayment(repo, storageWith(), admin, "pay-1"));
+    const failure = await failureOf(confirmPayment(repo, admin, "pay-1"));
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
     expect((failure as AppError).message).toContain("قبلا تأیید شده");
@@ -198,7 +194,7 @@ describe("confirmPayment", () => {
       transitionPaymentFromPending: vi.fn().mockResolvedValue(null),
       findPaymentById: vi.fn().mockResolvedValue(rejectedPayment),
     });
-    const failure = await failureOf(confirmPayment(repo, storageWith(), admin, "pay-8"));
+    const failure = await failureOf(confirmPayment(repo, admin, "pay-8"));
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
     expect((failure as AppError).message).toContain("رسید جدید");
@@ -211,7 +207,7 @@ describe("rejectPayment", () => {
       findUserById: vi.fn().mockResolvedValue(adminRecord),
       transitionPaymentFromPending: vi.fn().mockResolvedValue(rejectedPayment),
     });
-    const record = await rejectPayment(repo, storageWith(), admin, "pay-8", "رسید ناخوانا است.");
+    const record = await rejectPayment(repo, admin, "pay-8", "رسید ناخوانا است.");
 
     expect(repo.transitionPaymentFromPending).toHaveBeenCalledWith("pay-8", { status: "REJECTED", note: "رسید ناخوانا است." });
     expect(record.status).toBe("REJECTED");
@@ -224,7 +220,7 @@ describe("rejectPayment", () => {
       transitionPaymentFromPending: vi.fn().mockResolvedValue(null),
       findPaymentById: vi.fn().mockResolvedValue({ ...paymentRow, status: "CONFIRMED" }),
     });
-    const failure = await failureOf(rejectPayment(repo, storageWith(), admin, "pay-1", "ناسازگار"));
+    const failure = await failureOf(rejectPayment(repo, admin, "pay-1", "ناسازگار"));
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
     expect((failure as AppError).message).toContain("قابل رد کردن نیست");
@@ -236,7 +232,7 @@ describe("rejectPayment", () => {
       transitionPaymentFromPending: vi.fn().mockResolvedValue(null),
       findPaymentById: vi.fn().mockResolvedValue(rejectedPayment),
     });
-    const failure = await failureOf(rejectPayment(repo, storageWith(), admin, "pay-8", "ناسازگار"));
+    const failure = await failureOf(rejectPayment(repo, admin, "pay-8", "ناسازگار"));
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
     expect((failure as AppError).message).toContain("قبلا رد شده");
@@ -256,8 +252,8 @@ describe("rejectPayment", () => {
     });
 
     const [first, second] = await Promise.all([
-      confirmPayment(repo, storageWith(), admin, "pay-1"),
-      confirmPayment(repo, storageWith(), admin, "pay-1").catch((error: unknown) => error),
+      confirmPayment(repo, admin, "pay-1"),
+      confirmPayment(repo, admin, "pay-1").catch((error: unknown) => error),
     ]);
 
     expect(first).toMatchObject({ status: "CONFIRMED" });

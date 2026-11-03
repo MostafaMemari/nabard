@@ -25,8 +25,9 @@ export type Storage = {
   put(input: StoredFileInput): Promise<StoredFileInfo>;
   get(id: string): Promise<StoredFileContent | null>;
   delete(id: string): Promise<void>;
-  // Direct URLs that the browser can fetch without going through this
-  // backend. R2 files resolve to presigned object URLs; files still stored
-  // in Postgres have none and stay absent from the returned map.
+  // Direct urls that the browser can fetch without going through this
+  // backend, for files meant to be public (profile photos). Receipts are
+  // session-gated and stay out of this map's public form: their keys resolve
+  // to signed urls on the private receipts bucket only.
   getUrls(ids: string[]): Promise<Map<string, string>>;
 };

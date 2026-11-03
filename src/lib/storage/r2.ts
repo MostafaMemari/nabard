@@ -8,7 +8,7 @@ import type { Storage, StoredFileContent, StoredFileInfo, StoredFileInput } from
 const fileInfoSelection = { id: true, mime: true, size: true } as const;
 
 // When R2_PUBLIC_URL is configured (the bucket's public r2.dev subdomain or a
-// custom domain), file urls point straight at that endpoint: no signature and
+// custom domain), photo urls point straight at that endpoint: no signature and
 // no backend hop. Without it (local development) presigned urls keep the app
 // working; they stay valid for a day, but signing on every request would
 // produce a fresh signature each time and defeat the browser cache, so one
@@ -41,15 +41,26 @@ export function createR2Client(env: R2Env): S3Client {
 
 export function createR2Storage(env: R2Env, client: S3Client = createR2Client(env)): Storage {
   const bucket = env.R2_BUCKET_NAME;
+  // Receipts prove bank payments, so they live in a separate bucket without
+  // any public endpoint and reach the browser only through the authenticated
+  // payments file route. With R2_RECEIPTS_BUCKET unset (local development,
+  // single bucket) they fall back to the main bucket behind presigned urls.
+  const receiptsBucket = env.R2_RECEIPTS_BUCKET || env.R2_BUCKET_NAME;
+
+  function bucketForKey(objectKey: string): string {
+    return objectKey.startsWith("receipts/") ? receiptsBucket : bucket;
+  }
+
   const presignedUrls = new Map<string, { url: string; signedAt: number }>();
 
-  async function presignGetUrl(objectKey: string): Promise<string> {
-    const cached = presignedUrls.get(objectKey);
+  async function presignGetUrl(targetBucket: string, objectKey: string): Promise<string> {
+    const cacheKey = `${targetBucket}/${objectKey}`;
+    const cached = presignedUrls.get(cacheKey);
     if (cached && Date.now() - cached.signedAt < PRESIGN_REUSE_MS) return cached.url;
 
-    const command = new GetObjectCommand({ Bucket: bucket, Key: objectKey });
+    const command = new GetObjectCommand({ Bucket: targetBucket, Key: objectKey });
     const url = await getSignedUrl(client, command, { expiresIn: PRESIGN_VALID_SECONDS });
-    presignedUrls.set(objectKey, { url, signedAt: Date.now() });
+    presignedUrls.set(cacheKey, { url, signedAt: Date.now() });
 
     return url;
   }
@@ -57,16 +68,18 @@ export function createR2Storage(env: R2Env, client: S3Client = createR2Client(en
   return {
     async put(input: StoredFileInput): Promise<StoredFileInfo> {
       const objectKey = `${input.folder}/${randomUUID()}${extensionForMime(input.mime)}`;
+      const target = input.folder === "receipts" ? receiptsBucket : bucket;
 
       await client.send(
         new PutObjectCommand({
-          Bucket: bucket,
+          Bucket: target,
           Key: objectKey,
           Body: input.data,
           ContentType: input.mime,
           // Keys are UUIDs and never change content, so browsers can cache
-          // the object for as long as they keep the URL.
-          CacheControl: "public, max-age=31536000, immutable",
+          // the object for as long as they keep the URL. Receipts are
+          // session-gated, so shared caches must not store them.
+          CacheControl: input.folder === "receipts" ? "private, max-age=31536000, immutable" : "public, max-age=31536000, immutable",
         }),
       );
 
@@ -76,7 +89,7 @@ export function createR2Storage(env: R2Env, client: S3Client = createR2Client(en
           select: fileInfoSelection,
         });
       } catch (error) {
-        await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: objectKey })).catch(() => {});
+        await client.send(new DeleteObjectCommand({ Bucket: target, Key: objectKey })).catch(() => {});
         throw error;
       }
     },
@@ -89,7 +102,7 @@ export function createR2Storage(env: R2Env, client: S3Client = createR2Client(en
 
       if (!row?.objectKey) return null;
 
-      const object = await client.send(new GetObjectCommand({ Bucket: bucket, Key: row.objectKey }));
+      const object = await client.send(new GetObjectCommand({ Bucket: bucketForKey(row.objectKey), Key: row.objectKey }));
       const body = object.Body;
       if (!body) return null;
 
@@ -105,7 +118,7 @@ export function createR2Storage(env: R2Env, client: S3Client = createR2Client(en
       if (!row) return;
 
       if (row.objectKey) {
-        await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: row.objectKey }));
+        await client.send(new DeleteObjectCommand({ Bucket: bucketForKey(row.objectKey), Key: row.objectKey }));
       }
 
       await getPrisma().storedFile.delete({ where: { id } });
@@ -121,13 +134,18 @@ export function createR2Storage(env: R2Env, client: S3Client = createR2Client(en
       });
 
       // Read on every call instead of caching at startup so tests and local
-      // runs can toggle the variable freely.
+      // runs can toggle the variable freely. Only non-receipt objects may use
+      // the public endpoint; receipts stay behind a signature on their own
+      // (private) bucket.
       const publicBase = process.env.R2_PUBLIC_URL?.replace(/\/+$/, "");
-      if (publicBase) {
-        return new Map(rows.map((row) => [row.id, `${publicBase}/${row.objectKey as string}`]));
-      }
-
-      const entries = await Promise.all(rows.map(async (row) => [row.id, await presignGetUrl(row.objectKey as string)] as const));
+      const entries = await Promise.all(
+        rows.map(async (row) => {
+          const objectKey = row.objectKey as string;
+          const target = bucketForKey(objectKey);
+          if (publicBase && !objectKey.startsWith("receipts/")) return [row.id, `${publicBase}/${objectKey}`] as const;
+          return [row.id, await presignGetUrl(target, objectKey)] as const;
+        }),
+      );
 
       return new Map(entries);
     },
