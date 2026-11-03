@@ -1,18 +1,21 @@
 import "dotenv/config";
 import { randomUUID } from "node:crypto";
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { CopyObjectCommand, DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import sharp from "sharp";
 import { getR2Env } from "../src/lib/env";
 import { getPrisma } from "../src/lib/prisma";
-import { createR2Client } from "../src/lib/storage/r2";
+import { createR2Client, extensionForMime } from "../src/lib/storage/r2";
 
-// One-shot pass over photos that were uploaded to R2 before client-side
-// compression existed: student profile photos (PHOTO documents) and coach
-// profile photos. Each object is re-encoded to WebP, capped at 512 px on the
-// long edge with a quality ladder targeting 100 KB, stored under a new key
-// and the metadata row is pointed at it before the old object is deleted.
-// Idempotent: objects that are already small WebP images are skipped, so the
-// script can be re-run safely. Prints counts only, never file data.
+// One-shot maintenance pass over every object stored in R2:
+// 1. Student profile photos (PHOTO documents) and coach photos that predate
+//    client-side compression are re-encoded to WebP, capped at 512 px on the
+//    long edge with a quality ladder targeting 100 KB.
+// 2. Every object whose key lacks the file extension of its mime (rows
+//    migrated from Postgres) is copied to `folder/<uuid>.<ext>` with
+//    ContentType and CacheControl metadata, so the public R2 endpoint serves
+//    a self-describing url with the right media type.
+// Idempotent: already-normalized objects are skipped, so the script can be
+// re-run safely. Prints counts only, never file data.
 
 const MAX_EDGE = 512;
 const TARGET_BYTES = 100 * 1024;
@@ -35,22 +38,34 @@ if (!process.argv.includes("--yes")) {
 const client = createR2Client(env);
 const bucket = env.R2_BUCKET_NAME;
 
-type PhotoRow = { id: string; objectKey: string; mime: string; size: number };
+type FileRow = { id: string; objectKey: string; mime: string; size: number; isPhoto: boolean };
 
-async function findPhotoRows(afterId: string | null, take: number): Promise<PhotoRow[]> {
+async function findRows(afterId: string | null, take: number): Promise<FileRow[]> {
   const rows = await prisma.storedFile.findMany({
     where: {
       provider: "R2",
       objectKey: { not: null },
       ...(afterId === null ? {} : { id: { gt: afterId } }),
-      OR: [{ studentDocuments: { some: { type: "PHOTO" } } }, { coachPhoto: { isNot: null } }],
     },
-    select: { id: true, objectKey: true, mime: true, size: true },
+    select: {
+      id: true,
+      objectKey: true,
+      mime: true,
+      size: true,
+      coachPhoto: { select: { id: true } },
+      studentDocuments: { select: { type: true } },
+    },
     orderBy: { id: "asc" },
     take,
   });
 
-  return rows.map((row) => ({ ...row, objectKey: row.objectKey as string }));
+  return rows.map((row) => ({
+    id: row.id,
+    objectKey: row.objectKey as string,
+    mime: row.mime,
+    size: row.size,
+    isPhoto: row.coachPhoto !== null || row.studentDocuments.some((doc) => doc.type === "PHOTO"),
+  }));
 }
 
 async function encodeImage(bytes: Buffer): Promise<{ webp: Buffer; size: number } | null> {
@@ -77,52 +92,83 @@ async function encodeImage(bytes: Buffer): Promise<{ webp: Buffer; size: number 
 let scanned = 0;
 let skipped = 0;
 let recompressed = 0;
+let reformatted = 0;
 let failed = 0;
 let savedBytes = 0;
+
+async function copyWithMetadata(row: FileRow, newKey: string, mime: string): Promise<void> {
+  // The content is already fine; the copy only gives the object a
+  // self-describing key and the metadata the public endpoint needs.
+  await client.send(
+    new CopyObjectCommand({
+      Bucket: bucket,
+      CopySource: `/${bucket}/${row.objectKey.split("/").map(encodeURIComponent).join("/")}`,
+      Key: newKey,
+      ContentType: mime,
+      CacheControl: "public, max-age=31536000, immutable",
+      MetadataDirective: "REPLACE",
+    }),
+  );
+}
 
 async function main(): Promise<void> {
   let cursor: string | null = null;
 
   for (;;) {
-    const rows = await findPhotoRows(cursor, 50);
+    const rows = await findRows(cursor, 50);
     if (rows.length === 0) break;
     cursor = rows[rows.length - 1]?.id ?? null;
 
     for (const row of rows) {
       scanned += 1;
 
-      if (row.mime === "image/webp" && row.size <= TARGET_BYTES) {
+      const extension = extensionForMime(row.mime);
+      const needsExtension = extension !== "" && !row.objectKey.endsWith(extension);
+      const photoNeedsReencode = row.isPhoto && !(row.mime === "image/webp" && row.size <= TARGET_BYTES);
+
+      if (!photoNeedsReencode && !needsExtension) {
         skipped += 1;
         continue;
       }
 
       try {
-        const object = await client.send(new GetObjectCommand({ Bucket: bucket, Key: row.objectKey }));
-        const body = await object.Body?.transformToByteArray();
-        if (!body) throw new Error("empty body");
+        let bytes: Buffer | null = null;
+        let outMime = row.mime;
+        let outSize = row.size;
 
-        const encoded = await encodeImage(Buffer.from(body));
-        if (encoded === null || encoded.size > row.size * (1 - MIN_SAVINGS_RATIO)) {
-          skipped += 1;
-          continue;
+        if (photoNeedsReencode) {
+          const object = await client.send(new GetObjectCommand({ Bucket: bucket, Key: row.objectKey }));
+          const body = await object.Body?.transformToByteArray();
+          if (!body) throw new Error("empty body");
+
+          const encoded = await encodeImage(Buffer.from(body));
+          if (encoded !== null && encoded.size <= row.size * (1 - MIN_SAVINGS_RATIO)) {
+            bytes = encoded.webp;
+            outMime = "image/webp";
+            outSize = encoded.size;
+          }
         }
 
-        const folder = row.objectKey.split("/")[0] ?? "student-photos";
-        const newKey = `${folder}/${randomUUID()}`;
-        await client.send(
-          new PutObjectCommand({
-            Bucket: bucket,
-            Key: newKey,
-            Body: encoded.webp,
-            ContentType: "image/webp",
-            CacheControl: "public, max-age=31536000, immutable",
-          }),
-        );
+        const newKey = `${row.objectKey.split("/")[0] ?? "files"}/${randomUUID()}${extensionForMime(outMime)}`;
+
+        if (bytes === null) {
+          await copyWithMetadata(row, newKey, outMime);
+        } else {
+          await client.send(
+            new PutObjectCommand({
+              Bucket: bucket,
+              Key: newKey,
+              Body: bytes,
+              ContentType: outMime,
+              CacheControl: "public, max-age=31536000, immutable",
+            }),
+          );
+        }
 
         try {
           await prisma.storedFile.update({
             where: { id: row.id },
-            data: { objectKey: newKey, mime: "image/webp", size: encoded.size },
+            data: { objectKey: newKey, mime: outMime, size: outSize },
           });
         } catch (error) {
           // The row still points at the old object, so only the unused copy
@@ -133,8 +179,12 @@ async function main(): Promise<void> {
 
         await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: row.objectKey }));
 
-        recompressed += 1;
-        savedBytes += row.size - encoded.size;
+        if (bytes === null) {
+          reformatted += 1;
+        } else {
+          recompressed += 1;
+          savedBytes += row.size - outSize;
+        }
       } catch (error) {
         failed += 1;
         console.error(`خطا در پردازش فایل ${row.id}:`, error instanceof Error ? error.message : error);
@@ -148,6 +198,7 @@ main()
     console.log(`بررسی شد: ${scanned}`);
     console.log(`از قبل بهینه: ${skipped}`);
     console.log(`فشرده سازی مجدد شد: ${recompressed}`);
+    console.log(`فرمت و متادیتا اصلاح شد: ${reformatted}`);
     console.log(`ناموفق: ${failed}`);
     console.log(`صرفه جویی حجم: ${Math.round(savedBytes / 1024)} کیلوبایت`);
     return prisma.$disconnect();

@@ -24,19 +24,11 @@ import { isStudentDocumentType } from "./repository";
 const DEFAULT_PAGE_SIZE = 100;
 const DEFAULT_BELT_CODE = "white";
 
-function studentPhotoRoute(studentId: string): string {
-  return `/api/v1/students/${studentId}/documents/PHOTO/file`;
-}
-
-function photoUrlFor(fileId: string | null | undefined, urls: Map<string, string>, fallback: string): string | null {
-  if (!fileId) return null;
-  return urls.get(fileId) ?? fallback;
-}
-
-// Photos live in R2 and are displayed straight from there via presigned
-// URLs; files still in Postgres (local dev) fall back to the authenticated
-// route that streams the bytes. The internal file id is stripped from the
-// response payload.
+// Photos live in R2 and are displayed straight from its public endpoint:
+// no signature and no backend hop. When a file url cannot be resolved
+// (local development without the public endpoint) the photo url is null and
+// the UI shows the fallback avatar. The internal file id is stripped from
+// the response payload.
 async function withPhotoUrls<T extends { id: string; photoFileId?: string | null }>(
   storage: Storage,
   records: T[],
@@ -50,7 +42,7 @@ async function withPhotoUrls<T extends { id: string; photoFileId?: string | null
     const { photoFileId, ...rest } = record;
     return {
       ...rest,
-      ...(photoFileId ? { photoUrl: photoUrlFor(photoFileId, urls, studentPhotoRoute(record.id)) } : {}),
+      ...(photoFileId ? { photoUrl: urls.get(photoFileId) ?? null } : {}),
     };
   });
 }
@@ -164,7 +156,7 @@ export async function getStudent(repo: StudentRepository, storage: Storage, user
     ...toStudentRecord(student),
     coachName: student.coachName,
     documents,
-    ...(photoDocument ? { photoUrl: photoUrlFor(photoDocument.fileId, urls, studentPhotoRoute(id)) } : {}),
+    ...(photoDocument ? { photoUrl: urls.get(photoDocument.fileId) ?? null } : {}),
   };
 }
 

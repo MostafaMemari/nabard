@@ -174,7 +174,7 @@ describe("coach photo url", () => {
     photoFileId: "photo-file-1",
   };
 
-  it("resolves the coach photo to the presigned R2 url", async () => {
+  it("resolves the coach photo to the public R2 url", async () => {
     const storage = storageWith({ "photo-file-1": "https://r2.example/coach-photos/x?sig=1" });
 
     const result = await login(repoWith(coachWithPhoto), { mobile: "09121110000", password }, undefined, storage);
@@ -183,10 +183,10 @@ describe("coach photo url", () => {
     expect(result.photoUrl).toBe("https://r2.example/coach-photos/x?sig=1");
   });
 
-  it("falls back to the authenticated route when the photo is not on R2", async () => {
+  it("keeps the photo url null when the photo is not on R2", async () => {
     const result = await getProfile(repoWith(coachWithPhoto), { id: "user-1", role: "COACH" }, storageWith());
 
-    expect(result.photoUrl).toBe("/api/v1/coaches/me/photo");
+    expect(result.photoUrl).toBeNull();
   });
 
   it("keeps the photo url null for users without a photo", async () => {

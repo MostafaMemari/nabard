@@ -27,7 +27,7 @@ export type Student = {
   approvedAt: string | null;
   createdAt: string;
   updatedAt: string;
-  // Presigned R2 URL for the profile photo, ready to drop into <img src>;
+  // Public R2 URL for the profile photo, ready to drop into <img src>;
   // null/absent when the student has no photo.
   photoUrl?: string | null;
 };

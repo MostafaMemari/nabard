@@ -56,6 +56,10 @@ vi.mock("@/lib/prisma", () => ({
         return { id: row.id, mime: row.mime, size: row.size };
       },
       findUnique: async ({ where: { id } }: { where: { id: string } }) => state.rows.get(id) ?? null,
+      findMany: async ({ where: { id } }: { where: { id: { in: string[] } } }) =>
+        [...state.rows.values()]
+          .filter((row) => id.in.includes(row.id) && row.provider === "R2" && row.objectKey !== null)
+          .map((row) => ({ id: row.id, objectKey: row.objectKey })),
       delete: async ({ where: { id } }: { where: { id: string } }) => {
         const row = state.rows.get(id);
         if (!row) throw new Error("record not found");
@@ -146,7 +150,7 @@ describe("r2 storage", () => {
     expect(info.size).toBe(bytes.byteLength);
 
     const objectKey = state.rows.get(info.id)?.objectKey ?? "";
-    expect(objectKey).toMatch(/^student-photos\//);
+    expect(objectKey).toMatch(/^student-photos\/.+\.png$/);
 
     const s3 = client as unknown as FakeS3;
     expect(s3.objects.get(objectKey)).toEqual(bytes);
@@ -154,6 +158,24 @@ describe("r2 storage", () => {
 
     const row = state.rows.get(info.id);
     expect(row).toMatchObject({ provider: "R2", data: null, mime: "image/png", size: bytes.byteLength });
+  });
+
+  it("returns public urls without any signature when R2_PUBLIC_URL is set", async () => {
+    process.env.R2_PUBLIC_URL = "https://pub-abc123.r2.dev/";
+    try {
+      const client = fakeClient();
+      const storage = createR2Storage(env, client);
+      const info = await storage.put({ data: bytes, mime: "image/webp", folder: "student-photos" });
+
+      const urls = await storage.getUrls([info.id, "missing-row"]);
+
+      const objectKey = state.rows.get(info.id)?.objectKey ?? "";
+      expect(objectKey).toMatch(/^student-photos\/.+\.webp$/);
+      expect(urls.get(info.id)).toBe(`https://pub-abc123.r2.dev/${objectKey}`);
+      expect(urls.has("missing-row")).toBe(false);
+    } finally {
+      delete process.env.R2_PUBLIC_URL;
+    }
   });
 
   it("removes the uploaded object when the metadata row cannot be created", async () => {

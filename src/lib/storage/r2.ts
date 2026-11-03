@@ -7,11 +7,26 @@ import type { Storage, StoredFileContent, StoredFileInfo, StoredFileInput } from
 
 const fileInfoSelection = { id: true, mime: true, size: true } as const;
 
-// A presigned URL stays valid for a day, but signing on every request would
+// When R2_PUBLIC_URL is configured (the bucket's public r2.dev subdomain or a
+// custom domain), file urls point straight at that endpoint: no signature and
+// no backend hop. Without it (local development) presigned urls keep the app
+// working; they stay valid for a day, but signing on every request would
 // produce a fresh signature each time and defeat the browser cache, so one
-// URL is reused per object key for an hour.
+// url is reused per object key for an hour.
 const PRESIGN_VALID_SECONDS = 24 * 60 * 60;
 const PRESIGN_REUSE_MS = 60 * 60 * 1000;
+
+// Object keys end with the file's extension so urls are self-describing about
+// the image format (e.g. student-photos/<uuid>.webp).
+const EXTENSIONS: Record<string, string> = {
+  "image/webp": ".webp",
+  "image/jpeg": ".jpg",
+  "image/png": ".png",
+};
+
+export function extensionForMime(mime: string): string {
+  return EXTENSIONS[mime] ?? "";
+}
 
 export function createR2Client(env: R2Env): S3Client {
   return new S3Client({
@@ -41,7 +56,7 @@ export function createR2Storage(env: R2Env, client: S3Client = createR2Client(en
 
   return {
     async put(input: StoredFileInput): Promise<StoredFileInfo> {
-      const objectKey = `${input.folder}/${randomUUID()}`;
+      const objectKey = `${input.folder}/${randomUUID()}${extensionForMime(input.mime)}`;
 
       await client.send(
         new PutObjectCommand({
@@ -104,6 +119,13 @@ export function createR2Storage(env: R2Env, client: S3Client = createR2Client(en
         where: { id: { in: wanted }, provider: "R2", objectKey: { not: null } },
         select: { id: true, objectKey: true },
       });
+
+      // Read on every call instead of caching at startup so tests and local
+      // runs can toggle the variable freely.
+      const publicBase = process.env.R2_PUBLIC_URL?.replace(/\/+$/, "");
+      if (publicBase) {
+        return new Map(rows.map((row) => [row.id, `${publicBase}/${row.objectKey as string}`]));
+      }
 
       const entries = await Promise.all(rows.map(async (row) => [row.id, await presignGetUrl(row.objectKey as string)] as const));
 

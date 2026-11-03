@@ -20,8 +20,6 @@ function invalidCredentials(): AppError {
   return new AppError(401, "INVALID_CREDENTIALS", "شماره همراه یا رمز عبور اشتباه است.");
 }
 
-const COACH_PHOTO_ROUTE = "/api/v1/coaches/me/photo";
-
 function toAuthUser(user: UserRecord, photoUrl: string | null): AuthUser {
   return {
     id: user.id,
@@ -36,14 +34,15 @@ function toAuthUser(user: UserRecord, photoUrl: string | null): AuthUser {
   };
 }
 
-// The coach photo lives in R2 and is displayed straight from there via a
-// presigned URL; files still in Postgres (local dev) fall back to the
-// authenticated route that streams the bytes.
+// The coach photo lives in R2 and is displayed straight from its public
+// endpoint: no signature and no backend hop. When the url cannot be resolved
+// (local development without the public endpoint) it is null and the UI
+// shows the fallback avatar.
 async function coachPhotoUrl(storage: Storage, user: UserRecord): Promise<string | null> {
   if (user.role !== "COACH" || user.photoFileId === null) return null;
 
   const urls = await storage.getUrls([user.photoFileId]);
-  return urls.get(user.photoFileId) ?? COACH_PHOTO_ROUTE;
+  return urls.get(user.photoFileId) ?? null;
 }
 
 export async function login(

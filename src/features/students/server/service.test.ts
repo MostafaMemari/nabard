@@ -99,7 +99,7 @@ const createInput = {
 };
 
 describe("photo urls", () => {
-  it("attaches a presigned R2 photo url to list results and hides the file id", async () => {
+  it("attaches the public R2 photo url to list results and hides the file id", async () => {
     const repo = repoWith({
       findStudents: vi.fn().mockResolvedValue([{ ...recordOf(ownStudent), photoFileId: "file-1" }]),
     });
@@ -111,14 +111,14 @@ describe("photo urls", () => {
     expect(result.data[0]).not.toHaveProperty("photoFileId");
   });
 
-  it("falls back to the authenticated route when the photo file is not on R2", async () => {
+  it("leaves the photo url null when the photo file is not on R2", async () => {
     const repo = repoWith({
       findStudents: vi.fn().mockResolvedValue([{ ...recordOf(ownStudent), photoFileId: "file-1" }]),
     });
 
     const result = await listStudents(repo, storageWith(), coach, {});
 
-    expect(result.data[0]).toMatchObject({ photoUrl: "/api/v1/students/student-1/documents/PHOTO/file" });
+    expect(result.data[0]).toMatchObject({ photoUrl: null });
   });
 
   it("leaves students without a photo without a photo url", async () => {
@@ -131,7 +131,7 @@ describe("photo urls", () => {
     expect(result.data[0]).not.toHaveProperty("photoUrl");
   });
 
-  it("attaches a presigned photo url to the student detail", async () => {
+  it("attaches the public R2 photo url to the student detail", async () => {
     const repo = repoWith();
     const storage = storageWithUrls({ "file-1": "https://r2.example/student-photos/b?sig=2" });
 
@@ -140,7 +140,7 @@ describe("photo urls", () => {
     expect(result.photoUrl).toBe("https://r2.example/student-photos/b?sig=2");
   });
 
-  it("attaches a presigned photo url to pending review results", async () => {
+  it("attaches the public R2 photo url to pending review results", async () => {
     const pending = { ...recordOf(ownStudent), coachName: "رضا کریمی", documents: [documentRow], photoFileId: "file-1" };
     const repo = repoWith({
       findUserById: vi.fn().mockResolvedValue(adminRecord),
@@ -220,7 +220,7 @@ describe("getStudent", () => {
       ...recordOf(ownStudent),
       coachName: "رضا کریمی",
       documents: [documentRow],
-      photoUrl: "/api/v1/students/student-1/documents/PHOTO/file",
+      photoUrl: null,
     });
     expect(result).not.toHaveProperty("coachProvince");
   });
