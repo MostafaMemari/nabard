@@ -15,7 +15,7 @@ export function FormActions({
   submittingLabel?: string;
 }) {
   return (
-    <div className="flex items-center justify-end gap-3">
+    <div className="sticky bottom-0 z-10 flex items-center justify-end gap-3 rounded-xl border border-border bg-card px-4 py-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] shadow-card">
       <Button type="button" variant="ghost" render={<Link href={cancelHref} />}>
         انصراف
       </Button>

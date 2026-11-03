@@ -56,7 +56,7 @@ export function DeadlineExtensionDialog({
         onOpenChange(next);
       }}
     >
-      <DialogContent showCloseButton={false} className="max-h-[85vh] overflow-y-auto">
+      <DialogContent showCloseButton={false} className="max-h-[85dvh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>تمدید مهلت ثبت نام</DialogTitle>
           <DialogDescription>

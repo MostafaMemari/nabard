@@ -14,7 +14,7 @@ export function FormSection({
   children: ReactNode;
 }) {
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-card md:p-6">
+    <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 shadow-card md:p-6">
       <div className="flex items-center gap-3">
         {icon ? <IconTile icon={icon} /> : null}
         <div className="flex flex-col gap-1">

@@ -20,7 +20,7 @@ export function EmptyState({
       <IconTile icon={icon} tone={tone} />
       <div className="flex max-w-xs flex-col gap-1">
         <p className="text-sm font-medium text-foreground">{title}</p>
-        {description ? <p className="text-subtle text-sm text-muted-foreground">{description}</p> : null}
+        {description ? <p className="text-subtle text-muted-foreground">{description}</p> : null}
       </div>
       {action}
     </div>

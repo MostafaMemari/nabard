@@ -1,5 +1,15 @@
 # UI Audit
 
+## Consistency pass — phase checklist
+
+Status: `[ ]` not started, `[~]` in progress, `[x]` done and pushed. If a run is interrupted, continue from the first unfinished phase.
+
+- [x] **Phase 1 — Foundations.** Token audit (spacing 4/8/12/16/24/32, card padding 16 mobile/24 desktop, radius, shadows, row/control heights, font and icon sizes) and shared-component audit (PageHeader, FormSection/SectionCard, ListToolbar/FilterBar, DataTable/DataList with mobile cards, EmptyState, Skeletons, FormSection, FormActions, StatusBadge, chips). Changed: Card padding token 20→16/24 (`ui/card.tsx`), FormSection and SummaryCard padding 20→16/24, FormActions rebuilt as a sticky bottom action bar on mobile (safe-area padding, card look, consistent cancel/submit order), EmptyState double font-size class fixed, filter-sheet count badge 11px→12px token, deadline-extension dialog max-height unified to 85dvh.
+- [ ] **Phase 2 — Coach screens.** Home, competitions, competition details, registration, payment step, my registrations and detail, students list, form and detail, profile dialog, transfers.
+- [ ] **Phase 3 — Admin screens.** Home, competitions list, form and details, payments review and detail, profile review, refunds, transfers, coaches list, form and detail, counties, coach requests.
+- [ ] **Phase 4 — Super admin screens and login.** Home, admins, counties view, base data, coaches and competitions views, login.
+- [ ] **Phase 5 — Cross-cutting.** Dialogs, sheets, toasts, error and empty states, loading transitions without layout jumps, focus styles, keyboard use, contrast, touch targets, RTL details, forms, number and date formatting, wording consistency, copy rules (no ZWNJ, no long dashes).
+
 ## Phase 1 — Research findings (applied)
 
 ### Tables → cards on mobile
