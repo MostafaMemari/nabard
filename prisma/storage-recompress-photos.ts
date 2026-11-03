@@ -79,71 +79,83 @@ let skipped = 0;
 let recompressed = 0;
 let failed = 0;
 let savedBytes = 0;
-let cursor: string | null = null;
 
-for (;;) {
-  const rows = await findPhotoRows(cursor, 50);
-  if (rows.length === 0) break;
-  cursor = rows[rows.length - 1]?.id ?? null;
+async function main(): Promise<void> {
+  let cursor: string | null = null;
 
-  for (const row of rows) {
-    scanned += 1;
+  for (;;) {
+    const rows = await findPhotoRows(cursor, 50);
+    if (rows.length === 0) break;
+    cursor = rows[rows.length - 1]?.id ?? null;
 
-    if (row.mime === "image/webp" && row.size <= TARGET_BYTES) {
-      skipped += 1;
-      continue;
-    }
+    for (const row of rows) {
+      scanned += 1;
 
-    try {
-      const object = await client.send(new GetObjectCommand({ Bucket: bucket, Key: row.objectKey }));
-      const body = await object.Body?.transformToByteArray();
-      if (!body) throw new Error("empty body");
-
-      const encoded = await encodeImage(Buffer.from(body));
-      if (encoded === null || encoded.size > row.size * (1 - MIN_SAVINGS_RATIO)) {
+      if (row.mime === "image/webp" && row.size <= TARGET_BYTES) {
         skipped += 1;
         continue;
       }
 
-      const folder = row.objectKey.split("/")[0] ?? "student-photos";
-      const newKey = `${folder}/${randomUUID()}`;
-      await client.send(
-        new PutObjectCommand({
-          Bucket: bucket,
-          Key: newKey,
-          Body: encoded.webp,
-          ContentType: "image/webp",
-          CacheControl: "public, max-age=31536000, immutable",
-        }),
-      );
-
       try {
-        await prisma.storedFile.update({
-          where: { id: row.id },
-          data: { objectKey: newKey, mime: "image/webp", size: encoded.size },
-        });
+        const object = await client.send(new GetObjectCommand({ Bucket: bucket, Key: row.objectKey }));
+        const body = await object.Body?.transformToByteArray();
+        if (!body) throw new Error("empty body");
+
+        const encoded = await encodeImage(Buffer.from(body));
+        if (encoded === null || encoded.size > row.size * (1 - MIN_SAVINGS_RATIO)) {
+          skipped += 1;
+          continue;
+        }
+
+        const folder = row.objectKey.split("/")[0] ?? "student-photos";
+        const newKey = `${folder}/${randomUUID()}`;
+        await client.send(
+          new PutObjectCommand({
+            Bucket: bucket,
+            Key: newKey,
+            Body: encoded.webp,
+            ContentType: "image/webp",
+            CacheControl: "public, max-age=31536000, immutable",
+          }),
+        );
+
+        try {
+          await prisma.storedFile.update({
+            where: { id: row.id },
+            data: { objectKey: newKey, mime: "image/webp", size: encoded.size },
+          });
+        } catch (error) {
+          // The row still points at the old object, so only the unused copy
+          // is removed before failing.
+          await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: newKey })).catch(() => {});
+          throw error;
+        }
+
+        await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: row.objectKey }));
+
+        recompressed += 1;
+        savedBytes += row.size - encoded.size;
       } catch (error) {
-        // The row still points at the old object, so only the unused copy is
-        // removed before failing.
-        await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: newKey })).catch(() => {});
-        throw error;
+        failed += 1;
+        console.error(`خطا در پردازش فایل ${row.id}:`, error instanceof Error ? error.message : error);
       }
-
-      await client.send(new DeleteObjectCommand({ Bucket: bucket, Key: row.objectKey }));
-
-      recompressed += 1;
-      savedBytes += row.size - encoded.size;
-    } catch (error) {
-      failed += 1;
-      console.error(`خطا در پردازش فایل ${row.id}:`, error instanceof Error ? error.message : error);
     }
   }
 }
 
-console.log(`بررسی شد: ${scanned}`);
-console.log(`از قبل بهینه: ${skipped}`);
-console.log(`فشرده سازی مجدد شد: ${recompressed}`);
-console.log(`ناموفق: ${failed}`);
-console.log(`صرفه جویی حجم: ${Math.round(savedBytes / 1024)} کیلوبایت`);
-
-process.exit(0);
+main()
+  .then(() => {
+    console.log(`بررسی شد: ${scanned}`);
+    console.log(`از قبل بهینه: ${skipped}`);
+    console.log(`فشرده سازی مجدد شد: ${recompressed}`);
+    console.log(`ناموفق: ${failed}`);
+    console.log(`صرفه جویی حجم: ${Math.round(savedBytes / 1024)} کیلوبایت`);
+    return prisma.$disconnect();
+  })
+  .then(() => process.exit(0))
+  .catch(async (error) => {
+    console.error("اجرای فشرده سازی عکس ها انجام نشد.");
+    console.error(error instanceof Error ? error.message : error);
+    await prisma.$disconnect().catch(() => {});
+    process.exit(1);
+  });
