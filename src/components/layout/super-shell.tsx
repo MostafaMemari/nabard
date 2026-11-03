@@ -7,7 +7,7 @@ import { APP_NAME } from "@/lib/app";
 import { AppSidebar, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
 import { BrandMark } from "./brand-mark";
 import { MobileBottomNav } from "./mobile-bottom-nav";
-import { MobileUserSheet } from "./mobile-user-sheet";
+import { MobileUserMenu } from "./mobile-user-menu";
 
 const navItems: SidebarNavItem[] = [
   { id: "home", label: "خانه", href: "/super", icon: HouseIcon },
@@ -41,7 +41,7 @@ export function SuperShell({ active, children }: { active: string; children: Rea
             <BrandMark className="size-7" />
             <span className="text-sm font-semibold">{APP_NAME}</span>
           </div>
-          <MobileUserSheet user={sidebarUser} />
+          <MobileUserMenu user={sidebarUser} />
         </div>
         <main id="super-main" className="flex-1 pb-20 lg:pb-0">
           <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 lg:p-8 print:p-0">{children}</div>

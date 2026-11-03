@@ -8,7 +8,7 @@ import { APP_NAME } from "@/lib/app";
 import { AppSidebar, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
 import { BrandMark } from "./brand-mark";
 import { MobileBottomNav } from "./mobile-bottom-nav";
-import { MobileUserSheet } from "./mobile-user-sheet";
+import { MobileUserMenu } from "./mobile-user-menu";
 
 export const coachNavItems: SidebarNavItem[] = [
   { id: "home", label: "خانه", href: "/coach", icon: HouseIcon },
@@ -49,7 +49,7 @@ export function CoachShell({ active, children }: { active: string; children: Rea
               <BrandMark className="size-7" />
               <span className="text-sm font-semibold">{APP_NAME}</span>
             </div>
-            <MobileUserSheet user={sidebarUser} extra={<CoachProfileButton className="size-9 rounded-lg" />} />
+            <MobileUserMenu user={sidebarUser} coachProfile />
           </div>
         </header>
         <main id="coach-main" className="flex-1 pb-20 @5xl:pb-8">
