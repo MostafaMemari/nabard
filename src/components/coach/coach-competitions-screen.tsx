@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { EmptyState, PageHeader } from "@/components/shared";
+import { EmptyState, ErrorBanner, PageHeader, StateCard } from "@/components/shared";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMe } from "@/features/auth";
 import { CoachCompetitionList, useCompetitions } from "@/features/competitions";
@@ -23,12 +23,7 @@ export function CoachCompetitionsScreen() {
       {user?.gender === null ? (
         <div className="rounded-xl border border-warning/30 bg-warning-bg px-4 py-3 text-sm text-warning">{NO_GENDER_MESSAGE}</div>
       ) : error ? (
-        <div className="flex items-center justify-between gap-3 rounded-xl border border-danger/30 bg-danger-bg px-4 py-3 text-sm text-danger">
-          <span>دریافت اطلاعات ناموفق بود.</span>
-          <button type="button" onClick={() => void mutate()} className="font-medium hover:underline">
-            تلاش دوباره
-          </button>
-        </div>
+        <ErrorBanner onRetry={() => void mutate()} />
       ) : isLoading ? (
         <div className="flex flex-col gap-3">
           {["c1", "c2", "c3"].map((key) => (
@@ -36,9 +31,9 @@ export function CoachCompetitionsScreen() {
           ))}
         </div>
       ) : openCompetitions.length === 0 ? (
-        <div className="rounded-xl border border-border bg-card shadow-card">
+        <StateCard>
           <EmptyState title="مسابقه بازی برای ثبت نام وجود ندارد." />
-        </div>
+        </StateCard>
       ) : (
         <CoachCompetitionList competitions={openCompetitions} />
       )}

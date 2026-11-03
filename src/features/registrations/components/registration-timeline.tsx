@@ -1,56 +1,20 @@
+"use client";
+
 import { cn } from "cn";
 import { BadgeCheckIcon, CircleXIcon, HourglassIcon, type LucideIcon } from "lucide-react";
 import type { PaymentStatus } from "@/features/payments";
-import { formatJalaliDateTime } from "@/lib/format";
+import { buildRegistrationSteps, type TimelineStepState } from "../registration-steps";
 import type { Registration } from "../types";
 
-type StepState = "done" | "current" | "failed" | "upcoming";
-
-const stepVisuals: Record<StepState, { icon: LucideIcon | null; className: string }> = {
+const stepVisuals: Record<TimelineStepState, { icon: LucideIcon | null; className: string }> = {
   done: { icon: BadgeCheckIcon, className: "bg-success-bg text-success" },
   current: { icon: HourglassIcon, className: "bg-primary-subtle text-primary" },
   failed: { icon: CircleXIcon, className: "bg-danger-bg text-danger" },
   upcoming: { icon: null, className: "bg-pending-bg text-pending" },
 };
 
-type Step = { title: string; hint?: string; state: StepState };
-
-function buildSteps(registration: Registration, paymentStatus: PaymentStatus | null): Step[] {
-  const receiptState: StepState =
-    paymentStatus === null ? "upcoming" : paymentStatus === "PENDING" ? "current" : paymentStatus === "CONFIRMED" ? "done" : "failed";
-  const studentState: StepState =
-    receiptState === "done"
-      ? registration.status === "PENDING"
-        ? "current"
-        : registration.status === "APPROVED"
-          ? "done"
-          : "failed"
-      : "upcoming";
-
-  return [
-    { title: "ثبت نام ارسال شد", hint: formatJalaliDateTime(new Date(registration.createdAt)), state: "done" },
-    {
-      title: "بررسی رسید",
-      hint:
-        paymentStatus === null
-          ? "هنوز رسیدی بارگذاری نشده است."
-          : paymentStatus === "PENDING"
-            ? "در انتظار بررسی مدیریت استان"
-            : paymentStatus === "REJECTED"
-              ? "رسید رد شد؛ رسید جدید بارگذاری کنید."
-              : "رسید تایید شد",
-      state: receiptState,
-    },
-    {
-      title: "بررسی ثبت نام",
-      hint: registration.status === "REJECTED" ? (registration.note ?? undefined) : undefined,
-      state: studentState,
-    },
-  ];
-}
-
 export function RegistrationTimeline({ registration, paymentStatus }: { registration: Registration; paymentStatus: PaymentStatus | null }) {
-  const steps = buildSteps(registration, paymentStatus);
+  const steps = buildRegistrationSteps(registration, paymentStatus);
 
   return (
     <ol className="flex flex-col sm:grid sm:grid-cols-3 sm:gap-x-8">

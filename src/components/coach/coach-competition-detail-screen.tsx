@@ -2,7 +2,7 @@
 
 import { ArrowLeftIcon, HistoryIcon, TimerIcon } from "lucide-react";
 import Link from "next/link";
-import { CountdownLarge, DetailPageHeader, ErrorBanner, IconTile, StatusBadge } from "@/components/shared";
+import { CountdownLarge, DescriptionList, DetailPageHeader, ErrorBanner, SectionCard, StatusBadge } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { genderLabels, useBelts } from "@/features/base-data";
@@ -46,14 +46,7 @@ export function CoachCompetitionDetailScreen({ competitionId }: { competitionId:
         }
       />
 
-      <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-card md:p-6">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <IconTile icon={TimerIcon} />
-            <h2 className="text-base font-semibold">مهلت ثبت نام</h2>
-          </div>
-          <StatusBadge status={competition.status} />
-        </div>
+      <SectionCard title="مهلت ثبت نام" icon={TimerIcon} action={<StatusBadge status={competition.status} />}>
         <CountdownLarge deadline={competition.registrationDeadline} startedAt={competition.createdAt} />
         {!open ? (
           <Button variant="ghost" className="w-fit" render={<Link href="/coach/registrations" />}>
@@ -61,31 +54,20 @@ export function CoachCompetitionDetailScreen({ competitionId }: { competitionId:
             مشاهده سوابق
           </Button>
         ) : null}
-      </section>
+      </SectionCard>
 
-      <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-card md:p-6">
-        <div className="flex items-center gap-3">
-          <IconTile icon={disciplineIcons[competition.discipline]} />
-          <h2 className="text-base font-semibold">اطلاعات مسابقه</h2>
-        </div>
-        <dl className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
-          <FactLine label="تاریخ برگزاری" value={formatJalaliDate(new Date(competition.eventDate))} />
-          <FactLine label="هزینه هر هنرجو" value={formatRialsAsToman(Number(competition.feePerStudent))} />
-        </dl>
+      <SectionCard title="اطلاعات مسابقه" icon={disciplineIcons[competition.discipline]}>
+        <DescriptionList
+          items={[
+            { term: "تاریخ برگزاری", value: formatJalaliDate(new Date(competition.eventDate)) },
+            { term: "هزینه هر هنرجو", value: formatRialsAsToman(Number(competition.feePerStudent)) },
+          ]}
+        />
         <div className="flex flex-wrap items-center gap-2">
           <span className="text-subtle text-muted-foreground">کمربندها:</span>
           <BeltChips belts={belts} ids={competition.beltIds} />
         </div>
-      </section>
-    </div>
-  );
-}
-
-function FactLine({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-baseline justify-between gap-3 border-b border-border pb-2">
-      <dt className="text-subtle text-muted-foreground">{label}</dt>
-      <dd className="text-sm font-medium tabular-nums">{value}</dd>
+      </SectionCard>
     </div>
   );
 }

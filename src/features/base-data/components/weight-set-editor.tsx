@@ -181,7 +181,7 @@ export function WeightSetEditor({
         </TableBody>
       </Table>
 
-      <p className="text-subtle text-xs text-muted-foreground">
+      <p className="text-subtle text-muted-foreground">
         «شروع باز» یعنی وزنی که دقیقا برابر حداقل است در این رده قرار نمی گیرد و «پایان باز» یعنی وزنی که دقیقا برابر حداکثر است در این رده
         قرار نمی گیرد.
       </p>

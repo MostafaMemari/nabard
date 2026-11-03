@@ -2,7 +2,7 @@
 
 import { TrophyIcon } from "lucide-react";
 import Link from "next/link";
-import { EmptyState, ErrorBanner, SkeletonRows, StatusBadge } from "@/components/shared";
+import { EmptyState, ErrorBanner, SkeletonRows, StateCard, StatusBadge } from "@/components/shared";
 import type { RegistrationStatus } from "@/features/registrations";
 import { useRegistrations } from "@/features/registrations";
 import { formatJalaliDate, toPersianDigits } from "@/lib/format";
@@ -27,9 +27,9 @@ export function StudentRegistrationHistory({ studentId }: { studentId: string })
       ) : isLoading ? (
         <SkeletonRows rows={2} className="h-14" />
       ) : registrations.length === 0 ? (
-        <div className="rounded-xl border border-border bg-card shadow-card">
+        <StateCard>
           <EmptyState icon={TrophyIcon} title="این هنرجو تا کنون در مسابقه ای ثبت نام نشده است." />
-        </div>
+        </StateCard>
       ) : (
         <div className="flex flex-col gap-2">
           {registrations.map((registration) => (

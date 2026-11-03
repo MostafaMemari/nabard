@@ -2,7 +2,7 @@
 
 import { PlusIcon, UsersIcon } from "lucide-react";
 import Link from "next/link";
-import { DataTable, EmptyState, ErrorBanner } from "@/components/shared";
+import { DataTable, EmptyState, ErrorBanner, StateCard } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Belt } from "@/features/base-data";
@@ -35,17 +35,17 @@ export function StudentsResults({
 
   if (isLoading) {
     return (
-      <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 shadow-card">
+      <StateCard className="flex flex-col gap-3 p-4">
         {["s1", "s2", "s3", "s4", "s5"].map((key) => (
           <Skeleton key={key} className="h-13 w-full" />
         ))}
-      </div>
+      </StateCard>
     );
   }
 
   if (rows.length === 0) {
     return (
-      <div className="rounded-xl border border-border bg-card shadow-card">
+      <StateCard>
         <EmptyState
           icon={UsersIcon}
           title={query !== "" ? `نتیجه ای برای «${query}» پیدا نشد.` : "هنوز هنرجویی اضافه نکرده اید."}
@@ -58,7 +58,7 @@ export function StudentsResults({
             ) : undefined
           }
         />
-      </div>
+      </StateCard>
     );
   }
 

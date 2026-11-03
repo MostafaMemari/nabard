@@ -1,14 +1,10 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { useTransferLookup, useTransferRequestCreate } from "../hooks/use-transfers";
-import { type CreateTransferRequestInput, createTransferRequestSchema } from "../schemas";
+import { useTransferRequestDialog } from "../hooks/use-transfer-request-dialog";
 
 export function TransferRequestDialog({
   open,
@@ -19,49 +15,7 @@ export function TransferRequestDialog({
   onOpenChange: (open: boolean) => void;
   onRequested: () => void;
 }) {
-  const { lookup } = useTransferLookup();
-  const { request } = useTransferRequestCreate(onRequested);
-  const [result, setResult] = useState<{ maskedName: string; currentCoachName: string } | null>(null);
-  const [working, setWorking] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const form = useForm<CreateTransferRequestInput>({
-    resolver: zodResolver(createTransferRequestSchema),
-    defaultValues: { nationalCode: "" },
-  });
-
-  function close() {
-    form.reset({ nationalCode: "" });
-    setResult(null);
-    setError(null);
-    onOpenChange(false);
-  }
-
-  async function check() {
-    const valid = await form.trigger();
-    if (!valid) return;
-
-    setWorking(true);
-    setError(null);
-    const response = await lookup(form.getValues("nationalCode"));
-    setWorking(false);
-    if (response.ok) {
-      setResult(response.data);
-    } else {
-      setResult(null);
-      setError(response.error);
-    }
-  }
-
-  async function confirm() {
-    if (!result) return;
-
-    setWorking(true);
-    const done = await request(form.getValues("nationalCode"));
-    setWorking(false);
-    if (done) {
-      close();
-    }
-  }
+  const { form, result, working, error, close, submit } = useTransferRequestDialog({ onOpenChange, onRequested });
 
   return (
     <Dialog
@@ -80,7 +34,7 @@ export function TransferRequestDialog({
         <form
           onSubmit={(event) => {
             event.preventDefault();
-            void (result ? confirm() : check());
+            void submit();
           }}
           noValidate
           className="flex flex-col gap-4"
@@ -97,22 +51,16 @@ export function TransferRequestDialog({
               <p className="text-subtle text-muted-foreground">مربی فعلی: {result.currentCoachName}</p>
             </div>
           ) : null}
-          <p className="text-subtle text-xs text-muted-foreground">
+          <p className="text-subtle text-muted-foreground">
             با تایید مدیر استان فقط مربی هنرجو تغییر می کند و ثبت نام ها و پرداخت های قبلی دست نخورده می مانند.
           </p>
           <div className="flex items-center justify-end gap-3">
             <Button type="button" variant="ghost" onClick={close}>
               انصراف
             </Button>
-            {result ? (
-              <Button type="submit" disabled={working}>
-                {working ? "در حال ثبت…" : "ثبت درخواست"}
-              </Button>
-            ) : (
-              <Button type="submit" disabled={working}>
-                {working ? "در حال جستجو…" : "جستجو"}
-              </Button>
-            )}
+            <Button type="submit" disabled={working}>
+              {working ? (result ? "در حال ثبت…" : "در حال جستجو…") : result ? "ثبت درخواست" : "جستجو"}
+            </Button>
           </div>
         </form>
       </DialogContent>

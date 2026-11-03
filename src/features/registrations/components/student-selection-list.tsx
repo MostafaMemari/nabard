@@ -1,6 +1,7 @@
 "use client";
 
-import { SelectionGroup, SelectionItem } from "./selection-item";
+import { SelectionGroup } from "./selection-group";
+import { SelectionItem } from "./selection-item";
 import type { SelectionRow } from "./selection-row";
 
 export type { SelectionRow } from "./selection-row";

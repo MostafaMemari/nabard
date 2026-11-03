@@ -14,7 +14,7 @@ export function CoachCompetitionList({ competitions }: { competitions: Competiti
   return (
     <div className="flex flex-col gap-3">
       {competitions.map((competition) => (
-        <article key={competition.id} className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5 shadow-card">
+        <article key={competition.id} className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4 shadow-card md:p-6">
           <div className="flex items-center gap-3">
             <IconTile icon={disciplineIcons[competition.discipline]} />
             <div className="min-w-0 flex-1 leading-tight">
@@ -39,9 +39,7 @@ export function CoachCompetitionList({ competitions }: { competitions: Competiti
 
           <div className="flex items-center justify-between gap-2">
             <CountdownChip deadline={competition.registrationDeadline} />
-            <span className="text-subtle text-xs text-muted-foreground">
-              مهلت: {formatJalaliDate(new Date(competition.registrationDeadline))}
-            </span>
+            <span className="text-subtle text-muted-foreground">مهلت: {formatJalaliDate(new Date(competition.registrationDeadline))}</span>
           </div>
           <DeadlineProgress startedAt={competition.createdAt} deadline={competition.registrationDeadline} />
 

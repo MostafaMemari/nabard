@@ -2,7 +2,7 @@
 
 import { ClipboardListIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { DataTable, EmptyState, PageHeader, SkeletonRows } from "@/components/shared";
+import { DataTable, EmptyState, ErrorBanner, PageHeader, SkeletonRows, StateCard } from "@/components/shared";
 import { CoachRegistrationCard, coachRegistrationColumns } from "@/features/registrations";
 import { CoachRefundsList } from "./coach-refunds-list";
 import { useCoachRegistrationRows } from "./use-coach-registration-rows";
@@ -15,20 +15,15 @@ export function CoachRegistrationsScreen() {
     <>
       <PageHeader title="ثبت نام های من" description="پیگیری وضعیت ثبت نام و پرداخت هنرجویان." />
       {error ? (
-        <div className="flex items-center justify-between gap-3 rounded-xl border border-danger/30 bg-danger-bg px-4 py-3 text-sm text-danger">
-          <span>دریافت اطلاعات ناموفق بود.</span>
-          <button type="button" onClick={() => void mutate()} className="font-medium hover:underline">
-            تلاش دوباره
-          </button>
-        </div>
+        <ErrorBanner onRetry={() => void mutate()} />
       ) : isLoading ? (
-        <div className="rounded-xl border border-border bg-card p-4 shadow-card">
+        <StateCard className="p-4">
           <SkeletonRows rows={5} className="h-12" />
-        </div>
+        </StateCard>
       ) : rows.length === 0 ? (
-        <div className="rounded-xl border border-border bg-card shadow-card">
+        <StateCard>
           <EmptyState icon={ClipboardListIcon} title="هنوز ثبت نامی انجام نشده است." />
-        </div>
+        </StateCard>
       ) : (
         <DataTable
           columns={coachRegistrationColumns()}

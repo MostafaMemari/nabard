@@ -32,7 +32,7 @@ function AgeCategoryRow({
           <span className="text-sm font-medium">{category.label}</span>
           {!category.isActive ? <Badge variant="secondary">بایگانی</Badge> : null}
         </div>
-        <span className="text-subtle text-xs text-muted-foreground tabular-nums">
+        <span className="text-subtle text-muted-foreground tabular-nums">
           متولدین {toPersianDigits(category.birthYearStart ?? 0)} تا {toPersianDigits(category.birthYearEnd ?? 0)} ·{" "}
           {formatJalaliDate(new Date(category.startDate))} تا {formatJalaliDate(new Date(category.endDate))}
         </span>

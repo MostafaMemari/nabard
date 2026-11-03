@@ -32,7 +32,7 @@ function BeltRow({
         {!belt.isActive ? <Badge variant="secondary">بایگانی</Badge> : null}
       </div>
       <div className="flex items-center gap-3">
-        <span className="text-subtle text-xs text-muted-foreground tabular-nums">سطح {belt.level}</span>
+        <span className="text-subtle text-muted-foreground tabular-nums">سطح {belt.level}</span>
         <Switch checked={belt.isActive} onCheckedChange={() => onToggle(belt)} aria-label={`فعال بودن ${belt.label}`} />
         <DropdownMenu>
           <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label={`عملیات ${belt.label}`} />}>

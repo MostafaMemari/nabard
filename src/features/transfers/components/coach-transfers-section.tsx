@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowLeftRightIcon } from "lucide-react";
-import { EmptyState, ErrorBanner, SkeletonRows, StatusBadge } from "@/components/shared";
+import { EmptyState, ErrorBanner, SectionCard, SkeletonRows, StatusBadge } from "@/components/shared";
 import { formatJalaliDate } from "@/lib/format";
 import { transferStatusKey, transferStatusLabels } from "../labels";
 import type { CoachTransferRequest } from "../types";
@@ -20,9 +20,7 @@ function RequestRow({ request }: { request: CoachTransferRequest }) {
             <span className="text-subtle text-muted-foreground"> از مربی «{request.fromCoachName}»</span>
           </p>
         )}
-        {request.createdAt ? (
-          <p className="text-subtle text-xs text-muted-foreground">{formatJalaliDate(new Date(request.createdAt))}</p>
-        ) : null}
+        {request.createdAt ? <p className="text-subtle text-muted-foreground">{formatJalaliDate(new Date(request.createdAt))}</p> : null}
       </div>
       <StatusBadge status={transferStatusKey(request.status)} />
     </div>
@@ -41,29 +39,26 @@ export function CoachTransfersSection({
   onRetry: () => void;
 }) {
   return (
-    <section className="rounded-xl border border-border bg-card p-5 shadow-card">
-      <div className="flex items-center gap-3">
-        <span className="text-sm font-semibold">درخواست های انتقال هنرجو</span>
-      </div>
-      <p className="text-subtle mt-1 text-muted-foreground">
-        درخواست هایی که ثبت کرده اید یا هنرجویانی که درخواست انتقال آنها از باشگاه شما ثبت شده است.
-      </p>
-      <div className="mt-4">
-        {isLoading ? (
-          <SkeletonRows rows={2} />
-        ) : error ? (
-          <ErrorBanner message="دریافت درخواست های انتقال انجام نشد." onRetry={onRetry} />
-        ) : requests.length === 0 ? (
-          <EmptyState icon={ArrowLeftRightIcon} title="درخواست انتقالی ثبت نشده است." />
-        ) : (
-          requests.map((request) => <RequestRow key={request.id} request={request} />)
-        )}
-      </div>
+    <SectionCard
+      title="درخواست های انتقال هنرجو"
+      description="درخواست هایی که ثبت کرده اید یا هنرجویانی که درخواست انتقال آنها از باشگاه شما ثبت شده است."
+    >
+      {isLoading ? (
+        <SkeletonRows rows={2} />
+      ) : error ? (
+        <ErrorBanner message="دریافت درخواست های انتقال انجام نشد." onRetry={onRetry} />
+      ) : requests.length === 0 ? (
+        <EmptyState icon={ArrowLeftRightIcon} title="درخواست انتقالی ثبت نشده است." />
+      ) : (
+        <div>
+          {requests.map((request) => (
+            <RequestRow key={request.id} request={request} />
+          ))}
+        </div>
+      )}
       {requests.length > 0 ? (
-        <p className="text-subtle mt-3 text-xs text-muted-foreground">
-          {transferStatusLabels.PENDING} به معنای بررسی نشدن توسط مدیر استان است.
-        </p>
+        <p className="text-subtle text-muted-foreground">{transferStatusLabels.PENDING} به معنای بررسی نشدن توسط مدیر استان است.</p>
       ) : null}
-    </section>
+    </SectionCard>
   );
 }

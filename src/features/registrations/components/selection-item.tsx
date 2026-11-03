@@ -1,11 +1,10 @@
 "use client";
 
 import { cn } from "cn";
-import type { ReactNode } from "react";
 import { Avatar, BeltChip } from "@/components/shared";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { formatNumber, toPersianDigits } from "@/lib/format";
+import { toPersianDigits } from "@/lib/format";
 import type { SelectionRow } from "./selection-row";
 
 export function SelectionItem({
@@ -73,16 +72,5 @@ export function SelectionItem({
         </div>
       ) : null}
     </div>
-  );
-}
-
-export function SelectionGroup({ title, count, children }: { title: string; count: number; children: ReactNode }) {
-  return (
-    <section className="flex flex-col gap-3">
-      <h3 className="text-sm font-semibold">
-        {title} <span className="font-normal text-muted-foreground">({formatNumber(count)})</span>
-      </h3>
-      <div className="flex flex-col gap-3">{children}</div>
-    </section>
   );
 }

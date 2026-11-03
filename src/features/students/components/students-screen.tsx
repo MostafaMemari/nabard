@@ -14,7 +14,8 @@ import { useStudents } from "../hooks/use-students";
 import { birthDateInAgeCategory } from "../student-age";
 import type { Student } from "../types";
 import { StudentDeleteDialog } from "./student-delete-dialog";
-import { StudentsActiveFilters, StudentsFilterSheet } from "./students-filter-sheet";
+import { StudentsActiveFilters } from "./students-active-filters";
+import { StudentsFilterSheet } from "./students-filter-sheet";
 import { StudentsResults } from "./students-results";
 
 export function StudentsScreen() {
