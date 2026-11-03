@@ -3,20 +3,33 @@
 import { HouseIcon, LayersIcon, MapPinnedIcon, ShieldCheckIcon, TrophyIcon, UsersIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { roleLabels, useMe } from "@/features/auth";
-import { APP_NAME } from "@/lib/app";
-import { AppSidebar, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
-import { BrandMark } from "./brand-mark";
+import { AppSidebar, type SidebarNavGroup, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
 import { MobileBottomNav } from "./mobile-bottom-nav";
-import { MobileUserMenu } from "./mobile-user-menu";
 
-const navItems: SidebarNavItem[] = [
-  { id: "home", label: "خانه", href: "/super", icon: HouseIcon },
-  { id: "admins", label: "ادمین های استان", shortLabel: "ادمین ها", href: "/super/admins", icon: ShieldCheckIcon },
-  { id: "counties", label: "شهرستان ها", shortLabel: "شهرستان ها", href: "/super/counties", icon: MapPinnedIcon },
-  { id: "base-data", label: "اطلاعات پایه", shortLabel: "اطلاعات پایه", href: "/super/base-data", icon: LayersIcon },
-  { id: "coaches", label: "مربیان", href: "/super/coaches", icon: UsersIcon },
-  { id: "competitions", label: "مسابقات", href: "/super/competitions", icon: TrophyIcon },
-];
+const home: SidebarNavItem = { id: "home", label: "خانه", href: "/super", icon: HouseIcon };
+const admins: SidebarNavItem = {
+  id: "admins",
+  label: "ادمین های استان",
+  shortLabel: "ادمین ها",
+  href: "/super/admins",
+  icon: ShieldCheckIcon,
+};
+const counties: SidebarNavItem = { id: "counties", label: "شهرستان ها", href: "/super/counties", icon: MapPinnedIcon };
+const baseData: SidebarNavItem = {
+  id: "base-data",
+  label: "اطلاعات پایه",
+  href: "/super/base-data",
+  icon: LayersIcon,
+};
+const coaches: SidebarNavItem = { id: "coaches", label: "مربیان", href: "/super/coaches", icon: UsersIcon };
+const competitions: SidebarNavItem = { id: "competitions", label: "مسابقات", href: "/super/competitions", icon: TrophyIcon };
+
+const navItems: SidebarNavItem[] = [home, admins, counties, baseData, coaches, competitions];
+
+const navGroups: SidebarNavGroup[] = [{ items: navItems }];
+
+const mobilePrimary: SidebarNavItem[] = [home, admins, baseData, competitions];
+const mobileMore: SidebarNavItem[] = navItems.filter((item) => !mobilePrimary.includes(item));
 
 function useSidebarUser(): SidebarUser | null {
   const { user } = useMe();
@@ -25,6 +38,7 @@ function useSidebarUser(): SidebarUser | null {
 
 export function SuperShell({ active, children }: { active: string; children: ReactNode }) {
   const sidebarUser = useSidebarUser();
+  const title = navItems.find((item) => item.id === active);
 
   return (
     <div className="flex min-h-svh bg-background">
@@ -34,22 +48,21 @@ export function SuperShell({ active, children }: { active: string; children: Rea
       >
         پرش به محتوا
       </a>
-      <AppSidebar items={navItems} active={active} user={sidebarUser} groupLabel="پنل مدیریت کل" />
+      <AppSidebar groups={navGroups} active={active} user={sidebarUser} groupLabel="ناوبری مدیریت کل" />
       <div className="flex min-w-0 flex-1 flex-col">
-        <div className="flex h-14 shrink-0 items-center justify-between gap-2.5 border-b border-border bg-card px-4 lg:hidden print:hidden">
-          <div className="flex items-center gap-2.5">
-            <BrandMark className="size-7" />
-            <span className="text-sm font-semibold">{APP_NAME}</span>
+        <header className="sticky top-0 z-20 border-b border-border bg-card lg:hidden print:hidden">
+          <div className="flex h-14 items-center px-4">
+            <span className="truncate text-base font-semibold">{title ? (title.shortLabel ?? title.label) : ""}</span>
           </div>
-          <MobileUserMenu user={sidebarUser} />
-        </div>
-        <main id="super-main" className="flex-1 pb-20 lg:pb-0">
+        </header>
+        <main id="super-main" className="flex-1">
           <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 lg:p-8 print:p-0">{children}</div>
         </main>
         <MobileBottomNav
-          items={navItems.slice(0, 4)}
-          moreItems={navItems.slice(4)}
+          items={mobilePrimary}
+          moreItems={mobileMore}
           active={active}
+          user={sidebarUser}
           label="ناوبری مدیریت کل"
           className="lg:hidden"
         />

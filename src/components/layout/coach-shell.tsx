@@ -3,19 +3,23 @@
 import { ClipboardListIcon, HouseIcon, TrophyIcon, UsersIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { roleLabels, useMe } from "@/features/auth";
-import { CoachProfileButton } from "@/features/county-changes";
-import { APP_NAME } from "@/lib/app";
-import { AppSidebar, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
-import { BrandMark } from "./brand-mark";
+import { AppSidebar, type SidebarNavGroup, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
 import { MobileBottomNav } from "./mobile-bottom-nav";
-import { MobileUserMenu } from "./mobile-user-menu";
 
-export const coachNavItems: SidebarNavItem[] = [
-  { id: "home", label: "خانه", href: "/coach", icon: HouseIcon },
-  { id: "competitions", label: "مسابقات", href: "/coach/competitions", icon: TrophyIcon },
-  { id: "students", label: "هنرجویان", href: "/coach/students", icon: UsersIcon },
-  { id: "registrations", label: "ثبت نام های من", href: "/coach/registrations", icon: ClipboardListIcon },
-];
+const home: SidebarNavItem = { id: "home", label: "خانه", href: "/coach", icon: HouseIcon };
+const competitions: SidebarNavItem = { id: "competitions", label: "مسابقات", href: "/coach/competitions", icon: TrophyIcon };
+const students: SidebarNavItem = { id: "students", label: "هنرجویان", href: "/coach/students", icon: UsersIcon };
+const registrations: SidebarNavItem = {
+  id: "registrations",
+  label: "ثبت نام های من",
+  shortLabel: "ثبت نام ها",
+  href: "/coach/registrations",
+  icon: ClipboardListIcon,
+};
+
+export const coachNavItems: SidebarNavItem[] = [home, competitions, students, registrations];
+
+const navGroups: SidebarNavGroup[] = [{ items: coachNavItems }];
 
 function useSidebarUser(): SidebarUser | null {
   const { user } = useMe();
@@ -24,7 +28,7 @@ function useSidebarUser(): SidebarUser | null {
 
 export function CoachShell({ active, children }: { active: string; children: ReactNode }) {
   const sidebarUser = useSidebarUser();
-  const profileButton = <CoachProfileButton />;
+  const title = coachNavItems.find((item) => item.id === active);
 
   return (
     <div className="@container flex min-h-svh bg-background">
@@ -34,28 +38,24 @@ export function CoachShell({ active, children }: { active: string; children: Rea
       >
         پرش به محتوا
       </a>
-      <AppSidebar
-        items={coachNavItems}
-        active={active}
-        user={sidebarUser}
-        groupLabel="پنل مربی"
-        userMenuExtra={profileButton}
-        breakpoint="@5xl"
-      />
+      <AppSidebar groups={navGroups} active={active} user={sidebarUser} groupLabel="ناوبری مربی" coachProfile breakpoint="@5xl" />
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 shrink-0 border-b border-border bg-card @5xl:hidden">
-          <div className="flex h-14 items-center justify-between px-4">
-            <div className="flex items-center gap-2.5">
-              <BrandMark className="size-7" />
-              <span className="text-sm font-semibold">{APP_NAME}</span>
-            </div>
-            <MobileUserMenu user={sidebarUser} coachProfile />
+        <header className="sticky top-0 z-20 border-b border-border bg-card @5xl:hidden print:hidden">
+          <div className="flex h-14 items-center px-4">
+            <span className="truncate text-base font-semibold">{title ? (title.shortLabel ?? title.label) : ""}</span>
           </div>
         </header>
-        <main id="coach-main" className="flex-1 pb-20 @5xl:pb-8">
+        <main id="coach-main" className="flex-1">
           <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 @5xl:p-8">{children}</div>
         </main>
-        <MobileBottomNav items={coachNavItems} active={active} label="ناوبری مربی" className="@5xl:hidden" />
+        <MobileBottomNav
+          items={coachNavItems}
+          active={active}
+          user={sidebarUser}
+          coachProfile
+          label="ناوبری مربی"
+          className="@5xl:hidden"
+        />
       </div>
     </div>
   );

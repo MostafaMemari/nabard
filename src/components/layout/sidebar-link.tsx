@@ -8,7 +8,7 @@ export function SidebarLink({ item, active }: { item: SidebarNavItem; active: bo
       href={item.href}
       aria-current={active ? "page" : undefined}
       className={cn(
-        "relative flex h-10 items-center gap-2.5 rounded-lg px-3 text-sm font-medium transition-colors duration-150",
+        "relative flex h-10 items-center gap-2 rounded-lg px-3 text-sm font-medium transition-colors duration-150",
         active
           ? "bg-sidebar-accent text-sidebar-accent-foreground"
           : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground",

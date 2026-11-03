@@ -12,23 +12,59 @@ import {
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { roleLabels, useMe } from "@/features/auth";
-import { APP_NAME } from "@/lib/app";
-import { AppSidebar, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
-import { BrandMark } from "./brand-mark";
+import { AppSidebar, type SidebarNavGroup, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
 import { MobileBottomNav } from "./mobile-bottom-nav";
-import { MobileUserMenu } from "./mobile-user-menu";
 
-const navItems: SidebarNavItem[] = [
-  { id: "home", label: "خانه", href: "/admin", icon: HouseIcon },
-  { id: "competitions", label: "مسابقات", href: "/admin/competitions", icon: TrophyIcon },
-  { id: "payments", label: "بررسی پرداخت ها", shortLabel: "پرداخت ها", href: "/admin/payments", icon: ReceiptTextIcon },
-  { id: "profiles", label: "بررسی پروفایل ها", shortLabel: "پروفایل ها", href: "/admin/profiles", icon: UserCheckIcon },
-  { id: "county-changes", label: "درخواست های مربیان", shortLabel: "درخواست ها", href: "/admin/county-changes", icon: ArrowLeftRightIcon },
-  { id: "transfer-requests", label: "درخواست های انتقال", shortLabel: "انتقال ها", href: "/admin/transfer-requests", icon: UsersIcon },
-  { id: "counties", label: "شهرستان ها", shortLabel: "شهرستان ها", href: "/admin/counties", icon: MapPinnedIcon },
-  { id: "refunds", label: "بازپرداخت ها", shortLabel: "بازپرداخت", href: "/admin/refunds", icon: Undo2Icon },
-  { id: "coaches", label: "مربیان", href: "/admin/coaches", icon: UsersIcon },
+const home: SidebarNavItem = { id: "home", label: "خانه", href: "/admin", icon: HouseIcon };
+const competitions: SidebarNavItem = { id: "competitions", label: "مسابقات", href: "/admin/competitions", icon: TrophyIcon };
+const payments: SidebarNavItem = {
+  id: "payments",
+  label: "بررسی پرداخت ها",
+  shortLabel: "پرداخت ها",
+  href: "/admin/payments",
+  icon: ReceiptTextIcon,
+};
+const profiles: SidebarNavItem = {
+  id: "profiles",
+  label: "بررسی پروفایل ها",
+  shortLabel: "پروفایل ها",
+  href: "/admin/profiles",
+  icon: UserCheckIcon,
+};
+const countyChanges: SidebarNavItem = {
+  id: "county-changes",
+  label: "درخواست های مربیان",
+  shortLabel: "درخواست ها",
+  href: "/admin/county-changes",
+  icon: ArrowLeftRightIcon,
+};
+const transferRequests: SidebarNavItem = {
+  id: "transfer-requests",
+  label: "درخواست های انتقال",
+  shortLabel: "انتقال ها",
+  href: "/admin/transfer-requests",
+  icon: UsersIcon,
+};
+const counties: SidebarNavItem = { id: "counties", label: "شهرستان ها", href: "/admin/counties", icon: MapPinnedIcon };
+const refunds: SidebarNavItem = {
+  id: "refunds",
+  label: "بازپرداخت ها",
+  shortLabel: "بازپرداخت",
+  href: "/admin/refunds",
+  icon: Undo2Icon,
+};
+const coaches: SidebarNavItem = { id: "coaches", label: "مربیان", href: "/admin/coaches", icon: UsersIcon };
+
+const navItems: SidebarNavItem[] = [home, competitions, payments, profiles, countyChanges, transferRequests, counties, refunds, coaches];
+
+const navGroups: SidebarNavGroup[] = [
+  { label: "کار روزانه", items: [home, competitions, payments, profiles] },
+  { label: "مدیریت", items: [countyChanges, transferRequests, coaches, refunds] },
+  { label: "تنظیمات", items: [counties] },
 ];
+
+const mobilePrimary: SidebarNavItem[] = [home, competitions, payments, coaches];
+const mobileMore: SidebarNavItem[] = navItems.filter((item) => !mobilePrimary.includes(item));
 
 function useSidebarUser(): SidebarUser | null {
   const { user } = useMe();
@@ -37,6 +73,7 @@ function useSidebarUser(): SidebarUser | null {
 
 export function AdminShell({ active, children }: { active: string; children: ReactNode }) {
   const sidebarUser = useSidebarUser();
+  const title = navItems.find((item) => item.id === active);
 
   return (
     <div className="flex min-h-svh bg-background">
@@ -46,22 +83,21 @@ export function AdminShell({ active, children }: { active: string; children: Rea
       >
         پرش به محتوا
       </a>
-      <AppSidebar items={navItems} active={active} user={sidebarUser} groupLabel="پنل مدیریت" />
+      <AppSidebar groups={navGroups} active={active} user={sidebarUser} groupLabel="ناوبری مدیریت" />
       <div className="flex min-w-0 flex-1 flex-col">
-        <div className="flex h-14 shrink-0 items-center justify-between gap-2.5 border-b border-border bg-card px-4 lg:hidden print:hidden">
-          <div className="flex items-center gap-2.5">
-            <BrandMark className="size-7" />
-            <span className="text-sm font-semibold">{APP_NAME}</span>
+        <header className="sticky top-0 z-20 border-b border-border bg-card lg:hidden print:hidden">
+          <div className="flex h-14 items-center px-4">
+            <span className="truncate text-base font-semibold">{title ? (title.shortLabel ?? title.label) : ""}</span>
           </div>
-          <MobileUserMenu user={sidebarUser} />
-        </div>
-        <main id="admin-main" className="flex-1 pb-20 lg:pb-0">
+        </header>
+        <main id="admin-main" className="flex-1">
           <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 lg:p-8 print:p-0">{children}</div>
         </main>
         <MobileBottomNav
-          items={navItems.slice(0, 4)}
-          moreItems={navItems.slice(4)}
+          items={mobilePrimary}
+          moreItems={mobileMore}
           active={active}
+          user={sidebarUser}
           label="ناوبری مدیریت"
           className="lg:hidden"
         />

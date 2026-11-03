@@ -58,7 +58,7 @@ Sizes and depth:
 
 These make the product feel designed. Use them consistently.
 
-- **Dark sidebar** with the brand mark and name at the top, grouped nav items, an active item with a soft highlight and a 3px primary bar on the start edge, and the user (avatar, name, role) at the bottom.
+- **Dark sidebar** with the brand mark and name at the top, grouped nav items, an active item with a soft highlight and a 3px primary bar on the start edge, and the user block pinned to the bottom opening the account menu above it.
 - **Avatars with initials** next to every person's name in tables and headers.
 - **Belt chips**: small pill with a colored dot and the belt name wherever a belt appears.
 - **Status badges**: soft tinted pill with a dot and a Persian label.
@@ -73,9 +73,30 @@ These make the product feel designed. Use them consistently.
 - Forms: single column, max width 640px inside a card, labels above inputs, helper text only when needed, error directly under the field, actions at the end.
 - Detail pages: header card (avatar or icon-less title, status badge, actions), then cards per topic with description lists. Side summary column sticky on desktop.
 
+## Navigation
+
+Shared rules for all three shells (admin, coach, super). Navigation is UI only; every shell keeps its own destinations.
+
+### Desktop sidebar (768px and up)
+
+- The sidebar is sticky, full viewport height (`h-svh`), 256px, dark navy. Three zones: a fixed brand header (64px), a scrollable nav zone and a fixed user footer. Long menus scroll only inside the nav zone, which uses `min-h-0` and a thin, subtle scrollbar tinted with the sidebar border color.
+- Nav groups carry a small muted title (12px, sidebar foreground at 60%) only when the shell has more than 6 items (admin: کار روزانه، مدیریت، تنظیمات). Coach and super stay ungrouped.
+- Items: 40px high, 12px horizontal padding, 8px gap between the 18px icon and the label, 2px between items, 16px between groups. Active item: soft highlight (`sidebar-accent`) plus a 3px primary bar on the start edge.
+- Footer user block: one full-width button (avatar 36px, full name on one line, role below it, chevron up) with 12px padding. It opens a menu above it (side top, aligned to the start edge, same width as the sidebar minus padding) with a clear overlay shadow and 6px inner padding.
+- Account menu: identity header (avatar, name, role); separator; «پروفایل و شهرستان» (coach only) and «تغییر رمز عبور»; separator; «خروج از حساب» in destructive style. Menu items are 40px high with 12px padding, 12px gap and 16px icons.
+
+### Mobile (below 768px)
+
+- The top bar shows only the page title (the active section name), no hamburger, no avatar. Sticky, white, hairline bottom border, 56px.
+- The bottom bar is sticky, white with a top hairline border, 64px high plus the safe-area inset. Four primary destinations plus «بیشتر»: coach خانه، مسابقات، هنرجویان، ثبت نام ها; admin خانه، مسابقات، پرداخت ها، مربیان; super خانه، ادمین ها، اطلاعات پایه، مسابقات.
+- Bar items: 22px icon over an 11 to 12px label, minimum 44px touch area, active item in primary color with a primary-subtle pill behind the icon.
+- «بیشتر» opens a bottom sheet: drag handle, user header (avatar, name, role), the remaining nav items as a 2-column grid of cards (icon, label, 12px radius, hairline border, card shadow, 48px high, active card primary-subtle), then «تغییر رمز عبور», «پروفایل و شهرستان» (coach only) and «خروج از حساب» as 44px rows. The sheet closes on outside tap, Escape and a downward swipe on the handle; tall content scrolls inside with a max height of 85dvh and contained overscroll.
+- Because the bar is sticky (not fixed), page content needs no extra bottom padding.
+
 ## Components
 
 - Use shadcn components as the base and style them through tokens. Make buttons, inputs, selects and badges match the sizes above.
+- Overlays share one rhythm: menus, sheets and dialogs use the same radius tokens (8px menus, 16px sheets and dialogs), the overlay shadow, and 40px menu items with 12px padding, 12px gap and 16px icons. Menus have 6px inner padding; destructive items use the danger color.
 - One primary button per view. Secondary actions are outline or ghost. Destructive actions ask for confirmation.
 - Empty state: a calm card with a small neutral icon, one sentence and one button. No stock illustrations.
 - Loading: skeletons that match the final layout. Errors: inline message with a retry button.

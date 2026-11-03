@@ -1,12 +1,9 @@
 import { cn } from "cn";
 import type { LucideIcon } from "lucide-react";
-import type { ReactNode } from "react";
-import { Avatar } from "@/components/shared";
-import { ChangePasswordButton } from "@/features/auth";
 import { APP_NAME, APP_SUBTITLE } from "@/lib/app";
 import { BrandMark } from "./brand-mark";
-import { LogoutButton } from "./logout-button";
 import { SidebarLink } from "./sidebar-link";
+import { SidebarUserMenu } from "./sidebar-user-menu";
 
 export type SidebarNavItem = {
   id: string;
@@ -16,78 +13,71 @@ export type SidebarNavItem = {
   icon: LucideIcon;
 };
 
+export type SidebarNavGroup = {
+  label?: string;
+  items: SidebarNavItem[];
+};
+
 export type SidebarUser = {
   id: string;
   name: string;
   roleLabel: string;
 };
 
+// Three zones: fixed brand header, scrollable nav, user block pinned to the
+// bottom of the viewport. Long menus scroll only inside the nav zone.
 export function AppSidebar({
-  items,
+  groups,
   active,
   user,
   groupLabel,
-  userMenuExtra,
+  coachProfile = false,
   breakpoint = "lg",
 }: {
-  items: SidebarNavItem[];
+  groups: SidebarNavGroup[];
   active: string;
   user: SidebarUser | null;
   groupLabel: string;
-  userMenuExtra?: ReactNode;
+  coachProfile?: boolean;
   breakpoint?: "lg" | "@5xl";
 }) {
   return (
     <aside
       className={cn(
-        "hidden w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground print:hidden",
+        "sticky top-0 hidden h-svh w-64 shrink-0 flex-col bg-sidebar text-sidebar-foreground print:hidden",
         breakpoint === "lg" ? "lg:flex" : "@5xl:flex",
       )}
     >
-      <div className="flex h-16 items-center gap-2.5 px-5">
+      <div className="flex h-16 shrink-0 items-center gap-2.5 px-5">
         <BrandMark />
         <div className="flex min-w-0 flex-col leading-tight">
           <span className="truncate text-sm font-semibold text-sidebar-accent-foreground">{APP_NAME}</span>
           <span className="truncate text-xs text-sidebar-foreground/70">{APP_SUBTITLE}</span>
         </div>
       </div>
-      <div className="h-px bg-sidebar-border" aria-hidden />
-      <nav aria-label={groupLabel} className="flex-1 overflow-y-auto p-3">
-        <p className="px-3 pt-1 pb-2 text-xs text-sidebar-foreground/60">{groupLabel}</p>
-        <ul className="flex flex-col gap-1">
-          {items.map((item) => (
-            <li key={item.id}>
-              <SidebarLink item={item} active={item.id === active} />
-            </li>
+      <div className="h-px shrink-0 bg-sidebar-border" aria-hidden />
+      <nav
+        aria-label={groupLabel}
+        className="min-h-0 flex-1 overflow-y-auto px-3 py-4 [scrollbar-color:var(--sidebar-border)_transparent] [scrollbar-width:thin]"
+      >
+        <div className="flex flex-col gap-4">
+          {groups.map((group, groupIndex) => (
+            <div key={group.label ?? groupIndex} className="flex flex-col gap-0.5">
+              {group.label ? <p className="px-3 pb-1.5 text-xs text-sidebar-foreground/60">{group.label}</p> : null}
+              <ul className="flex flex-col gap-0.5">
+                {group.items.map((item) => (
+                  <li key={item.id}>
+                    <SidebarLink item={item} active={item.id === active} />
+                  </li>
+                ))}
+              </ul>
+            </div>
           ))}
-        </ul>
+        </div>
       </nav>
-      <div className="h-px bg-sidebar-border" aria-hidden />
-      <div className="p-3">
-        {user ? (
-          <div className="flex flex-col gap-2 rounded-lg p-2">
-            <div className="flex items-start gap-2.5">
-              <Avatar id={user.id} name={user.name} size="md" />
-              <div className="min-w-0 flex-1 leading-tight">
-                <span className="block text-sm font-medium text-sidebar-accent-foreground">{user.name}</span>
-                <span className="mt-0.5 block text-xs text-sidebar-foreground/80">{user.roleLabel}</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-1 ps-11">
-              <ChangePasswordButton className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" />
-              {userMenuExtra}
-              <LogoutButton className="text-sidebar-foreground/70 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground" />
-            </div>
-          </div>
-        ) : (
-          <div aria-hidden className="flex items-center gap-2.5 rounded-lg p-2">
-            <span className="size-9 rounded-full bg-sidebar-accent" />
-            <span className="flex flex-col gap-1.5">
-              <span className="h-3 w-20 rounded bg-sidebar-accent" />
-              <span className="h-2.5 w-12 rounded bg-sidebar-accent" />
-            </span>
-          </div>
-        )}
+      <div className="h-px shrink-0 bg-sidebar-border" aria-hidden />
+      <div className="shrink-0 p-3">
+        <SidebarUserMenu user={user} coachProfile={coachProfile} />
       </div>
     </aside>
   );

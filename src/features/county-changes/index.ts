@@ -1,5 +1,4 @@
 export * from "./api";
-export * from "./components/coach-profile-button";
 export * from "./components/coach-profile-dialog";
 export * from "./components/county-changes-screen";
 export * from "./hooks/use-county-changes";
