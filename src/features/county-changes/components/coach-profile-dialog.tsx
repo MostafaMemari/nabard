@@ -61,6 +61,7 @@ export function CoachProfileDialog({ open, onOpenChange }: { open: boolean; onOp
   const { user } = useMe();
   const { request, mutate } = useMyCountyChange();
   const { counties } = useCounties();
+  const targetCounties = counties.filter((county) => county.id !== user?.countyId);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -83,7 +84,7 @@ export function CoachProfileDialog({ open, onOpenChange }: { open: boolean; onOp
           {request?.status === "PENDING" ? (
             <p className="text-subtle text-muted-foreground">تا بررسی این درخواست نمی توانید درخواست جدیدی ثبت کنید.</p>
           ) : (
-            <ChangeRequestForm counties={counties} onRequested={() => void mutate()} />
+            <ChangeRequestForm counties={targetCounties} onRequested={() => void mutate()} />
           )}
         </div>
       </DialogContent>
