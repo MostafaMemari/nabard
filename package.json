@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && (prisma migrate resolve --rolled-back 20261103090000_coach_gender_backfill || true) && (prisma migrate resolve --rolled-back 20261103093000_demo_competition_titles || true) && prisma migrate deploy && tsx prisma/storage-migrate-to-r2.ts -- --yes && tsx prisma/storage-r2-verify.ts && tsx prisma/ensure-super-admin.ts && next build",
+    "build": "prisma generate && (prisma migrate resolve --rolled-back 20261103090000_coach_gender_backfill || true) && (prisma migrate resolve --rolled-back 20261103093000_demo_competition_titles || true) && prisma migrate deploy && tsx prisma/ensure-super-admin.ts && next build",
     "start": "next start",
     "db:migrate": "prisma migrate dev && prisma generate",
     "db:seed": "prisma db seed",
