@@ -1,7 +1,7 @@
 "use client";
 
 import { MapPinnedIcon } from "lucide-react";
-import { EmptyState, ErrorBanner, PageHeader, ScreenSpinner } from "@/components/shared";
+import { EmptyState, ErrorBanner, PageHeader, SkeletonRows, StateCard } from "@/components/shared";
 import { toPersianDigits } from "@/lib/format";
 import { provinceLabels, provinceValues } from "@/lib/provinces";
 import { useSearchParam } from "@/lib/use-search-param";
@@ -20,15 +20,23 @@ export function SuperCountiesScreen() {
       <PageHeader title="شهرستان ها" description="شهرستان های همه استان ها؛ فقط قابل مشاهده است." />
 
       {isLoading ? (
-        <ScreenSpinner />
+        <div className="flex flex-col gap-4">
+          {["g1", "g2", "g3", "g4"].map((key) => (
+            <StateCard key={key} className="p-4">
+              <SkeletonRows rows={1} className="h-8" />
+            </StateCard>
+          ))}
+        </div>
       ) : error ? (
         <ErrorBanner message="دریافت شهرستان ها انجام نشد." onRetry={() => mutate()} />
       ) : groups.length === 0 ? (
-        <EmptyState icon={MapPinnedIcon} title="شهرستانی یافت نشد." />
+        <StateCard>
+          <EmptyState icon={MapPinnedIcon} title="شهرستانی یافت نشد." />
+        </StateCard>
       ) : (
         <div className="flex flex-col gap-4">
           {groups.map((group) => (
-            <section key={group.province} className="rounded-xl border border-border bg-card shadow-card">
+            <StateCard key={group.province}>
               <header className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
                 <h2 className="text-sm font-semibold">{provinceLabels[group.province]}</h2>
                 <span className="text-subtle text-muted-foreground">{toPersianDigits(group.counties.length)} شهرستان</span>
@@ -40,7 +48,7 @@ export function SuperCountiesScreen() {
                   </span>
                 ))}
               </div>
-            </section>
+            </StateCard>
           ))}
         </div>
       )}
