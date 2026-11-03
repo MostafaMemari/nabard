@@ -8,6 +8,7 @@ import { useCountyChanges } from "../hooks/use-county-changes";
 import { countyChangeTabs } from "../tabs";
 import type { CountyChangeRequest } from "../types";
 import { CountyChangeCard } from "./county-change-card";
+import { CountyChangeCoachDialog } from "./county-change-coach-dialog";
 import { useCountyChangeColumns } from "./county-change-columns";
 import { CountyChangeDecisionDialog } from "./county-change-decision-dialog";
 
@@ -16,9 +17,11 @@ type Decision = { request: CountyChangeRequest; decision: "approve" | "reject" }
 export function CountyChangesScreen() {
   const [statusFilter, setStatusFilter] = useSearchParam("status");
   const [target, setTarget] = useState<Decision | null>(null);
+  const [coachId, setCoachId] = useState<string | null>(null);
   const { requests, isLoading, error, mutate } = useCountyChanges();
   const columns = useCountyChangeColumns({
     onDecide: (request, decision) => setTarget({ request, decision }),
+    onOpenCoach: (request) => setCoachId(request.coachId),
   });
 
   const counts = {
@@ -42,7 +45,14 @@ export function CountyChangesScreen() {
         isLoading={isLoading}
         error={error}
         onRetry={() => mutate()}
-        renderCard={(row) => <CountyChangeCard request={row} onDecide={(request, decision) => setTarget({ request, decision })} />}
+        onRowClick={(row) => setCoachId(row.coachId)}
+        renderCard={(row) => (
+          <CountyChangeCard
+            request={row}
+            onDecide={(request, decision) => setTarget({ request, decision })}
+            onOpenCoach={() => setCoachId(row.coachId)}
+          />
+        )}
         emptyIcon={ArrowLeftRightIcon}
         emptyTitle="درخواستی ثبت نشده است."
         toolbar={
@@ -54,6 +64,8 @@ export function CountyChangesScreen() {
           />
         }
       />
+
+      <CountyChangeCoachDialog coachId={coachId} onClose={() => setCoachId(null)} />
 
       <CountyChangeDecisionDialog
         request={target?.request ?? null}

@@ -8,18 +8,27 @@ import type { CountyChangeRequest } from "../types";
 
 export function useCountyChangeColumns({
   onDecide,
+  onOpenCoach,
 }: {
   onDecide: (request: CountyChangeRequest, decision: "approve" | "reject") => void;
+  onOpenCoach: (request: CountyChangeRequest) => void;
 }): DataTableColumn<CountyChangeRequest>[] {
   return [
     {
       id: "coach",
       header: "مربی",
       cell: (row) => (
-        <div className="flex items-center gap-2.5">
+        <button
+          type="button"
+          onClick={(event) => {
+            event.stopPropagation();
+            onOpenCoach(row);
+          }}
+          className="flex items-center gap-2.5 rounded-md text-start font-medium underline-offset-4 transition-colors duration-150 hover:text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+        >
           <Avatar id={row.coachId} name={row.coachName} size="sm" />
-          <span className="font-medium">{row.coachName}</span>
-        </div>
+          <span className="min-w-0 truncate">{row.coachName}</span>
+        </button>
       ),
       sortValue: (row) => row.coachName,
     },
