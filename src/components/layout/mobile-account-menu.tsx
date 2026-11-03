@@ -8,6 +8,7 @@ import { ChangePasswordDialog, useLogout } from "@/features/auth";
 import { CoachProfileDialog } from "@/features/county-changes";
 import type { SidebarUser } from "./app-sidebar";
 import { SheetHandle } from "./sheet-handle";
+import { useAboveDesktop } from "./use-above-desktop";
 
 const rowClass =
   "flex h-11 w-full items-center gap-3 rounded-lg px-3 text-sm font-medium transition-colors duration-150 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50";
@@ -19,8 +20,9 @@ export function MobileAccountMenu({ user, coachProfile = false }: { user: Sideba
   const [profileOpen, setProfileOpen] = useState(false);
   const [passwordOpen, setPasswordOpen] = useState(false);
   const signOut = useLogout();
+  const aboveDesktop = useAboveDesktop();
 
-  if (!user) {
+  if (!user || aboveDesktop) {
     return null;
   }
 

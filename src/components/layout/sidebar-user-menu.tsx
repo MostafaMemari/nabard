@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronUpIcon, KeyRoundIcon, LogOutIcon, MapPinIcon } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Avatar } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,13 +14,20 @@ import {
 import { ChangePasswordDialog, useLogout } from "@/features/auth";
 import { CoachProfileDialog } from "@/features/county-changes";
 import type { SidebarUser } from "./app-sidebar";
+import { useAboveDesktop } from "./use-above-desktop";
 
 // Fixed footer of the sidebar: one full-width button that opens the account
 // menu above it, anchored to the same width as the trigger.
 export function SidebarUserMenu({ user, coachProfile = false }: { user: SidebarUser | null; coachProfile?: boolean }) {
   const [profileOpen, setProfileOpen] = useState(false);
   const [passwordOpen, setPasswordOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const signOut = useLogout();
+  const aboveDesktop = useAboveDesktop();
+
+  useEffect(() => {
+    if (!aboveDesktop) setMenuOpen(false);
+  }, [aboveDesktop]);
 
   if (!user) {
     return (
@@ -35,7 +42,7 @@ export function SidebarUserMenu({ user, coachProfile = false }: { user: SidebarU
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
       <DropdownMenuTrigger
         render={
           <Button
