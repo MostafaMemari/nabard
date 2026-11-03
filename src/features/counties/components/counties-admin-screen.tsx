@@ -1,6 +1,6 @@
 "use client";
 
-import { LayersIcon, MapPinnedIcon, MoreHorizontalIcon, PlusIcon } from "lucide-react";
+import { MapPinnedIcon, MoreHorizontalIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { EmptyState, ErrorBanner, PageHeader, SkeletonRows } from "@/components/shared";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,6 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { toPersianDigits } from "@/lib/format";
 import { useCounties } from "../hooks/use-counties";
 import type { County } from "../types";
-import { CountyDefaultsDialog } from "./county-defaults-dialog";
 import { CountyDeleteDialog } from "./county-delete-dialog";
 import { CountyFormSheet } from "./county-form-sheet";
 
@@ -32,7 +31,6 @@ function CountyRow({ county, onEdit, onDelete }: { county: County; onEdit: (coun
 export function CountiesAdminScreen() {
   const { counties, isLoading, error, mutate } = useCounties();
   const [sheetOpen, setSheetOpen] = useState(false);
-  const [defaultsOpen, setDefaultsOpen] = useState(false);
   const [editing, setEditing] = useState<County | null>(null);
   const [deleting, setDeleting] = useState<County | null>(null);
 
@@ -42,16 +40,10 @@ export function CountiesAdminScreen() {
         title="شهرستان ها"
         description="شهرستان های استان شما؛ مربیان و مسابقات شهرستانی از این فهرست استفاده می کنند."
         action={
-          <div className="flex flex-wrap items-center gap-2">
-            <Button variant="outline" onClick={() => setDefaultsOpen(true)}>
-              <LayersIcon data-icon="inline-start" />
-              افزودن فهرست پیش فرض
-            </Button>
-            <Button onClick={() => setSheetOpen(true)}>
-              <PlusIcon data-icon="inline-start" />
-              شهرستان جدید
-            </Button>
-          </div>
+          <Button onClick={() => setSheetOpen(true)}>
+            <PlusIcon data-icon="inline-start" />
+            شهرستان جدید
+          </Button>
         }
       />
 
@@ -63,16 +55,11 @@ export function CountiesAdminScreen() {
         <EmptyState
           icon={MapPinnedIcon}
           title="هنوز شهرستانی ثبت نشده است."
-          description="تا وقتی هیچ شهرستانی ثبت نشده باشد نمی توانید مربی ایجاد کنید."
+          description="شهرستان های پیش فرض همه استان ها با مهاجرت پایگاه داده ثبت شده اند؛ با مدیر استان تماس بگیرید."
           action={
-            <div className="flex flex-wrap items-center justify-center gap-2">
-              <Button size="sm" variant="outline" onClick={() => setDefaultsOpen(true)}>
-                افزودن فهرست پیش فرض
-              </Button>
-              <Button size="sm" onClick={() => setSheetOpen(true)}>
-                شهرستان جدید
-              </Button>
-            </div>
+            <Button size="sm" onClick={() => setSheetOpen(true)}>
+              شهرستان جدید
+            </Button>
           }
         />
       ) : (
@@ -97,7 +84,6 @@ export function CountiesAdminScreen() {
         county={editing}
       />
       <CountyDeleteDialog county={deleting} onDone={() => void mutate()} onClose={() => setDeleting(null)} />
-      <CountyDefaultsDialog open={defaultsOpen} onDone={() => void mutate()} onClose={() => setDefaultsOpen(false)} />
     </>
   );
 }
