@@ -5,10 +5,19 @@ import { useRef, useState } from "react";
 import { Avatar } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { ACCEPTED_RECEIPT_TYPES } from "@/features/registrations";
-import { buildApiUrl } from "@/lib/http";
 import { useCoachPhoto } from "../hooks/use-coach-photo";
 
-export function CoachPhotoField({ userId, fullName, hasPhoto }: { userId: string; fullName: string; hasPhoto: boolean }) {
+export function CoachPhotoField({
+  userId,
+  fullName,
+  hasPhoto,
+  photoUrl,
+}: {
+  userId: string;
+  fullName: string;
+  hasPhoto: boolean;
+  photoUrl?: string | null;
+}) {
   const { working, upload, remove } = useCoachPhoto();
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +36,7 @@ export function CoachPhotoField({ userId, fullName, hasPhoto }: { userId: string
 
   return (
     <div className="flex items-center gap-3">
-      <Avatar id={userId} name={fullName} size="lg" src={hasPhoto ? buildApiUrl("/api/v1/coaches/me/photo") : undefined} />
+      <Avatar id={userId} name={fullName} size="lg" src={photoUrl ?? undefined} />
       <div className="flex min-w-0 flex-1 flex-col gap-2">
         <div className="flex items-center gap-2">
           <Button type="button" size="sm" variant="outline" disabled={working} onClick={() => inputRef.current?.click()}>

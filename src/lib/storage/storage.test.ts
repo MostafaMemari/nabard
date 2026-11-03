@@ -21,6 +21,7 @@ const state = vi.hoisted(() => {
       r2.put.mockClear();
       r2.get.mockClear();
       r2.delete.mockClear();
+      r2.getUrls.mockClear();
     },
     nextId: () => {
       counter += 1;
@@ -36,6 +37,7 @@ const r2 = vi.hoisted(() => ({
   put: vi.fn(),
   get: vi.fn(),
   delete: vi.fn(),
+  getUrls: vi.fn(),
 }));
 
 vi.mock("@/lib/prisma", () => ({

@@ -29,4 +29,10 @@ export const postgresStorage: Storage = {
   async delete(id: string): Promise<void> {
     await getPrisma().storedFile.delete({ where: { id } });
   },
+
+  async getUrls(_ids: string[]): Promise<Map<string, string>> {
+    // Bytes live in this database, so there is no direct URL to hand out;
+    // callers fall back to the authenticated streaming route.
+    return new Map();
+  },
 };

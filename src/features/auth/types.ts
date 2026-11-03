@@ -11,4 +11,7 @@ export type AuthUser = {
   countyId: string | null;
   countyName: string | null;
   hasPhoto: boolean;
+  // Presigned R2 URL for the coach photo (or the authenticated route for
+  // files still in Postgres); null when there is no photo.
+  photoUrl: string | null;
 };

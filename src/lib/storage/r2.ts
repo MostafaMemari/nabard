@@ -1,10 +1,17 @@
 import { randomUUID } from "node:crypto";
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import type { R2Env } from "@/lib/env";
 import { getPrisma } from "@/lib/prisma";
 import type { Storage, StoredFileContent, StoredFileInfo, StoredFileInput } from "./types";
 
 const fileInfoSelection = { id: true, mime: true, size: true } as const;
+
+// A presigned URL stays valid for a day, but signing on every request would
+// produce a fresh signature each time and defeat the browser cache, so one
+// URL is reused per object key for an hour.
+const PRESIGN_VALID_SECONDS = 24 * 60 * 60;
+const PRESIGN_REUSE_MS = 60 * 60 * 1000;
 
 export function createR2Client(env: R2Env): S3Client {
   return new S3Client({
@@ -19,12 +26,34 @@ export function createR2Client(env: R2Env): S3Client {
 
 export function createR2Storage(env: R2Env, client: S3Client = createR2Client(env)): Storage {
   const bucket = env.R2_BUCKET_NAME;
+  const presignedUrls = new Map<string, { url: string; signedAt: number }>();
+
+  async function presignGetUrl(objectKey: string): Promise<string> {
+    const cached = presignedUrls.get(objectKey);
+    if (cached && Date.now() - cached.signedAt < PRESIGN_REUSE_MS) return cached.url;
+
+    const command = new GetObjectCommand({ Bucket: bucket, Key: objectKey });
+    const url = await getSignedUrl(client, command, { expiresIn: PRESIGN_VALID_SECONDS });
+    presignedUrls.set(objectKey, { url, signedAt: Date.now() });
+
+    return url;
+  }
 
   return {
     async put(input: StoredFileInput): Promise<StoredFileInfo> {
       const objectKey = `${input.folder}/${randomUUID()}`;
 
-      await client.send(new PutObjectCommand({ Bucket: bucket, Key: objectKey, Body: input.data, ContentType: input.mime }));
+      await client.send(
+        new PutObjectCommand({
+          Bucket: bucket,
+          Key: objectKey,
+          Body: input.data,
+          ContentType: input.mime,
+          // Keys are UUIDs and never change content, so browsers can cache
+          // the object for as long as they keep the URL.
+          CacheControl: "public, max-age=31536000, immutable",
+        }),
+      );
 
       try {
         return await getPrisma().storedFile.create({
@@ -65,6 +94,20 @@ export function createR2Storage(env: R2Env, client: S3Client = createR2Client(en
       }
 
       await getPrisma().storedFile.delete({ where: { id } });
+    },
+
+    async getUrls(ids: string[]): Promise<Map<string, string>> {
+      const wanted = [...new Set(ids)];
+      if (wanted.length === 0) return new Map();
+
+      const rows = await getPrisma().storedFile.findMany({
+        where: { id: { in: wanted }, provider: "R2", objectKey: { not: null } },
+        select: { id: true, objectKey: true },
+      });
+
+      const entries = await Promise.all(rows.map(async (row) => [row.id, await presignGetUrl(row.objectKey as string)] as const));
+
+      return new Map(entries);
     },
   };
 }

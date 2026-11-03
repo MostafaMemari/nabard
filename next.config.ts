@@ -6,7 +6,7 @@ const csp = [
   "default-src 'self'",
   isDev ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'" : "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  "img-src 'self' data: blob: https://*.r2.cloudflarestorage.com",
   "font-src 'self' data:",
   "connect-src 'self'",
   "object-src 'none'",

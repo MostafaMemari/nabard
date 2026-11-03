@@ -2,7 +2,6 @@
 
 import { Avatar, type DataTableColumn, StatusBadge } from "@/components/shared";
 import { formatJalaliDate, toPersianDigits } from "@/lib/format";
-import { studentPhotoUrl } from "../api";
 import type { PendingReviewStudent } from "../types";
 import { profileStatusKey } from "../types";
 
@@ -13,12 +12,7 @@ export function useAdminReviewColumns(): DataTableColumn<PendingReviewStudent>[]
       header: "هنرجو",
       cell: (row) => (
         <div className="flex items-center gap-2.5">
-          <Avatar
-            id={row.id}
-            name={row.fullName}
-            size="sm"
-            src={row.documents.some((document) => document.type === "PHOTO") ? studentPhotoUrl(row.id) : undefined}
-          />
+          <Avatar id={row.id} name={row.fullName} size="sm" src={row.photoUrl ?? undefined} />
           <span className="font-medium">{row.fullName}</span>
         </div>
       ),

@@ -41,7 +41,7 @@ export function Avatar({ id, name, size = "md", src }: { id: string; name: strin
       )}
     >
       {src ? (
-        // biome-ignore lint/performance/noImgElement: private photo served by an authenticated endpoint
+        // biome-ignore lint/performance/noImgElement: photo loads straight from R2 storage
         <img src={src} alt="" className="size-full object-cover" />
       ) : (
         initialsOf(name)

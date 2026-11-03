@@ -1,8 +1,18 @@
 import { compareSync, hashSync } from "bcryptjs";
 import { describe, expect, it, vi } from "vitest";
 import { AppError } from "@/lib/api";
+import type { Storage } from "@/lib/storage/types";
 import type { UserRecord } from "./repository";
 import { changePassword, getProfile, login } from "./service";
+
+function storageWith(urls: Record<string, string> = {}): Storage {
+  return {
+    put: vi.fn(),
+    get: vi.fn(),
+    delete: vi.fn(),
+    getUrls: vi.fn().mockResolvedValue(new Map(Object.entries(urls))),
+  };
+}
 
 const password = "Secret!1234";
 
@@ -44,7 +54,7 @@ function throttleWith(counts: Record<string, number>) {
 
 describe("login", () => {
   it("returns the auth user for valid credentials", async () => {
-    const result = await login(repoWith(activeAdmin), { mobile: "09121110000", password });
+    const result = await login(repoWith(activeAdmin), { mobile: "09121110000", password }, undefined, storageWith());
 
     expect(result).toEqual({
       id: "user-1",
@@ -55,11 +65,12 @@ describe("login", () => {
       countyId: null,
       countyName: null,
       hasPhoto: false,
+      photoUrl: null,
     });
   });
 
   it("rejects a wrong password with 401", async () => {
-    const failure = await login(repoWith(activeAdmin), { mobile: "09121110000", password: "WrongPass123" }).catch(
+    const failure = await login(repoWith(activeAdmin), { mobile: "09121110000", password: "WrongPass123" }, undefined, storageWith()).catch(
       (error: unknown) => error,
     );
 
@@ -68,17 +79,24 @@ describe("login", () => {
   });
 
   it("returns the same error for an unknown mobile", async () => {
-    const wrongPassword = await login(repoWith(activeAdmin), { mobile: "09121110000", password: "WrongPass123" }).catch(
+    const wrongPassword = await login(
+      repoWith(activeAdmin),
+      { mobile: "09121110000", password: "WrongPass123" },
+      undefined,
+      storageWith(),
+    ).catch((error: unknown) => error);
+    const unknownMobile = await login(repoWith(null), { mobile: "09120000000", password }, undefined, storageWith()).catch(
       (error: unknown) => error,
     );
-    const unknownMobile = await login(repoWith(null), { mobile: "09120000000", password }).catch((error: unknown) => error);
 
     expect(unknownMobile).toMatchObject({ status: 401, code: "INVALID_CREDENTIALS" });
     expect((unknownMobile as AppError).message).toBe((wrongPassword as AppError).message);
   });
 
   it("rejects an inactive user with 403 even with valid credentials", async () => {
-    const failure = await login(repoWith(inactiveAdmin), { mobile: "09121110000", password }).catch((error: unknown) => error);
+    const failure = await login(repoWith(inactiveAdmin), { mobile: "09121110000", password }, undefined, storageWith()).catch(
+      (error: unknown) => error,
+    );
 
     expect(failure).toBeInstanceOf(AppError);
     expect(failure).toMatchObject({ status: 403, code: "USER_INACTIVE" });
@@ -86,7 +104,9 @@ describe("login", () => {
 
   it("blocks the login with 429 when the throttle reports a lockout", async () => {
     const throttle = throttleWith({ "mobile:09121110000": 5 });
-    const failure = await login(repoWith(activeAdmin), { mobile: "09121110000", password }, throttle).catch((error: unknown) => error);
+    const failure = await login(repoWith(activeAdmin), { mobile: "09121110000", password }, throttle, storageWith()).catch(
+      (error: unknown) => error,
+    );
 
     expect(failure).toMatchObject({ status: 429, code: "TOO_MANY_ATTEMPTS" });
     expect((failure as AppError).message).toContain("ورود موقتا مسدود شده است");
@@ -95,11 +115,11 @@ describe("login", () => {
 
   it("records a failure on wrong password and clears failures on success", async () => {
     const failing = throttleWith({});
-    await login(repoWith(activeAdmin), { mobile: "09121110000", password: "WrongPass123" }, failing).catch(() => undefined);
+    await login(repoWith(activeAdmin), { mobile: "09121110000", password: "WrongPass123" }, failing, storageWith()).catch(() => undefined);
     expect(failing.repo.recordLoginFailures).toHaveBeenCalledWith(failing.keys, expect.any(Date));
 
     const succeeding = throttleWith({});
-    await login(repoWith(activeAdmin), { mobile: "09121110000", password }, succeeding);
+    await login(repoWith(activeAdmin), { mobile: "09121110000", password }, succeeding, storageWith());
     expect(succeeding.repo.recordLoginFailures).not.toHaveBeenCalled();
     expect(succeeding.repo.clearLoginFailures).toHaveBeenCalledWith(succeeding.keys);
   });
@@ -147,6 +167,35 @@ describe("changePassword", () => {
   });
 });
 
+describe("coach photo url", () => {
+  const coachWithPhoto: UserRecord = {
+    ...activeAdmin,
+    role: "COACH",
+    photoFileId: "photo-file-1",
+  };
+
+  it("resolves the coach photo to the presigned R2 url", async () => {
+    const storage = storageWith({ "photo-file-1": "https://r2.example/coach-photos/x?sig=1" });
+
+    const result = await login(repoWith(coachWithPhoto), { mobile: "09121110000", password }, undefined, storage);
+
+    expect(result.hasPhoto).toBe(true);
+    expect(result.photoUrl).toBe("https://r2.example/coach-photos/x?sig=1");
+  });
+
+  it("falls back to the authenticated route when the photo is not on R2", async () => {
+    const result = await getProfile(repoWith(coachWithPhoto), { id: "user-1", role: "COACH" }, storageWith());
+
+    expect(result.photoUrl).toBe("/api/v1/coaches/me/photo");
+  });
+
+  it("keeps the photo url null for users without a photo", async () => {
+    const result = await getProfile(repoWith(activeAdmin), { id: "user-1", role: "ADMIN" }, storageWith());
+
+    expect(result.photoUrl).toBeNull();
+  });
+});
+
 describe("getProfile with a nullable province", () => {
   const superAdminRecord: UserRecord = {
     id: "super-1",
@@ -163,7 +212,7 @@ describe("getProfile with a nullable province", () => {
   };
 
   it("returns a super admin with a null province and county", async () => {
-    const result = await getProfile(repoWith(superAdminRecord), { id: "super-1", role: "SUPER_ADMIN" });
+    const result = await getProfile(repoWith(superAdminRecord), { id: "super-1", role: "SUPER_ADMIN" }, storageWith());
 
     expect(result).toEqual({
       id: "super-1",
@@ -174,11 +223,12 @@ describe("getProfile with a nullable province", () => {
       countyId: null,
       countyName: null,
       hasPhoto: false,
+      photoUrl: null,
     });
   });
 
   it("keeps the province of admins and coaches", async () => {
-    const result = await getProfile(repoWith(activeAdmin), { id: "user-1", role: "ADMIN" });
+    const result = await getProfile(repoWith(activeAdmin), { id: "user-1", role: "ADMIN" }, storageWith());
 
     expect(result.province).toBe("TEHRAN");
   });

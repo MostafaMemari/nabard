@@ -52,6 +52,13 @@ export function createStorage(): Storage {
       if (provider === "R2") return requireR2().delete(id);
       if (provider === "DB") return postgresStorage.delete(id);
     },
+
+    getUrls(ids) {
+      // The R2 implementation only resolves rows whose provider is R2, so
+      // delegating blindly is safe; without R2 env nothing resolves and the
+      // map stays empty (callers fall back to the streaming route).
+      return (resolveR2() ?? postgresStorage).getUrls(ids);
+    },
   };
 }
 

@@ -52,6 +52,7 @@ function storageWith(overrides: Partial<Storage> = {}): Storage {
     put: vi.fn().mockResolvedValue({ id: "file-2", mime: "image/png", size: PNG_BYTES.byteLength }),
     get: vi.fn().mockResolvedValue({ mime: "image/png", size: PNG_BYTES.byteLength, stream: new Blob([PNG_BYTES]).stream() }),
     delete: vi.fn().mockResolvedValue(undefined),
+    getUrls: vi.fn().mockResolvedValue(new Map()),
     ...overrides,
   };
 }

@@ -6,7 +6,7 @@ import { storage } from "@/lib/storage";
 
 export const GET = route({ roles: ["ADMIN", "COACH", "SUPER_ADMIN"] }, async ({ user, params }) => {
   const { id } = await params;
-  return getStudent(repository, user, id);
+  return getStudent(repository, storage, user, id);
 });
 
 export const PATCH = route({ roles: ["ADMIN"], body: updateStudentBeltSchema }, async ({ user, body, params }) => {

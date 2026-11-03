@@ -98,10 +98,67 @@ const createInput = {
   tkdBankChargeDate: "",
 };
 
+describe("photo urls", () => {
+  it("attaches a presigned R2 photo url to list results and hides the file id", async () => {
+    const repo = repoWith({
+      findStudents: vi.fn().mockResolvedValue([{ ...recordOf(ownStudent), photoFileId: "file-1" }]),
+    });
+    const storage = storageWithUrls({ "file-1": "https://r2.example/student-photos/a?sig=1" });
+
+    const result = await listStudents(repo, storage, coach, {});
+
+    expect(result.data[0]).toMatchObject({ photoUrl: "https://r2.example/student-photos/a?sig=1" });
+    expect(result.data[0]).not.toHaveProperty("photoFileId");
+  });
+
+  it("falls back to the authenticated route when the photo file is not on R2", async () => {
+    const repo = repoWith({
+      findStudents: vi.fn().mockResolvedValue([{ ...recordOf(ownStudent), photoFileId: "file-1" }]),
+    });
+
+    const result = await listStudents(repo, storageWith(), coach, {});
+
+    expect(result.data[0]).toMatchObject({ photoUrl: "/api/v1/students/student-1/documents/PHOTO/file" });
+  });
+
+  it("leaves students without a photo without a photo url", async () => {
+    const repo = repoWith({
+      findStudents: vi.fn().mockResolvedValue([recordOf(ownStudent)]),
+    });
+
+    const result = await listStudents(repo, storageWith(), coach, {});
+
+    expect(result.data[0]).not.toHaveProperty("photoUrl");
+  });
+
+  it("attaches a presigned photo url to the student detail", async () => {
+    const repo = repoWith();
+    const storage = storageWithUrls({ "file-1": "https://r2.example/student-photos/b?sig=2" });
+
+    const result = await getStudent(repo, storage, coach, "student-1");
+
+    expect(result.photoUrl).toBe("https://r2.example/student-photos/b?sig=2");
+  });
+
+  it("attaches a presigned photo url to pending review results", async () => {
+    const pending = { ...recordOf(ownStudent), coachName: "رضا کریمی", documents: [documentRow], photoFileId: "file-1" };
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findPendingReviewStudents: vi.fn().mockResolvedValue([pending]),
+    });
+    const storage = storageWithUrls({ "file-1": "https://r2.example/student-photos/c?sig=3" });
+
+    const result = await listPendingReviewStudents(repo, storage, admin, {});
+
+    expect(result.data[0]).toMatchObject({ photoUrl: "https://r2.example/student-photos/c?sig=3" });
+    expect(result.data[0]).not.toHaveProperty("photoFileId");
+  });
+});
+
 describe("listStudents", () => {
   it("forces a coach to its own students and ignores the coachId param", async () => {
     const repo = repoWith();
-    const result = await listStudents(repo, coach, { coachId: "coach-2", page: 2, pageSize: 10 });
+    const result = await listStudents(repo, storageWith(), coach, { coachId: "coach-2", page: 2, pageSize: 10 });
 
     expect(repo.findStudents).toHaveBeenCalledWith({ coachId: "coach-1", gender: undefined, beltId: undefined, search: undefined }, 10, 10);
     expect(repo.countStudents).toHaveBeenCalledWith({ coachId: "coach-1", gender: undefined, beltId: undefined, search: undefined });
@@ -110,14 +167,14 @@ describe("listStudents", () => {
 
   it("passes search and belt filters to the repository", async () => {
     const repo = repoWith();
-    await listStudents(repo, coach, { search: "  علی  ", beltId: "belt-blue", gender: "FEMALE" });
+    await listStudents(repo, storageWith(), coach, { search: "  علی  ", beltId: "belt-blue", gender: "FEMALE" });
 
     expect(repo.findStudents).toHaveBeenCalledWith({ coachId: "coach-1", gender: "FEMALE", beltId: "belt-blue", search: "علی" }, 0, 100);
   });
 
   it("scopes an admin to its province", async () => {
     const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    await listStudents(repo, admin, {});
+    await listStudents(repo, storageWith(), admin, {});
 
     expect(repo.findStudents).toHaveBeenCalledWith(
       { province: "TEHRAN", coachId: undefined, gender: undefined, beltId: undefined, search: undefined },
@@ -128,7 +185,7 @@ describe("listStudents", () => {
 
   it("lets an admin filter by coachId inside the province", async () => {
     const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    await listStudents(repo, admin, { coachId: "coach-2" });
+    await listStudents(repo, storageWith(), admin, { coachId: "coach-2" });
 
     expect(repo.findStudents).toHaveBeenCalledWith(
       { province: "TEHRAN", coachId: "coach-2", gender: undefined, beltId: undefined, search: undefined },
@@ -139,7 +196,7 @@ describe("listStudents", () => {
 
   it("rejects an inactive user with 403", async () => {
     const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(inactiveCoachRecord) });
-    const failure = await failureOf(listStudents(repo, coach, {}));
+    const failure = await failureOf(listStudents(repo, storageWith(), coach, {}));
 
     expect(failure).toBeInstanceOf(AppError);
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
@@ -148,7 +205,7 @@ describe("listStudents", () => {
 
   it("rejects a missing user row with 401", async () => {
     const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(null) });
-    const failure = await failureOf(listStudents(repo, coach, {}));
+    const failure = await failureOf(listStudents(repo, storageWith(), coach, {}));
 
     expect(failure).toMatchObject({ status: 401, code: "UNAUTHORIZED" });
   });
@@ -157,15 +214,20 @@ describe("listStudents", () => {
 describe("getStudent", () => {
   it("returns a student of the coach with documents and without the coach province", async () => {
     const repo = repoWith();
-    const result = await getStudent(repo, coach, "student-1");
+    const result = await getStudent(repo, storageWith(), coach, "student-1");
 
-    expect(result).toEqual({ ...recordOf(ownStudent), coachName: "رضا کریمی", documents: [documentRow] });
+    expect(result).toEqual({
+      ...recordOf(ownStudent),
+      coachName: "رضا کریمی",
+      documents: [documentRow],
+      photoUrl: "/api/v1/students/student-1/documents/PHOTO/file",
+    });
     expect(result).not.toHaveProperty("coachProvince");
   });
 
   it("hides another coach student behind 404", async () => {
     const repo = repoWith({ findStudentById: vi.fn().mockResolvedValue(otherCoachStudent) });
-    const failure = await failureOf(getStudent(repo, coach, "student-2"));
+    const failure = await failureOf(getStudent(repo, storageWith(), coach, "student-2"));
 
     expect(failure).toBeInstanceOf(AppError);
     expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
@@ -173,7 +235,7 @@ describe("getStudent", () => {
 
   it("returns a student of the admin province", async () => {
     const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    const result = await getStudent(repo, admin, "student-1");
+    const result = await getStudent(repo, storageWith(), admin, "student-1");
 
     expect(result.id).toBe("student-1");
   });
@@ -183,14 +245,14 @@ describe("getStudent", () => {
       findUserById: vi.fn().mockResolvedValue(adminRecord),
       findStudentById: vi.fn().mockResolvedValue(farsStudent),
     });
-    const failure = await failureOf(getStudent(repo, admin, "student-3"));
+    const failure = await failureOf(getStudent(repo, storageWith(), admin, "student-3"));
 
     expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
   });
 
   it("rejects a missing student with 404", async () => {
     const repo = repoWith({ findStudentById: vi.fn().mockResolvedValue(null) });
-    const failure = await failureOf(getStudent(repo, coach, "student-404"));
+    const failure = await failureOf(getStudent(repo, storageWith(), coach, "student-404"));
 
     expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
   });
@@ -367,7 +429,12 @@ function storageWith(): Storage {
     put: vi.fn().mockResolvedValue({ id: "file-9", mime: "image/jpeg", size: JPEG_BYTES.byteLength }),
     get: vi.fn().mockResolvedValue({ mime: "image/jpeg", size: JPEG_BYTES.byteLength, stream: new Blob([JPEG_BYTES]).stream() }),
     delete: vi.fn().mockResolvedValue(undefined),
+    getUrls: vi.fn().mockResolvedValue(new Map()),
   };
+}
+
+function storageWithUrls(urls: Record<string, string>): Storage {
+  return { ...storageWith(), getUrls: vi.fn().mockResolvedValue(new Map(Object.entries(urls))) };
 }
 
 describe("uploadStudentDocument", () => {
@@ -504,7 +571,7 @@ describe("deleteStudentDocument", () => {
 describe("listPendingReviewStudents", () => {
   it("scopes an admin to its province with the status filter and pagination", async () => {
     const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    const result = await listPendingReviewStudents(repo, admin, { status: "REJECTED", page: 2, pageSize: 20 });
+    const result = await listPendingReviewStudents(repo, storageWith(), admin, { status: "REJECTED", page: 2, pageSize: 20 });
 
     expect(repo.findPendingReviewStudents).toHaveBeenCalledWith({ province: "TEHRAN", status: "REJECTED" }, 20, 20);
     expect(repo.countPendingReviewStudents).toHaveBeenCalledWith({ province: "TEHRAN", status: "REJECTED" });
@@ -513,14 +580,14 @@ describe("listPendingReviewStudents", () => {
 
   it("defaults to pending and rejected profiles", async () => {
     const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    await listPendingReviewStudents(repo, admin, {});
+    await listPendingReviewStudents(repo, storageWith(), admin, {});
 
     expect(repo.findPendingReviewStudents).toHaveBeenCalledWith({ province: "TEHRAN", status: undefined }, 0, 100);
   });
 
   it("rejects a coach with 403", async () => {
     const repo = repoWith();
-    const failure = await failureOf(listPendingReviewStudents(repo, coach, {}));
+    const failure = await failureOf(listPendingReviewStudents(repo, storageWith(), coach, {}));
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
     expect(repo.findPendingReviewStudents).not.toHaveBeenCalled();

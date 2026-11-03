@@ -24,6 +24,37 @@ import { isStudentDocumentType } from "./repository";
 const DEFAULT_PAGE_SIZE = 100;
 const DEFAULT_BELT_CODE = "white";
 
+function studentPhotoRoute(studentId: string): string {
+  return `/api/v1/students/${studentId}/documents/PHOTO/file`;
+}
+
+function photoUrlFor(fileId: string | null | undefined, urls: Map<string, string>, fallback: string): string | null {
+  if (!fileId) return null;
+  return urls.get(fileId) ?? fallback;
+}
+
+// Photos live in R2 and are displayed straight from there via presigned
+// URLs; files still in Postgres (local dev) fall back to the authenticated
+// route that streams the bytes. The internal file id is stripped from the
+// response payload.
+async function withPhotoUrls<T extends { id: string; photoFileId?: string | null }>(
+  storage: Storage,
+  records: T[],
+): Promise<Omit<T, "photoFileId">[]> {
+  if (records.length === 0) return records;
+
+  const fileIds = records.map((record) => record.photoFileId).filter((fileId): fileId is string => Boolean(fileId));
+  const urls = await storage.getUrls(fileIds);
+
+  return records.map((record) => {
+    const { photoFileId, ...rest } = record;
+    return {
+      ...rest,
+      ...(photoFileId ? { photoUrl: photoUrlFor(photoFileId, urls, studentPhotoRoute(record.id)) } : {}),
+    };
+  });
+}
+
 function forbidden(): AppError {
   return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
 }
@@ -101,6 +132,7 @@ function toFilters(user: CurrentUser, identity: UserIdentityRecord, query: Stude
 
 export async function listStudents(
   repo: StudentRepository,
+  storage: Storage,
   user: CurrentUser,
   query: StudentListQuery,
 ): Promise<ListResult<StudentRecord>> {
@@ -111,10 +143,10 @@ export async function listStudents(
 
   const [total, students] = await Promise.all([repo.countStudents(filters), repo.findStudents(filters, (page - 1) * pageSize, pageSize)]);
 
-  return { data: students, meta: { page, pageSize, total } };
+  return { data: await withPhotoUrls(storage, students), meta: { page, pageSize, total } };
 }
 
-export async function getStudent(repo: StudentRepository, user: CurrentUser, id: string): Promise<StudentDetail> {
+export async function getStudent(repo: StudentRepository, storage: Storage, user: CurrentUser, id: string): Promise<StudentDetail> {
   const identity = await requireActiveUser(repo, user);
   const student = await repo.findStudentById(id);
   if (!student) throw studentNotFound();
@@ -125,8 +157,15 @@ export async function getStudent(repo: StudentRepository, user: CurrentUser, id:
   if (!inScope) throw studentNotFound();
 
   const documents = await repo.findStudentDocuments(id);
+  const photoDocument = documents.find((document) => document.type === "PHOTO");
+  const urls = photoDocument ? await storage.getUrls([photoDocument.fileId]) : new Map<string, string>();
 
-  return { ...toStudentRecord(student), coachName: student.coachName, documents };
+  return {
+    ...toStudentRecord(student),
+    coachName: student.coachName,
+    documents,
+    ...(photoDocument ? { photoUrl: photoUrlFor(photoDocument.fileId, urls, studentPhotoRoute(id)) } : {}),
+  };
 }
 
 export async function createStudent(repo: StudentRepository, user: CurrentUser, input: CreateStudentInput): Promise<StudentRecord> {
@@ -284,6 +323,7 @@ export async function deleteStudentDocument(
 
 export async function listPendingReviewStudents(
   repo: StudentRepository,
+  storage: Storage,
   user: CurrentUser,
   query: PendingReviewQuery,
 ): Promise<ListResult<PendingReviewStudent>> {
@@ -299,7 +339,7 @@ export async function listPendingReviewStudents(
     repo.findPendingReviewStudents(filters, (page - 1) * pageSize, pageSize),
   ]);
 
-  return { data: students, meta: { page, pageSize, total } };
+  return { data: await withPhotoUrls(storage, students), meta: { page, pageSize, total } };
 }
 
 async function reviewProfile(

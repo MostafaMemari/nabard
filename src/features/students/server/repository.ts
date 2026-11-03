@@ -39,8 +39,12 @@ export type StudentRecord = {
   approvedAt: Date | null;
   createdAt: Date;
   updatedAt: Date;
-  // Only populated by list queries; absent when the caller does not need it.
-  hasPhoto?: boolean;
+  // Internal: stored file id behind the PHOTO document. Only populated by
+  // list/detail queries; the service turns it into a display URL.
+  photoFileId?: string | null;
+  // Display URL for the photo: a presigned R2 URL (or the authenticated
+  // streaming route for files still in Postgres). Filled in by the service.
+  photoUrl?: string | null;
 };
 
 export type StudentDocumentRecord = {
@@ -194,14 +198,14 @@ export async function findStudents(filters: StudentFilters, skip: number, take: 
     where: studentWhere(filters),
     select: {
       ...studentSelection,
-      documents: { where: { type: "PHOTO" }, select: { id: true }, take: 1 },
+      documents: { where: { type: "PHOTO" }, select: { fileId: true }, take: 1 },
     },
     orderBy: { createdAt: "asc" },
     skip,
     take,
   });
 
-  return rows.map((row) => ({ ...toStudentRecord(row), hasPhoto: row.documents.length > 0 }));
+  return rows.map((row) => ({ ...toStudentRecord(row), photoFileId: row.documents[0]?.fileId ?? null }));
 }
 
 export async function findStudentById(id: string): Promise<StudentWithCoach | null> {
@@ -323,7 +327,7 @@ export async function findPendingReviewStudents(
     ...toStudentRecord(row),
     coachName: row.coach.fullName,
     documents: row.documents.map(toDocumentRecord),
-    hasPhoto: row.documents.some((document) => document.type === "PHOTO"),
+    photoFileId: row.documents.find((document) => document.type === "PHOTO")?.fileId ?? null,
   }));
 }
 

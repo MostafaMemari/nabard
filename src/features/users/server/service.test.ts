@@ -452,6 +452,7 @@ function photoStorageWith(): Storage {
     put: vi.fn().mockResolvedValue({ id: "photo-file-2", mime: "image/jpeg", size: JPEG_BYTES.byteLength }),
     get: vi.fn().mockResolvedValue({ mime: "image/jpeg", size: JPEG_BYTES.byteLength, stream: new Blob([JPEG_BYTES]).stream() }),
     delete: vi.fn().mockResolvedValue(undefined),
+    getUrls: vi.fn().mockResolvedValue(new Map()),
   };
 }
 

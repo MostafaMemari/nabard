@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && (prisma migrate resolve --rolled-back 20261103090000_coach_gender_backfill || true) && (prisma migrate resolve --rolled-back 20261103093000_demo_competition_titles || true) && prisma migrate deploy && tsx prisma/ensure-super-admin.ts && next build",
+    "build": "prisma generate && (prisma migrate resolve --rolled-back 20261103090000_coach_gender_backfill || true) && (prisma migrate resolve --rolled-back 20261103093000_demo_competition_titles || true) && prisma migrate deploy && tsx prisma/storage-recompress-photos.ts -- --yes && tsx prisma/ensure-super-admin.ts && next build",
     "start": "next start",
     "db:migrate": "prisma migrate dev && prisma generate",
     "db:seed": "prisma db seed",
@@ -13,6 +13,7 @@
     "db:clean-demo": "tsx prisma/clean-demo.ts",
     "storage:migrate-to-r2": "tsx prisma/storage-migrate-to-r2.ts",
     "storage:verify-r2": "tsx prisma/storage-r2-verify.ts",
+    "storage:recompress-photos": "tsx prisma/storage-recompress-photos.ts",
     "check": "biome check",
     "fix": "biome check --write",
     "typecheck": "tsc --noEmit",
@@ -20,6 +21,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1161.0",
+    "@aws-sdk/s3-request-presigner": "^3.1161.0",
     "@base-ui/react": "^1.9.0",
     "@hookform/resolvers": "^6.0.2",
     "@neondatabase/serverless": "^1.2.0",
@@ -51,6 +53,7 @@
     "@types/react-dom": "^19",
     "dotenv": "^18.0.9",
     "prisma": "^7.10.1",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^5",

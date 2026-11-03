@@ -72,7 +72,7 @@ export function CoachProfileDialog({ open, onOpenChange }: { open: boolean; onOp
           <DialogDescription>شهرستان فعلی شما و وضعیت درخواست تغییر شهرستان.</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-3 text-sm">
-          {user ? <CoachPhotoField userId={user.id} fullName={user.fullName} hasPhoto={user.hasPhoto} /> : null}
+          {user ? <CoachPhotoField userId={user.id} fullName={user.fullName} hasPhoto={user.hasPhoto} photoUrl={user.photoUrl} /> : null}
           <div className="h-px bg-border" aria-hidden />
           <div className="flex flex-col gap-2">
             <p className="font-medium">{user?.fullName}</p>

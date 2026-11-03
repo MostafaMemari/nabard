@@ -4,18 +4,16 @@ import { LockIcon, UserIcon } from "lucide-react";
 import { SectionCard, StatusBadge } from "@/components/shared";
 import { personGenderLabels } from "@/features/base-data";
 import { formatJalaliDate } from "@/lib/format";
-import { studentPhotoUrl } from "../api";
 import { profileStatusKey, type StudentDetail } from "../types";
 
 export function StudentProfileHeader({ student }: { student: StudentDetail }) {
-  const hasPhoto = student.documents.some((document) => document.type === "PHOTO");
-  const photoUrl = studentPhotoUrl(student.id);
+  const photoUrl = student.photoUrl;
 
   return (
     <SectionCard>
       <div className="flex items-center gap-4">
-        {hasPhoto ? (
-          // biome-ignore lint/performance/noImgElement: private document served by an authenticated endpoint
+        {photoUrl ? (
+          // biome-ignore lint/performance/noImgElement: photo loads straight from R2 storage
           <img src={photoUrl} alt={student.fullName} className="size-16 shrink-0 rounded-full bg-muted object-cover" />
         ) : (
           <span className="flex size-16 shrink-0 items-center justify-center rounded-full bg-primary-subtle text-primary">

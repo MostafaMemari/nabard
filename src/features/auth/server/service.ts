@@ -1,6 +1,7 @@
 import { compare, hash } from "bcryptjs";
 import { AppError } from "@/lib/api";
 import type { CurrentUser } from "@/lib/session";
+import type { Storage } from "@/lib/storage/types";
 import type { AuthUser } from "../types";
 import type { UserRecord } from "./repository";
 import { assertCanLogin, type LoginThrottleRepository, recordLoginFailure } from "./throttle";
@@ -19,7 +20,9 @@ function invalidCredentials(): AppError {
   return new AppError(401, "INVALID_CREDENTIALS", "شماره همراه یا رمز عبور اشتباه است.");
 }
 
-function toAuthUser(user: UserRecord): AuthUser {
+const COACH_PHOTO_ROUTE = "/api/v1/coaches/me/photo";
+
+function toAuthUser(user: UserRecord, photoUrl: string | null): AuthUser {
   return {
     id: user.id,
     role: user.role,
@@ -29,13 +32,25 @@ function toAuthUser(user: UserRecord): AuthUser {
     countyId: user.countyId,
     countyName: user.countyName,
     hasPhoto: user.role === "COACH" && user.photoFileId !== null,
+    photoUrl,
   };
+}
+
+// The coach photo lives in R2 and is displayed straight from there via a
+// presigned URL; files still in Postgres (local dev) fall back to the
+// authenticated route that streams the bytes.
+async function coachPhotoUrl(storage: Storage, user: UserRecord): Promise<string | null> {
+  if (user.role !== "COACH" || user.photoFileId === null) return null;
+
+  const urls = await storage.getUrls([user.photoFileId]);
+  return urls.get(user.photoFileId) ?? COACH_PHOTO_ROUTE;
 }
 
 export async function login(
   users: UserRepository,
   input: { mobile: string; password: string },
   throttle?: LoginThrottle,
+  storage?: Storage,
 ): Promise<AuthUser> {
   const now = new Date();
   if (throttle) await assertCanLogin(throttle.repo, throttle.keys, now);
@@ -59,16 +74,16 @@ export async function login(
 
   if (throttle) await throttle.repo.clearLoginFailures(throttle.keys);
 
-  return toAuthUser(user);
+  return toAuthUser(user, storage ? await coachPhotoUrl(storage, user) : null);
 }
 
-export async function getProfile(users: UserRepository, user: CurrentUser): Promise<AuthUser> {
+export async function getProfile(users: UserRepository, user: CurrentUser, storage: Storage): Promise<AuthUser> {
   const record = await users.findUserById(user.id);
   if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
   if (!record.isActive) {
     throw new AppError(403, "USER_INACTIVE", "حساب کاربری شما غیرفعال است. با مدیر استان تماس بگیرید.");
   }
-  return toAuthUser(record);
+  return toAuthUser(record, await coachPhotoUrl(storage, record));
 }
 
 export async function changePassword(

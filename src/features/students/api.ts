@@ -1,12 +1,7 @@
 import type { Gender } from "@/features/base-data";
-import { api, buildApiUrl } from "@/lib/http";
+import { api } from "@/lib/http";
 import type { ListQuery, ListResult } from "@/lib/pagination";
 import type { PendingReviewStudent, Student, StudentDetail, StudentDocument, StudentDocumentType, StudentInput } from "./types";
-
-// Private photo, served through the authenticated file endpoint only.
-export function studentPhotoUrl(studentId: string): string {
-  return buildApiUrl(`/api/v1/students/${studentId}/documents/PHOTO/file`);
-}
 
 export type StudentListParams = ListQuery & {
   coachId?: string;
