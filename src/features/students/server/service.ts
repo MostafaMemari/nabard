@@ -29,14 +29,21 @@ const DEFAULT_BELT_CODE = "white";
 // (local development without the public endpoint) the photo url is null and
 // the UI shows the fallback avatar. The internal file id is stripped from
 // the response payload.
+async function resolveFileUrls(storage: Storage, fileIds: Array<string | null | undefined>): Promise<Map<string, string>> {
+  const ids = [...new Set(fileIds.filter((fileId): fileId is string => Boolean(fileId)))];
+  return ids.length > 0 ? storage.getUrls(ids) : new Map<string, string>();
+}
+
 async function withPhotoUrls<T extends { id: string; photoFileId?: string | null }>(
   storage: Storage,
   records: T[],
 ): Promise<Omit<T, "photoFileId">[]> {
   if (records.length === 0) return records;
 
-  const fileIds = records.map((record) => record.photoFileId).filter((fileId): fileId is string => Boolean(fileId));
-  const urls = await storage.getUrls(fileIds);
+  const urls = await resolveFileUrls(
+    storage,
+    records.map((record) => record.photoFileId),
+  );
 
   return records.map((record) => {
     const { photoFileId, ...rest } = record;
@@ -45,6 +52,10 @@ async function withPhotoUrls<T extends { id: string; photoFileId?: string | null
       ...(photoFileId ? { photoUrl: urls.get(photoFileId) ?? null } : {}),
     };
   });
+}
+
+function documentsWithUrls(documents: StudentDocumentRecord[], urls: Map<string, string>): StudentDocumentRecord[] {
+  return documents.map((document) => ({ ...document, url: urls.get(document.fileId) ?? null }));
 }
 
 function forbidden(): AppError {
@@ -149,13 +160,16 @@ export async function getStudent(repo: StudentRepository, storage: Storage, user
   if (!inScope) throw studentNotFound();
 
   const documents = await repo.findStudentDocuments(id);
+  const urls = await resolveFileUrls(
+    storage,
+    documents.map((document) => document.fileId),
+  );
   const photoDocument = documents.find((document) => document.type === "PHOTO");
-  const urls = photoDocument ? await storage.getUrls([photoDocument.fileId]) : new Map<string, string>();
 
   return {
     ...toStudentRecord(student),
     coachName: student.coachName,
-    documents,
+    documents: documentsWithUrls(documents, urls),
     ...(photoDocument ? { photoUrl: urls.get(photoDocument.fileId) ?? null } : {}),
   };
 }
@@ -260,7 +274,8 @@ export async function uploadStudentDocument(
       await deleteStorageFileQuietly(storage, existing.fileId);
     }
 
-    return record;
+    const urls = await storage.getUrls([stored.id]);
+    return { ...record, url: urls.get(stored.id) ?? null };
   } catch (error) {
     await deleteStorageFileQuietly(storage, stored.id);
     throw error;
@@ -331,7 +346,23 @@ export async function listPendingReviewStudents(
     repo.findPendingReviewStudents(filters, (page - 1) * pageSize, pageSize),
   ]);
 
-  return { data: await withPhotoUrls(storage, students), meta: { page, pageSize, total } };
+  // One batched url lookup for every photo and document on the page.
+  const urls = await resolveFileUrls(
+    storage,
+    students.flatMap((student) => [student.photoFileId, ...student.documents.map((document) => document.fileId)]),
+  );
+
+  return {
+    data: students.map((student) => {
+      const { photoFileId, ...rest } = student;
+      return {
+        ...rest,
+        documents: documentsWithUrls(student.documents, urls),
+        ...(photoFileId ? { photoUrl: urls.get(photoFileId) ?? null } : {}),
+      };
+    }),
+    meta: { page, pageSize, total },
+  };
 }
 
 async function reviewProfile(

@@ -4,13 +4,12 @@ import { ReceiptTextIcon, ZoomInIcon } from "lucide-react";
 import { useState } from "react";
 import { IconTile, SectionCard } from "@/components/shared";
 import { formatJalaliDateTime } from "@/lib/format";
-import { buildApiUrl } from "@/lib/http";
 import type { Payment } from "../types";
 import { ReceiptLightbox } from "./receipt-lightbox";
 
 export function PaymentReceiptCard({ payment }: { payment: Payment }) {
   const [lightboxOpen, setLightboxOpen] = useState(false);
-  const receiptUrl = buildApiUrl(`/api/v1/payments/${payment.id}/receipt`);
+  const receiptUrl = payment.receiptUrl ?? null;
 
   return (
     <SectionCard
@@ -18,7 +17,7 @@ export function PaymentReceiptCard({ payment }: { payment: Payment }) {
       icon={ReceiptTextIcon}
       action={<span className="text-subtle text-muted-foreground">ارسال شده در {formatJalaliDateTime(new Date(payment.createdAt))}</span>}
     >
-      {payment.receiptKey === null ? (
+      {receiptUrl === null ? (
         <div className="flex h-48 flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border bg-muted/40 text-sm text-muted-foreground">
           <IconTile icon={ReceiptTextIcon} tone="pending" />
           رسیدی برای این پرداخت بارگذاری نشده است.
@@ -32,7 +31,7 @@ export function PaymentReceiptCard({ payment }: { payment: Payment }) {
               aria-label="نمایش بزرگ تصویر رسید"
               className="group relative mx-auto block w-full max-w-sm cursor-zoom-in overflow-hidden rounded-md"
             >
-              {/* biome-ignore lint/performance/noImgElement: private receipt served by an authenticated endpoint */}
+              {/* biome-ignore lint/performance/noImgElement: direct R2 url with an unguessable key */}
               <img
                 src={receiptUrl}
                 alt="تصویر رسید پرداخت کارت به کارت"

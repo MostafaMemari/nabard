@@ -3,21 +3,17 @@
 import { ImageOffIcon } from "lucide-react";
 import { useState } from "react";
 import { ReceiptLightbox } from "@/features/payments";
-import { buildApiUrl } from "@/lib/http";
 import { studentDocumentLabels, studentDocumentTypes } from "../labels";
 import { requiredDocumentTypes, type StudentDocument, type StudentDocumentType } from "../types";
 
-function documentUrl(studentId: string, type: StudentDocumentType): string {
-  return buildApiUrl(`/api/v1/students/${studentId}/documents/${type}/file`);
-}
-
-export function ReviewDocuments({ studentId, documents }: { studentId: string; documents: StudentDocument[] }) {
+export function ReviewDocuments({ documents }: { documents: StudentDocument[] }) {
   const [lightbox, setLightbox] = useState<StudentDocumentType | null>(null);
 
   return (
     <div className="grid gap-3 sm:grid-cols-2">
       {studentDocumentTypes.map((type) => {
-        const uploaded = documents.some((document) => document.type === type);
+        const uploaded = documents.find((document) => document.type === type);
+        const url = uploaded?.url ?? null;
         const required = requiredDocumentTypes.includes(type);
 
         return (
@@ -36,14 +32,14 @@ export function ReviewDocuments({ studentId, documents }: { studentId: string; d
             </div>
             <button
               type="button"
-              disabled={!uploaded}
+              disabled={!url}
               onClick={() => setLightbox(type)}
               className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-lg bg-muted disabled:cursor-default"
-              aria-label={uploaded ? "مشاهده در اندازه اصلی" : "بارگذاری نشده"}
+              aria-label={url ? "مشاهده در اندازه اصلی" : "بارگذاری نشده"}
             >
-              {uploaded ? (
-                // biome-ignore lint/performance/noImgElement: private document served by an authenticated endpoint
-                <img src={documentUrl(studentId, type)} alt={studentDocumentLabels[type]} className="size-full object-cover" />
+              {url ? (
+                // biome-ignore lint/performance/noImgElement: direct R2 url with an unguessable key
+                <img src={url} alt={studentDocumentLabels[type]} className="size-full object-cover" />
               ) : (
                 <span className="flex flex-col items-center gap-1.5 text-subtle text-muted-foreground">
                   <ImageOffIcon className="size-5" aria-hidden />
@@ -60,7 +56,7 @@ export function ReviewDocuments({ studentId, documents }: { studentId: string; d
         onOpenChange={(open) => {
           if (!open) setLightbox(null);
         }}
-        src={lightbox ? documentUrl(studentId, lightbox) : ""}
+        src={lightbox ? (documents.find((document) => document.type === lightbox)?.url ?? "") : ""}
       />
     </div>
   );

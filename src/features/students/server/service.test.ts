@@ -138,6 +138,7 @@ describe("photo urls", () => {
     const result = await getStudent(repo, storage, coach, "student-1");
 
     expect(result.photoUrl).toBe("https://r2.example/student-photos/b?sig=2");
+    expect(result.documents[0]).toMatchObject({ id: "doc-1", url: "https://r2.example/student-photos/b?sig=2" });
   });
 
   it("attaches the public R2 photo url to pending review results", async () => {
@@ -152,6 +153,7 @@ describe("photo urls", () => {
 
     expect(result.data[0]).toMatchObject({ photoUrl: "https://r2.example/student-photos/c?sig=3" });
     expect(result.data[0]).not.toHaveProperty("photoFileId");
+    expect(result.data[0].documents[0]).toMatchObject({ id: "doc-1", url: "https://r2.example/student-photos/c?sig=3" });
   });
 });
 
@@ -219,7 +221,7 @@ describe("getStudent", () => {
     expect(result).toEqual({
       ...recordOf(ownStudent),
       coachName: "رضا کریمی",
-      documents: [documentRow],
+      documents: [{ ...documentRow, url: null }],
       photoUrl: null,
     });
     expect(result).not.toHaveProperty("coachProvince");
@@ -446,7 +448,7 @@ describe("uploadStudentDocument", () => {
     expect(storage.put).toHaveBeenCalledWith({ data: JPEG_BYTES, mime: "image/jpeg", folder: "student-photos" });
     expect(repo.upsertStudentDocument).toHaveBeenCalledWith("student-1", "PHOTO", "file-9");
     expect(storage.delete).toHaveBeenCalledWith("file-1");
-    expect(result).toEqual(documentRow);
+    expect(result).toEqual({ ...documentRow, url: null });
   });
 
   it("rejects an admin with 403", async () => {

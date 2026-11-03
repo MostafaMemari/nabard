@@ -42,8 +42,8 @@ export type StudentRecord = {
   // Internal: stored file id behind the PHOTO document. Only populated by
   // list/detail queries; the service turns it into a display URL.
   photoFileId?: string | null;
-  // Display URL for the photo: a presigned R2 URL (or the authenticated
-  // streaming route for files still in Postgres). Filled in by the service.
+  // Display URL for the photo: the direct public R2 url. Filled in by the
+  // service; null when the file is not on R2.
   photoUrl?: string | null;
 };
 
@@ -53,6 +53,9 @@ export type StudentDocumentRecord = {
   type: StudentDocumentType;
   fileId: string;
   createdAt: Date;
+  // Direct display url, filled in by the service layer. Null when the file is
+  // not on R2 (local development without R2 env vars).
+  url?: string | null;
 };
 
 export type PendingReviewStudent = StudentRecord & { coachName: string; documents: StudentDocumentRecord[] };

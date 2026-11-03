@@ -50,7 +50,7 @@ export function AdminReviewDetailScreen({ studentId }: { studentId: string }) {
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         <section className="flex flex-col gap-3">
           <h2 className="text-base font-semibold">مدارک</h2>
-          <ReviewDocuments studentId={student.id} documents={student.documents} />
+          <ReviewDocuments documents={student.documents} />
         </section>
         <ReviewSideSummary
           student={student}

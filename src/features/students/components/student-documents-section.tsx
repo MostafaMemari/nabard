@@ -20,8 +20,8 @@ export function StudentDocumentsSection({ student, documents }: { student: Stude
         {studentDocumentTypes.map((type) => (
           <DocumentUploadCard
             key={type}
-            studentId={student.id}
             type={type}
+            url={student.documents.find((document) => document.type === type)?.url ?? null}
             uploaded={student.documents.some((document) => document.type === type)}
             working={documents.workingType === type}
             onUpload={documents.upload}

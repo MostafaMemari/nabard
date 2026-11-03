@@ -10,6 +10,9 @@ export type StudentDocument = {
   type: StudentDocumentType;
   fileId: string;
   createdAt: string;
+  // Direct R2 url of the document image, ready for <img src>;
+  // null when the file is not on R2 (local development without R2 env vars).
+  url?: string | null;
 };
 
 export type Student = {

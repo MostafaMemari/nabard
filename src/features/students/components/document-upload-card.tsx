@@ -4,20 +4,19 @@ import { ImageOffIcon, Trash2Icon, UploadIcon } from "lucide-react";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ACCEPTED_RECEIPT_TYPES } from "@/features/registrations";
-import { buildApiUrl } from "@/lib/http";
 import { studentDocumentLabels } from "../labels";
 import { requiredDocumentTypes, type StudentDocumentType } from "../types";
 
 export function DocumentUploadCard({
-  studentId,
   type,
+  url,
   uploaded,
   working,
   onUpload,
   onDelete,
 }: {
-  studentId: string;
   type: StudentDocumentType;
+  url: string | null;
   uploaded: boolean;
   working: boolean;
   onUpload: (type: StudentDocumentType, file: File) => void;
@@ -26,7 +25,6 @@ export function DocumentUploadCard({
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
   const required = requiredDocumentTypes.includes(type);
-  const url = buildApiUrl(`/api/v1/students/${studentId}/documents/${type}/file`);
 
   function selectFile(file: File | null) {
     if (!file) return;
@@ -56,8 +54,8 @@ export function DocumentUploadCard({
       </div>
 
       <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-lg bg-muted">
-        {uploaded ? (
-          // biome-ignore lint/performance/noImgElement: private document served by an authenticated endpoint
+        {url ? (
+          // biome-ignore lint/performance/noImgElement: direct R2 url with an unguessable key
           <img src={url} alt={studentDocumentLabels[type]} className="size-full object-cover" />
         ) : (
           <ImageOffIcon className="size-6 text-muted-foreground" aria-hidden />

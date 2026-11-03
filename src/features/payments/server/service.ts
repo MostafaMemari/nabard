@@ -17,6 +17,23 @@ import type {
 
 const DEFAULT_PAGE_SIZE = 100;
 
+// Receipts live in R2 and are displayed straight from its public endpoint;
+// receiptUrl is null when the file is not on R2 (local development without
+// R2 env vars) or the payment has no receipt at all.
+type PaymentPayload = PaymentRecord & { receiptUrl: string | null };
+
+async function withReceiptUrls(storage: Storage, records: PaymentRecord[]): Promise<PaymentPayload[]> {
+  if (records.length === 0) return [];
+
+  const ids = [...new Set(records.map((record) => record.receiptKey).filter((key): key is string => key !== null))];
+  const urls = ids.length > 0 ? await storage.getUrls(ids) : new Map<string, string>();
+
+  return records.map((record) => ({
+    ...record,
+    receiptUrl: record.receiptKey === null ? null : (urls.get(record.receiptKey) ?? null),
+  }));
+}
+
 function forbidden(): AppError {
   return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
 }
@@ -72,9 +89,10 @@ function toFilters(user: CurrentUser, identity: UserIdentityRecord, query: Payme
 
 export async function listPayments(
   repo: PaymentsRepository,
+  storage: Storage,
   user: CurrentUser,
   query: PaymentListQuery,
-): Promise<ListResult<PaymentRecord>> {
+): Promise<ListResult<PaymentPayload>> {
   const identity = await requireActiveUser(repo, user);
   const page = query.page ?? 1;
   const pageSize = Math.min(query.pageSize ?? DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
@@ -82,10 +100,10 @@ export async function listPayments(
 
   const [total, rows] = await Promise.all([repo.countPayments(filters), repo.findPayments(filters, (page - 1) * pageSize, pageSize)]);
 
-  return { data: rows.map(toRecord), meta: { page, pageSize, total } };
+  return { data: await withReceiptUrls(storage, rows.map(toRecord)), meta: { page, pageSize, total } };
 }
 
-export async function getPayment(repo: PaymentsRepository, user: CurrentUser, id: string): Promise<PaymentRecord> {
+export async function getPayment(repo: PaymentsRepository, storage: Storage, user: CurrentUser, id: string): Promise<PaymentPayload> {
   const identity = await requireActiveUser(repo, user);
   const row = await repo.findPaymentById(id);
   if (!row) throw paymentNotFound();
@@ -94,15 +112,17 @@ export async function getPayment(repo: PaymentsRepository, user: CurrentUser, id
     identity.role === "SUPER_ADMIN" || (identity.role === "ADMIN" ? row.coachProvince === provinceOf(identity) : row.coachId === user.id);
   if (!inScope) throw paymentNotFound();
 
-  return toRecord(row);
+  const [record] = await withReceiptUrls(storage, [toRecord(row)]);
+  return record;
 }
 
 async function decidePayment(
   repo: PaymentsRepository,
+  storage: Storage,
   user: CurrentUser,
   id: string,
   input: PaymentTransitionInput,
-): Promise<PaymentRecord> {
+): Promise<PaymentPayload> {
   const identity = await requireActiveUser(repo, user);
   if (identity.role !== "ADMIN") throw forbidden();
 
@@ -110,7 +130,10 @@ async function decidePayment(
   if (!current || current.coachProvince !== identity.province) throw paymentNotFound();
 
   const updated = await repo.transitionPaymentFromPending(id, input);
-  if (updated) return toRecord(updated);
+  if (updated) {
+    const [record] = await withReceiptUrls(storage, [toRecord(updated)]);
+    return record;
+  }
 
   const row = await repo.findPaymentById(id);
   if (row === null) throw paymentNotFound();
@@ -131,12 +154,18 @@ async function decidePayment(
   throw new AppError(409, "CONFLICT", "این پرداخت قبلا بررسی شده است.");
 }
 
-export async function confirmPayment(repo: PaymentsRepository, user: CurrentUser, id: string): Promise<PaymentRecord> {
-  return decidePayment(repo, user, id, { status: "CONFIRMED", note: null });
+export async function confirmPayment(repo: PaymentsRepository, storage: Storage, user: CurrentUser, id: string): Promise<PaymentPayload> {
+  return decidePayment(repo, storage, user, id, { status: "CONFIRMED", note: null });
 }
 
-export async function rejectPayment(repo: PaymentsRepository, user: CurrentUser, id: string, note: string): Promise<PaymentRecord> {
-  return decidePayment(repo, user, id, { status: "REJECTED", note });
+export async function rejectPayment(
+  repo: PaymentsRepository,
+  storage: Storage,
+  user: CurrentUser,
+  id: string,
+  note: string,
+): Promise<PaymentPayload> {
+  return decidePayment(repo, storage, user, id, { status: "REJECTED", note });
 }
 
 export async function readReceipt(
@@ -171,7 +200,7 @@ export async function uploadReceipt(
   user: CurrentUser,
   id: string,
   receiptFile: File,
-): Promise<PaymentRecord> {
+): Promise<PaymentPayload> {
   const identity = await requireActiveUser(repo, user);
   if (identity.role !== "COACH") throw forbidden();
 
@@ -195,7 +224,8 @@ export async function uploadReceipt(
       await deleteStorageFileQuietly(storage, row.receiptKey);
     }
 
-    return toRecord(updated);
+    const [record] = await withReceiptUrls(storage, [toRecord(updated)]);
+    return record;
   } catch (error) {
     await deleteStorageFileQuietly(storage, stored.id);
     throw error;
