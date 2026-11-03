@@ -7,11 +7,12 @@ import { createR2Client } from "../src/lib/storage/r2";
 import type { StorageFolder } from "../src/lib/storage/types";
 import { type MigrationRow, migrateStoredFilesToR2 } from "./storage-migration";
 
-// One-shot migration: copies every provider=db StoredFile row (payment receipts
-// and student profile photos) into the private Cloudflare R2 bucket, verifies
-// size and sha-256 of each copy, then rewrites the row to provider=r2 with a
-// null data and a stable objectKey. Rows that no receipt and no document
-// reference are skipped and counted. Prints counts only, never file data.
+// One-shot migration: copies every provider=db StoredFile row (payment receipts,
+// student profile photos and coach profile photos) into the private Cloudflare
+// R2 bucket, verifies size and sha-256 of each copy, then rewrites the row to
+// provider=r2 with a null data and a stable objectKey. Rows that no receipt,
+// document or coach photo reference are skipped and counted. Prints counts
+// only, never file data.
 
 const prisma = getPrisma();
 const env = getR2Env();
@@ -41,10 +42,21 @@ async function findNextBatch(afterId: string | null, take: number): Promise<Migr
     if (payment.receiptKey !== null) receiptKeys.add(payment.receiptKey);
   }
 
+  const coachPhotoIds = new Set<string>();
+  const coachUsers = await prisma.user.findMany({
+    where: { photoFileId: { in: rows.map((row) => row.id) } },
+    select: { photoFileId: true },
+  });
+  for (const user of coachUsers) {
+    if (user.photoFileId !== null) coachPhotoIds.add(user.photoFileId);
+  }
+
   return rows.map((row) => {
     let folder: StorageFolder | null = null;
     if (receiptKeys.has(row.id)) {
       folder = "receipts";
+    } else if (coachPhotoIds.has(row.id)) {
+      folder = "coach-photos";
     } else if (row.studentDocuments[0]?.type === "PHOTO") {
       folder = "student-photos";
     } else if (row.studentDocuments.length > 0) {
