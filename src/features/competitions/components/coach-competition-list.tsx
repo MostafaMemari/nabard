@@ -19,7 +19,7 @@ export function CoachCompetitionList({ competitions }: { competitions: Competiti
     <div className="flex flex-col gap-3">
       {competitions.map((competition) => (
         <article key={competition.id} className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 shadow-card md:p-6">
-          <div className="flex flex-col gap-4 @5xl:flex-row @5xl:items-start @5xl:gap-6">
+          <div className="flex flex-col gap-4 @5xl:grid @5xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] @5xl:items-start @5xl:gap-6">
             <div className="flex min-w-0 flex-1 flex-col gap-2.5">
               <div className="flex min-w-0 items-center gap-3">
                 <IconTile icon={disciplineIcons[competition.discipline]} />
@@ -45,7 +45,7 @@ export function CoachCompetitionList({ competitions }: { competitions: Competiti
               ) : null}
             </div>
 
-            <div className="flex flex-col gap-2.5 border-t border-border pt-3.5 @5xl:w-72 @5xl:shrink-0 @5xl:border-t-0 @5xl:border-s @5xl:pt-0 @5xl:ps-6">
+            <div className="flex flex-col gap-2.5 border-t border-border pt-3.5 @5xl:border-t-0 @5xl:border-s @5xl:pt-0 @5xl:ps-6">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <CountdownChip deadline={competition.registrationDeadline} />
                 <span className="text-subtle text-muted-foreground tabular-nums">
