@@ -8,50 +8,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatJalaliDate, toPersianDigits } from "@/lib/format";
 import { type AgeCategoryAdmin, updateAgeCategory } from "../api-admin";
 import { useAgeCategoriesAdmin } from "../hooks/use-base-data-admin";
 import { AgeCategoryDeleteDialog } from "./age-category-delete-dialog";
 import { AgeCategoryFormSheet } from "./age-category-form-sheet";
-
-function AgeCategoryRow({
-  category,
-  onEdit,
-  onDelete,
-  onToggle,
-}: {
-  category: AgeCategoryAdmin;
-  onEdit: (category: AgeCategoryAdmin) => void;
-  onDelete: (category: AgeCategoryAdmin) => void;
-  onToggle: (category: AgeCategoryAdmin) => void;
-}) {
-  return (
-    <div className="flex min-h-13 items-center justify-between gap-3 border-b border-border py-2 last:border-b-0">
-      <div className="flex min-w-0 flex-col gap-0.5">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium">{category.label}</span>
-          {!category.isActive ? <Badge variant="secondary">بایگانی</Badge> : null}
-        </div>
-        <span className="text-subtle text-muted-foreground tabular-nums">
-          متولدین {toPersianDigits(category.birthYearStart ?? 0)} تا {toPersianDigits(category.birthYearEnd ?? 0)} ·{" "}
-          {formatJalaliDate(new Date(category.startDate))} تا {formatJalaliDate(new Date(category.endDate))}
-        </span>
-      </div>
-      <div className="flex items-center gap-3">
-        <Switch checked={category.isActive} onCheckedChange={() => onToggle(category)} aria-label={`فعال بودن ${category.label}`} />
-        <DropdownMenu>
-          <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label={`عملیات ${category.label}`} />}>
-            <MoreHorizontalIcon />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuItem onClick={() => onEdit(category)}>ویرایش</DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onDelete(category)}>حذف</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    </div>
-  );
-}
 
 export function AgeCategoriesTab() {
   const { ageCategories, isLoading, error, mutate } = useAgeCategoriesAdmin(true);
@@ -86,28 +48,77 @@ export function AgeCategoriesTab() {
           رده سنی جدید
         </Button>
       </header>
-      <div className="px-4 pb-2">
-        {isLoading ? (
+
+      {isLoading ? (
+        <div className="px-4 py-2">
           <SkeletonRows rows={5} />
-        ) : error ? (
+        </div>
+      ) : error ? (
+        <div className="px-4 py-2">
           <ErrorBanner message="دریافت رده های سنی انجام نشد." onRetry={() => void mutate()} />
-        ) : ageCategories.length === 0 ? (
+        </div>
+      ) : ageCategories.length === 0 ? (
+        <div className="px-4 pb-4">
           <EmptyState title="هنوز رده سنی تعریف نشده است." />
-        ) : (
-          ageCategories.map((category) => (
-            <AgeCategoryRow
-              key={category.id}
-              category={category}
-              onEdit={(row) => {
-                setEditing(row);
-                setSheetOpen(true);
-              }}
-              onDelete={setDeleting}
-              onToggle={(row) => void toggle(row)}
-            />
-          ))
-        )}
-      </div>
+        </div>
+      ) : (
+        <Table>
+          <TableHeader className="bg-muted/50">
+            <TableRow className="hover:bg-transparent">
+              <TableHead className="text-subtle text-muted-foreground">رده سنی</TableHead>
+              <TableHead className="text-subtle w-36 text-muted-foreground">متولدین</TableHead>
+              <TableHead className="text-subtle hidden w-64 sm:table-cell text-muted-foreground">بازه تولد</TableHead>
+              <TableHead className="text-subtle w-20 text-center text-muted-foreground">فعال</TableHead>
+              <TableHead className="w-14">
+                <span className="sr-only">عملیات</span>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {ageCategories.map((category) => (
+              <TableRow key={category.id}>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium">{category.label}</span>
+                    {!category.isActive ? <Badge variant="secondary">بایگانی</Badge> : null}
+                  </div>
+                </TableCell>
+                <TableCell className="text-subtle tabular-nums text-muted-foreground">
+                  {toPersianDigits(category.birthYearStart ?? 0)} تا {toPersianDigits(category.birthYearEnd ?? 0)}
+                </TableCell>
+                <TableCell className="text-subtle hidden tabular-nums sm:table-cell text-muted-foreground">
+                  {formatJalaliDate(new Date(category.startDate))} تا {formatJalaliDate(new Date(category.endDate))}
+                </TableCell>
+                <TableCell className="text-center">
+                  <Switch
+                    checked={category.isActive}
+                    onCheckedChange={() => void toggle(category)}
+                    aria-label={`فعال بودن ${category.label}`}
+                  />
+                </TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label={`عملیات ${category.label}`} />}>
+                      <MoreHorizontalIcon />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="start">
+                      <DropdownMenuItem
+                        onClick={() => {
+                          setEditing(category);
+                          setSheetOpen(true);
+                        }}
+                      >
+                        ویرایش
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => setDeleting(category)}>حذف</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      )}
 
       <AgeCategoryFormSheet open={sheetOpen} onOpenChange={setSheetOpen} onSaved={() => void mutate()} category={editing} />
       <AgeCategoryDeleteDialog category={deleting} onDone={() => void mutate()} onClose={() => setDeleting(null)} />

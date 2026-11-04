@@ -67,7 +67,7 @@ export function WeightClassesTab({ ageCategories }: { ageCategories: AgeCategory
         </p>
       </header>
       <div className="flex flex-col gap-5 p-4">
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-4 sm:max-w-2xl sm:grid-cols-2">
           <Selector label="رده سنی" value={ageCategoryId} items={categoryItems} onChange={setAgeCategoryId} />
           <Selector label="جنسیت" value={gender} items={genderLabels} onChange={setGender} />
         </div>

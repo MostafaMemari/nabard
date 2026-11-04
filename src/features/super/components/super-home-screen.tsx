@@ -34,7 +34,7 @@ const columns = [
   },
   {
     id: "pendingPayments",
-    header: "پرداخت های در انتظار",
+    header: "در انتظار پرداخت",
     cell: (row: ProvinceSummary) => toPersianDigits(row.pendingPayments),
     align: "center" as const,
     minScreen: "lg" as const,
@@ -48,7 +48,7 @@ function SummaryCardRow({ row }: { row: ProvinceSummary }) {
     ["هنرجویان", row.students],
     ["مسابقات", row.competitions],
     ["ثبت نام ها", row.registrations],
-    ["پرداخت های در انتظار", row.pendingPayments],
+    ["در انتظار پرداخت", row.pendingPayments],
   ];
 
   return (
