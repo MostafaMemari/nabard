@@ -32,6 +32,7 @@ export type EligibilityStudentRow = {
 export type CompetitionRow = {
   id: string;
   title: string;
+  description: string | null;
   province: Province;
   level: CompetitionLevel;
   countyIds: string[];
@@ -66,6 +67,7 @@ export type CompetitionOrder = "createdAtDesc" | "deadlineAsc";
 
 export type NewCompetitionData = {
   title: string;
+  description?: string | null;
   province: Province;
   level: CompetitionLevel;
   countyIds: string[];
@@ -84,6 +86,7 @@ export type NewCompetitionData = {
 
 export type CompetitionUpdateData = {
   title?: string;
+  description?: string | null;
   level?: CompetitionLevel;
   countyIds?: string[];
   discipline?: Discipline;
@@ -141,6 +144,7 @@ export type CompetitionsRepository = {
 const competitionSelection = {
   id: true,
   title: true,
+  description: true,
   province: true,
   level: true,
   counties: { select: { countyId: true, county: { select: { name: true } } } },
@@ -251,6 +255,7 @@ export async function createCompetition(data: NewCompetitionData): Promise<Compe
   const row = await getPrisma().competition.create({
     data: {
       title: data.title,
+      description: data.description ?? null,
       province: data.province,
       level: data.level,
       counties: { create: data.countyIds.map((countyId) => ({ countyId })) },

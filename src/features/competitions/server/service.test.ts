@@ -118,6 +118,7 @@ function rowWith(overrides: Partial<CompetitionRow> = {}): CompetitionRow {
   return {
     id: "comp-9",
     title: "مسابقات قهرمانی استان",
+    description: null,
     province: "TEHRAN",
     level: "PROVINCIAL",
     countyIds: [],
@@ -553,6 +554,21 @@ describe("createCompetition", () => {
     expect(repo.findWeightClasses).not.toHaveBeenCalled();
     expect(repo.createCompetition).toHaveBeenCalled();
   });
+
+  it("stores the optional description for coaches", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
+    await createCompetition(repo, admin, { ...createInput, description: "سالن انقلاب، ساعت ۸ صبح" });
+
+    expect(repo.createCompetition).toHaveBeenCalledTimes(1);
+    expect(vi.mocked(repo.createCompetition).mock.calls[0][0].description).toBe("سالن انقلاب، ساعت ۸ صبح");
+  });
+
+  it("defaults the description to null when it is missing", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
+    await createCompetition(repo, admin, { ...createInput, description: "" });
+
+    expect(vi.mocked(repo.createCompetition).mock.calls[0][0].description).toBeNull();
+  });
 });
 
 describe("updateCompetition", () => {
@@ -563,6 +579,28 @@ describe("updateCompetition", () => {
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
     expect((failure as AppError).message).toContain("قابل ویرایش نیست");
     expect(repo.updateCompetition).not.toHaveBeenCalled();
+  });
+
+  it("lets the description be edited even when locked by registrations", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord), countRegistrations: vi.fn().mockResolvedValue(3) });
+    await updateCompetition(repo, admin, "comp-9", { description: "برنامه روز مسابقه به روز شد" });
+
+    expect(repo.updateCompetition).toHaveBeenCalledWith("comp-9", { description: "برنامه روز مسابقه به روز شد" });
+  });
+
+  it("still blocks a mixed edit with the description once registrations exist", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord), countRegistrations: vi.fn().mockResolvedValue(3) });
+    const failure = await failureOf(updateCompetition(repo, admin, "comp-9", { description: "نکته", title: "عنوان تازه" }));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect(repo.updateCompetition).not.toHaveBeenCalled();
+  });
+
+  it("clears the description when an empty string is sent", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
+    await updateCompetition(repo, admin, "comp-9", { description: "" });
+
+    expect(repo.updateCompetition).toHaveBeenCalledWith("comp-9", { description: null });
   });
 
   it("edits a field of an unlocked competition", async () => {

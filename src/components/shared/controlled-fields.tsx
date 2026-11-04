@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import type { FieldValues } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import { FieldBody, type SharedFieldProps } from "./field-body";
 
 export function ControlledTextField<T extends FieldValues>({
@@ -15,6 +16,19 @@ export function ControlledTextField<T extends FieldValues>({
   return (
     <FieldBody control={control} name={name} label={label}>
       {({ value, onChange }) => <Input id={name} value={value} onChange={onChange} {...input} />}
+    </FieldBody>
+  );
+}
+
+export function ControlledTextAreaField<T extends FieldValues>({
+  control,
+  name,
+  label,
+  ...input
+}: SharedFieldProps<T> & Omit<React.ComponentProps<typeof Textarea>, "id" | "name">) {
+  return (
+    <FieldBody control={control} name={name} label={label}>
+      {({ value, onChange }) => <Textarea id={name} value={value} onChange={onChange} {...input} />}
     </FieldBody>
   );
 }

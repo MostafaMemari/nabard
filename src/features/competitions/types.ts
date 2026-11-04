@@ -44,6 +44,7 @@ export type CompetitionRulesSnapshot = {
 export type Competition = {
   id: string;
   title: string;
+  description?: string | null;
   province: Province;
   level: CompetitionLevel;
   countyIds: string[];

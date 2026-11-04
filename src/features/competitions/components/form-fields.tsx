@@ -2,7 +2,7 @@
 
 import type { ComponentProps } from "react";
 import type { Control } from "react-hook-form";
-import { ControlledDateField, ControlledSelectField, ControlledTextField } from "@/components/shared";
+import { ControlledDateField, ControlledSelectField, ControlledTextAreaField, ControlledTextField } from "@/components/shared";
 import type { CompetitionFormValues } from "../schemas";
 
 type FieldProps = {
@@ -13,6 +13,10 @@ type FieldProps = {
 
 export function FormTextField({ control, name, label, ...input }: FieldProps & Omit<ComponentProps<"input">, "id" | "name">) {
   return <ControlledTextField control={control} name={name} label={label} {...input} />;
+}
+
+export function FormTextAreaField({ control, name, label, ...input }: FieldProps & Omit<ComponentProps<"textarea">, "id" | "name">) {
+  return <ControlledTextAreaField control={control} name={name} label={label} {...input} />;
 }
 
 export function FormSelectField({ control, name, label, items }: FieldProps & { items: Record<string, React.ReactNode> }) {

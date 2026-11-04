@@ -292,9 +292,10 @@ model WeightClass {
 // ───────────── Competitions ─────────────
 
 model Competition {
-  id       String   @id @default(uuid()) @map("id")
-  title    String   @map("title") @db.VarChar(150)
-  province Province @map("province")
+  id          String   @id @default(uuid()) @map("id")
+  title       String   @map("title") @db.VarChar(150)
+  description String?  @map("description") @db.VarChar(2000) // optional note for coaches, written by the province admin
+  province    Province @map("province")
 
   level     CompetitionLevel    @default(PROVINCIAL) @map("level")
   counties  CompetitionCounty[] // one or more counties when level is COUNTY, none when PROVINCIAL

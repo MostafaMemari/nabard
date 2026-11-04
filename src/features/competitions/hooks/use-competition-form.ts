@@ -40,6 +40,7 @@ export function useCompetitionForm(competitionId?: string) {
     if (isEdit && competition) {
       form.reset({
         title: competition.title,
+        description: competition.description ?? "",
         discipline: competition.discipline,
         gender: competition.gender,
         ageCategoryId: competition.ageCategoryId,
@@ -61,6 +62,7 @@ export function useCompetitionForm(competitionId?: string) {
   async function submit(formValues: CompetitionFormValues) {
     const input: CompetitionInput = {
       title: formValues.title.trim(),
+      description: formValues.description.trim() ? formValues.description.trim() : null,
       discipline: formValues.discipline as Discipline,
       gender: formValues.gender as Gender,
       ageCategoryId: formValues.ageCategoryId,

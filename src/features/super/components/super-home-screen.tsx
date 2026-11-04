@@ -13,29 +13,30 @@ const columns = [
     header: "استان",
     cell: (row: ProvinceSummary) => provinceLabels[row.province],
     sortValue: (row: ProvinceSummary) => provinceLabels[row.province],
+    align: "center" as const,
   },
-  { id: "admins", header: "ادمین ها", cell: (row: ProvinceSummary) => toPersianDigits(row.admins), align: "end" as const },
-  { id: "coaches", header: "مربیان", cell: (row: ProvinceSummary) => toPersianDigits(row.coaches), align: "end" as const },
+  { id: "admins", header: "ادمین ها", cell: (row: ProvinceSummary) => toPersianDigits(row.admins), align: "center" as const },
+  { id: "coaches", header: "مربیان", cell: (row: ProvinceSummary) => toPersianDigits(row.coaches), align: "center" as const },
   {
     id: "students",
     header: "هنرجویان",
     cell: (row: ProvinceSummary) => toPersianDigits(row.students),
-    align: "end" as const,
+    align: "center" as const,
     minScreen: "lg" as const,
   },
-  { id: "competitions", header: "مسابقات", cell: (row: ProvinceSummary) => toPersianDigits(row.competitions), align: "end" as const },
+  { id: "competitions", header: "مسابقات", cell: (row: ProvinceSummary) => toPersianDigits(row.competitions), align: "center" as const },
   {
     id: "registrations",
     header: "ثبت نام ها",
     cell: (row: ProvinceSummary) => toPersianDigits(row.registrations),
-    align: "end" as const,
+    align: "center" as const,
     minScreen: "lg" as const,
   },
   {
     id: "pendingPayments",
     header: "پرداخت های در انتظار",
     cell: (row: ProvinceSummary) => toPersianDigits(row.pendingPayments),
-    align: "end" as const,
+    align: "center" as const,
     minScreen: "lg" as const,
   },
 ];
@@ -52,10 +53,10 @@ function SummaryCardRow({ row }: { row: ProvinceSummary }) {
 
   return (
     <div className="rounded-xl border border-border bg-card p-4 shadow-card">
-      <p className="mb-2 text-sm font-medium">{provinceLabels[row.province]}</p>
-      <dl className="grid grid-cols-3 gap-x-3 gap-y-2">
+      <p className="mb-2 text-center text-sm font-medium">{provinceLabels[row.province]}</p>
+      <dl className="grid grid-cols-3 gap-x-3 gap-y-2 text-center">
         {items.map(([label, value]) => (
-          <div key={label} className="flex flex-col gap-0.5">
+          <div key={label} className="flex flex-col items-center gap-0.5">
             <dt className="text-subtle text-muted-foreground">{label}</dt>
             <dd className="text-sm font-medium tabular-nums">{toPersianDigits(value)}</dd>
           </div>

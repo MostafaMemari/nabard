@@ -2,13 +2,17 @@
 
 import { PencilIcon } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { toast } from "sonner";
 import { CountdownChip, DetailPageHeader, ErrorBanner, IconTile, StatusBadge } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { genderLabels, useBelts } from "@/features/base-data";
 import { useRegistrations } from "@/features/registrations";
+import { updateCompetition } from "../api";
 import { useCompetition } from "../hooks/use-competitions";
 import { disciplineIcons, disciplineLabels } from "../labels";
+import { CompetitionDescriptionDialog } from "./competition-description-dialog";
 import { CompetitionInfoSections } from "./competition-info-sections";
 import { CompetitionParticipants } from "./competition-participants";
 import { CompetitionRegistrations } from "./competition-registrations";
@@ -20,6 +24,23 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
   const { registrations } = useRegistrations();
   const { belts } = useBelts();
   const { weightClasses } = useWeightClassesFor(competition);
+  const [descriptionOpen, setDescriptionOpen] = useState(false);
+  const [descriptionSaving, setDescriptionSaving] = useState(false);
+
+  async function saveDescription(description: string) {
+    if (!competition) return;
+    setDescriptionSaving(true);
+    try {
+      await updateCompetition(competitionId, { description: description.trim() ? description.trim() : null });
+      toast.success("توضیحات مسابقه ذخیره شد.");
+      setDescriptionOpen(false);
+      await mutate();
+    } catch {
+      toast.error("ذخیره توضیحات انجام نشد. دوباره تلاش کنید.");
+    } finally {
+      setDescriptionSaving(false);
+    }
+  }
 
   if (isLoading) {
     return (
@@ -69,11 +90,24 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
         {hasRegistrations ? <p className="text-subtle text-muted-foreground">به دلیل وجود ثبت نام، ویرایش این مسابقه ممکن نیست.</p> : null}
       </div>
 
-      <CompetitionInfoSections competition={competition} belts={belts} weightClassCount={weightClasses.length} />
+      <CompetitionInfoSections
+        competition={competition}
+        belts={belts}
+        weightClassCount={weightClasses.length}
+        onEditDescription={() => setDescriptionOpen(true)}
+      />
 
       <CompetitionRegistrations competitionId={competitionId} ageCategoryId={competition.ageCategoryId} gender={competition.gender} />
 
       <CompetitionParticipants competitionId={competitionId} />
+
+      <CompetitionDescriptionDialog
+        open={descriptionOpen}
+        onOpenChange={setDescriptionOpen}
+        initialValue={competition.description ?? ""}
+        loading={descriptionSaving}
+        onConfirm={saveDescription}
+      />
     </div>
   );
 }

@@ -19,6 +19,7 @@ const FEE = BigInt("3500000");
 const canceledRow: CompetitionRow = {
   id: "comp-1",
   title: "مسابقات قهرمانی استان",
+  description: null,
   province: "TEHRAN",
   level: "PROVINCIAL",
   countyIds: [],

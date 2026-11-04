@@ -1904,6 +1904,7 @@ export type WeightClassScalarFieldEnum = (typeof WeightClassScalarFieldEnum)[key
 export const CompetitionScalarFieldEnum = {
   id: 'id',
   title: 'title',
+  description: 'description',
   province: 'province',
   level: 'level',
   discipline: 'discipline',

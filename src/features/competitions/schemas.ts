@@ -5,6 +5,7 @@ import { provinceValues } from "@/lib/provinces";
 export const competitionSchema = z
   .object({
     title: z.string().trim().min(3, "عنوان مسابقه باید حداقل ۳ حرف باشد."),
+    description: z.string().trim().max(2000, "توضیحات حداکثر ۲۰۰۰ نویسه است."),
     discipline: z.string().min(1, "رشته را انتخاب کنید."),
     gender: z.string().min(1, "جنسیت را انتخاب کنید."),
     ageCategoryId: z.string().min(1, "رده سنی را انتخاب کنید."),
@@ -31,6 +32,7 @@ export const competitionSchema = z
 
 export type CompetitionFormValues = {
   title: string;
+  description: string;
   discipline: string;
   gender: string;
   ageCategoryId: string;
@@ -49,6 +51,7 @@ function isIsoDate(value: string): boolean {
 }
 
 const titleField = z.string().trim().min(3, "عنوان مسابقه باید حداقل ۳ حرف باشد.");
+const descriptionField = z.string().trim().max(2000, "توضیحات حداکثر ۲۰۰۰ نویسه است.").nullish(); // absent, null or text
 const disciplineField = z.enum(["KYORUGI", "POOMSAE"], { message: "رشته را انتخاب کنید." });
 const genderField = z.enum(["MALE", "FEMALE"], { message: "جنسیت را انتخاب کنید." });
 const ageCategoryField = z.string().min(1, "رده سنی را انتخاب کنید.");
@@ -75,6 +78,7 @@ const countyIdsField = z.array(z.string().min(1));
 export const createCompetitionSchema = z
   .object({
     title: titleField,
+    description: descriptionField,
     discipline: disciplineField,
     gender: genderField,
     ageCategoryId: ageCategoryField,
@@ -95,6 +99,7 @@ export const createCompetitionSchema = z
 export const updateCompetitionSchema = z
   .object({
     title: titleField.optional(),
+    description: descriptionField,
     discipline: disciplineField.optional(),
     gender: genderField.optional(),
     ageCategoryId: ageCategoryField.optional(),
@@ -134,6 +139,7 @@ export type CompetitionListQuery = z.output<typeof competitionListQuerySchema>;
 
 export const emptyCompetitionForm: CompetitionFormValues = {
   title: "",
+  description: "",
   discipline: "",
   gender: "",
   ageCategoryId: "",

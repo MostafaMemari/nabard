@@ -45,6 +45,7 @@ export function DataTableHeader<T>({
               "h-11 text-subtle font-medium text-muted-foreground",
               columnScreenClass(column),
               column.align === "end" && "text-end",
+              column.align === "center" && "text-center",
             )}
           >
             {column.sortValue ? (

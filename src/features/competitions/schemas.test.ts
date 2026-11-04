@@ -4,6 +4,7 @@ import { cancelCompetitionSchema, competitionSchema, createCompetitionSchema, up
 
 const valid = {
   title: "مسابقات قهرمانی استان",
+  description: "",
   discipline: "KYORUGI",
   gender: "MALE",
   ageCategoryId: "senior",
@@ -154,6 +155,50 @@ describe("updateCompetitionSchema", () => {
     if (!result.success) {
       expect(result.error.issues[0]?.message).toBe("اطلاعاتی برای تغییر ارسال نشده است.");
     }
+  });
+});
+
+describe("competition description", () => {
+  it("accepts a competition without a description", () => {
+    const { description: _omitted, ...withoutDescription } = valid;
+    const result = createCompetitionSchema.safeParse(withoutDescription);
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.description).toBeUndefined();
+    }
+  });
+
+  it("accepts and trims a description on create", () => {
+    const result = createCompetitionSchema.safeParse({ ...valid, description: "  سالن انقلاب  " });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.description).toBe("سالن انقلاب");
+    }
+  });
+
+  it("accepts an explicit null description on create and update", () => {
+    expect(createCompetitionSchema.safeParse({ ...valid, description: null }).success).toBe(true);
+    expect(updateCompetitionSchema.safeParse({ description: null }).success).toBe(true);
+  });
+
+  it("rejects a description longer than 2000 characters", () => {
+    expect(createCompetitionSchema.safeParse({ ...valid, description: "x".repeat(2001) }).success).toBe(false);
+    expect(updateCompetitionSchema.safeParse({ description: "x".repeat(2001) }).success).toBe(false);
+  });
+
+  it("accepts a description-only update", () => {
+    const result = updateCompetitionSchema.safeParse({ description: "برنامه روز مسابقه" });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.description).toBe("برنامه روز مسابقه");
+    }
+  });
+
+  it("accepts an empty description in the form", () => {
+    expect(competitionSchema.safeParse({ ...valid, description: "" }).success).toBe(true);
   });
 });
 

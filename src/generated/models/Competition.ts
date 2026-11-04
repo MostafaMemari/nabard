@@ -37,6 +37,7 @@ export type CompetitionSumAggregateOutputType = {
 export type CompetitionMinAggregateOutputType = {
   id: string | null
   title: string | null
+  description: string | null
   province: $Enums.Province | null
   level: $Enums.CompetitionLevel | null
   discipline: $Enums.Discipline | null
@@ -58,6 +59,7 @@ export type CompetitionMinAggregateOutputType = {
 export type CompetitionMaxAggregateOutputType = {
   id: string | null
   title: string | null
+  description: string | null
   province: $Enums.Province | null
   level: $Enums.CompetitionLevel | null
   discipline: $Enums.Discipline | null
@@ -79,6 +81,7 @@ export type CompetitionMaxAggregateOutputType = {
 export type CompetitionCountAggregateOutputType = {
   id: number
   title: number
+  description: number
   province: number
   level: number
   discipline: number
@@ -111,6 +114,7 @@ export type CompetitionSumAggregateInputType = {
 export type CompetitionMinAggregateInputType = {
   id?: true
   title?: true
+  description?: true
   province?: true
   level?: true
   discipline?: true
@@ -132,6 +136,7 @@ export type CompetitionMinAggregateInputType = {
 export type CompetitionMaxAggregateInputType = {
   id?: true
   title?: true
+  description?: true
   province?: true
   level?: true
   discipline?: true
@@ -153,6 +158,7 @@ export type CompetitionMaxAggregateInputType = {
 export type CompetitionCountAggregateInputType = {
   id?: true
   title?: true
+  description?: true
   province?: true
   level?: true
   discipline?: true
@@ -262,6 +268,7 @@ export type CompetitionGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 export type CompetitionGroupByOutputType = {
   id: string
   title: string
+  description: string | null
   province: $Enums.Province
   level: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -307,6 +314,7 @@ export type CompetitionWhereInput = {
   NOT?: Prisma.CompetitionWhereInput | Prisma.CompetitionWhereInput[]
   id?: Prisma.StringFilter<"Competition"> | string
   title?: Prisma.StringFilter<"Competition"> | string
+  description?: Prisma.StringNullableFilter<"Competition"> | string | null
   province?: Prisma.EnumProvinceFilter<"Competition"> | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFilter<"Competition"> | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFilter<"Competition"> | $Enums.Discipline
@@ -336,6 +344,7 @@ export type CompetitionWhereInput = {
 export type CompetitionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   province?: Prisma.SortOrder
   level?: Prisma.SortOrder
   discipline?: Prisma.SortOrder
@@ -368,6 +377,7 @@ export type CompetitionWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.CompetitionWhereInput[]
   NOT?: Prisma.CompetitionWhereInput | Prisma.CompetitionWhereInput[]
   title?: Prisma.StringFilter<"Competition"> | string
+  description?: Prisma.StringNullableFilter<"Competition"> | string | null
   province?: Prisma.EnumProvinceFilter<"Competition"> | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFilter<"Competition"> | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFilter<"Competition"> | $Enums.Discipline
@@ -397,6 +407,7 @@ export type CompetitionWhereUniqueInput = Prisma.AtLeast<{
 export type CompetitionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   province?: Prisma.SortOrder
   level?: Prisma.SortOrder
   discipline?: Prisma.SortOrder
@@ -427,6 +438,7 @@ export type CompetitionScalarWhereWithAggregatesInput = {
   NOT?: Prisma.CompetitionScalarWhereWithAggregatesInput | Prisma.CompetitionScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Competition"> | string
   title?: Prisma.StringWithAggregatesFilter<"Competition"> | string
+  description?: Prisma.StringNullableWithAggregatesFilter<"Competition"> | string | null
   province?: Prisma.EnumProvinceWithAggregatesFilter<"Competition"> | $Enums.Province
   level?: Prisma.EnumCompetitionLevelWithAggregatesFilter<"Competition"> | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineWithAggregatesFilter<"Competition"> | $Enums.Discipline
@@ -449,6 +461,7 @@ export type CompetitionScalarWhereWithAggregatesInput = {
 export type CompetitionCreateInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -475,6 +488,7 @@ export type CompetitionCreateInput = {
 export type CompetitionUncheckedCreateInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -501,6 +515,7 @@ export type CompetitionUncheckedCreateInput = {
 export type CompetitionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -527,6 +542,7 @@ export type CompetitionUpdateInput = {
 export type CompetitionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -553,6 +569,7 @@ export type CompetitionUncheckedUpdateInput = {
 export type CompetitionCreateManyInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -575,6 +592,7 @@ export type CompetitionCreateManyInput = {
 export type CompetitionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -594,6 +612,7 @@ export type CompetitionUpdateManyMutationInput = {
 export type CompetitionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -626,6 +645,7 @@ export type CompetitionOrderByRelationAggregateInput = {
 export type CompetitionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   province?: Prisma.SortOrder
   level?: Prisma.SortOrder
   discipline?: Prisma.SortOrder
@@ -652,6 +672,7 @@ export type CompetitionAvgOrderByAggregateInput = {
 export type CompetitionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   province?: Prisma.SortOrder
   level?: Prisma.SortOrder
   discipline?: Prisma.SortOrder
@@ -673,6 +694,7 @@ export type CompetitionMaxOrderByAggregateInput = {
 export type CompetitionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
+  description?: Prisma.SortOrder
   province?: Prisma.SortOrder
   level?: Prisma.SortOrder
   discipline?: Prisma.SortOrder
@@ -905,6 +927,7 @@ export type CompetitionUpdateOneRequiredWithoutRegistrationsNestedInput = {
 export type CompetitionCreateWithoutMinBeltInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -930,6 +953,7 @@ export type CompetitionCreateWithoutMinBeltInput = {
 export type CompetitionUncheckedCreateWithoutMinBeltInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -965,6 +989,7 @@ export type CompetitionCreateManyMinBeltInputEnvelope = {
 export type CompetitionCreateWithoutMaxBeltInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -990,6 +1015,7 @@ export type CompetitionCreateWithoutMaxBeltInput = {
 export type CompetitionUncheckedCreateWithoutMaxBeltInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -1044,6 +1070,7 @@ export type CompetitionScalarWhereInput = {
   NOT?: Prisma.CompetitionScalarWhereInput | Prisma.CompetitionScalarWhereInput[]
   id?: Prisma.StringFilter<"Competition"> | string
   title?: Prisma.StringFilter<"Competition"> | string
+  description?: Prisma.StringNullableFilter<"Competition"> | string | null
   province?: Prisma.EnumProvinceFilter<"Competition"> | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFilter<"Competition"> | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFilter<"Competition"> | $Enums.Discipline
@@ -1082,6 +1109,7 @@ export type CompetitionUpdateManyWithWhereWithoutMaxBeltInput = {
 export type CompetitionCreateWithoutAgeCategoryInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -1107,6 +1135,7 @@ export type CompetitionCreateWithoutAgeCategoryInput = {
 export type CompetitionUncheckedCreateWithoutAgeCategoryInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -1158,6 +1187,7 @@ export type CompetitionUpdateManyWithWhereWithoutAgeCategoryInput = {
 export type CompetitionCreateWithoutCountiesInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -1183,6 +1213,7 @@ export type CompetitionCreateWithoutCountiesInput = {
 export type CompetitionUncheckedCreateWithoutCountiesInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -1224,6 +1255,7 @@ export type CompetitionUpdateToOneWithWhereWithoutCountiesInput = {
 export type CompetitionUpdateWithoutCountiesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -1249,6 +1281,7 @@ export type CompetitionUpdateWithoutCountiesInput = {
 export type CompetitionUncheckedUpdateWithoutCountiesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -1274,6 +1307,7 @@ export type CompetitionUncheckedUpdateWithoutCountiesInput = {
 export type CompetitionCreateWithoutDeadlineExtensionsInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -1299,6 +1333,7 @@ export type CompetitionCreateWithoutDeadlineExtensionsInput = {
 export type CompetitionUncheckedCreateWithoutDeadlineExtensionsInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -1340,6 +1375,7 @@ export type CompetitionUpdateToOneWithWhereWithoutDeadlineExtensionsInput = {
 export type CompetitionUpdateWithoutDeadlineExtensionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -1365,6 +1401,7 @@ export type CompetitionUpdateWithoutDeadlineExtensionsInput = {
 export type CompetitionUncheckedUpdateWithoutDeadlineExtensionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -1390,6 +1427,7 @@ export type CompetitionUncheckedUpdateWithoutDeadlineExtensionsInput = {
 export type CompetitionCreateWithoutPaymentsInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -1415,6 +1453,7 @@ export type CompetitionCreateWithoutPaymentsInput = {
 export type CompetitionUncheckedCreateWithoutPaymentsInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -1456,6 +1495,7 @@ export type CompetitionUpdateToOneWithWhereWithoutPaymentsInput = {
 export type CompetitionUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -1481,6 +1521,7 @@ export type CompetitionUpdateWithoutPaymentsInput = {
 export type CompetitionUncheckedUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -1506,6 +1547,7 @@ export type CompetitionUncheckedUpdateWithoutPaymentsInput = {
 export type CompetitionCreateWithoutRegistrationsInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -1531,6 +1573,7 @@ export type CompetitionCreateWithoutRegistrationsInput = {
 export type CompetitionUncheckedCreateWithoutRegistrationsInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -1572,6 +1615,7 @@ export type CompetitionUpdateToOneWithWhereWithoutRegistrationsInput = {
 export type CompetitionUpdateWithoutRegistrationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -1597,6 +1641,7 @@ export type CompetitionUpdateWithoutRegistrationsInput = {
 export type CompetitionUncheckedUpdateWithoutRegistrationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -1622,6 +1667,7 @@ export type CompetitionUncheckedUpdateWithoutRegistrationsInput = {
 export type CompetitionCreateManyMinBeltInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -1643,6 +1689,7 @@ export type CompetitionCreateManyMinBeltInput = {
 export type CompetitionCreateManyMaxBeltInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -1664,6 +1711,7 @@ export type CompetitionCreateManyMaxBeltInput = {
 export type CompetitionUpdateWithoutMinBeltInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -1689,6 +1737,7 @@ export type CompetitionUpdateWithoutMinBeltInput = {
 export type CompetitionUncheckedUpdateWithoutMinBeltInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -1714,6 +1763,7 @@ export type CompetitionUncheckedUpdateWithoutMinBeltInput = {
 export type CompetitionUncheckedUpdateManyWithoutMinBeltInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -1735,6 +1785,7 @@ export type CompetitionUncheckedUpdateManyWithoutMinBeltInput = {
 export type CompetitionUpdateWithoutMaxBeltInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -1760,6 +1811,7 @@ export type CompetitionUpdateWithoutMaxBeltInput = {
 export type CompetitionUncheckedUpdateWithoutMaxBeltInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -1785,6 +1837,7 @@ export type CompetitionUncheckedUpdateWithoutMaxBeltInput = {
 export type CompetitionUncheckedUpdateManyWithoutMaxBeltInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -1806,6 +1859,7 @@ export type CompetitionUncheckedUpdateManyWithoutMaxBeltInput = {
 export type CompetitionCreateManyAgeCategoryInput = {
   id?: string
   title: string
+  description?: string | null
   province: $Enums.Province
   level?: $Enums.CompetitionLevel
   discipline: $Enums.Discipline
@@ -1827,6 +1881,7 @@ export type CompetitionCreateManyAgeCategoryInput = {
 export type CompetitionUpdateWithoutAgeCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -1852,6 +1907,7 @@ export type CompetitionUpdateWithoutAgeCategoryInput = {
 export type CompetitionUncheckedUpdateWithoutAgeCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -1877,6 +1933,7 @@ export type CompetitionUncheckedUpdateWithoutAgeCategoryInput = {
 export type CompetitionUncheckedUpdateManyWithoutAgeCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   province?: Prisma.EnumProvinceFieldUpdateOperationsInput | $Enums.Province
   level?: Prisma.EnumCompetitionLevelFieldUpdateOperationsInput | $Enums.CompetitionLevel
   discipline?: Prisma.EnumDisciplineFieldUpdateOperationsInput | $Enums.Discipline
@@ -1956,6 +2013,7 @@ export type CompetitionCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.
 export type CompetitionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   title?: boolean
+  description?: boolean
   province?: boolean
   level?: boolean
   discipline?: boolean
@@ -1986,6 +2044,7 @@ export type CompetitionSelect<ExtArgs extends runtime.Types.Extensions.InternalA
 export type CompetitionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   title?: boolean
+  description?: boolean
   province?: boolean
   level?: boolean
   discipline?: boolean
@@ -2011,6 +2070,7 @@ export type CompetitionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
 export type CompetitionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   title?: boolean
+  description?: boolean
   province?: boolean
   level?: boolean
   discipline?: boolean
@@ -2036,6 +2096,7 @@ export type CompetitionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
 export type CompetitionSelectScalar = {
   id?: boolean
   title?: boolean
+  description?: boolean
   province?: boolean
   level?: boolean
   discipline?: boolean
@@ -2055,7 +2116,7 @@ export type CompetitionSelectScalar = {
   updatedAt?: boolean
 }
 
-export type CompetitionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "province" | "level" | "discipline" | "gender" | "ageCategoryId" | "minBeltId" | "maxBeltId" | "feePerStudent" | "payeeCardNumber" | "payeeCardHolder" | "registrationDeadline" | "eventDate" | "status" | "cancelReason" | "rulesSnapshot" | "createdAt" | "updatedAt", ExtArgs["result"]["competition"]>
+export type CompetitionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "province" | "level" | "discipline" | "gender" | "ageCategoryId" | "minBeltId" | "maxBeltId" | "feePerStudent" | "payeeCardNumber" | "payeeCardHolder" | "registrationDeadline" | "eventDate" | "status" | "cancelReason" | "rulesSnapshot" | "createdAt" | "updatedAt", ExtArgs["result"]["competition"]>
 export type CompetitionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   counties?: boolean | Prisma.Competition$countiesArgs<ExtArgs>
   ageCategory?: boolean | Prisma.AgeCategoryDefaultArgs<ExtArgs>
@@ -2091,6 +2152,7 @@ export type $CompetitionPayload<ExtArgs extends runtime.Types.Extensions.Interna
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     title: string
+    description: string | null
     province: $Enums.Province
     level: $Enums.CompetitionLevel
     discipline: $Enums.Discipline
@@ -2540,6 +2602,7 @@ export interface Prisma__CompetitionClient<T, Null = never, ExtArgs extends runt
 export interface CompetitionFieldRefs {
   readonly id: Prisma.FieldRef<"Competition", 'String'>
   readonly title: Prisma.FieldRef<"Competition", 'String'>
+  readonly description: Prisma.FieldRef<"Competition", 'String'>
   readonly province: Prisma.FieldRef<"Competition", 'Province'>
   readonly level: Prisma.FieldRef<"Competition", 'CompetitionLevel'>
   readonly discipline: Prisma.FieldRef<"Competition", 'Discipline'>

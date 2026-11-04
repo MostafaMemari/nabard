@@ -6,7 +6,7 @@ export type DataTableColumn<T> = {
   header: string;
   cell: (row: T) => ReactNode;
   sortValue?: (row: T) => string | number;
-  align?: "start" | "end";
+  align?: "start" | "center" | "end";
   minScreen?: "lg" | "xl";
 };
 

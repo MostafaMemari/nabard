@@ -8,7 +8,7 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useCounties } from "@/features/counties";
 import { competitionLevelLabels, disciplineLabels } from "../labels";
 import type { CompetitionFormValues } from "../schemas";
-import { FormSelectField, FormTextField } from "./form-fields";
+import { FormSelectField, FormTextAreaField, FormTextField } from "./form-fields";
 
 export function BasicInfoSection({ control }: { control: Control<CompetitionFormValues> }) {
   const level = useWatch({ control, name: "level" });
@@ -17,6 +17,13 @@ export function BasicInfoSection({ control }: { control: Control<CompetitionForm
   return (
     <FormSection title="اطلاعات پایه" description="نام، سطح و رشته ورزشی مسابقه." icon={TrophyIcon}>
       <FormTextField control={control} name="title" label="عنوان مسابقه" placeholder="مثلاً مسابقات قهرمانی استان تهران" />
+      <FormTextAreaField
+        control={control}
+        name="description"
+        label="توضیحات (اختیاری)"
+        placeholder="نکته هایی برای مربی ها؛ مثلاً آدرس سالن، برنامه روز مسابقه یا مدارک لازم."
+        rows={4}
+      />
       <FormSelectField control={control} name="level" label="سطح مسابقه" items={competitionLevelLabels} />
       {level === "COUNTY" ? (
         <Controller

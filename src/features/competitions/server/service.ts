@@ -32,6 +32,7 @@ const DEFAULT_PAGE_SIZE = 100;
 export type CompetitionRecord = {
   id: string;
   title: string;
+  description: string | null;
   province: string;
   level: CompetitionLevel;
   countyIds: string[];
@@ -102,6 +103,7 @@ function toRecord(row: CompetitionRow, belts: Belt[], categories: AgeCategoryRow
   return {
     id: row.id,
     title: row.title,
+    description: row.description,
     province: row.province,
     level: row.level,
     countyIds: row.countyIds,
@@ -396,6 +398,7 @@ export async function createCompetition(
 
   const data: NewCompetitionData = {
     title: input.title,
+    description: input.description ? input.description : null,
     province: provinceOf(identity),
     level: input.level,
     countyIds,
@@ -430,7 +433,10 @@ export async function updateCompetition(
   if (!row || row.province !== identity.province) throw competitionNotFound();
 
   const registrations = await repo.countRegistrations(id);
-  if (registrations > 0) {
+  // The description is the admin's note to coaches; it stays editable even when
+  // the rest of the competition is locked by registrations.
+  const isDescriptionOnly = input.description !== undefined && Object.keys(input).length === 1;
+  if (registrations > 0 && !isDescriptionOnly) {
     throw new AppError(409, "CONFLICT", "این مسابقه ثبت نام دارد و قابل ویرایش نیست.");
   }
 
@@ -446,6 +452,7 @@ export async function updateCompetition(
 
   const data: Record<string, unknown> = {};
   if (input.title !== undefined) data.title = input.title;
+  if (input.description !== undefined) data.description = input.description ? input.description : null;
   if (input.discipline !== undefined) data.discipline = input.discipline;
   if (input.gender !== undefined) data.gender = input.gender;
   if (input.ageCategoryId !== undefined) data.ageCategoryId = input.ageCategoryId;

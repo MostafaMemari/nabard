@@ -35,7 +35,14 @@ export function DataTableBody<T>({
         ? skeletonKeys.map((key) => (
             <TableRow key={key} className="h-13 hover:bg-transparent">
               {columns.map((column) => (
-                <TableCell key={column.id} className={columnScreenClass(column)}>
+                <TableCell
+                  key={column.id}
+                  className={cn(
+                    columnScreenClass(column),
+                    column.align === "end" && "text-end",
+                    column.align === "center" && "text-center",
+                  )}
+                >
                   <Skeleton className="h-4 w-24" />
                 </TableCell>
               ))}
@@ -61,7 +68,12 @@ export function DataTableBody<T>({
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
-                  className={cn("text-sm", columnScreenClass(column), column.align === "end" && "text-end tabular-nums")}
+                  className={cn(
+                    "text-sm",
+                    columnScreenClass(column),
+                    column.align === "end" && "text-end tabular-nums",
+                    column.align === "center" && "text-center tabular-nums",
+                  )}
                 >
                   {column.cell(row)}
                 </TableCell>

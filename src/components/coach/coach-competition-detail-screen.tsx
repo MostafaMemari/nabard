@@ -69,6 +69,12 @@ export function CoachCompetitionDetailScreen({ competitionId }: { competitionId:
             <BeltChips belts={belts} ids={competition.beltIds} />
           </div>
         ) : null}
+        {competition.description ? (
+          <div className="flex flex-col gap-2 rounded-lg border border-border bg-muted/40 p-3">
+            <span className="text-subtle text-sm font-medium text-muted-foreground">توضیحات مسابقه:</span>
+            <p className="text-sm leading-7 whitespace-pre-line">{competition.description}</p>
+          </div>
+        ) : null}
       </SectionCard>
     </div>
   );
