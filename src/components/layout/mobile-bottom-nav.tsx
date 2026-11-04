@@ -3,8 +3,9 @@
 import { cn } from "cn";
 import { LayoutGridIcon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { SidebarNavGroup, SidebarNavItem } from "./app-sidebar";
+import { useAboveDesktop } from "./use-above-desktop";
 import { WorkspaceSheet } from "./workspace-sheet";
 
 function BottomNavItem({ item, active }: { item: SidebarNavItem; active: boolean }) {
@@ -44,7 +45,16 @@ export function MobileBottomNav({
   className?: string;
 }) {
   const [workspaceOpen, setWorkspaceOpen] = useState(false);
+  const aboveDesktop = useAboveDesktop();
   const workspaceActive = moreItems.some((item) => item.id === active);
+
+  // The sheet lives in a portal, so the nav's `lg:hidden` cannot hide it when
+  // the viewport crosses to desktop; close it on the breakpoint crossing.
+  useEffect(() => {
+    if (aboveDesktop) {
+      setWorkspaceOpen(false);
+    }
+  }, [aboveDesktop]);
 
   return (
     <>
