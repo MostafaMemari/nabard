@@ -87,7 +87,7 @@ export function StudentsFilterSheet({
           </section>
         </div>
         <footer className="mt-auto flex items-center justify-between gap-2 border-t px-5 py-4">
-          <span className="text-subtle text-muted-foreground">{formatNumber(resultCount)} هنرجو</span>
+          <span className="text-subtle text-muted-foreground tabular-nums">{formatNumber(resultCount)} هنرجو</span>
           <div className="flex items-center gap-2">
             <Button
               type="button"

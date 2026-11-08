@@ -1,5 +1,6 @@
 "use client";
 
+import { MousePointerClickIcon } from "lucide-react";
 import { useState } from "react";
 import { EmptyState, ErrorBanner, SkeletonRows, StateCard } from "@/components/shared";
 import { Field, FieldLabel } from "@/components/ui/field";
@@ -73,7 +74,7 @@ export function WeightClassesTab({ ageCategories }: { ageCategories: AgeCategory
         </div>
 
         {!selected ? (
-          <EmptyState title="یک رده سنی و جنسیت انتخاب کنید تا رده های وزنی آن نمایش داده شود." />
+          <EmptyState icon={MousePointerClickIcon} title="یک رده سنی و جنسیت انتخاب کنید تا رده های وزنی آن نمایش داده شود." />
         ) : set.isLoading ? (
           <StateCard className="p-4">
             <SkeletonRows rows={4} className="h-11" />

@@ -1,5 +1,6 @@
 "use client";
 
+import { ClipboardListIcon } from "lucide-react";
 import { DataTable, EmptyState, ErrorBanner, SkeletonRows } from "@/components/shared";
 import type { Gender } from "@/features/base-data";
 import { useWeightClasses } from "@/features/base-data";
@@ -42,7 +43,7 @@ export function CompetitionRegistrationsTable({
   }
 
   if (rows.length === 0) {
-    return <EmptyState title="هنوز ثبت نامی برای این مسابقه انجام نشده است." />;
+    return <EmptyState icon={ClipboardListIcon} title="هنوز ثبت نامی برای این مسابقه انجام نشده است." />;
   }
 
   return (

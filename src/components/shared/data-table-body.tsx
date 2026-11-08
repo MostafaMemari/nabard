@@ -62,8 +62,22 @@ export function DataTableBody<T>({
         ? rows.map((row) => (
             <TableRow
               key={getRowId(row)}
-              className={cn("h-13", onRowClick && "cursor-pointer")}
+              className={cn(
+                "h-13",
+                onRowClick &&
+                  "cursor-pointer focus-visible:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/50",
+              )}
               onClick={onRowClick ? () => onRowClick(row) : undefined}
+              tabIndex={onRowClick ? 0 : undefined}
+              onKeyDown={
+                onRowClick
+                  ? (event) => {
+                      if (event.key === "Enter") {
+                        onRowClick(row);
+                      }
+                    }
+                  : undefined
+              }
             >
               {columns.map((column) => (
                 <TableCell

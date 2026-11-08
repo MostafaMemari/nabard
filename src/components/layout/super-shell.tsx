@@ -25,9 +25,12 @@ const baseData: SidebarNavItem = {
 const coaches: SidebarNavItem = { id: "coaches", label: "مربیان", href: "/super/coaches", icon: UsersIcon };
 const competitions: SidebarNavItem = { id: "competitions", label: "مسابقات", href: "/super/competitions", icon: TrophyIcon };
 
-const navItems: SidebarNavItem[] = [home, admins, counties, baseData, coaches, competitions];
+const navGroups: SidebarNavGroup[] = [
+  { label: "مدیریت", items: [home, admins, counties, baseData] },
+  { label: "مشاهده", items: [coaches, competitions] },
+];
 
-const navGroups: SidebarNavGroup[] = [{ items: navItems }];
+const navItems: SidebarNavItem[] = [home, admins, counties, baseData, coaches, competitions];
 
 const mobilePrimary: SidebarNavItem[] = [home, admins, baseData, competitions];
 const mobileMore: SidebarNavItem[] = navItems.filter((item) => !mobilePrimary.includes(item));

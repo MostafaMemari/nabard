@@ -49,7 +49,7 @@ export function DeadlineExtensionHistory({ competitionId, open }: { competitionI
           ))}
         </ol>
       )}
-      <p className="text-xs text-muted-foreground">{toPersianDigits(extensions.length)} تمدید ثبت شده</p>
+      <p className="text-xs text-muted-foreground tabular-nums">{toPersianDigits(extensions.length)} تمدید ثبت شده</p>
     </section>
   );
 }

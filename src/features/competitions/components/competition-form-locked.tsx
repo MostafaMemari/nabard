@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 export function CompetitionFormLocked({ competitionId }: { competitionId: string }) {
   return (
     <FormContainer variant="standard">
-      <PageHeader title="ویرایش مسابقه" />
+      <PageHeader title="ویرایش مسابقه" description="اطلاعات این مسابقه پس از شروع ثبت نام قفل می شود." />
       <div className="mt-4 rounded-xl border border-border bg-card shadow-card">
         <EmptyState
           icon={LockIcon}

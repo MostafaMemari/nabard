@@ -1,5 +1,7 @@
 "use client";
 
+import { UsersIcon } from "lucide-react";
+import { EmptyState } from "@/components/shared";
 import { SelectionGroup } from "./selection-group";
 import { SelectionItem } from "./selection-item";
 import type { SelectionRow } from "./selection-row";
@@ -27,7 +29,7 @@ export function StudentSelectionList({
   if (rows.length === 0) {
     return (
       <div className="rounded-xl border border-border bg-card shadow-card">
-        <p className="px-4 py-10 text-center text-sm text-muted-foreground">هنوز هنرجویی اضافه نکرده اید.</p>
+        <EmptyState icon={UsersIcon} title="هنوز هنرجویی اضافه نکرده اید." />
       </div>
     );
   }

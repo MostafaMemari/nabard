@@ -29,7 +29,7 @@ export function ReceiptUploadField({ file, onChange }: { file: File | null; onCh
             className="h-48 w-full rounded-lg object-cover"
           />
           <div className="flex items-center justify-between gap-3">
-            <span className="text-subtle min-w-0 truncate text-muted-foreground">
+            <span className="text-subtle min-w-0 truncate text-muted-foreground tabular-nums">
               {file.name} · {formatNumber(Math.round(file.size / 1024))} کیلوبایت
             </span>
             <Button type="button" variant="ghost" size="icon-sm" aria-label="حذف تصویر رسید" onClick={clear}>

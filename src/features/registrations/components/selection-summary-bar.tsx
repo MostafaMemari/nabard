@@ -17,7 +17,9 @@ export function SelectionSummaryBar({
 }) {
   const summary = (
     <>
-      <span className="text-sm font-medium">{count > 0 ? `${formatNumber(count)} هنرجو انتخاب شد` : "هنرجویی انتخاب نشده است"}</span>
+      <span className="text-sm font-medium tabular-nums">
+        {count > 0 ? `${formatNumber(count)} هنرجو انتخاب شد` : "هنرجویی انتخاب نشده است"}
+      </span>
       <span className="text-subtle text-muted-foreground">جمع هزینه: {totalLabel}</span>
     </>
   );

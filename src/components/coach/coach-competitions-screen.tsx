@@ -1,5 +1,6 @@
 "use client";
 
+import { TrophyIcon } from "lucide-react";
 import { useMemo } from "react";
 import { EmptyState, ErrorBanner, PageHeader, StateCard } from "@/components/shared";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -32,7 +33,7 @@ export function CoachCompetitionsScreen() {
         </div>
       ) : openCompetitions.length === 0 ? (
         <StateCard>
-          <EmptyState title="مسابقه بازی برای ثبت نام وجود ندارد." />
+          <EmptyState icon={TrophyIcon} title="مسابقه بازی برای ثبت نام وجود ندارد." />
         </StateCard>
       ) : (
         <CoachCompetitionList competitions={openCompetitions} />

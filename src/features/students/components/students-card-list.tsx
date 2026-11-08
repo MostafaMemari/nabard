@@ -26,7 +26,7 @@ export function StudentCardList({
             <button
               type="button"
               onClick={() => onEdit(student)}
-              className="flex min-h-11 w-full items-center gap-3 rounded-t-xl p-4 pb-3 text-start transition-colors duration-150 hover:bg-muted/50 active:bg-muted"
+              className="flex min-h-11 w-full items-center gap-3 rounded-t-xl p-4 pb-3 text-start transition-colors duration-150 hover:bg-muted/50 active:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring/50"
             >
               <Avatar id={student.id} name={student.fullName} size="md" src={student.photoUrl ?? undefined} />
               <span className="min-w-0 flex-1 truncate text-sm font-medium">{student.fullName}</span>

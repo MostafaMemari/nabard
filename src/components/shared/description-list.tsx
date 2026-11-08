@@ -11,7 +11,7 @@ export function DescriptionList({ items }: { items: DescriptionItem[] }) {
       {items.map((item) => (
         <div key={item.term} className="contents">
           <dt className="text-subtle text-muted-foreground">{item.term}</dt>
-          <dd className="text-sm">{item.value}</dd>
+          <dd className="text-sm tabular-nums">{item.value}</dd>
         </div>
       ))}
     </dl>

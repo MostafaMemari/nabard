@@ -34,8 +34,8 @@ export function StudentFormScreen() {
             autoComplete="off"
           />
           <ControlledDateField control={form.control} name="birthDate" label="تاریخ تولد" />
-          <ControlledDateField control={form.control} name="insuranceDate" label="تاریخ بیمه ورزشی" />
-          <ControlledDateField control={form.control} name="tkdBankChargeDate" label="تاریخ شارژ بانک اطلاعات تکواندو" />
+          <ControlledDateField control={form.control} name="insuranceDate" label="تاریخ بیمه ورزشی (اختیاری)" />
+          <ControlledDateField control={form.control} name="tkdBankChargeDate" label="تاریخ شارژ بانک اطلاعات تکواندو (اختیاری)" />
         </FormSection>
 
         <p className="flex items-start gap-2 rounded-xl border border-border bg-muted/40 px-3 py-2.5 text-subtle text-muted-foreground">

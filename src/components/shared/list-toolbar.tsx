@@ -4,6 +4,7 @@ import { SlidersHorizontalIcon } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { toPersianDigits } from "@/lib/format";
 import type { useSearchParamText } from "@/lib/use-search-param";
 import { type FilterTab, FilterTabs } from "./filter-tabs";
 import { SearchInput } from "./search-input";
@@ -44,8 +45,8 @@ export function ListToolbar({
           <SlidersHorizontalIcon data-icon="inline-start" />
           فیلترها
           {activeCount > 0 ? (
-            <span className="inline-flex size-5 items-center justify-center rounded-full bg-primary-subtle text-xs font-medium text-primary">
-              ۱
+            <span className="inline-flex size-5 items-center justify-center rounded-full bg-primary-subtle text-xs font-medium text-primary tabular-nums">
+              {toPersianDigits(activeCount)}
             </span>
           ) : null}
         </Button>

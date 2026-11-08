@@ -14,11 +14,11 @@ export function CompetitionParticipants({ competitionId }: { competitionId: stri
   const csvUrl = buildApiUrl(`/api/v1/competitions/${competitionId}/participants.csv`);
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-card print:rounded-none print:border-0 print:bg-white print:p-0 print:shadow-none">
+    <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 shadow-card md:p-6 print:rounded-none print:border-0 print:bg-white print:p-0 print:shadow-none">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <h2 className="text-base font-semibold">شرکت کنندگان تأیید شده</h2>
-          <span className="text-subtle text-muted-foreground">({toPersianDigits(participants.length)} نفر)</span>
+          <span className="text-subtle text-muted-foreground tabular-nums">({toPersianDigits(participants.length)} نفر)</span>
         </div>
         <div className="flex items-center gap-2 print:hidden">
           <Button variant="ghost" size="sm" onClick={() => window.print()}>

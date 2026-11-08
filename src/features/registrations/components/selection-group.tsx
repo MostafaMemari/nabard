@@ -5,7 +5,7 @@ export function SelectionGroup({ title, count, children }: { title: string; coun
   return (
     <section className="flex flex-col gap-3">
       <h3 className="text-sm font-semibold">
-        {title} <span className="font-normal text-muted-foreground">({formatNumber(count)})</span>
+        {title} <span className="font-normal text-muted-foreground tabular-nums">({formatNumber(count)})</span>
       </h3>
       <div className="flex flex-col gap-3">{children}</div>
     </section>

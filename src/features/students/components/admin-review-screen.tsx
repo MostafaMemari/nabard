@@ -36,7 +36,7 @@ export function AdminReviewScreen() {
         error={error}
         onRetry={() => mutate()}
         onRowClick={(row) => router.push(`/admin/profiles/${row.id}`)}
-        renderCard={(row) => <AdminReviewCard student={row} />}
+        renderCard={(row) => <AdminReviewCard student={row} href={`/admin/profiles/${row.id}`} />}
         emptyIcon={UserCheckIcon}
         emptyTitle="پروفایلی برای بررسی وجود ندارد."
         toolbar={

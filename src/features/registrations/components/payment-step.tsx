@@ -47,13 +47,18 @@ export function PaymentStep({
       </FormSection>
       <FormSection title="رسید پرداخت" description="تصویر رسید کارت به کارت را بارگذاری کنید.">
         <ReceiptUploadField file={file} onChange={setFile} />
-        {error ? <p className="text-subtle text-danger">{error}</p> : null}
+        {error ? (
+          <p role="alert" className="text-subtle text-danger">
+            {error}
+          </p>
+        ) : null}
       </FormSection>
-      <div className="flex items-center justify-end gap-3">
-        <Button type="button" variant="outline" className="h-11 md:h-10" onClick={onBack} disabled={submitting}>
+      {/* Same sticky action bar as FormActions, with بازگشت instead of a cancel link. */}
+      <div className="sticky bottom-0 z-10 flex items-center justify-end gap-3 rounded-xl border border-border bg-card px-4 py-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)] shadow-card">
+        <Button type="button" variant="outline" onClick={onBack} disabled={submitting}>
           بازگشت
         </Button>
-        <Button type="button" className="h-11 md:h-10" onClick={submit} disabled={submitting}>
+        <Button type="button" onClick={submit} disabled={submitting}>
           ثبت پرداخت
         </Button>
       </div>

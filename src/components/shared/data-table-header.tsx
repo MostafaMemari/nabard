@@ -52,7 +52,7 @@ export function DataTableHeader<T>({
               <button
                 type="button"
                 onClick={() => onToggleSort(column.id)}
-                className="inline-flex items-center gap-1 hover:text-foreground"
+                className="inline-flex items-center gap-1 rounded-sm hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
               >
                 {column.header}
                 <SortIcon active={sort?.columnId === column.id} direction={sort?.direction ?? "asc"} />

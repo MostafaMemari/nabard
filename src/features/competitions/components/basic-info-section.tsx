@@ -21,7 +21,7 @@ export function BasicInfoSection({ control }: { control: Control<CompetitionForm
         control={control}
         name="description"
         label="توضیحات (اختیاری)"
-        placeholder="نکته هایی برای مربی ها؛ مثلاً آدرس سالن، برنامه روز مسابقه یا مدارک لازم."
+        placeholder="مثلاً آدرس سالن یا مدارک لازم"
         rows={4}
       />
       <FormSelectField control={control} name="level" label="سطح مسابقه" items={competitionLevelLabels} />
