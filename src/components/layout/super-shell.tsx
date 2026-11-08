@@ -1,6 +1,6 @@
 "use client";
 
-import { HouseIcon, LayersIcon, MapPinnedIcon, ShieldCheckIcon, TrophyIcon, UsersIcon } from "lucide-react";
+import { ChartColumnBigIcon, HouseIcon, LayersIcon, MapPinnedIcon, ShieldCheckIcon, TrophyIcon, UsersIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { roleLabels, useMe } from "@/features/auth";
 import { AppSidebar, type SidebarNavGroup, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
@@ -24,13 +24,19 @@ const baseData: SidebarNavItem = {
 };
 const coaches: SidebarNavItem = { id: "coaches", label: "مربیان", href: "/super/coaches", icon: UsersIcon };
 const competitions: SidebarNavItem = { id: "competitions", label: "مسابقات", href: "/super/competitions", icon: TrophyIcon };
+const analytics: SidebarNavItem = {
+  id: "analytics",
+  label: "داشبورد آماری",
+  href: "/super/analytics",
+  icon: ChartColumnBigIcon,
+};
 
 const navGroups: SidebarNavGroup[] = [
   { label: "مدیریت", items: [home, admins, counties, baseData] },
-  { label: "مشاهده", items: [coaches, competitions] },
+  { label: "مشاهده", items: [analytics, coaches, competitions] },
 ];
 
-const navItems: SidebarNavItem[] = [home, admins, counties, baseData, coaches, competitions];
+const navItems: SidebarNavItem[] = [home, admins, counties, baseData, coaches, competitions, analytics];
 
 const mobilePrimary: SidebarNavItem[] = [home, admins, baseData, competitions];
 const mobileMore: SidebarNavItem[] = navItems.filter((item) => !mobilePrimary.includes(item));

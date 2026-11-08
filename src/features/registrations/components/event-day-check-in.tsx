@@ -22,7 +22,9 @@ export function EventDayCheckIn({
         aria-label={`حضور ${row.student.fullName}`}
         onCheckedChange={(checked) => onCheckIn(row.id, checked)}
       />
-      {row.checkInAt ? <span className="text-xs text-muted-foreground tabular-nums">{formatJalaliDateTime(new Date(row.checkInAt))}</span> : null}
+      {row.checkInAt ? (
+        <span className="text-xs text-muted-foreground tabular-nums">{formatJalaliDateTime(new Date(row.checkInAt))}</span>
+      ) : null}
     </div>
   );
 }
