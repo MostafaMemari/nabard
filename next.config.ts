@@ -48,6 +48,9 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // exceljs and @react-pdf/renderer are CJS/WASM-heavy server libraries; keep
+  // them external so the bundler does not inline their assets.
+  serverExternalPackages: ["exceljs", "@react-pdf/renderer"],
   experimental: {
     agentFeedback: true,
   },

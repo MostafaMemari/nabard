@@ -1,3 +1,4 @@
+import { downloadFilename, downloadResponse } from "@/lib/export";
 import { formatJalaliDate } from "@/lib/format";
 import type { CurrentUser } from "@/lib/session";
 import type { RegistrationRepository } from "./repository";
@@ -11,7 +12,6 @@ const HEADER = ["نام و نام خانوادگی", "کد ملی", "تاریخ 
 
 const FORMULA_PREFIX = /^[=+@-]/;
 const UNICODE_MINUS = "\u2212";
-const UNSAFE_FILENAME_CHARS = [/[/\\:*?"<>|]/g, /[\p{Cc}]/gu, /^[.\s-]+|[.\s-]+$/g];
 
 export function csvBaseCell(value: string): string {
   return /[",\r\n]/.test(value) ? `"${value.replaceAll('"', '""')}"` : value;
@@ -43,17 +43,7 @@ export function toParticipantsCsv(participants: ParticipantRecord[]): string {
 }
 
 export function participantsCsvFilename(title: string, competitionId: string): { ascii: string; utf8: string } {
-  let clean = title;
-  for (const pattern of UNSAFE_FILENAME_CHARS) {
-    clean = clean.replace(pattern, " ");
-  }
-
-  clean = clean
-    .trim()
-    .replace(/\s+/g, "-")
-    .slice(0, 60)
-    .replace(/[-.\s]+$/, "");
-  return { ascii: `participants-${competitionId}.csv`, utf8: `participants-${clean || competitionId}.csv` };
+  return downloadFilename("participants", title, competitionId, "csv");
 }
 
 export async function participantsCsvResponse(repo: RegistrationRepository, user: CurrentUser, competitionId: string): Promise<Response> {
@@ -61,11 +51,5 @@ export async function participantsCsvResponse(repo: RegistrationRepository, user
   const title = await repo.findCompetitionTitleById(competitionId);
   const filename = participantsCsvFilename(title ?? "", competitionId);
 
-  return new Response(toParticipantsCsv(participants), {
-    headers: {
-      "content-type": "text/csv; charset=utf-8",
-      "content-disposition": `attachment; filename="${filename.ascii}"; filename*=UTF-8''${encodeURIComponent(filename.utf8)}`,
-      "cache-control": "private, no-store",
-    },
-  });
+  return downloadResponse(toParticipantsCsv(participants), "text/csv; charset=utf-8", filename);
 }

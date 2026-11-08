@@ -3,11 +3,11 @@
 import { ScaleIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { EmptyState, ErrorBanner, SearchInput } from "@/components/shared";
+import { DownloadMenu, EmptyState, ErrorBanner, SearchInput } from "@/components/shared";
 import { FilterTabs } from "@/components/shared/filter-tabs";
 import { SkeletonRows } from "@/components/shared/rows-skeleton";
 import { formatNumber } from "@/lib/format";
-import { ApiError } from "@/lib/http";
+import { ApiError, buildApiUrl } from "@/lib/http";
 import { useEventDay } from "../hooks/use-event-day";
 import { EventDayCards } from "./event-day-cards";
 import { EventDaySummary } from "./event-day-summary";
@@ -42,10 +42,20 @@ export function EventDaySection({ competitionId }: { competitionId: string }) {
 
   return (
     <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 shadow-card md:p-6">
-      <div className="flex items-center gap-2">
-        <h2 className="text-base font-semibold">روز مسابقه</h2>
-        {eventDay ? (
-          <span className="text-subtle text-muted-foreground tabular-nums">({formatNumber(eventDay.summary.approved)} نفر)</span>
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <h2 className="text-base font-semibold">روز مسابقه</h2>
+          {eventDay ? (
+            <span className="text-subtle text-muted-foreground tabular-nums">({formatNumber(eventDay.summary.approved)} نفر)</span>
+          ) : null}
+        </div>
+        {eventDay && eventDay.rows.length > 0 ? (
+          <DownloadMenu
+            items={[
+              { label: "فایل اکسل (xlsx)", href: buildApiUrl(`/api/v1/competitions/${competitionId}/event-day.xlsx`) },
+              { label: "فایل PDF", href: buildApiUrl(`/api/v1/competitions/${competitionId}/event-day.pdf`) },
+            ]}
+          />
         ) : null}
       </div>
 

@@ -1,9 +1,10 @@
 "use client";
 
 import { ChartPieIcon, ClipboardListIcon, MapPinnedIcon, TrendingUpIcon, TrophyIcon, UserRoundIcon, UsersIcon } from "lucide-react";
-import { ErrorBanner, IconTile, PageHeader, SectionCard } from "@/components/shared";
+import { DownloadMenu, ErrorBanner, IconTile, PageHeader, SectionCard } from "@/components/shared";
 import { ProvinceFilter } from "@/features/super/components/province-filter";
 import { formatNumber, toPersianDigits } from "@/lib/format";
+import { buildApiUrl } from "@/lib/http";
 import { provinceLabels } from "@/lib/provinces";
 import { useSearchParam } from "@/lib/use-search-param";
 import { useSuperAnalytics } from "../hooks/use-super-analytics";
@@ -113,10 +114,25 @@ export function SuperAnalyticsScreen() {
   const [provinceParam] = useSearchParam("province");
   const province = provinceParam === "" ? null : provinceParam;
   const { analytics, isLoading, error, mutate } = useSuperAnalytics(province);
+  const provinceQuery = province === null ? "" : `?province=${encodeURIComponent(province)}`;
 
   return (
     <>
-      <PageHeader title="داشبورد آماری" description="نمای کلان آمار سامانه در سطح استان ها." action={<ProvinceFilter />} />
+      <PageHeader
+        title="داشبورد آماری"
+        description="نمای کلان آمار سامانه در سطح استان ها."
+        action={
+          <div className="flex flex-wrap items-center gap-2">
+            <DownloadMenu
+              items={[
+                { label: "فایل اکسل (xlsx)", href: buildApiUrl(`/api/v1/super/analytics.xlsx${provinceQuery}`) },
+                { label: "فایل PDF", href: buildApiUrl(`/api/v1/super/analytics.pdf${provinceQuery}`) },
+              ]}
+            />
+            <ProvinceFilter />
+          </div>
+        }
+      />
       {error ? <ErrorBanner onRetry={() => mutate()} /> : null}
       {analytics ? <Dashboard analytics={analytics} /> : isLoading ? <DashboardSkeleton /> : null}
     </>

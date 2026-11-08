@@ -1,7 +1,7 @@
 "use client";
 
-import { DownloadIcon, PrinterIcon, UsersRoundIcon } from "lucide-react";
-import { EmptyState, ErrorBanner } from "@/components/shared";
+import { PrinterIcon, UsersRoundIcon } from "lucide-react";
+import { DownloadMenu, EmptyState, ErrorBanner } from "@/components/shared";
 import { SkeletonRows } from "@/components/shared/rows-skeleton";
 import { Button } from "@/components/ui/button";
 import { useParticipants } from "@/features/registrations";
@@ -11,7 +11,7 @@ import { ParticipantsGroups } from "./participants-groups";
 
 export function CompetitionParticipants({ competitionId }: { competitionId: string }) {
   const { participants, isLoading, error, mutate } = useParticipants(competitionId);
-  const csvUrl = buildApiUrl(`/api/v1/competitions/${competitionId}/participants.csv`);
+  const basePath = `/api/v1/competitions/${competitionId}/participants`;
 
   return (
     <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 shadow-card md:p-6 print:rounded-none print:border-0 print:bg-white print:p-0 print:shadow-none">
@@ -25,15 +25,12 @@ export function CompetitionParticipants({ competitionId }: { competitionId: stri
             <PrinterIcon data-icon="inline-start" />
             چاپ
           </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            render={
-              <a href={csvUrl} download="participants.csv">
-                <DownloadIcon data-icon="inline-start" />
-                دانلود اکسل
-              </a>
-            }
+          <DownloadMenu
+            items={[
+              { label: "فایل اکسل (xlsx)", href: buildApiUrl(`${basePath}.xlsx`) },
+              { label: "فایل PDF", href: buildApiUrl(`${basePath}.pdf`) },
+              { label: "فایل CSV", href: buildApiUrl(`${basePath}.csv`) },
+            ]}
           />
         </div>
       </div>

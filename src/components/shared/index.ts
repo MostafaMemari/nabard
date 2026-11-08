@@ -11,6 +11,7 @@ export * from "./deadline-chip";
 export * from "./deadline-progress";
 export * from "./description-list";
 export * from "./detail-page-header";
+export * from "./download-menu";
 export * from "./empty-state";
 export * from "./error-banner";
 export * from "./filter-tabs";

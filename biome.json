@@ -55,6 +55,16 @@
           }
         }
       }
+    },
+    {
+      "includes": ["src/lib/pdf/report.tsx"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noArrayIndexKey": "off"
+          }
+        }
+      }
     }
   ],
   "assist": {
