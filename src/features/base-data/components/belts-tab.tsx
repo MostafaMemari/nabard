@@ -3,7 +3,7 @@
 import { MoreHorizontalIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { BeltDot, EmptyState, ErrorBanner, SkeletonRows } from "@/components/shared";
+import { BeltDot, EmptyState, ErrorBanner, MobileCard, MobileCardChips, SkeletonRows } from "@/components/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -15,11 +15,60 @@ import { useBeltsAdmin } from "../hooks/use-base-data-admin";
 import { BeltDeleteDialog } from "./belt-delete-dialog";
 import { BeltFormSheet } from "./belt-form-sheet";
 
+function RowMenu({ belt, onEdit, onDelete }: { belt: BeltAdmin; onEdit: () => void; onDelete: () => void }) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label={`عملیات ${belt.label}`} />}>
+        <MoreHorizontalIcon />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start">
+        <DropdownMenuItem onClick={onEdit}>ویرایش</DropdownMenuItem>
+        <DropdownMenuItem onClick={onDelete}>حذف</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+// Mobile variant of the belts table above.
+function BeltCard({
+  belt,
+  onToggle,
+  onEdit,
+  onDelete,
+}: {
+  belt: BeltAdmin;
+  onToggle: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+}) {
+  return (
+    <MobileCard className="gap-0 p-0">
+      <div className="flex items-center gap-3 p-4 pb-3">
+        <BeltDot code={belt.code} />
+        <span className="min-w-0 flex-1 truncate text-sm font-medium">{belt.label}</span>
+        <Switch checked={belt.isActive} onCheckedChange={onToggle} aria-label={`فعال بودن ${belt.label}`} />
+      </div>
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border px-4 py-2.5">
+        <MobileCardChips>
+          <span className="text-subtle text-muted-foreground tabular-nums">سطح {toPersianDigits(belt.level)}</span>
+          {!belt.isActive ? <Badge variant="secondary">بایگانی</Badge> : null}
+        </MobileCardChips>
+        <RowMenu belt={belt} onEdit={onEdit} onDelete={onDelete} />
+      </div>
+    </MobileCard>
+  );
+}
+
 export function BeltsTab() {
   const { belts, isLoading, error, mutate } = useBeltsAdmin(true);
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editing, setEditing] = useState<BeltAdmin | null>(null);
   const [deleting, setDeleting] = useState<BeltAdmin | null>(null);
+
+  function openEdit(belt: BeltAdmin) {
+    setEditing(belt);
+    setSheetOpen(true);
+  }
 
   async function toggle(belt: BeltAdmin) {
     try {
@@ -62,53 +111,53 @@ export function BeltsTab() {
           <EmptyState title="هنوز کمربندی تعریف نشده است." />
         </div>
       ) : (
-        <Table>
-          <TableHeader className="bg-muted/50">
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="text-subtle text-muted-foreground">کمربند</TableHead>
-              <TableHead className="text-subtle w-24 text-muted-foreground">سطح</TableHead>
-              <TableHead className="text-subtle w-20 text-center text-muted-foreground">فعال</TableHead>
-              <TableHead className="w-14">
-                <span className="sr-only">عملیات</span>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
+        <>
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader className="bg-muted/50">
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="text-subtle text-muted-foreground">کمربند</TableHead>
+                  <TableHead className="text-subtle w-24 text-muted-foreground">سطح</TableHead>
+                  <TableHead className="text-subtle w-20 text-center text-muted-foreground">فعال</TableHead>
+                  <TableHead className="w-14">
+                    <span className="sr-only">عملیات</span>
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {belts.map((belt) => (
+                  <TableRow key={belt.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-2.5">
+                        <BeltDot code={belt.code} />
+                        <span className="text-sm font-medium">{belt.label}</span>
+                        {!belt.isActive ? <Badge variant="secondary">بایگانی</Badge> : null}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-subtle tabular-nums text-muted-foreground">{toPersianDigits(belt.level)}</TableCell>
+                    <TableCell className="text-center">
+                      <Switch checked={belt.isActive} onCheckedChange={() => void toggle(belt)} aria-label={`فعال بودن ${belt.label}`} />
+                    </TableCell>
+                    <TableCell>
+                      <RowMenu belt={belt} onEdit={() => openEdit(belt)} onDelete={() => setDeleting(belt)} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+          <div className="flex flex-col gap-3 md:hidden">
             {belts.map((belt) => (
-              <TableRow key={belt.id}>
-                <TableCell>
-                  <div className="flex items-center gap-2.5">
-                    <BeltDot code={belt.code} />
-                    <span className="text-sm font-medium">{belt.label}</span>
-                    {!belt.isActive ? <Badge variant="secondary">بایگانی</Badge> : null}
-                  </div>
-                </TableCell>
-                <TableCell className="text-subtle tabular-nums text-muted-foreground">{toPersianDigits(belt.level)}</TableCell>
-                <TableCell className="text-center">
-                  <Switch checked={belt.isActive} onCheckedChange={() => void toggle(belt)} aria-label={`فعال بودن ${belt.label}`} />
-                </TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger render={<Button variant="ghost" size="icon-sm" aria-label={`عملیات ${belt.label}`} />}>
-                      <MoreHorizontalIcon />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="start">
-                      <DropdownMenuItem
-                        onClick={() => {
-                          setEditing(belt);
-                          setSheetOpen(true);
-                        }}
-                      >
-                        ویرایش
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => setDeleting(belt)}>حذف</DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
+              <BeltCard
+                key={belt.id}
+                belt={belt}
+                onToggle={() => void toggle(belt)}
+                onEdit={() => openEdit(belt)}
+                onDelete={() => setDeleting(belt)}
+              />
             ))}
-          </TableBody>
-        </Table>
+          </div>
+        </>
       )}
 
       <BeltFormSheet open={sheetOpen} onOpenChange={setSheetOpen} onSaved={() => void mutate()} belt={editing} />

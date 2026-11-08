@@ -19,7 +19,7 @@ export function ProvinceFilter() {
         if (next !== null) setValue(next === "all" ? null : String(next));
       }}
     >
-      <SelectTrigger className="w-48" aria-label="استان">
+      <SelectTrigger className="w-full sm:w-48" aria-label="استان">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
