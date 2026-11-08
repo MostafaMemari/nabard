@@ -80,7 +80,7 @@ export async function countRegistrations(province: Province | null): Promise<num
 export async function countProfilesByStatus(province: Province | null): Promise<ProfileStatusCounts> {
   const rows = await getPrisma().student.groupBy({
     by: ["profileStatus"],
-    ...(province === null ? {} : coachScope(province)),
+    where: coachScope(province),
     _count: { _all: true },
   });
 
@@ -104,12 +104,12 @@ export async function findRecentRegistrationDates(province: Province | null, sin
 }
 
 export async function countRegistrationsByCounty(province: Province | null): Promise<CountyCountRow[]> {
-  const rows = await getPrisma().registration.groupBy({ by: ["coachId"], ...coachScope(province), _count: { _all: true } });
+  const rows = await getPrisma().registration.groupBy({ by: ["coachId"], where: coachScope(province), _count: { _all: true } });
   return countsByCounty(rows, await coachCountyMap(rows.map((row) => row.coachId)));
 }
 
 export async function countStudentsByCounty(province: Province | null): Promise<CountyCountRow[]> {
-  const rows = await getPrisma().student.groupBy({ by: ["coachId"], ...coachScope(province), _count: { _all: true } });
+  const rows = await getPrisma().student.groupBy({ by: ["coachId"], where: coachScope(province), _count: { _all: true } });
   return countsByCounty(rows, await coachCountyMap(rows.map((row) => row.coachId)));
 }
 
