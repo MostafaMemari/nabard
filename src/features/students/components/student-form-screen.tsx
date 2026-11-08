@@ -33,7 +33,7 @@ export function StudentFormScreen() {
             spellCheck={false}
             autoComplete="off"
           />
-          <ControlledDateField control={form.control} name="birthDate" label="تاریخ تولد" />
+          <ControlledDateField control={form.control} name="birthDate" label="تاریخ تولد" variant="birth" />
           <ControlledDateField control={form.control} name="insuranceDate" label="تاریخ بیمه ورزشی (اختیاری)" />
           <ControlledDateField control={form.control} name="tkdBankChargeDate" label="تاریخ شارژ بانک اطلاعات تکواندو (اختیاری)" />
         </FormSection>

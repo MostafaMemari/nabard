@@ -75,8 +75,8 @@ export function AgeCategoryFormSheet({
         </SheetHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="mt-6 flex flex-col gap-4">
           <ControlledTextField control={form.control} name="label" label="نام رده سنی" placeholder="مثلاً بزرگسال" />
-          <ControlledDateField control={form.control} name="startDate" label="تاریخ شروع تولد" />
-          <ControlledDateField control={form.control} name="endDate" label="تاریخ پایان تولد" />
+          <ControlledDateField control={form.control} name="startDate" label="تاریخ شروع تولد" variant="birth" />
+          <ControlledDateField control={form.control} name="endDate" label="تاریخ پایان تولد" variant="birth" />
           <div className="mt-2 flex items-center justify-end gap-3">
             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
               انصراف
