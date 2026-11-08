@@ -73,7 +73,9 @@ export function EventDaySection({ competitionId }: { competitionId: string }) {
             <p className="py-6 text-center text-sm text-muted-foreground">نتیجه ای یافت نشد.</p>
           ) : (
             <>
-              <EventDayTable rows={view.filtered} kyorugi={kyorugi === true} busyId={busyId} onWeigh={onWeigh} onCheckIn={onCheckIn} />
+              <div className="hidden md:block">
+                <EventDayTable rows={view.filtered} kyorugi={kyorugi === true} busyId={busyId} onWeigh={onWeigh} onCheckIn={onCheckIn} />
+              </div>
               <EventDayCards rows={view.filtered} kyorugi={kyorugi === true} busyId={busyId} onWeigh={onWeigh} onCheckIn={onCheckIn} />
             </>
           )}
