@@ -29,11 +29,13 @@ export type AggregateRegistration = {
 export type RegistrationAvgAggregateOutputType = {
   weightClassMin: runtime.Decimal | null
   weightClassMax: runtime.Decimal | null
+  weighInKg: runtime.Decimal | null
 }
 
 export type RegistrationSumAggregateOutputType = {
   weightClassMin: runtime.Decimal | null
   weightClassMax: runtime.Decimal | null
+  weighInKg: runtime.Decimal | null
 }
 
 export type RegistrationMinAggregateOutputType = {
@@ -48,6 +50,12 @@ export type RegistrationMinAggregateOutputType = {
   weightClassMax: runtime.Decimal | null
   status: $Enums.RegistrationStatus | null
   note: string | null
+  checkInAt: Date | null
+  checkInById: string | null
+  weighInKg: runtime.Decimal | null
+  weighInAt: Date | null
+  weighInById: string | null
+  weighInVerdict: $Enums.WeighInVerdict | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -64,6 +72,12 @@ export type RegistrationMaxAggregateOutputType = {
   weightClassMax: runtime.Decimal | null
   status: $Enums.RegistrationStatus | null
   note: string | null
+  checkInAt: Date | null
+  checkInById: string | null
+  weighInKg: runtime.Decimal | null
+  weighInAt: Date | null
+  weighInById: string | null
+  weighInVerdict: $Enums.WeighInVerdict | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -80,6 +94,12 @@ export type RegistrationCountAggregateOutputType = {
   weightClassMax: number
   status: number
   note: number
+  checkInAt: number
+  checkInById: number
+  weighInKg: number
+  weighInAt: number
+  weighInById: number
+  weighInVerdict: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -89,11 +109,13 @@ export type RegistrationCountAggregateOutputType = {
 export type RegistrationAvgAggregateInputType = {
   weightClassMin?: true
   weightClassMax?: true
+  weighInKg?: true
 }
 
 export type RegistrationSumAggregateInputType = {
   weightClassMin?: true
   weightClassMax?: true
+  weighInKg?: true
 }
 
 export type RegistrationMinAggregateInputType = {
@@ -108,6 +130,12 @@ export type RegistrationMinAggregateInputType = {
   weightClassMax?: true
   status?: true
   note?: true
+  checkInAt?: true
+  checkInById?: true
+  weighInKg?: true
+  weighInAt?: true
+  weighInById?: true
+  weighInVerdict?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -124,6 +152,12 @@ export type RegistrationMaxAggregateInputType = {
   weightClassMax?: true
   status?: true
   note?: true
+  checkInAt?: true
+  checkInById?: true
+  weighInKg?: true
+  weighInAt?: true
+  weighInById?: true
+  weighInVerdict?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -140,6 +174,12 @@ export type RegistrationCountAggregateInputType = {
   weightClassMax?: true
   status?: true
   note?: true
+  checkInAt?: true
+  checkInById?: true
+  weighInKg?: true
+  weighInAt?: true
+  weighInById?: true
+  weighInVerdict?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -243,6 +283,12 @@ export type RegistrationGroupByOutputType = {
   weightClassMax: runtime.Decimal | null
   status: $Enums.RegistrationStatus
   note: string | null
+  checkInAt: Date | null
+  checkInById: string | null
+  weighInKg: runtime.Decimal | null
+  weighInAt: Date | null
+  weighInById: string | null
+  weighInVerdict: $Enums.WeighInVerdict | null
   createdAt: Date
   updatedAt: Date
   _count: RegistrationCountAggregateOutputType | null
@@ -282,6 +328,12 @@ export type RegistrationWhereInput = {
   weightClassMax?: Prisma.DecimalNullableFilter<"Registration"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFilter<"Registration"> | $Enums.RegistrationStatus
   note?: Prisma.StringNullableFilter<"Registration"> | string | null
+  checkInAt?: Prisma.DateTimeNullableFilter<"Registration"> | Date | string | null
+  checkInById?: Prisma.StringNullableFilter<"Registration"> | string | null
+  weighInKg?: Prisma.DecimalNullableFilter<"Registration"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.DateTimeNullableFilter<"Registration"> | Date | string | null
+  weighInById?: Prisma.StringNullableFilter<"Registration"> | string | null
+  weighInVerdict?: Prisma.EnumWeighInVerdictNullableFilter<"Registration"> | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFilter<"Registration"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Registration"> | Date | string
   competition?: Prisma.XOR<Prisma.CompetitionScalarRelationFilter, Prisma.CompetitionWhereInput>
@@ -289,6 +341,8 @@ export type RegistrationWhereInput = {
   coach?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
   weightClass?: Prisma.XOR<Prisma.WeightClassNullableScalarRelationFilter, Prisma.WeightClassWhereInput> | null
+  checkInBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  weighInBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   refund?: Prisma.XOR<Prisma.RefundNullableScalarRelationFilter, Prisma.RefundWhereInput> | null
 }
 
@@ -304,6 +358,12 @@ export type RegistrationOrderByWithRelationInput = {
   weightClassMax?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
+  checkInAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  checkInById?: Prisma.SortOrderInput | Prisma.SortOrder
+  weighInKg?: Prisma.SortOrderInput | Prisma.SortOrder
+  weighInAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  weighInById?: Prisma.SortOrderInput | Prisma.SortOrder
+  weighInVerdict?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   competition?: Prisma.CompetitionOrderByWithRelationInput
@@ -311,6 +371,8 @@ export type RegistrationOrderByWithRelationInput = {
   coach?: Prisma.UserOrderByWithRelationInput
   payment?: Prisma.PaymentOrderByWithRelationInput
   weightClass?: Prisma.WeightClassOrderByWithRelationInput
+  checkInBy?: Prisma.UserOrderByWithRelationInput
+  weighInBy?: Prisma.UserOrderByWithRelationInput
   refund?: Prisma.RefundOrderByWithRelationInput
 }
 
@@ -329,6 +391,12 @@ export type RegistrationWhereUniqueInput = Prisma.AtLeast<{
   weightClassMax?: Prisma.DecimalNullableFilter<"Registration"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFilter<"Registration"> | $Enums.RegistrationStatus
   note?: Prisma.StringNullableFilter<"Registration"> | string | null
+  checkInAt?: Prisma.DateTimeNullableFilter<"Registration"> | Date | string | null
+  checkInById?: Prisma.StringNullableFilter<"Registration"> | string | null
+  weighInKg?: Prisma.DecimalNullableFilter<"Registration"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.DateTimeNullableFilter<"Registration"> | Date | string | null
+  weighInById?: Prisma.StringNullableFilter<"Registration"> | string | null
+  weighInVerdict?: Prisma.EnumWeighInVerdictNullableFilter<"Registration"> | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFilter<"Registration"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Registration"> | Date | string
   competition?: Prisma.XOR<Prisma.CompetitionScalarRelationFilter, Prisma.CompetitionWhereInput>
@@ -336,6 +404,8 @@ export type RegistrationWhereUniqueInput = Prisma.AtLeast<{
   coach?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   payment?: Prisma.XOR<Prisma.PaymentNullableScalarRelationFilter, Prisma.PaymentWhereInput> | null
   weightClass?: Prisma.XOR<Prisma.WeightClassNullableScalarRelationFilter, Prisma.WeightClassWhereInput> | null
+  checkInBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
+  weighInBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   refund?: Prisma.XOR<Prisma.RefundNullableScalarRelationFilter, Prisma.RefundWhereInput> | null
 }, "id">
 
@@ -351,6 +421,12 @@ export type RegistrationOrderByWithAggregationInput = {
   weightClassMax?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
+  checkInAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  checkInById?: Prisma.SortOrderInput | Prisma.SortOrder
+  weighInKg?: Prisma.SortOrderInput | Prisma.SortOrder
+  weighInAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  weighInById?: Prisma.SortOrderInput | Prisma.SortOrder
+  weighInVerdict?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.RegistrationCountOrderByAggregateInput
@@ -375,6 +451,12 @@ export type RegistrationScalarWhereWithAggregatesInput = {
   weightClassMax?: Prisma.DecimalNullableWithAggregatesFilter<"Registration"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusWithAggregatesFilter<"Registration"> | $Enums.RegistrationStatus
   note?: Prisma.StringNullableWithAggregatesFilter<"Registration"> | string | null
+  checkInAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Registration"> | Date | string | null
+  checkInById?: Prisma.StringNullableWithAggregatesFilter<"Registration"> | string | null
+  weighInKg?: Prisma.DecimalNullableWithAggregatesFilter<"Registration"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Registration"> | Date | string | null
+  weighInById?: Prisma.StringNullableWithAggregatesFilter<"Registration"> | string | null
+  weighInVerdict?: Prisma.EnumWeighInVerdictNullableWithAggregatesFilter<"Registration"> | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Registration"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Registration"> | Date | string
 }
@@ -386,6 +468,10 @@ export type RegistrationCreateInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
   competition: Prisma.CompetitionCreateNestedOneWithoutRegistrationsInput
@@ -393,6 +479,8 @@ export type RegistrationCreateInput = {
   coach: Prisma.UserCreateNestedOneWithoutRegistrationsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutRegistrationsInput
   weightClass?: Prisma.WeightClassCreateNestedOneWithoutRegistrationsInput
+  checkInBy?: Prisma.UserCreateNestedOneWithoutCheckedInRegistrationsInput
+  weighInBy?: Prisma.UserCreateNestedOneWithoutWeighedRegistrationsInput
   refund?: Prisma.RefundCreateNestedOneWithoutRegistrationInput
 }
 
@@ -408,6 +496,12 @@ export type RegistrationUncheckedCreateInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  checkInById?: string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInById?: string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
   refund?: Prisma.RefundUncheckedCreateNestedOneWithoutRegistrationInput
@@ -420,6 +514,10 @@ export type RegistrationUpdateInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   competition?: Prisma.CompetitionUpdateOneRequiredWithoutRegistrationsNestedInput
@@ -427,6 +525,8 @@ export type RegistrationUpdateInput = {
   coach?: Prisma.UserUpdateOneRequiredWithoutRegistrationsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutRegistrationsNestedInput
   weightClass?: Prisma.WeightClassUpdateOneWithoutRegistrationsNestedInput
+  checkInBy?: Prisma.UserUpdateOneWithoutCheckedInRegistrationsNestedInput
+  weighInBy?: Prisma.UserUpdateOneWithoutWeighedRegistrationsNestedInput
   refund?: Prisma.RefundUpdateOneWithoutRegistrationNestedInput
 }
 
@@ -442,6 +542,12 @@ export type RegistrationUncheckedUpdateInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refund?: Prisma.RefundUncheckedUpdateOneWithoutRegistrationNestedInput
@@ -459,6 +565,12 @@ export type RegistrationCreateManyInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  checkInById?: string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInById?: string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -470,6 +582,10 @@ export type RegistrationUpdateManyMutationInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -486,6 +602,12 @@ export type RegistrationUncheckedUpdateManyInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -512,6 +634,12 @@ export type RegistrationCountOrderByAggregateInput = {
   weightClassMax?: Prisma.SortOrder
   status?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  checkInAt?: Prisma.SortOrder
+  checkInById?: Prisma.SortOrder
+  weighInKg?: Prisma.SortOrder
+  weighInAt?: Prisma.SortOrder
+  weighInById?: Prisma.SortOrder
+  weighInVerdict?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -519,6 +647,7 @@ export type RegistrationCountOrderByAggregateInput = {
 export type RegistrationAvgOrderByAggregateInput = {
   weightClassMin?: Prisma.SortOrder
   weightClassMax?: Prisma.SortOrder
+  weighInKg?: Prisma.SortOrder
 }
 
 export type RegistrationMaxOrderByAggregateInput = {
@@ -533,6 +662,12 @@ export type RegistrationMaxOrderByAggregateInput = {
   weightClassMax?: Prisma.SortOrder
   status?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  checkInAt?: Prisma.SortOrder
+  checkInById?: Prisma.SortOrder
+  weighInKg?: Prisma.SortOrder
+  weighInAt?: Prisma.SortOrder
+  weighInById?: Prisma.SortOrder
+  weighInVerdict?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -549,6 +684,12 @@ export type RegistrationMinOrderByAggregateInput = {
   weightClassMax?: Prisma.SortOrder
   status?: Prisma.SortOrder
   note?: Prisma.SortOrder
+  checkInAt?: Prisma.SortOrder
+  checkInById?: Prisma.SortOrder
+  weighInKg?: Prisma.SortOrder
+  weighInAt?: Prisma.SortOrder
+  weighInById?: Prisma.SortOrder
+  weighInVerdict?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -556,6 +697,7 @@ export type RegistrationMinOrderByAggregateInput = {
 export type RegistrationSumOrderByAggregateInput = {
   weightClassMin?: Prisma.SortOrder
   weightClassMax?: Prisma.SortOrder
+  weighInKg?: Prisma.SortOrder
 }
 
 export type RegistrationScalarRelationFilter = {
@@ -570,10 +712,38 @@ export type RegistrationCreateNestedManyWithoutCoachInput = {
   connect?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
 }
 
+export type RegistrationCreateNestedManyWithoutCheckInByInput = {
+  create?: Prisma.XOR<Prisma.RegistrationCreateWithoutCheckInByInput, Prisma.RegistrationUncheckedCreateWithoutCheckInByInput> | Prisma.RegistrationCreateWithoutCheckInByInput[] | Prisma.RegistrationUncheckedCreateWithoutCheckInByInput[]
+  connectOrCreate?: Prisma.RegistrationCreateOrConnectWithoutCheckInByInput | Prisma.RegistrationCreateOrConnectWithoutCheckInByInput[]
+  createMany?: Prisma.RegistrationCreateManyCheckInByInputEnvelope
+  connect?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+}
+
+export type RegistrationCreateNestedManyWithoutWeighInByInput = {
+  create?: Prisma.XOR<Prisma.RegistrationCreateWithoutWeighInByInput, Prisma.RegistrationUncheckedCreateWithoutWeighInByInput> | Prisma.RegistrationCreateWithoutWeighInByInput[] | Prisma.RegistrationUncheckedCreateWithoutWeighInByInput[]
+  connectOrCreate?: Prisma.RegistrationCreateOrConnectWithoutWeighInByInput | Prisma.RegistrationCreateOrConnectWithoutWeighInByInput[]
+  createMany?: Prisma.RegistrationCreateManyWeighInByInputEnvelope
+  connect?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+}
+
 export type RegistrationUncheckedCreateNestedManyWithoutCoachInput = {
   create?: Prisma.XOR<Prisma.RegistrationCreateWithoutCoachInput, Prisma.RegistrationUncheckedCreateWithoutCoachInput> | Prisma.RegistrationCreateWithoutCoachInput[] | Prisma.RegistrationUncheckedCreateWithoutCoachInput[]
   connectOrCreate?: Prisma.RegistrationCreateOrConnectWithoutCoachInput | Prisma.RegistrationCreateOrConnectWithoutCoachInput[]
   createMany?: Prisma.RegistrationCreateManyCoachInputEnvelope
+  connect?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+}
+
+export type RegistrationUncheckedCreateNestedManyWithoutCheckInByInput = {
+  create?: Prisma.XOR<Prisma.RegistrationCreateWithoutCheckInByInput, Prisma.RegistrationUncheckedCreateWithoutCheckInByInput> | Prisma.RegistrationCreateWithoutCheckInByInput[] | Prisma.RegistrationUncheckedCreateWithoutCheckInByInput[]
+  connectOrCreate?: Prisma.RegistrationCreateOrConnectWithoutCheckInByInput | Prisma.RegistrationCreateOrConnectWithoutCheckInByInput[]
+  createMany?: Prisma.RegistrationCreateManyCheckInByInputEnvelope
+  connect?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+}
+
+export type RegistrationUncheckedCreateNestedManyWithoutWeighInByInput = {
+  create?: Prisma.XOR<Prisma.RegistrationCreateWithoutWeighInByInput, Prisma.RegistrationUncheckedCreateWithoutWeighInByInput> | Prisma.RegistrationCreateWithoutWeighInByInput[] | Prisma.RegistrationUncheckedCreateWithoutWeighInByInput[]
+  connectOrCreate?: Prisma.RegistrationCreateOrConnectWithoutWeighInByInput | Prisma.RegistrationCreateOrConnectWithoutWeighInByInput[]
+  createMany?: Prisma.RegistrationCreateManyWeighInByInputEnvelope
   connect?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
 }
 
@@ -591,6 +761,34 @@ export type RegistrationUpdateManyWithoutCoachNestedInput = {
   deleteMany?: Prisma.RegistrationScalarWhereInput | Prisma.RegistrationScalarWhereInput[]
 }
 
+export type RegistrationUpdateManyWithoutCheckInByNestedInput = {
+  create?: Prisma.XOR<Prisma.RegistrationCreateWithoutCheckInByInput, Prisma.RegistrationUncheckedCreateWithoutCheckInByInput> | Prisma.RegistrationCreateWithoutCheckInByInput[] | Prisma.RegistrationUncheckedCreateWithoutCheckInByInput[]
+  connectOrCreate?: Prisma.RegistrationCreateOrConnectWithoutCheckInByInput | Prisma.RegistrationCreateOrConnectWithoutCheckInByInput[]
+  upsert?: Prisma.RegistrationUpsertWithWhereUniqueWithoutCheckInByInput | Prisma.RegistrationUpsertWithWhereUniqueWithoutCheckInByInput[]
+  createMany?: Prisma.RegistrationCreateManyCheckInByInputEnvelope
+  set?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+  disconnect?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+  delete?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+  connect?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+  update?: Prisma.RegistrationUpdateWithWhereUniqueWithoutCheckInByInput | Prisma.RegistrationUpdateWithWhereUniqueWithoutCheckInByInput[]
+  updateMany?: Prisma.RegistrationUpdateManyWithWhereWithoutCheckInByInput | Prisma.RegistrationUpdateManyWithWhereWithoutCheckInByInput[]
+  deleteMany?: Prisma.RegistrationScalarWhereInput | Prisma.RegistrationScalarWhereInput[]
+}
+
+export type RegistrationUpdateManyWithoutWeighInByNestedInput = {
+  create?: Prisma.XOR<Prisma.RegistrationCreateWithoutWeighInByInput, Prisma.RegistrationUncheckedCreateWithoutWeighInByInput> | Prisma.RegistrationCreateWithoutWeighInByInput[] | Prisma.RegistrationUncheckedCreateWithoutWeighInByInput[]
+  connectOrCreate?: Prisma.RegistrationCreateOrConnectWithoutWeighInByInput | Prisma.RegistrationCreateOrConnectWithoutWeighInByInput[]
+  upsert?: Prisma.RegistrationUpsertWithWhereUniqueWithoutWeighInByInput | Prisma.RegistrationUpsertWithWhereUniqueWithoutWeighInByInput[]
+  createMany?: Prisma.RegistrationCreateManyWeighInByInputEnvelope
+  set?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+  disconnect?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+  delete?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+  connect?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+  update?: Prisma.RegistrationUpdateWithWhereUniqueWithoutWeighInByInput | Prisma.RegistrationUpdateWithWhereUniqueWithoutWeighInByInput[]
+  updateMany?: Prisma.RegistrationUpdateManyWithWhereWithoutWeighInByInput | Prisma.RegistrationUpdateManyWithWhereWithoutWeighInByInput[]
+  deleteMany?: Prisma.RegistrationScalarWhereInput | Prisma.RegistrationScalarWhereInput[]
+}
+
 export type RegistrationUncheckedUpdateManyWithoutCoachNestedInput = {
   create?: Prisma.XOR<Prisma.RegistrationCreateWithoutCoachInput, Prisma.RegistrationUncheckedCreateWithoutCoachInput> | Prisma.RegistrationCreateWithoutCoachInput[] | Prisma.RegistrationUncheckedCreateWithoutCoachInput[]
   connectOrCreate?: Prisma.RegistrationCreateOrConnectWithoutCoachInput | Prisma.RegistrationCreateOrConnectWithoutCoachInput[]
@@ -602,6 +800,34 @@ export type RegistrationUncheckedUpdateManyWithoutCoachNestedInput = {
   connect?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
   update?: Prisma.RegistrationUpdateWithWhereUniqueWithoutCoachInput | Prisma.RegistrationUpdateWithWhereUniqueWithoutCoachInput[]
   updateMany?: Prisma.RegistrationUpdateManyWithWhereWithoutCoachInput | Prisma.RegistrationUpdateManyWithWhereWithoutCoachInput[]
+  deleteMany?: Prisma.RegistrationScalarWhereInput | Prisma.RegistrationScalarWhereInput[]
+}
+
+export type RegistrationUncheckedUpdateManyWithoutCheckInByNestedInput = {
+  create?: Prisma.XOR<Prisma.RegistrationCreateWithoutCheckInByInput, Prisma.RegistrationUncheckedCreateWithoutCheckInByInput> | Prisma.RegistrationCreateWithoutCheckInByInput[] | Prisma.RegistrationUncheckedCreateWithoutCheckInByInput[]
+  connectOrCreate?: Prisma.RegistrationCreateOrConnectWithoutCheckInByInput | Prisma.RegistrationCreateOrConnectWithoutCheckInByInput[]
+  upsert?: Prisma.RegistrationUpsertWithWhereUniqueWithoutCheckInByInput | Prisma.RegistrationUpsertWithWhereUniqueWithoutCheckInByInput[]
+  createMany?: Prisma.RegistrationCreateManyCheckInByInputEnvelope
+  set?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+  disconnect?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+  delete?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+  connect?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+  update?: Prisma.RegistrationUpdateWithWhereUniqueWithoutCheckInByInput | Prisma.RegistrationUpdateWithWhereUniqueWithoutCheckInByInput[]
+  updateMany?: Prisma.RegistrationUpdateManyWithWhereWithoutCheckInByInput | Prisma.RegistrationUpdateManyWithWhereWithoutCheckInByInput[]
+  deleteMany?: Prisma.RegistrationScalarWhereInput | Prisma.RegistrationScalarWhereInput[]
+}
+
+export type RegistrationUncheckedUpdateManyWithoutWeighInByNestedInput = {
+  create?: Prisma.XOR<Prisma.RegistrationCreateWithoutWeighInByInput, Prisma.RegistrationUncheckedCreateWithoutWeighInByInput> | Prisma.RegistrationCreateWithoutWeighInByInput[] | Prisma.RegistrationUncheckedCreateWithoutWeighInByInput[]
+  connectOrCreate?: Prisma.RegistrationCreateOrConnectWithoutWeighInByInput | Prisma.RegistrationCreateOrConnectWithoutWeighInByInput[]
+  upsert?: Prisma.RegistrationUpsertWithWhereUniqueWithoutWeighInByInput | Prisma.RegistrationUpsertWithWhereUniqueWithoutWeighInByInput[]
+  createMany?: Prisma.RegistrationCreateManyWeighInByInputEnvelope
+  set?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+  disconnect?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+  delete?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+  connect?: Prisma.RegistrationWhereUniqueInput | Prisma.RegistrationWhereUniqueInput[]
+  update?: Prisma.RegistrationUpdateWithWhereUniqueWithoutWeighInByInput | Prisma.RegistrationUpdateWithWhereUniqueWithoutWeighInByInput[]
+  updateMany?: Prisma.RegistrationUpdateManyWithWhereWithoutWeighInByInput | Prisma.RegistrationUpdateManyWithWhereWithoutWeighInByInput[]
   deleteMany?: Prisma.RegistrationScalarWhereInput | Prisma.RegistrationScalarWhereInput[]
 }
 
@@ -777,6 +1003,10 @@ export type EnumRegistrationStatusFieldUpdateOperationsInput = {
   set?: $Enums.RegistrationStatus
 }
 
+export type NullableEnumWeighInVerdictFieldUpdateOperationsInput = {
+  set?: $Enums.WeighInVerdict | null
+}
+
 export type RegistrationCreateNestedOneWithoutRefundInput = {
   create?: Prisma.XOR<Prisma.RegistrationCreateWithoutRefundInput, Prisma.RegistrationUncheckedCreateWithoutRefundInput>
   connectOrCreate?: Prisma.RegistrationCreateOrConnectWithoutRefundInput
@@ -798,12 +1028,18 @@ export type RegistrationCreateWithoutCoachInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
   competition: Prisma.CompetitionCreateNestedOneWithoutRegistrationsInput
   student: Prisma.StudentCreateNestedOneWithoutRegistrationsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutRegistrationsInput
   weightClass?: Prisma.WeightClassCreateNestedOneWithoutRegistrationsInput
+  checkInBy?: Prisma.UserCreateNestedOneWithoutCheckedInRegistrationsInput
+  weighInBy?: Prisma.UserCreateNestedOneWithoutWeighedRegistrationsInput
   refund?: Prisma.RefundCreateNestedOneWithoutRegistrationInput
 }
 
@@ -818,6 +1054,12 @@ export type RegistrationUncheckedCreateWithoutCoachInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  checkInById?: string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInById?: string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
   refund?: Prisma.RefundUncheckedCreateNestedOneWithoutRegistrationInput
@@ -830,6 +1072,114 @@ export type RegistrationCreateOrConnectWithoutCoachInput = {
 
 export type RegistrationCreateManyCoachInputEnvelope = {
   data: Prisma.RegistrationCreateManyCoachInput | Prisma.RegistrationCreateManyCoachInput[]
+  skipDuplicates?: boolean
+}
+
+export type RegistrationCreateWithoutCheckInByInput = {
+  id?: string
+  weightClassLabel?: string | null
+  weightClassMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.RegistrationStatus
+  note?: string | null
+  checkInAt?: Date | string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  competition: Prisma.CompetitionCreateNestedOneWithoutRegistrationsInput
+  student: Prisma.StudentCreateNestedOneWithoutRegistrationsInput
+  coach: Prisma.UserCreateNestedOneWithoutRegistrationsInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutRegistrationsInput
+  weightClass?: Prisma.WeightClassCreateNestedOneWithoutRegistrationsInput
+  weighInBy?: Prisma.UserCreateNestedOneWithoutWeighedRegistrationsInput
+  refund?: Prisma.RefundCreateNestedOneWithoutRegistrationInput
+}
+
+export type RegistrationUncheckedCreateWithoutCheckInByInput = {
+  id?: string
+  competitionId: string
+  studentId: string
+  coachId: string
+  paymentId?: string | null
+  weightClassId?: string | null
+  weightClassLabel?: string | null
+  weightClassMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.RegistrationStatus
+  note?: string | null
+  checkInAt?: Date | string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInById?: string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutRegistrationInput
+}
+
+export type RegistrationCreateOrConnectWithoutCheckInByInput = {
+  where: Prisma.RegistrationWhereUniqueInput
+  create: Prisma.XOR<Prisma.RegistrationCreateWithoutCheckInByInput, Prisma.RegistrationUncheckedCreateWithoutCheckInByInput>
+}
+
+export type RegistrationCreateManyCheckInByInputEnvelope = {
+  data: Prisma.RegistrationCreateManyCheckInByInput | Prisma.RegistrationCreateManyCheckInByInput[]
+  skipDuplicates?: boolean
+}
+
+export type RegistrationCreateWithoutWeighInByInput = {
+  id?: string
+  weightClassLabel?: string | null
+  weightClassMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.RegistrationStatus
+  note?: string | null
+  checkInAt?: Date | string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  competition: Prisma.CompetitionCreateNestedOneWithoutRegistrationsInput
+  student: Prisma.StudentCreateNestedOneWithoutRegistrationsInput
+  coach: Prisma.UserCreateNestedOneWithoutRegistrationsInput
+  payment?: Prisma.PaymentCreateNestedOneWithoutRegistrationsInput
+  weightClass?: Prisma.WeightClassCreateNestedOneWithoutRegistrationsInput
+  checkInBy?: Prisma.UserCreateNestedOneWithoutCheckedInRegistrationsInput
+  refund?: Prisma.RefundCreateNestedOneWithoutRegistrationInput
+}
+
+export type RegistrationUncheckedCreateWithoutWeighInByInput = {
+  id?: string
+  competitionId: string
+  studentId: string
+  coachId: string
+  paymentId?: string | null
+  weightClassId?: string | null
+  weightClassLabel?: string | null
+  weightClassMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.RegistrationStatus
+  note?: string | null
+  checkInAt?: Date | string | null
+  checkInById?: string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  refund?: Prisma.RefundUncheckedCreateNestedOneWithoutRegistrationInput
+}
+
+export type RegistrationCreateOrConnectWithoutWeighInByInput = {
+  where: Prisma.RegistrationWhereUniqueInput
+  create: Prisma.XOR<Prisma.RegistrationCreateWithoutWeighInByInput, Prisma.RegistrationUncheckedCreateWithoutWeighInByInput>
+}
+
+export type RegistrationCreateManyWeighInByInputEnvelope = {
+  data: Prisma.RegistrationCreateManyWeighInByInput | Prisma.RegistrationCreateManyWeighInByInput[]
   skipDuplicates?: boolean
 }
 
@@ -864,8 +1214,46 @@ export type RegistrationScalarWhereInput = {
   weightClassMax?: Prisma.DecimalNullableFilter<"Registration"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFilter<"Registration"> | $Enums.RegistrationStatus
   note?: Prisma.StringNullableFilter<"Registration"> | string | null
+  checkInAt?: Prisma.DateTimeNullableFilter<"Registration"> | Date | string | null
+  checkInById?: Prisma.StringNullableFilter<"Registration"> | string | null
+  weighInKg?: Prisma.DecimalNullableFilter<"Registration"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.DateTimeNullableFilter<"Registration"> | Date | string | null
+  weighInById?: Prisma.StringNullableFilter<"Registration"> | string | null
+  weighInVerdict?: Prisma.EnumWeighInVerdictNullableFilter<"Registration"> | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFilter<"Registration"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Registration"> | Date | string
+}
+
+export type RegistrationUpsertWithWhereUniqueWithoutCheckInByInput = {
+  where: Prisma.RegistrationWhereUniqueInput
+  update: Prisma.XOR<Prisma.RegistrationUpdateWithoutCheckInByInput, Prisma.RegistrationUncheckedUpdateWithoutCheckInByInput>
+  create: Prisma.XOR<Prisma.RegistrationCreateWithoutCheckInByInput, Prisma.RegistrationUncheckedCreateWithoutCheckInByInput>
+}
+
+export type RegistrationUpdateWithWhereUniqueWithoutCheckInByInput = {
+  where: Prisma.RegistrationWhereUniqueInput
+  data: Prisma.XOR<Prisma.RegistrationUpdateWithoutCheckInByInput, Prisma.RegistrationUncheckedUpdateWithoutCheckInByInput>
+}
+
+export type RegistrationUpdateManyWithWhereWithoutCheckInByInput = {
+  where: Prisma.RegistrationScalarWhereInput
+  data: Prisma.XOR<Prisma.RegistrationUpdateManyMutationInput, Prisma.RegistrationUncheckedUpdateManyWithoutCheckInByInput>
+}
+
+export type RegistrationUpsertWithWhereUniqueWithoutWeighInByInput = {
+  where: Prisma.RegistrationWhereUniqueInput
+  update: Prisma.XOR<Prisma.RegistrationUpdateWithoutWeighInByInput, Prisma.RegistrationUncheckedUpdateWithoutWeighInByInput>
+  create: Prisma.XOR<Prisma.RegistrationCreateWithoutWeighInByInput, Prisma.RegistrationUncheckedCreateWithoutWeighInByInput>
+}
+
+export type RegistrationUpdateWithWhereUniqueWithoutWeighInByInput = {
+  where: Prisma.RegistrationWhereUniqueInput
+  data: Prisma.XOR<Prisma.RegistrationUpdateWithoutWeighInByInput, Prisma.RegistrationUncheckedUpdateWithoutWeighInByInput>
+}
+
+export type RegistrationUpdateManyWithWhereWithoutWeighInByInput = {
+  where: Prisma.RegistrationScalarWhereInput
+  data: Prisma.XOR<Prisma.RegistrationUpdateManyMutationInput, Prisma.RegistrationUncheckedUpdateManyWithoutWeighInByInput>
 }
 
 export type RegistrationCreateWithoutStudentInput = {
@@ -875,12 +1263,18 @@ export type RegistrationCreateWithoutStudentInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
   competition: Prisma.CompetitionCreateNestedOneWithoutRegistrationsInput
   coach: Prisma.UserCreateNestedOneWithoutRegistrationsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutRegistrationsInput
   weightClass?: Prisma.WeightClassCreateNestedOneWithoutRegistrationsInput
+  checkInBy?: Prisma.UserCreateNestedOneWithoutCheckedInRegistrationsInput
+  weighInBy?: Prisma.UserCreateNestedOneWithoutWeighedRegistrationsInput
   refund?: Prisma.RefundCreateNestedOneWithoutRegistrationInput
 }
 
@@ -895,6 +1289,12 @@ export type RegistrationUncheckedCreateWithoutStudentInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  checkInById?: string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInById?: string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
   refund?: Prisma.RefundUncheckedCreateNestedOneWithoutRegistrationInput
@@ -933,12 +1333,18 @@ export type RegistrationCreateWithoutWeightClassInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
   competition: Prisma.CompetitionCreateNestedOneWithoutRegistrationsInput
   student: Prisma.StudentCreateNestedOneWithoutRegistrationsInput
   coach: Prisma.UserCreateNestedOneWithoutRegistrationsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutRegistrationsInput
+  checkInBy?: Prisma.UserCreateNestedOneWithoutCheckedInRegistrationsInput
+  weighInBy?: Prisma.UserCreateNestedOneWithoutWeighedRegistrationsInput
   refund?: Prisma.RefundCreateNestedOneWithoutRegistrationInput
 }
 
@@ -953,6 +1359,12 @@ export type RegistrationUncheckedCreateWithoutWeightClassInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  checkInById?: string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInById?: string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
   refund?: Prisma.RefundUncheckedCreateNestedOneWithoutRegistrationInput
@@ -991,12 +1403,18 @@ export type RegistrationCreateWithoutCompetitionInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutRegistrationsInput
   coach: Prisma.UserCreateNestedOneWithoutRegistrationsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutRegistrationsInput
   weightClass?: Prisma.WeightClassCreateNestedOneWithoutRegistrationsInput
+  checkInBy?: Prisma.UserCreateNestedOneWithoutCheckedInRegistrationsInput
+  weighInBy?: Prisma.UserCreateNestedOneWithoutWeighedRegistrationsInput
   refund?: Prisma.RefundCreateNestedOneWithoutRegistrationInput
 }
 
@@ -1011,6 +1429,12 @@ export type RegistrationUncheckedCreateWithoutCompetitionInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  checkInById?: string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInById?: string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
   refund?: Prisma.RefundUncheckedCreateNestedOneWithoutRegistrationInput
@@ -1049,12 +1473,18 @@ export type RegistrationCreateWithoutPaymentInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
   competition: Prisma.CompetitionCreateNestedOneWithoutRegistrationsInput
   student: Prisma.StudentCreateNestedOneWithoutRegistrationsInput
   coach: Prisma.UserCreateNestedOneWithoutRegistrationsInput
   weightClass?: Prisma.WeightClassCreateNestedOneWithoutRegistrationsInput
+  checkInBy?: Prisma.UserCreateNestedOneWithoutCheckedInRegistrationsInput
+  weighInBy?: Prisma.UserCreateNestedOneWithoutWeighedRegistrationsInput
   refund?: Prisma.RefundCreateNestedOneWithoutRegistrationInput
 }
 
@@ -1069,6 +1499,12 @@ export type RegistrationUncheckedCreateWithoutPaymentInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  checkInById?: string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInById?: string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
   refund?: Prisma.RefundUncheckedCreateNestedOneWithoutRegistrationInput
@@ -1107,6 +1543,10 @@ export type RegistrationCreateWithoutRefundInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
   competition: Prisma.CompetitionCreateNestedOneWithoutRegistrationsInput
@@ -1114,6 +1554,8 @@ export type RegistrationCreateWithoutRefundInput = {
   coach: Prisma.UserCreateNestedOneWithoutRegistrationsInput
   payment?: Prisma.PaymentCreateNestedOneWithoutRegistrationsInput
   weightClass?: Prisma.WeightClassCreateNestedOneWithoutRegistrationsInput
+  checkInBy?: Prisma.UserCreateNestedOneWithoutCheckedInRegistrationsInput
+  weighInBy?: Prisma.UserCreateNestedOneWithoutWeighedRegistrationsInput
 }
 
 export type RegistrationUncheckedCreateWithoutRefundInput = {
@@ -1128,6 +1570,12 @@ export type RegistrationUncheckedCreateWithoutRefundInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  checkInById?: string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInById?: string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1155,6 +1603,10 @@ export type RegistrationUpdateWithoutRefundInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   competition?: Prisma.CompetitionUpdateOneRequiredWithoutRegistrationsNestedInput
@@ -1162,6 +1614,8 @@ export type RegistrationUpdateWithoutRefundInput = {
   coach?: Prisma.UserUpdateOneRequiredWithoutRegistrationsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutRegistrationsNestedInput
   weightClass?: Prisma.WeightClassUpdateOneWithoutRegistrationsNestedInput
+  checkInBy?: Prisma.UserUpdateOneWithoutCheckedInRegistrationsNestedInput
+  weighInBy?: Prisma.UserUpdateOneWithoutWeighedRegistrationsNestedInput
 }
 
 export type RegistrationUncheckedUpdateWithoutRefundInput = {
@@ -1176,6 +1630,12 @@ export type RegistrationUncheckedUpdateWithoutRefundInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1191,6 +1651,54 @@ export type RegistrationCreateManyCoachInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  checkInById?: string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInById?: string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type RegistrationCreateManyCheckInByInput = {
+  id?: string
+  competitionId: string
+  studentId: string
+  coachId: string
+  paymentId?: string | null
+  weightClassId?: string | null
+  weightClassLabel?: string | null
+  weightClassMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.RegistrationStatus
+  note?: string | null
+  checkInAt?: Date | string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInById?: string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type RegistrationCreateManyWeighInByInput = {
+  id?: string
+  competitionId: string
+  studentId: string
+  coachId: string
+  paymentId?: string | null
+  weightClassId?: string | null
+  weightClassLabel?: string | null
+  weightClassMin?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: $Enums.RegistrationStatus
+  note?: string | null
+  checkInAt?: Date | string | null
+  checkInById?: string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1202,12 +1710,18 @@ export type RegistrationUpdateWithoutCoachInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   competition?: Prisma.CompetitionUpdateOneRequiredWithoutRegistrationsNestedInput
   student?: Prisma.StudentUpdateOneRequiredWithoutRegistrationsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutRegistrationsNestedInput
   weightClass?: Prisma.WeightClassUpdateOneWithoutRegistrationsNestedInput
+  checkInBy?: Prisma.UserUpdateOneWithoutCheckedInRegistrationsNestedInput
+  weighInBy?: Prisma.UserUpdateOneWithoutWeighedRegistrationsNestedInput
   refund?: Prisma.RefundUpdateOneWithoutRegistrationNestedInput
 }
 
@@ -1222,6 +1736,12 @@ export type RegistrationUncheckedUpdateWithoutCoachInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refund?: Prisma.RefundUncheckedUpdateOneWithoutRegistrationNestedInput
@@ -1238,6 +1758,142 @@ export type RegistrationUncheckedUpdateManyWithoutCoachInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type RegistrationUpdateWithoutCheckInByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  weightClassLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weightClassMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  competition?: Prisma.CompetitionUpdateOneRequiredWithoutRegistrationsNestedInput
+  student?: Prisma.StudentUpdateOneRequiredWithoutRegistrationsNestedInput
+  coach?: Prisma.UserUpdateOneRequiredWithoutRegistrationsNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutRegistrationsNestedInput
+  weightClass?: Prisma.WeightClassUpdateOneWithoutRegistrationsNestedInput
+  weighInBy?: Prisma.UserUpdateOneWithoutWeighedRegistrationsNestedInput
+  refund?: Prisma.RefundUpdateOneWithoutRegistrationNestedInput
+}
+
+export type RegistrationUncheckedUpdateWithoutCheckInByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  competitionId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  coachId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weightClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weightClassLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weightClassMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refund?: Prisma.RefundUncheckedUpdateOneWithoutRegistrationNestedInput
+}
+
+export type RegistrationUncheckedUpdateManyWithoutCheckInByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  competitionId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  coachId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weightClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weightClassLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weightClassMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type RegistrationUpdateWithoutWeighInByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  weightClassLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weightClassMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  competition?: Prisma.CompetitionUpdateOneRequiredWithoutRegistrationsNestedInput
+  student?: Prisma.StudentUpdateOneRequiredWithoutRegistrationsNestedInput
+  coach?: Prisma.UserUpdateOneRequiredWithoutRegistrationsNestedInput
+  payment?: Prisma.PaymentUpdateOneWithoutRegistrationsNestedInput
+  weightClass?: Prisma.WeightClassUpdateOneWithoutRegistrationsNestedInput
+  checkInBy?: Prisma.UserUpdateOneWithoutCheckedInRegistrationsNestedInput
+  refund?: Prisma.RefundUpdateOneWithoutRegistrationNestedInput
+}
+
+export type RegistrationUncheckedUpdateWithoutWeighInByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  competitionId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  coachId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weightClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weightClassLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weightClassMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  refund?: Prisma.RefundUncheckedUpdateOneWithoutRegistrationNestedInput
+}
+
+export type RegistrationUncheckedUpdateManyWithoutWeighInByInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  competitionId?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  coachId?: Prisma.StringFieldUpdateOperationsInput | string
+  paymentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weightClassId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weightClassLabel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weightClassMin?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1253,6 +1909,12 @@ export type RegistrationCreateManyStudentInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  checkInById?: string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInById?: string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1264,12 +1926,18 @@ export type RegistrationUpdateWithoutStudentInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   competition?: Prisma.CompetitionUpdateOneRequiredWithoutRegistrationsNestedInput
   coach?: Prisma.UserUpdateOneRequiredWithoutRegistrationsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutRegistrationsNestedInput
   weightClass?: Prisma.WeightClassUpdateOneWithoutRegistrationsNestedInput
+  checkInBy?: Prisma.UserUpdateOneWithoutCheckedInRegistrationsNestedInput
+  weighInBy?: Prisma.UserUpdateOneWithoutWeighedRegistrationsNestedInput
   refund?: Prisma.RefundUpdateOneWithoutRegistrationNestedInput
 }
 
@@ -1284,6 +1952,12 @@ export type RegistrationUncheckedUpdateWithoutStudentInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refund?: Prisma.RefundUncheckedUpdateOneWithoutRegistrationNestedInput
@@ -1300,6 +1974,12 @@ export type RegistrationUncheckedUpdateManyWithoutStudentInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1315,6 +1995,12 @@ export type RegistrationCreateManyWeightClassInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  checkInById?: string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInById?: string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1326,12 +2012,18 @@ export type RegistrationUpdateWithoutWeightClassInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   competition?: Prisma.CompetitionUpdateOneRequiredWithoutRegistrationsNestedInput
   student?: Prisma.StudentUpdateOneRequiredWithoutRegistrationsNestedInput
   coach?: Prisma.UserUpdateOneRequiredWithoutRegistrationsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutRegistrationsNestedInput
+  checkInBy?: Prisma.UserUpdateOneWithoutCheckedInRegistrationsNestedInput
+  weighInBy?: Prisma.UserUpdateOneWithoutWeighedRegistrationsNestedInput
   refund?: Prisma.RefundUpdateOneWithoutRegistrationNestedInput
 }
 
@@ -1346,6 +2038,12 @@ export type RegistrationUncheckedUpdateWithoutWeightClassInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refund?: Prisma.RefundUncheckedUpdateOneWithoutRegistrationNestedInput
@@ -1362,6 +2060,12 @@ export type RegistrationUncheckedUpdateManyWithoutWeightClassInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1377,6 +2081,12 @@ export type RegistrationCreateManyCompetitionInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  checkInById?: string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInById?: string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1388,12 +2098,18 @@ export type RegistrationUpdateWithoutCompetitionInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutRegistrationsNestedInput
   coach?: Prisma.UserUpdateOneRequiredWithoutRegistrationsNestedInput
   payment?: Prisma.PaymentUpdateOneWithoutRegistrationsNestedInput
   weightClass?: Prisma.WeightClassUpdateOneWithoutRegistrationsNestedInput
+  checkInBy?: Prisma.UserUpdateOneWithoutCheckedInRegistrationsNestedInput
+  weighInBy?: Prisma.UserUpdateOneWithoutWeighedRegistrationsNestedInput
   refund?: Prisma.RefundUpdateOneWithoutRegistrationNestedInput
 }
 
@@ -1408,6 +2124,12 @@ export type RegistrationUncheckedUpdateWithoutCompetitionInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refund?: Prisma.RefundUncheckedUpdateOneWithoutRegistrationNestedInput
@@ -1424,6 +2146,12 @@ export type RegistrationUncheckedUpdateManyWithoutCompetitionInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1439,6 +2167,12 @@ export type RegistrationCreateManyPaymentInput = {
   weightClassMax?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: $Enums.RegistrationStatus
   note?: string | null
+  checkInAt?: Date | string | null
+  checkInById?: string | null
+  weighInKg?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Date | string | null
+  weighInById?: string | null
+  weighInVerdict?: $Enums.WeighInVerdict | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1450,12 +2184,18 @@ export type RegistrationUpdateWithoutPaymentInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   competition?: Prisma.CompetitionUpdateOneRequiredWithoutRegistrationsNestedInput
   student?: Prisma.StudentUpdateOneRequiredWithoutRegistrationsNestedInput
   coach?: Prisma.UserUpdateOneRequiredWithoutRegistrationsNestedInput
   weightClass?: Prisma.WeightClassUpdateOneWithoutRegistrationsNestedInput
+  checkInBy?: Prisma.UserUpdateOneWithoutCheckedInRegistrationsNestedInput
+  weighInBy?: Prisma.UserUpdateOneWithoutWeighedRegistrationsNestedInput
   refund?: Prisma.RefundUpdateOneWithoutRegistrationNestedInput
 }
 
@@ -1470,6 +2210,12 @@ export type RegistrationUncheckedUpdateWithoutPaymentInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   refund?: Prisma.RefundUncheckedUpdateOneWithoutRegistrationNestedInput
@@ -1486,6 +2232,12 @@ export type RegistrationUncheckedUpdateManyWithoutPaymentInput = {
   weightClassMax?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   status?: Prisma.EnumRegistrationStatusFieldUpdateOperationsInput | $Enums.RegistrationStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInKg?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  weighInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  weighInById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  weighInVerdict?: Prisma.NullableEnumWeighInVerdictFieldUpdateOperationsInput | $Enums.WeighInVerdict | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1504,6 +2256,12 @@ export type RegistrationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   weightClassMax?: boolean
   status?: boolean
   note?: boolean
+  checkInAt?: boolean
+  checkInById?: boolean
+  weighInKg?: boolean
+  weighInAt?: boolean
+  weighInById?: boolean
+  weighInVerdict?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   competition?: boolean | Prisma.CompetitionDefaultArgs<ExtArgs>
@@ -1511,6 +2269,8 @@ export type RegistrationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   coach?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   payment?: boolean | Prisma.Registration$paymentArgs<ExtArgs>
   weightClass?: boolean | Prisma.Registration$weightClassArgs<ExtArgs>
+  checkInBy?: boolean | Prisma.Registration$checkInByArgs<ExtArgs>
+  weighInBy?: boolean | Prisma.Registration$weighInByArgs<ExtArgs>
   refund?: boolean | Prisma.Registration$refundArgs<ExtArgs>
 }, ExtArgs["result"]["registration"]>
 
@@ -1526,6 +2286,12 @@ export type RegistrationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   weightClassMax?: boolean
   status?: boolean
   note?: boolean
+  checkInAt?: boolean
+  checkInById?: boolean
+  weighInKg?: boolean
+  weighInAt?: boolean
+  weighInById?: boolean
+  weighInVerdict?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   competition?: boolean | Prisma.CompetitionDefaultArgs<ExtArgs>
@@ -1533,6 +2299,8 @@ export type RegistrationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   coach?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   payment?: boolean | Prisma.Registration$paymentArgs<ExtArgs>
   weightClass?: boolean | Prisma.Registration$weightClassArgs<ExtArgs>
+  checkInBy?: boolean | Prisma.Registration$checkInByArgs<ExtArgs>
+  weighInBy?: boolean | Prisma.Registration$weighInByArgs<ExtArgs>
 }, ExtArgs["result"]["registration"]>
 
 export type RegistrationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1547,6 +2315,12 @@ export type RegistrationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   weightClassMax?: boolean
   status?: boolean
   note?: boolean
+  checkInAt?: boolean
+  checkInById?: boolean
+  weighInKg?: boolean
+  weighInAt?: boolean
+  weighInById?: boolean
+  weighInVerdict?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   competition?: boolean | Prisma.CompetitionDefaultArgs<ExtArgs>
@@ -1554,6 +2328,8 @@ export type RegistrationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   coach?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   payment?: boolean | Prisma.Registration$paymentArgs<ExtArgs>
   weightClass?: boolean | Prisma.Registration$weightClassArgs<ExtArgs>
+  checkInBy?: boolean | Prisma.Registration$checkInByArgs<ExtArgs>
+  weighInBy?: boolean | Prisma.Registration$weighInByArgs<ExtArgs>
 }, ExtArgs["result"]["registration"]>
 
 export type RegistrationSelectScalar = {
@@ -1568,17 +2344,25 @@ export type RegistrationSelectScalar = {
   weightClassMax?: boolean
   status?: boolean
   note?: boolean
+  checkInAt?: boolean
+  checkInById?: boolean
+  weighInKg?: boolean
+  weighInAt?: boolean
+  weighInById?: boolean
+  weighInVerdict?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type RegistrationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "competitionId" | "studentId" | "coachId" | "paymentId" | "weightClassId" | "weightClassLabel" | "weightClassMin" | "weightClassMax" | "status" | "note" | "createdAt" | "updatedAt", ExtArgs["result"]["registration"]>
+export type RegistrationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "competitionId" | "studentId" | "coachId" | "paymentId" | "weightClassId" | "weightClassLabel" | "weightClassMin" | "weightClassMax" | "status" | "note" | "checkInAt" | "checkInById" | "weighInKg" | "weighInAt" | "weighInById" | "weighInVerdict" | "createdAt" | "updatedAt", ExtArgs["result"]["registration"]>
 export type RegistrationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   competition?: boolean | Prisma.CompetitionDefaultArgs<ExtArgs>
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   coach?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   payment?: boolean | Prisma.Registration$paymentArgs<ExtArgs>
   weightClass?: boolean | Prisma.Registration$weightClassArgs<ExtArgs>
+  checkInBy?: boolean | Prisma.Registration$checkInByArgs<ExtArgs>
+  weighInBy?: boolean | Prisma.Registration$weighInByArgs<ExtArgs>
   refund?: boolean | Prisma.Registration$refundArgs<ExtArgs>
 }
 export type RegistrationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1587,6 +2371,8 @@ export type RegistrationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types
   coach?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   payment?: boolean | Prisma.Registration$paymentArgs<ExtArgs>
   weightClass?: boolean | Prisma.Registration$weightClassArgs<ExtArgs>
+  checkInBy?: boolean | Prisma.Registration$checkInByArgs<ExtArgs>
+  weighInBy?: boolean | Prisma.Registration$weighInByArgs<ExtArgs>
 }
 export type RegistrationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   competition?: boolean | Prisma.CompetitionDefaultArgs<ExtArgs>
@@ -1594,6 +2380,8 @@ export type RegistrationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types
   coach?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   payment?: boolean | Prisma.Registration$paymentArgs<ExtArgs>
   weightClass?: boolean | Prisma.Registration$weightClassArgs<ExtArgs>
+  checkInBy?: boolean | Prisma.Registration$checkInByArgs<ExtArgs>
+  weighInBy?: boolean | Prisma.Registration$weighInByArgs<ExtArgs>
 }
 
 export type $RegistrationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1604,6 +2392,8 @@ export type $RegistrationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     coach: Prisma.$UserPayload<ExtArgs>
     payment: Prisma.$PaymentPayload<ExtArgs> | null
     weightClass: Prisma.$WeightClassPayload<ExtArgs> | null
+    checkInBy: Prisma.$UserPayload<ExtArgs> | null
+    weighInBy: Prisma.$UserPayload<ExtArgs> | null
     refund: Prisma.$RefundPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1618,6 +2408,12 @@ export type $RegistrationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     weightClassMax: runtime.Decimal | null
     status: $Enums.RegistrationStatus
     note: string | null
+    checkInAt: Date | null
+    checkInById: string | null
+    weighInKg: runtime.Decimal | null
+    weighInAt: Date | null
+    weighInById: string | null
+    weighInVerdict: $Enums.WeighInVerdict | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["registration"]>
@@ -2019,6 +2815,8 @@ export interface Prisma__RegistrationClient<T, Null = never, ExtArgs extends run
   coach<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   payment<T extends Prisma.Registration$paymentArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Registration$paymentArgs<ExtArgs>>): Prisma.Prisma__PaymentClient<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   weightClass<T extends Prisma.Registration$weightClassArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Registration$weightClassArgs<ExtArgs>>): Prisma.Prisma__WeightClassClient<runtime.Types.Result.GetResult<Prisma.$WeightClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  checkInBy<T extends Prisma.Registration$checkInByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Registration$checkInByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  weighInBy<T extends Prisma.Registration$weighInByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Registration$weighInByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   refund<T extends Prisma.Registration$refundArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Registration$refundArgs<ExtArgs>>): Prisma.Prisma__RefundClient<runtime.Types.Result.GetResult<Prisma.$RefundPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2060,6 +2858,12 @@ export interface RegistrationFieldRefs {
   readonly weightClassMax: Prisma.FieldRef<"Registration", 'Decimal'>
   readonly status: Prisma.FieldRef<"Registration", 'RegistrationStatus'>
   readonly note: Prisma.FieldRef<"Registration", 'String'>
+  readonly checkInAt: Prisma.FieldRef<"Registration", 'DateTime'>
+  readonly checkInById: Prisma.FieldRef<"Registration", 'String'>
+  readonly weighInKg: Prisma.FieldRef<"Registration", 'Decimal'>
+  readonly weighInAt: Prisma.FieldRef<"Registration", 'DateTime'>
+  readonly weighInById: Prisma.FieldRef<"Registration", 'String'>
+  readonly weighInVerdict: Prisma.FieldRef<"Registration", 'WeighInVerdict'>
   readonly createdAt: Prisma.FieldRef<"Registration", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Registration", 'DateTime'>
 }
@@ -2498,6 +3302,44 @@ export type Registration$weightClassArgs<ExtArgs extends runtime.Types.Extension
    */
   include?: Prisma.WeightClassInclude<ExtArgs> | null
   where?: Prisma.WeightClassWhereInput
+}
+
+/**
+ * Registration.checkInBy
+ */
+export type Registration$checkInByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
+}
+
+/**
+ * Registration.weighInBy
+ */
+export type Registration$weighInByArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the User
+   */
+  select?: Prisma.UserSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the User
+   */
+  omit?: Prisma.UserOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserInclude<ExtArgs> | null
+  where?: Prisma.UserWhereInput
 }
 
 /**

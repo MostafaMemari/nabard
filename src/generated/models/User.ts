@@ -261,6 +261,8 @@ export type UserWhereInput = {
   transfersTo?: Prisma.StudentTransferListRelationFilter
   decidedTransfers?: Prisma.StudentTransferListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  checkedInRegistrations?: Prisma.RegistrationListRelationFilter
+  weighedRegistrations?: Prisma.RegistrationListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -292,6 +294,8 @@ export type UserOrderByWithRelationInput = {
   transfersTo?: Prisma.StudentTransferOrderByRelationAggregateInput
   decidedTransfers?: Prisma.StudentTransferOrderByRelationAggregateInput
   auditLogs?: Prisma.AuditLogOrderByRelationAggregateInput
+  checkedInRegistrations?: Prisma.RegistrationOrderByRelationAggregateInput
+  weighedRegistrations?: Prisma.RegistrationOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -326,6 +330,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   transfersTo?: Prisma.StudentTransferListRelationFilter
   decidedTransfers?: Prisma.StudentTransferListRelationFilter
   auditLogs?: Prisma.AuditLogListRelationFilter
+  checkedInRegistrations?: Prisma.RegistrationListRelationFilter
+  weighedRegistrations?: Prisma.RegistrationListRelationFilter
 }, "id" | "mobile" | "nationalCode" | "photoFileId">
 
 export type UserOrderByWithAggregationInput = {
@@ -393,6 +399,8 @@ export type UserCreateInput = {
   transfersTo?: Prisma.StudentTransferCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -422,6 +430,8 @@ export type UserUncheckedCreateInput = {
   transfersTo?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserUpdateInput = {
@@ -451,6 +461,8 @@ export type UserUpdateInput = {
   transfersTo?: Prisma.StudentTransferUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -480,6 +492,8 @@ export type UserUncheckedUpdateInput = {
   transfersTo?: Prisma.StudentTransferUncheckedUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -842,12 +856,44 @@ export type UserCreateNestedOneWithoutRegistrationsInput = {
   connect?: Prisma.UserWhereUniqueInput
 }
 
+export type UserCreateNestedOneWithoutCheckedInRegistrationsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCheckedInRegistrationsInput, Prisma.UserUncheckedCreateWithoutCheckedInRegistrationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCheckedInRegistrationsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutWeighedRegistrationsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWeighedRegistrationsInput, Prisma.UserUncheckedCreateWithoutWeighedRegistrationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWeighedRegistrationsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
 export type UserUpdateOneRequiredWithoutRegistrationsNestedInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutRegistrationsInput, Prisma.UserUncheckedCreateWithoutRegistrationsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutRegistrationsInput
   upsert?: Prisma.UserUpsertWithoutRegistrationsInput
   connect?: Prisma.UserWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutRegistrationsInput, Prisma.UserUpdateWithoutRegistrationsInput>, Prisma.UserUncheckedUpdateWithoutRegistrationsInput>
+}
+
+export type UserUpdateOneWithoutCheckedInRegistrationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCheckedInRegistrationsInput, Prisma.UserUncheckedCreateWithoutCheckedInRegistrationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCheckedInRegistrationsInput
+  upsert?: Prisma.UserUpsertWithoutCheckedInRegistrationsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCheckedInRegistrationsInput, Prisma.UserUpdateWithoutCheckedInRegistrationsInput>, Prisma.UserUncheckedUpdateWithoutCheckedInRegistrationsInput>
+}
+
+export type UserUpdateOneWithoutWeighedRegistrationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWeighedRegistrationsInput, Prisma.UserUncheckedCreateWithoutWeighedRegistrationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWeighedRegistrationsInput
+  upsert?: Prisma.UserUpsertWithoutWeighedRegistrationsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWeighedRegistrationsInput, Prisma.UserUpdateWithoutWeighedRegistrationsInput>, Prisma.UserUncheckedUpdateWithoutWeighedRegistrationsInput>
 }
 
 export type UserCreateNestedOneWithoutRefundsInput = {
@@ -906,6 +952,8 @@ export type UserCreateWithoutCountyInput = {
   transfersTo?: Prisma.StudentTransferCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserUncheckedCreateWithoutCountyInput = {
@@ -934,6 +982,8 @@ export type UserUncheckedCreateWithoutCountyInput = {
   transfersTo?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserCreateOrConnectWithoutCountyInput = {
@@ -1007,6 +1057,8 @@ export type UserCreateWithoutStudentsInput = {
   transfersTo?: Prisma.StudentTransferCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserUncheckedCreateWithoutStudentsInput = {
@@ -1035,6 +1087,8 @@ export type UserUncheckedCreateWithoutStudentsInput = {
   transfersTo?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserCreateOrConnectWithoutStudentsInput = {
@@ -1068,6 +1122,8 @@ export type UserCreateWithoutReviewedProfilesInput = {
   transfersTo?: Prisma.StudentTransferCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserUncheckedCreateWithoutReviewedProfilesInput = {
@@ -1096,6 +1152,8 @@ export type UserUncheckedCreateWithoutReviewedProfilesInput = {
   transfersTo?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserCreateOrConnectWithoutReviewedProfilesInput = {
@@ -1140,6 +1198,8 @@ export type UserUpdateWithoutStudentsInput = {
   transfersTo?: Prisma.StudentTransferUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStudentsInput = {
@@ -1168,6 +1228,8 @@ export type UserUncheckedUpdateWithoutStudentsInput = {
   transfersTo?: Prisma.StudentTransferUncheckedUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUpsertWithoutReviewedProfilesInput = {
@@ -1207,6 +1269,8 @@ export type UserUpdateWithoutReviewedProfilesInput = {
   transfersTo?: Prisma.StudentTransferUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewedProfilesInput = {
@@ -1235,6 +1299,8 @@ export type UserUncheckedUpdateWithoutReviewedProfilesInput = {
   transfersTo?: Prisma.StudentTransferUncheckedUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserCreateWithoutCountyChangeRequestsInput = {
@@ -1263,6 +1329,8 @@ export type UserCreateWithoutCountyChangeRequestsInput = {
   transfersTo?: Prisma.StudentTransferCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserUncheckedCreateWithoutCountyChangeRequestsInput = {
@@ -1291,6 +1359,8 @@ export type UserUncheckedCreateWithoutCountyChangeRequestsInput = {
   transfersTo?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserCreateOrConnectWithoutCountyChangeRequestsInput = {
@@ -1324,6 +1394,8 @@ export type UserCreateWithoutDecidedCountyChangesInput = {
   transfersTo?: Prisma.StudentTransferCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserUncheckedCreateWithoutDecidedCountyChangesInput = {
@@ -1352,6 +1424,8 @@ export type UserUncheckedCreateWithoutDecidedCountyChangesInput = {
   transfersTo?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserCreateOrConnectWithoutDecidedCountyChangesInput = {
@@ -1396,6 +1470,8 @@ export type UserUpdateWithoutCountyChangeRequestsInput = {
   transfersTo?: Prisma.StudentTransferUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCountyChangeRequestsInput = {
@@ -1424,6 +1500,8 @@ export type UserUncheckedUpdateWithoutCountyChangeRequestsInput = {
   transfersTo?: Prisma.StudentTransferUncheckedUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUpsertWithoutDecidedCountyChangesInput = {
@@ -1463,6 +1541,8 @@ export type UserUpdateWithoutDecidedCountyChangesInput = {
   transfersTo?: Prisma.StudentTransferUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDecidedCountyChangesInput = {
@@ -1491,6 +1571,8 @@ export type UserUncheckedUpdateWithoutDecidedCountyChangesInput = {
   transfersTo?: Prisma.StudentTransferUncheckedUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserCreateWithoutTransfersFromInput = {
@@ -1519,6 +1601,8 @@ export type UserCreateWithoutTransfersFromInput = {
   transfersTo?: Prisma.StudentTransferCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserUncheckedCreateWithoutTransfersFromInput = {
@@ -1547,6 +1631,8 @@ export type UserUncheckedCreateWithoutTransfersFromInput = {
   transfersTo?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserCreateOrConnectWithoutTransfersFromInput = {
@@ -1580,6 +1666,8 @@ export type UserCreateWithoutTransfersToInput = {
   transfersFrom?: Prisma.StudentTransferCreateNestedManyWithoutFromCoachInput
   decidedTransfers?: Prisma.StudentTransferCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserUncheckedCreateWithoutTransfersToInput = {
@@ -1608,6 +1696,8 @@ export type UserUncheckedCreateWithoutTransfersToInput = {
   transfersFrom?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutFromCoachInput
   decidedTransfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserCreateOrConnectWithoutTransfersToInput = {
@@ -1641,6 +1731,8 @@ export type UserCreateWithoutDecidedTransfersInput = {
   transfersFrom?: Prisma.StudentTransferCreateNestedManyWithoutFromCoachInput
   transfersTo?: Prisma.StudentTransferCreateNestedManyWithoutToCoachInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserUncheckedCreateWithoutDecidedTransfersInput = {
@@ -1669,6 +1761,8 @@ export type UserUncheckedCreateWithoutDecidedTransfersInput = {
   transfersFrom?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutFromCoachInput
   transfersTo?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutToCoachInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserCreateOrConnectWithoutDecidedTransfersInput = {
@@ -1713,6 +1807,8 @@ export type UserUpdateWithoutTransfersFromInput = {
   transfersTo?: Prisma.StudentTransferUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransfersFromInput = {
@@ -1741,6 +1837,8 @@ export type UserUncheckedUpdateWithoutTransfersFromInput = {
   transfersTo?: Prisma.StudentTransferUncheckedUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUpsertWithoutTransfersToInput = {
@@ -1780,6 +1878,8 @@ export type UserUpdateWithoutTransfersToInput = {
   transfersFrom?: Prisma.StudentTransferUpdateManyWithoutFromCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTransfersToInput = {
@@ -1808,6 +1908,8 @@ export type UserUncheckedUpdateWithoutTransfersToInput = {
   transfersFrom?: Prisma.StudentTransferUncheckedUpdateManyWithoutFromCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUpsertWithoutDecidedTransfersInput = {
@@ -1847,6 +1949,8 @@ export type UserUpdateWithoutDecidedTransfersInput = {
   transfersFrom?: Prisma.StudentTransferUpdateManyWithoutFromCoachNestedInput
   transfersTo?: Prisma.StudentTransferUpdateManyWithoutToCoachNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDecidedTransfersInput = {
@@ -1875,6 +1979,8 @@ export type UserUncheckedUpdateWithoutDecidedTransfersInput = {
   transfersFrom?: Prisma.StudentTransferUncheckedUpdateManyWithoutFromCoachNestedInput
   transfersTo?: Prisma.StudentTransferUncheckedUpdateManyWithoutToCoachNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserCreateWithoutAuditLogsInput = {
@@ -1903,6 +2009,8 @@ export type UserCreateWithoutAuditLogsInput = {
   transfersFrom?: Prisma.StudentTransferCreateNestedManyWithoutFromCoachInput
   transfersTo?: Prisma.StudentTransferCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferCreateNestedManyWithoutDecidedByInput
+  checkedInRegistrations?: Prisma.RegistrationCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserUncheckedCreateWithoutAuditLogsInput = {
@@ -1931,6 +2039,8 @@ export type UserUncheckedCreateWithoutAuditLogsInput = {
   transfersFrom?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutFromCoachInput
   transfersTo?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutDecidedByInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserCreateOrConnectWithoutAuditLogsInput = {
@@ -1975,6 +2085,8 @@ export type UserUpdateWithoutAuditLogsInput = {
   transfersFrom?: Prisma.StudentTransferUpdateManyWithoutFromCoachNestedInput
   transfersTo?: Prisma.StudentTransferUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUpdateManyWithoutDecidedByNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAuditLogsInput = {
@@ -2003,6 +2115,8 @@ export type UserUncheckedUpdateWithoutAuditLogsInput = {
   transfersFrom?: Prisma.StudentTransferUncheckedUpdateManyWithoutFromCoachNestedInput
   transfersTo?: Prisma.StudentTransferUncheckedUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutDecidedByNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserCreateWithoutDeadlineExtensionsInput = {
@@ -2031,6 +2145,8 @@ export type UserCreateWithoutDeadlineExtensionsInput = {
   transfersTo?: Prisma.StudentTransferCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserUncheckedCreateWithoutDeadlineExtensionsInput = {
@@ -2059,6 +2175,8 @@ export type UserUncheckedCreateWithoutDeadlineExtensionsInput = {
   transfersTo?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserCreateOrConnectWithoutDeadlineExtensionsInput = {
@@ -2103,6 +2221,8 @@ export type UserUpdateWithoutDeadlineExtensionsInput = {
   transfersTo?: Prisma.StudentTransferUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDeadlineExtensionsInput = {
@@ -2131,6 +2251,8 @@ export type UserUncheckedUpdateWithoutDeadlineExtensionsInput = {
   transfersTo?: Prisma.StudentTransferUncheckedUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserCreateWithoutPhotoFileInput = {
@@ -2159,6 +2281,8 @@ export type UserCreateWithoutPhotoFileInput = {
   transfersTo?: Prisma.StudentTransferCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserUncheckedCreateWithoutPhotoFileInput = {
@@ -2187,6 +2311,8 @@ export type UserUncheckedCreateWithoutPhotoFileInput = {
   transfersTo?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserCreateOrConnectWithoutPhotoFileInput = {
@@ -2231,6 +2357,8 @@ export type UserUpdateWithoutPhotoFileInput = {
   transfersTo?: Prisma.StudentTransferUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPhotoFileInput = {
@@ -2259,6 +2387,8 @@ export type UserUncheckedUpdateWithoutPhotoFileInput = {
   transfersTo?: Prisma.StudentTransferUncheckedUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserCreateWithoutPaymentsInput = {
@@ -2287,6 +2417,8 @@ export type UserCreateWithoutPaymentsInput = {
   transfersTo?: Prisma.StudentTransferCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserUncheckedCreateWithoutPaymentsInput = {
@@ -2315,6 +2447,8 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   transfersTo?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserCreateOrConnectWithoutPaymentsInput = {
@@ -2359,6 +2493,8 @@ export type UserUpdateWithoutPaymentsInput = {
   transfersTo?: Prisma.StudentTransferUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentsInput = {
@@ -2387,6 +2523,8 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   transfersTo?: Prisma.StudentTransferUncheckedUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserCreateWithoutRegistrationsInput = {
@@ -2415,6 +2553,8 @@ export type UserCreateWithoutRegistrationsInput = {
   transfersTo?: Prisma.StudentTransferCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserUncheckedCreateWithoutRegistrationsInput = {
@@ -2443,11 +2583,143 @@ export type UserUncheckedCreateWithoutRegistrationsInput = {
   transfersTo?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserCreateOrConnectWithoutRegistrationsInput = {
   where: Prisma.UserWhereUniqueInput
   create: Prisma.XOR<Prisma.UserCreateWithoutRegistrationsInput, Prisma.UserUncheckedCreateWithoutRegistrationsInput>
+}
+
+export type UserCreateWithoutCheckedInRegistrationsInput = {
+  id?: string
+  mobile: string
+  passwordHash: string
+  fullName: string
+  nationalCode?: string | null
+  role: $Enums.Role
+  gender?: $Enums.Gender | null
+  province?: $Enums.Province | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  photoFile?: Prisma.StoredFileCreateNestedOneWithoutCoachPhotoInput
+  students?: Prisma.StudentCreateNestedManyWithoutCoachInput
+  registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
+  reviewedProfiles?: Prisma.StudentCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutDecidedByInput
+  transfersFrom?: Prisma.StudentTransferCreateNestedManyWithoutFromCoachInput
+  transfersTo?: Prisma.StudentTransferCreateNestedManyWithoutToCoachInput
+  decidedTransfers?: Prisma.StudentTransferCreateNestedManyWithoutDecidedByInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  weighedRegistrations?: Prisma.RegistrationCreateNestedManyWithoutWeighInByInput
+}
+
+export type UserUncheckedCreateWithoutCheckedInRegistrationsInput = {
+  id?: string
+  mobile: string
+  passwordHash: string
+  fullName: string
+  nationalCode?: string | null
+  role: $Enums.Role
+  gender?: $Enums.Gender | null
+  province?: $Enums.Province | null
+  isActive?: boolean
+  countyId?: string | null
+  photoFileId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
+  registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCoachInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCoachInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
+  reviewedProfiles?: Prisma.StudentUncheckedCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
+  transfersFrom?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutFromCoachInput
+  transfersTo?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutToCoachInput
+  decidedTransfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutDecidedByInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeighInByInput
+}
+
+export type UserCreateOrConnectWithoutCheckedInRegistrationsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCheckedInRegistrationsInput, Prisma.UserUncheckedCreateWithoutCheckedInRegistrationsInput>
+}
+
+export type UserCreateWithoutWeighedRegistrationsInput = {
+  id?: string
+  mobile: string
+  passwordHash: string
+  fullName: string
+  nationalCode?: string | null
+  role: $Enums.Role
+  gender?: $Enums.Gender | null
+  province?: $Enums.Province | null
+  isActive?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  county?: Prisma.CountyCreateNestedOneWithoutCoachesInput
+  photoFile?: Prisma.StoredFileCreateNestedOneWithoutCoachPhotoInput
+  students?: Prisma.StudentCreateNestedManyWithoutCoachInput
+  registrations?: Prisma.RegistrationCreateNestedManyWithoutCoachInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutCoachInput
+  deadlineExtensions?: Prisma.DeadlineExtensionCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundCreateNestedManyWithoutProcessedByInput
+  reviewedProfiles?: Prisma.StudentCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestCreateNestedManyWithoutDecidedByInput
+  transfersFrom?: Prisma.StudentTransferCreateNestedManyWithoutFromCoachInput
+  transfersTo?: Prisma.StudentTransferCreateNestedManyWithoutToCoachInput
+  decidedTransfers?: Prisma.StudentTransferCreateNestedManyWithoutDecidedByInput
+  auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationCreateNestedManyWithoutCheckInByInput
+}
+
+export type UserUncheckedCreateWithoutWeighedRegistrationsInput = {
+  id?: string
+  mobile: string
+  passwordHash: string
+  fullName: string
+  nationalCode?: string | null
+  role: $Enums.Role
+  gender?: $Enums.Gender | null
+  province?: $Enums.Province | null
+  isActive?: boolean
+  countyId?: string | null
+  photoFileId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutCoachInput
+  registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCoachInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCoachInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedCreateNestedManyWithoutCreatedByInput
+  refunds?: Prisma.RefundUncheckedCreateNestedManyWithoutCoachInput
+  processedRefunds?: Prisma.RefundUncheckedCreateNestedManyWithoutProcessedByInput
+  reviewedProfiles?: Prisma.StudentUncheckedCreateNestedManyWithoutApprovedByInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutCoachInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedCreateNestedManyWithoutDecidedByInput
+  transfersFrom?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutFromCoachInput
+  transfersTo?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutToCoachInput
+  decidedTransfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutDecidedByInput
+  auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCheckInByInput
+}
+
+export type UserCreateOrConnectWithoutWeighedRegistrationsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutWeighedRegistrationsInput, Prisma.UserUncheckedCreateWithoutWeighedRegistrationsInput>
 }
 
 export type UserUpsertWithoutRegistrationsInput = {
@@ -2487,6 +2759,8 @@ export type UserUpdateWithoutRegistrationsInput = {
   transfersTo?: Prisma.StudentTransferUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRegistrationsInput = {
@@ -2515,6 +2789,150 @@ export type UserUncheckedUpdateWithoutRegistrationsInput = {
   transfersTo?: Prisma.StudentTransferUncheckedUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeighInByNestedInput
+}
+
+export type UserUpsertWithoutCheckedInRegistrationsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCheckedInRegistrationsInput, Prisma.UserUncheckedUpdateWithoutCheckedInRegistrationsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCheckedInRegistrationsInput, Prisma.UserUncheckedCreateWithoutCheckedInRegistrationsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCheckedInRegistrationsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCheckedInRegistrationsInput, Prisma.UserUncheckedUpdateWithoutCheckedInRegistrationsInput>
+}
+
+export type UserUpdateWithoutCheckedInRegistrationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mobile?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+  province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  photoFile?: Prisma.StoredFileUpdateOneWithoutCoachPhotoNestedInput
+  students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
+  registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
+  reviewedProfiles?: Prisma.StudentUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUpdateManyWithoutDecidedByNestedInput
+  transfersFrom?: Prisma.StudentTransferUpdateManyWithoutFromCoachNestedInput
+  transfersTo?: Prisma.StudentTransferUpdateManyWithoutToCoachNestedInput
+  decidedTransfers?: Prisma.StudentTransferUpdateManyWithoutDecidedByNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  weighedRegistrations?: Prisma.RegistrationUpdateManyWithoutWeighInByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCheckedInRegistrationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mobile?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+  province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
+  registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCoachNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutCoachNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
+  reviewedProfiles?: Prisma.StudentUncheckedUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+  transfersFrom?: Prisma.StudentTransferUncheckedUpdateManyWithoutFromCoachNestedInput
+  transfersTo?: Prisma.StudentTransferUncheckedUpdateManyWithoutToCoachNestedInput
+  decidedTransfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutDecidedByNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeighInByNestedInput
+}
+
+export type UserUpsertWithoutWeighedRegistrationsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutWeighedRegistrationsInput, Prisma.UserUncheckedUpdateWithoutWeighedRegistrationsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutWeighedRegistrationsInput, Prisma.UserUncheckedCreateWithoutWeighedRegistrationsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutWeighedRegistrationsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutWeighedRegistrationsInput, Prisma.UserUncheckedUpdateWithoutWeighedRegistrationsInput>
+}
+
+export type UserUpdateWithoutWeighedRegistrationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mobile?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+  province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  county?: Prisma.CountyUpdateOneWithoutCoachesNestedInput
+  photoFile?: Prisma.StoredFileUpdateOneWithoutCoachPhotoNestedInput
+  students?: Prisma.StudentUpdateManyWithoutCoachNestedInput
+  registrations?: Prisma.RegistrationUpdateManyWithoutCoachNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutCoachNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUpdateManyWithoutProcessedByNestedInput
+  reviewedProfiles?: Prisma.StudentUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUpdateManyWithoutDecidedByNestedInput
+  transfersFrom?: Prisma.StudentTransferUpdateManyWithoutFromCoachNestedInput
+  transfersTo?: Prisma.StudentTransferUpdateManyWithoutToCoachNestedInput
+  decidedTransfers?: Prisma.StudentTransferUpdateManyWithoutDecidedByNestedInput
+  auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUpdateManyWithoutCheckInByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutWeighedRegistrationsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mobile?: Prisma.StringFieldUpdateOperationsInput | string
+  passwordHash?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  nationalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
+  province?: Prisma.NullableEnumProvinceFieldUpdateOperationsInput | $Enums.Province | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  countyId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  photoFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  students?: Prisma.StudentUncheckedUpdateManyWithoutCoachNestedInput
+  registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCoachNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutCoachNestedInput
+  deadlineExtensions?: Prisma.DeadlineExtensionUncheckedUpdateManyWithoutCreatedByNestedInput
+  refunds?: Prisma.RefundUncheckedUpdateManyWithoutCoachNestedInput
+  processedRefunds?: Prisma.RefundUncheckedUpdateManyWithoutProcessedByNestedInput
+  reviewedProfiles?: Prisma.StudentUncheckedUpdateManyWithoutApprovedByNestedInput
+  countyChangeRequests?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutCoachNestedInput
+  decidedCountyChanges?: Prisma.CoachCountyChangeRequestUncheckedUpdateManyWithoutDecidedByNestedInput
+  transfersFrom?: Prisma.StudentTransferUncheckedUpdateManyWithoutFromCoachNestedInput
+  transfersTo?: Prisma.StudentTransferUncheckedUpdateManyWithoutToCoachNestedInput
+  decidedTransfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutDecidedByNestedInput
+  auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCheckInByNestedInput
 }
 
 export type UserCreateWithoutRefundsInput = {
@@ -2543,6 +2961,8 @@ export type UserCreateWithoutRefundsInput = {
   transfersTo?: Prisma.StudentTransferCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserUncheckedCreateWithoutRefundsInput = {
@@ -2571,6 +2991,8 @@ export type UserUncheckedCreateWithoutRefundsInput = {
   transfersTo?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserCreateOrConnectWithoutRefundsInput = {
@@ -2604,6 +3026,8 @@ export type UserCreateWithoutProcessedRefundsInput = {
   transfersTo?: Prisma.StudentTransferCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserUncheckedCreateWithoutProcessedRefundsInput = {
@@ -2632,6 +3056,8 @@ export type UserUncheckedCreateWithoutProcessedRefundsInput = {
   transfersTo?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutToCoachInput
   decidedTransfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutDecidedByInput
   auditLogs?: Prisma.AuditLogUncheckedCreateNestedManyWithoutActorInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutCheckInByInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutWeighInByInput
 }
 
 export type UserCreateOrConnectWithoutProcessedRefundsInput = {
@@ -2676,6 +3102,8 @@ export type UserUpdateWithoutRefundsInput = {
   transfersTo?: Prisma.StudentTransferUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRefundsInput = {
@@ -2704,6 +3132,8 @@ export type UserUncheckedUpdateWithoutRefundsInput = {
   transfersTo?: Prisma.StudentTransferUncheckedUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUpsertWithoutProcessedRefundsInput = {
@@ -2743,6 +3173,8 @@ export type UserUpdateWithoutProcessedRefundsInput = {
   transfersTo?: Prisma.StudentTransferUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProcessedRefundsInput = {
@@ -2771,6 +3203,8 @@ export type UserUncheckedUpdateWithoutProcessedRefundsInput = {
   transfersTo?: Prisma.StudentTransferUncheckedUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserCreateManyCountyInput = {
@@ -2814,6 +3248,8 @@ export type UserUpdateWithoutCountyInput = {
   transfersTo?: Prisma.StudentTransferUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCountyInput = {
@@ -2842,6 +3278,8 @@ export type UserUncheckedUpdateWithoutCountyInput = {
   transfersTo?: Prisma.StudentTransferUncheckedUpdateManyWithoutToCoachNestedInput
   decidedTransfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutDecidedByNestedInput
   auditLogs?: Prisma.AuditLogUncheckedUpdateManyWithoutActorNestedInput
+  checkedInRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutCheckInByNestedInput
+  weighedRegistrations?: Prisma.RegistrationUncheckedUpdateManyWithoutWeighInByNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutCountyInput = {
@@ -2878,6 +3316,8 @@ export type UserCountOutputType = {
   transfersTo: number
   decidedTransfers: number
   auditLogs: number
+  checkedInRegistrations: number
+  weighedRegistrations: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2894,6 +3334,8 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   transfersTo?: boolean | UserCountOutputTypeCountTransfersToArgs
   decidedTransfers?: boolean | UserCountOutputTypeCountDecidedTransfersArgs
   auditLogs?: boolean | UserCountOutputTypeCountAuditLogsArgs
+  checkedInRegistrations?: boolean | UserCountOutputTypeCountCheckedInRegistrationsArgs
+  weighedRegistrations?: boolean | UserCountOutputTypeCountWeighedRegistrationsArgs
 }
 
 /**
@@ -2997,6 +3439,20 @@ export type UserCountOutputTypeCountAuditLogsArgs<ExtArgs extends runtime.Types.
   where?: Prisma.AuditLogWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCheckedInRegistrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RegistrationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountWeighedRegistrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RegistrationWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3027,6 +3483,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   transfersTo?: boolean | Prisma.User$transfersToArgs<ExtArgs>
   decidedTransfers?: boolean | Prisma.User$decidedTransfersArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  checkedInRegistrations?: boolean | Prisma.User$checkedInRegistrationsArgs<ExtArgs>
+  weighedRegistrations?: boolean | Prisma.User$weighedRegistrationsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -3099,6 +3557,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   transfersTo?: boolean | Prisma.User$transfersToArgs<ExtArgs>
   decidedTransfers?: boolean | Prisma.User$decidedTransfersArgs<ExtArgs>
   auditLogs?: boolean | Prisma.User$auditLogsArgs<ExtArgs>
+  checkedInRegistrations?: boolean | Prisma.User$checkedInRegistrationsArgs<ExtArgs>
+  weighedRegistrations?: boolean | Prisma.User$weighedRegistrationsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3128,6 +3588,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     transfersTo: Prisma.$StudentTransferPayload<ExtArgs>[]
     decidedTransfers: Prisma.$StudentTransferPayload<ExtArgs>[]
     auditLogs: Prisma.$AuditLogPayload<ExtArgs>[]
+    checkedInRegistrations: Prisma.$RegistrationPayload<ExtArgs>[]
+    weighedRegistrations: Prisma.$RegistrationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3552,6 +4014,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   transfersTo<T extends Prisma.User$transfersToArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$transfersToArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   decidedTransfers<T extends Prisma.User$decidedTransfersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$decidedTransfersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   auditLogs<T extends Prisma.User$auditLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$auditLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  checkedInRegistrations<T extends Prisma.User$checkedInRegistrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$checkedInRegistrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  weighedRegistrations<T extends Prisma.User$weighedRegistrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$weighedRegistrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4342,6 +4806,54 @@ export type User$auditLogsArgs<ExtArgs extends runtime.Types.Extensions.Internal
   take?: number
   skip?: number
   distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * User.checkedInRegistrations
+ */
+export type User$checkedInRegistrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Registration
+   */
+  select?: Prisma.RegistrationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Registration
+   */
+  omit?: Prisma.RegistrationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationInclude<ExtArgs> | null
+  where?: Prisma.RegistrationWhereInput
+  orderBy?: Prisma.RegistrationOrderByWithRelationInput | Prisma.RegistrationOrderByWithRelationInput[]
+  cursor?: Prisma.RegistrationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RegistrationScalarFieldEnum | Prisma.RegistrationScalarFieldEnum[]
+}
+
+/**
+ * User.weighedRegistrations
+ */
+export type User$weighedRegistrationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Registration
+   */
+  select?: Prisma.RegistrationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Registration
+   */
+  omit?: Prisma.RegistrationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RegistrationInclude<ExtArgs> | null
+  where?: Prisma.RegistrationWhereInput
+  orderBy?: Prisma.RegistrationOrderByWithRelationInput | Prisma.RegistrationOrderByWithRelationInput[]
+  cursor?: Prisma.RegistrationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RegistrationScalarFieldEnum | Prisma.RegistrationScalarFieldEnum[]
 }
 
 /**

@@ -1,7 +1,13 @@
 import { describe, expect, it } from "vitest";
 import type { AgeCategory, Belt, WeightClass } from "@/features/base-data";
 import type { CompetitionRulesSnapshot } from "@/features/competitions";
-import { checkEligibility, type EligibilityCompetition, type EligibilityStudent, eligibilityCompetitionFromSnapshot } from "./eligibility";
+import {
+  checkEligibility,
+  type EligibilityCompetition,
+  type EligibilityStudent,
+  eligibilityCompetitionFromSnapshot,
+  resolveWeightClass,
+} from "./eligibility";
 
 const belts: Belt[] = [
   { id: "b-white", code: "white", label: "سفید", level: 1, order: 1, rankType: "COLOR", color: null, colorHex: null, isActive: true },
@@ -225,5 +231,31 @@ describe("eligibilityCompetitionFromSnapshot", () => {
     const result = checkEligibility(student({ weightKg: 33 }), built, belts);
 
     expect(result).toEqual({ eligible: true, weightClass: built.weightClasses[1] });
+  });
+});
+
+describe("resolveWeightClass", () => {
+  it("matches the single class containing the weight", () => {
+    const result = resolveWeightClass(35, weightClasses);
+
+    expect(result).toEqual({ kind: "match", weightClass: weightClasses[1] });
+  });
+
+  it("honors the exclude boundaries between neighbouring classes", () => {
+    const lower = resolveWeightClass(33, weightClasses);
+    const upper = resolveWeightClass(37, weightClasses);
+
+    expect(lower).toEqual({ kind: "match", weightClass: weightClasses[1] });
+    expect(upper).toEqual({ kind: "match", weightClass: weightClasses[2] });
+  });
+
+  it("returns none when the weight falls outside every class", () => {
+    expect(resolveWeightClass(20, weightClasses)).toEqual({ kind: "none" });
+  });
+
+  it("returns ambiguous when the weight falls in more than one class", () => {
+    const overlapping = [weightClass("wc-a", "30-35", 30, 35, { excludeMax: false }), weightClass("wc-b", "35-40", 35, 40)];
+
+    expect(resolveWeightClass(35, overlapping)).toEqual({ kind: "ambiguous" });
   });
 });

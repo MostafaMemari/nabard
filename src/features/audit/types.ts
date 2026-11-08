@@ -22,6 +22,7 @@ export const auditActions = {
   transferApproved: "transfer.approved",
   transferRejected: "transfer.rejected",
   studentsReassigned: "students.reassigned",
+  registrationWeighed: "registration.weighed",
 } as const;
 
 export const auditEntityTypes = {
@@ -32,6 +33,7 @@ export const auditEntityTypes = {
   weightClassSet: "weight_class_set",
   transfer: "transfer",
   coach: "coach",
+  registration: "registration",
 } as const;
 
 export type AuditEntry = {

@@ -27,6 +27,16 @@ export const rejectRegistrationSchema = z.object({
   note: z.string().trim().min(3, "دلیل رد را وارد کنید.").max(500, "دلیل رد حداکثر ۵۰۰ کاراکتر است."),
 });
 
+export const weighInSchema = z.object({
+  weightKg: z.number().refine(isValidWeight, "وزن وارد شده معتبر نیست."),
+});
+
+export const checkInSchema = z.object({
+  checkedIn: z.boolean(),
+});
+
 export type RegistrationListQuery = z.output<typeof registrationListQuerySchema>;
 export type CreateRegistrationsPayload = z.output<typeof createRegistrationsSchema>;
 export type RejectRegistrationValues = z.infer<typeof rejectRegistrationSchema>;
+export type WeighInPayload = z.output<typeof weighInSchema>;
+export type CheckInPayload = z.output<typeof checkInSchema>;

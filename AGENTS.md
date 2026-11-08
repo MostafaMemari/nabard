@@ -174,4 +174,4 @@ The interface must look like a real, hand-designed product, not generated output
 
 ## Out of scope for the MVP
 
-Delegates, student transfers, notifications, payment gateway, match day management, dark mode, county merge. Do not build them unless a step explicitly asks.
+Delegates, notifications, payment gateway, dark mode, county merge. Do not build them unless a step explicitly asks. Match day management (weigh-in and check-in on the competition detail page) was requested by the owner and shipped.

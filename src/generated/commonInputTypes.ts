@@ -613,6 +613,13 @@ export type EnumRegistrationStatusFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumRegistrationStatusFilter<$PrismaModel> | $Enums.RegistrationStatus
 }
 
+export type EnumWeighInVerdictNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.WeighInVerdict | Prisma.EnumWeighInVerdictFieldRefInput<$PrismaModel> | null
+  in?: $Enums.WeighInVerdict[] | Prisma.ListEnumWeighInVerdictFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.WeighInVerdict[] | Prisma.ListEnumWeighInVerdictFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumWeighInVerdictNullableFilter<$PrismaModel> | $Enums.WeighInVerdict | null
+}
+
 export type EnumRegistrationStatusWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.RegistrationStatus | Prisma.EnumRegistrationStatusFieldRefInput<$PrismaModel>
   in?: $Enums.RegistrationStatus[] | Prisma.ListEnumRegistrationStatusFieldRefInput<$PrismaModel>
@@ -621,6 +628,16 @@ export type EnumRegistrationStatusWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumRegistrationStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumRegistrationStatusFilter<$PrismaModel>
+}
+
+export type EnumWeighInVerdictNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.WeighInVerdict | Prisma.EnumWeighInVerdictFieldRefInput<$PrismaModel> | null
+  in?: $Enums.WeighInVerdict[] | Prisma.ListEnumWeighInVerdictFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.WeighInVerdict[] | Prisma.ListEnumWeighInVerdictFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumWeighInVerdictNullableWithAggregatesFilter<$PrismaModel> | $Enums.WeighInVerdict | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumWeighInVerdictNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumWeighInVerdictNullableFilter<$PrismaModel>
 }
 
 export type EnumRefundReasonFilter<$PrismaModel = never> = {
@@ -1242,6 +1259,13 @@ export type NestedEnumRegistrationStatusFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumRegistrationStatusFilter<$PrismaModel> | $Enums.RegistrationStatus
 }
 
+export type NestedEnumWeighInVerdictNullableFilter<$PrismaModel = never> = {
+  equals?: $Enums.WeighInVerdict | Prisma.EnumWeighInVerdictFieldRefInput<$PrismaModel> | null
+  in?: $Enums.WeighInVerdict[] | Prisma.ListEnumWeighInVerdictFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.WeighInVerdict[] | Prisma.ListEnumWeighInVerdictFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumWeighInVerdictNullableFilter<$PrismaModel> | $Enums.WeighInVerdict | null
+}
+
 export type NestedEnumRegistrationStatusWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.RegistrationStatus | Prisma.EnumRegistrationStatusFieldRefInput<$PrismaModel>
   in?: $Enums.RegistrationStatus[] | Prisma.ListEnumRegistrationStatusFieldRefInput<$PrismaModel>
@@ -1250,6 +1274,16 @@ export type NestedEnumRegistrationStatusWithAggregatesFilter<$PrismaModel = neve
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumRegistrationStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumRegistrationStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumWeighInVerdictNullableWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.WeighInVerdict | Prisma.EnumWeighInVerdictFieldRefInput<$PrismaModel> | null
+  in?: $Enums.WeighInVerdict[] | Prisma.ListEnumWeighInVerdictFieldRefInput<$PrismaModel> | null
+  notIn?: $Enums.WeighInVerdict[] | Prisma.ListEnumWeighInVerdictFieldRefInput<$PrismaModel> | null
+  not?: Prisma.NestedEnumWeighInVerdictNullableWithAggregatesFilter<$PrismaModel> | $Enums.WeighInVerdict | null
+  _count?: Prisma.NestedIntNullableFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumWeighInVerdictNullableFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumWeighInVerdictNullableFilter<$PrismaModel>
 }
 
 export type NestedEnumRefundReasonFilter<$PrismaModel = never> = {

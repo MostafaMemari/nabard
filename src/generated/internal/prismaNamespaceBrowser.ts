@@ -338,6 +338,12 @@ export const RegistrationScalarFieldEnum = {
   weightClassMax: 'weightClassMax',
   status: 'status',
   note: 'note',
+  checkInAt: 'checkInAt',
+  checkInById: 'checkInById',
+  weighInKg: 'weighInKg',
+  weighInAt: 'weighInAt',
+  weighInById: 'weighInById',
+  weighInVerdict: 'weighInVerdict',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

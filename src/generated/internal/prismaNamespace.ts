@@ -2056,6 +2056,12 @@ export const RegistrationScalarFieldEnum = {
   weightClassMax: 'weightClassMax',
   status: 'status',
   note: 'note',
+  checkInAt: 'checkInAt',
+  checkInById: 'checkInById',
+  weighInKg: 'weighInKg',
+  weighInAt: 'weighInAt',
+  weighInById: 'weighInById',
+  weighInVerdict: 'weighInVerdict',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2425,6 +2431,20 @@ export type EnumRegistrationStatusFieldRefInput<$PrismaModel> = FieldRefInputTyp
  * Reference to a field of type 'RegistrationStatus[]'
  */
 export type ListEnumRegistrationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'RegistrationStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'WeighInVerdict'
+ */
+export type EnumWeighInVerdictFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WeighInVerdict'>
+    
+
+
+/**
+ * Reference to a field of type 'WeighInVerdict[]'
+ */
+export type ListEnumWeighInVerdictFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WeighInVerdict[]'>
     
 
 

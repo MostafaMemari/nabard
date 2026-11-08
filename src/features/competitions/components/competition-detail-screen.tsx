@@ -8,7 +8,7 @@ import { CountdownChip, DetailPageHeader, ErrorBanner, IconTile, StatusBadge } f
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { genderLabels, useBelts } from "@/features/base-data";
-import { useRegistrations } from "@/features/registrations";
+import { EventDaySection, useRegistrations } from "@/features/registrations";
 import { updateCompetition } from "../api";
 import { useCompetition } from "../hooks/use-competitions";
 import { disciplineIcons, disciplineLabels } from "../labels";
@@ -98,6 +98,8 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
       />
 
       <CompetitionRegistrations competitionId={competitionId} ageCategoryId={competition.ageCategoryId} gender={competition.gender} />
+
+      {competition.status === "PUBLISHED" ? <EventDaySection competitionId={competitionId} /> : null}
 
       <CompetitionParticipants competitionId={competitionId} />
 

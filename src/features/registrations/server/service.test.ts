@@ -76,6 +76,7 @@ const ageCategoryRow = {
 
 const competition = {
   id: "comp-1",
+  title: "مسابقات قهرمانی استان",
   province: "TEHRAN" as const,
   level: "PROVINCIAL" as const,
   countyIds: [] as string[],
@@ -88,6 +89,7 @@ const competition = {
   rules: null,
   feePerStudent: BigInt(2500000),
   registrationDeadline: new Date("2026-11-20T20:30:00.000Z"),
+  eventDate: new Date("2026-11-25T08:00:00.000Z"),
   createdAt: new Date("2026-09-01T10:00:00.000Z"),
 };
 
@@ -176,6 +178,10 @@ function repoWith(overrides: Partial<RegistrationRepository> = {}): Registration
     }),
     createRegistrationBundle: vi.fn().mockResolvedValue(bundle),
     transitionRegistrationFromPending: vi.fn().mockResolvedValue(null),
+    findEventDayRows: vi.fn().mockResolvedValue([]),
+    findEventDayRegistrationById: vi.fn().mockResolvedValue(null),
+    updateRegistrationWeighIn: vi.fn().mockResolvedValue(false),
+    updateRegistrationCheckIn: vi.fn().mockResolvedValue(false),
     ...overrides,
   };
 }

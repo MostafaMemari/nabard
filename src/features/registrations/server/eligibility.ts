@@ -92,6 +92,18 @@ function isWeightInClass(weight: number, weightClass: WeightClass): boolean {
   return weightClass.excludeMax ? weight < weightClass.maxWeightKg : weight <= weightClass.maxWeightKg;
 }
 
+export type WeightClassResolution = { kind: "match"; weightClass: WeightClass } | { kind: "none" } | { kind: "ambiguous" };
+
+export function resolveWeightClass(weight: number, weightClasses: WeightClass[]): WeightClassResolution {
+  const matches = weightClasses.filter((weightClass) => isWeightInClass(weight, weightClass));
+
+  if (matches.length === 1) {
+    return { kind: "match", weightClass: matches[0] };
+  }
+
+  return matches.length === 0 ? { kind: "none" } : { kind: "ambiguous" };
+}
+
 export function checkEligibility(
   student: EligibilityStudent,
   competition: EligibilityCompetition,
@@ -145,15 +157,10 @@ export function checkEligibility(
     return { eligible: false, reason: REASONS.weightRequired };
   }
 
-  const matches = competition.weightClasses.filter((weightClass) => isWeightInClass(weight, weightClass));
-
-  if (matches.length === 1) {
-    return { eligible: true, weightClass: matches[0] };
+  const resolution = resolveWeightClass(weight, competition.weightClasses);
+  if (resolution.kind === "match") {
+    return { eligible: true, weightClass: resolution.weightClass };
   }
 
-  if (matches.length === 0) {
-    return { eligible: false, reason: REASONS.weightNoMatch };
-  }
-
-  return { eligible: false, reason: REASONS.weightAmbiguous };
+  return { eligible: false, reason: resolution.kind === "none" ? REASONS.weightNoMatch : REASONS.weightAmbiguous };
 }

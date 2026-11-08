@@ -149,6 +149,15 @@ export const StudentTransferStatus = {
 export type StudentTransferStatus = (typeof StudentTransferStatus)[keyof typeof StudentTransferStatus]
 
 
+export const WeighInVerdict = {
+  MATCH: 'MATCH',
+  MOVED: 'MOVED',
+  OUT_OF_WEIGHT: 'OUT_OF_WEIGHT'
+} as const
+
+export type WeighInVerdict = (typeof WeighInVerdict)[keyof typeof WeighInVerdict]
+
+
 export const ProfileStatus = {
   PENDING: 'PENDING',
   APPROVED: 'APPROVED',

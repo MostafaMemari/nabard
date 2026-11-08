@@ -49,3 +49,54 @@ export type Participant = {
   weightClassLabel: string | null;
   coachName: string;
 };
+
+export type WeighInVerdict = "MATCH" | "MOVED" | "OUT_OF_WEIGHT";
+
+export type EventDayRow = {
+  id: string;
+  student: { id: string; fullName: string; nationalCode: string };
+  coachName: string;
+  beltLabel: string;
+  weightClassId: string | null;
+  weightClassLabel: string | null;
+  checkInAt: string | null;
+  checkInByName: string | null;
+  weighInKg: number | null;
+  weighInAt: string | null;
+  weighInByName: string | null;
+  weighInVerdict: WeighInVerdict | null;
+};
+
+export type EventDayRowPatch = {
+  id: string;
+  weightClassId?: string | null;
+  weightClassLabel?: string | null;
+  checkInAt?: string | null;
+  weighInKg?: number | null;
+  weighInAt?: string | null;
+  weighInVerdict?: WeighInVerdict | null;
+};
+
+export type EventDaySummary = {
+  approved: number;
+  checkedIn: number;
+  weighed: number;
+  match: number;
+  moved: number;
+  outOfWeight: number;
+};
+
+export type EventDayCompetition = {
+  id: string;
+  title: string;
+  status: string;
+  discipline: string;
+  eventDate: string;
+  registrationDeadline: string;
+};
+
+export type EventDay = {
+  competition: EventDayCompetition;
+  summary: EventDaySummary;
+  rows: EventDayRow[];
+};

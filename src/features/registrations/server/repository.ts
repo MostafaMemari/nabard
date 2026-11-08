@@ -55,6 +55,7 @@ export type RegistrationFilters = {
 
 export type CompetitionRegistrationRow = {
   id: string;
+  title: string;
   province: Province;
   level: CompetitionLevel;
   countyIds: string[];
@@ -67,6 +68,7 @@ export type CompetitionRegistrationRow = {
   rules: CompetitionRulesSnapshot | null;
   feePerStudent: bigint;
   registrationDeadline: Date;
+  eventDate: Date;
   createdAt: Date;
 };
 
@@ -167,6 +169,40 @@ export type DeadlineExtensionStatusRow = {
   createdAt: Date;
 };
 
+export type EventDayRegistrationRow = {
+  id: string;
+  student: { id: string; fullName: string; nationalCode: string };
+  coachName: string;
+  beltLabel: string;
+  weightClassId: string | null;
+  weightClassLabel: string | null;
+  weightClassOrder: number | null;
+  status: RegistrationStatus;
+  checkInAt: Date | null;
+  checkInByName: string | null;
+  weighInKg: number | null;
+  weighInAt: Date | null;
+  weighInByName: string | null;
+  weighInVerdict: "MATCH" | "MOVED" | "OUT_OF_WEIGHT" | null;
+};
+
+export type EventDayRegistrationDetailRow = {
+  id: string;
+  status: RegistrationStatus;
+  weightClassId: string | null;
+  weightClassLabel: string | null;
+  coachProvince: Province | null;
+  competition: { id: string; status: CompetitionStatus; discipline: Discipline; rules: CompetitionRulesSnapshot | null };
+};
+
+export type WeighInUpdateInput = {
+  weightKg: number;
+  weighInById: string;
+  weighInAt: Date;
+  verdict: "MATCH" | "MOVED" | "OUT_OF_WEIGHT";
+  movedTo: { id: string; label: string; min: number; max: number | null } | null;
+};
+
 export type RegistrationRepository = {
   findUserById(id: string): Promise<UserIdentityRecord | null>;
   findCompetitionTitleById(id: string): Promise<string | null>;
@@ -185,6 +221,10 @@ export type RegistrationRepository = {
   findRegistrationDetailById(id: string): Promise<RegistrationDetailRow | null>;
   createRegistrationBundle(input: RegistrationBundleInput): Promise<RegistrationBundle>;
   transitionRegistrationFromPending(id: string, input: RegistrationTransitionInput): Promise<RegistrationTransitionResult | null>;
+  findEventDayRows(competitionId: string): Promise<EventDayRegistrationRow[]>;
+  findEventDayRegistrationById(id: string): Promise<EventDayRegistrationDetailRow | null>;
+  updateRegistrationWeighIn(id: string, input: WeighInUpdateInput): Promise<boolean>;
+  updateRegistrationCheckIn(id: string, checkedIn: boolean, userId: string): Promise<boolean>;
 };
 
 const registrationSelection = {
@@ -298,6 +338,7 @@ export async function findCompetitionById(id: string): Promise<CompetitionRegist
     where: { id },
     select: {
       id: true,
+      title: true,
       province: true,
       level: true,
       counties: { select: { countyId: true } },
@@ -310,6 +351,7 @@ export async function findCompetitionById(id: string): Promise<CompetitionRegist
       rulesSnapshot: true,
       feePerStudent: true,
       registrationDeadline: true,
+      eventDate: true,
       createdAt: true,
     },
   });
@@ -568,4 +610,103 @@ export async function transitionRegistrationFromPending(
     if (row.status !== "PENDING") return { kind: "conflict", reason: "REVIEWED", row: withScope };
     return { kind: "conflict", reason: "PAYMENT_NOT_CONFIRMED", row: withScope };
   });
+}
+
+export async function findEventDayRows(competitionId: string): Promise<EventDayRegistrationRow[]> {
+  const rows = await getPrisma().registration.findMany({
+    where: { competitionId, status: "APPROVED" },
+    select: {
+      id: true,
+      status: true,
+      weightClassId: true,
+      weightClassLabel: true,
+      weightClass: { select: { order: true } },
+      weighInKg: true,
+      weighInAt: true,
+      weighInVerdict: true,
+      checkInAt: true,
+      student: { select: { id: true, fullName: true, nationalCode: true, belt: { select: { label: true } } } },
+      coach: { select: { fullName: true } },
+      checkInBy: { select: { fullName: true } },
+      weighInBy: { select: { fullName: true } },
+    },
+    orderBy: [{ weightClass: { order: "asc" } }, { createdAt: "asc" }],
+  });
+
+  return rows.map((row) => ({
+    id: row.id,
+    student: row.student,
+    coachName: row.coach.fullName,
+    beltLabel: row.student.belt.label,
+    weightClassId: row.weightClassId,
+    weightClassLabel: row.weightClassLabel,
+    weightClassOrder: row.weightClass?.order ?? null,
+    status: row.status,
+    checkInAt: row.checkInAt,
+    checkInByName: row.checkInBy?.fullName ?? null,
+    weighInKg: row.weighInKg === null ? null : Number(row.weighInKg),
+    weighInAt: row.weighInAt,
+    weighInByName: row.weighInBy?.fullName ?? null,
+    weighInVerdict: row.weighInVerdict,
+  }));
+}
+
+export async function findEventDayRegistrationById(id: string): Promise<EventDayRegistrationDetailRow | null> {
+  const row = await getPrisma().registration.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      status: true,
+      weightClassId: true,
+      weightClassLabel: true,
+      coach: { select: { province: true } },
+      competition: { select: { id: true, status: true, discipline: true, rulesSnapshot: true } },
+    },
+  });
+  if (row === null) return null;
+
+  return {
+    id: row.id,
+    status: row.status,
+    weightClassId: row.weightClassId,
+    weightClassLabel: row.weightClassLabel,
+    coachProvince: row.coach.province,
+    competition: {
+      id: row.competition.id,
+      status: row.competition.status,
+      discipline: row.competition.discipline,
+      rules: parseRulesSnapshot(row.competition.rulesSnapshot),
+    },
+  };
+}
+
+export async function updateRegistrationWeighIn(id: string, input: WeighInUpdateInput): Promise<boolean> {
+  const applied = await getPrisma().registration.updateMany({
+    where: { id, status: "APPROVED" },
+    data: {
+      weighInKg: input.weightKg,
+      weighInAt: input.weighInAt,
+      weighInById: input.weighInById,
+      weighInVerdict: input.verdict,
+      ...(input.movedTo === null
+        ? {}
+        : {
+            weightClassId: input.movedTo.id,
+            weightClassLabel: input.movedTo.label,
+            weightClassMin: input.movedTo.min,
+            weightClassMax: input.movedTo.max,
+          }),
+    },
+  });
+
+  return applied.count > 0;
+}
+
+export async function updateRegistrationCheckIn(id: string, checkedIn: boolean, userId: string): Promise<boolean> {
+  const applied = await getPrisma().registration.updateMany({
+    where: { id, status: "APPROVED" },
+    data: checkedIn ? { checkInAt: new Date(), checkInById: userId } : { checkInAt: null, checkInById: null },
+  });
+
+  return applied.count > 0;
 }
