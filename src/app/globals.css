@@ -137,10 +137,6 @@
   }
   html {
     @apply font-sans;
-    /* Reserve the scrollbar gutter even on short pages, so moving between
-       pages that scroll and pages that do not (and locking scroll under
-       sheets/dialogs) never shifts the whole layout sideways. */
-    scrollbar-gutter: stable;
   }
   body {
     @apply bg-background text-foreground;
@@ -166,6 +162,28 @@
   select:disabled,
   [aria-disabled="true"] {
     cursor: not-allowed;
+  }
+  /* Floating page scrollbar: on fine-pointer devices the native document
+     scrollbar is hidden (it takes zero layout space, so pages never shift
+     sideways when it appears and no white gutter is reserved when they do
+     not scroll) and ScrollbarOverlay draws a floating indicator instead.
+     Touch devices keep their native overlay scrollbars. scrollbar-width
+     inherits, so restore it for every descendant (:where keeps specificity
+     at zero so intentional styles like the thin sidebar scrollbar win). */
+  @media (hover: hover) and (pointer: fine) {
+    @supports (scrollbar-width: none) {
+      html[data-oscroll] {
+        scrollbar-width: none;
+      }
+      html[data-oscroll] :where(*) {
+        scrollbar-width: auto;
+      }
+    }
+    @supports selector(::-webkit-scrollbar) {
+      html[data-oscroll]::-webkit-scrollbar {
+        display: none;
+      }
+    }
   }
   @media (prefers-reduced-motion: reduce) {
     *,
