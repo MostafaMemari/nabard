@@ -137,6 +137,10 @@
   }
   html {
     @apply font-sans;
+    /* Reserve the scrollbar gutter even on short pages, so moving between
+       pages that scroll and pages that do not (and locking scroll under
+       sheets/dialogs) never shifts the whole layout sideways. */
+    scrollbar-gutter: stable;
   }
   body {
     @apply bg-background text-foreground;
