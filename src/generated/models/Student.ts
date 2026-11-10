@@ -32,6 +32,8 @@ export type StudentMinAggregateOutputType = {
   birthDate: Date | null
   insuranceDate: Date | null
   tkdBankChargeDate: Date | null
+  mobile: string | null
+  beltCertificateDate: Date | null
   beltId: string | null
   coachId: string | null
   profileStatus: $Enums.ProfileStatus | null
@@ -50,6 +52,8 @@ export type StudentMaxAggregateOutputType = {
   birthDate: Date | null
   insuranceDate: Date | null
   tkdBankChargeDate: Date | null
+  mobile: string | null
+  beltCertificateDate: Date | null
   beltId: string | null
   coachId: string | null
   profileStatus: $Enums.ProfileStatus | null
@@ -68,6 +72,8 @@ export type StudentCountAggregateOutputType = {
   birthDate: number
   insuranceDate: number
   tkdBankChargeDate: number
+  mobile: number
+  beltCertificateDate: number
   beltId: number
   coachId: number
   profileStatus: number
@@ -88,6 +94,8 @@ export type StudentMinAggregateInputType = {
   birthDate?: true
   insuranceDate?: true
   tkdBankChargeDate?: true
+  mobile?: true
+  beltCertificateDate?: true
   beltId?: true
   coachId?: true
   profileStatus?: true
@@ -106,6 +114,8 @@ export type StudentMaxAggregateInputType = {
   birthDate?: true
   insuranceDate?: true
   tkdBankChargeDate?: true
+  mobile?: true
+  beltCertificateDate?: true
   beltId?: true
   coachId?: true
   profileStatus?: true
@@ -124,6 +134,8 @@ export type StudentCountAggregateInputType = {
   birthDate?: true
   insuranceDate?: true
   tkdBankChargeDate?: true
+  mobile?: true
+  beltCertificateDate?: true
   beltId?: true
   coachId?: true
   profileStatus?: true
@@ -215,6 +227,8 @@ export type StudentGroupByOutputType = {
   birthDate: Date
   insuranceDate: Date | null
   tkdBankChargeDate: Date | null
+  mobile: string | null
+  beltCertificateDate: Date | null
   beltId: string
   coachId: string
   profileStatus: $Enums.ProfileStatus
@@ -254,6 +268,8 @@ export type StudentWhereInput = {
   birthDate?: Prisma.DateTimeFilter<"Student"> | Date | string
   insuranceDate?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   tkdBankChargeDate?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
+  mobile?: Prisma.StringNullableFilter<"Student"> | string | null
+  beltCertificateDate?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   beltId?: Prisma.StringFilter<"Student"> | string
   coachId?: Prisma.StringFilter<"Student"> | string
   profileStatus?: Prisma.EnumProfileStatusFilter<"Student"> | $Enums.ProfileStatus
@@ -268,6 +284,8 @@ export type StudentWhereInput = {
   documents?: Prisma.StudentDocumentListRelationFilter
   registrations?: Prisma.RegistrationListRelationFilter
   transfers?: Prisma.StudentTransferListRelationFilter
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestListRelationFilter
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestListRelationFilter
 }
 
 export type StudentOrderByWithRelationInput = {
@@ -278,6 +296,8 @@ export type StudentOrderByWithRelationInput = {
   birthDate?: Prisma.SortOrder
   insuranceDate?: Prisma.SortOrderInput | Prisma.SortOrder
   tkdBankChargeDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  mobile?: Prisma.SortOrderInput | Prisma.SortOrder
+  beltCertificateDate?: Prisma.SortOrderInput | Prisma.SortOrder
   beltId?: Prisma.SortOrder
   coachId?: Prisma.SortOrder
   profileStatus?: Prisma.SortOrder
@@ -292,6 +312,8 @@ export type StudentOrderByWithRelationInput = {
   documents?: Prisma.StudentDocumentOrderByRelationAggregateInput
   registrations?: Prisma.RegistrationOrderByRelationAggregateInput
   transfers?: Prisma.StudentTransferOrderByRelationAggregateInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestOrderByRelationAggregateInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestOrderByRelationAggregateInput
 }
 
 export type StudentWhereUniqueInput = Prisma.AtLeast<{
@@ -305,6 +327,8 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   birthDate?: Prisma.DateTimeFilter<"Student"> | Date | string
   insuranceDate?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   tkdBankChargeDate?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
+  mobile?: Prisma.StringNullableFilter<"Student"> | string | null
+  beltCertificateDate?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   beltId?: Prisma.StringFilter<"Student"> | string
   coachId?: Prisma.StringFilter<"Student"> | string
   profileStatus?: Prisma.EnumProfileStatusFilter<"Student"> | $Enums.ProfileStatus
@@ -319,6 +343,8 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   documents?: Prisma.StudentDocumentListRelationFilter
   registrations?: Prisma.RegistrationListRelationFilter
   transfers?: Prisma.StudentTransferListRelationFilter
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestListRelationFilter
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestListRelationFilter
 }, "id" | "nationalCode">
 
 export type StudentOrderByWithAggregationInput = {
@@ -329,6 +355,8 @@ export type StudentOrderByWithAggregationInput = {
   birthDate?: Prisma.SortOrder
   insuranceDate?: Prisma.SortOrderInput | Prisma.SortOrder
   tkdBankChargeDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  mobile?: Prisma.SortOrderInput | Prisma.SortOrder
+  beltCertificateDate?: Prisma.SortOrderInput | Prisma.SortOrder
   beltId?: Prisma.SortOrder
   coachId?: Prisma.SortOrder
   profileStatus?: Prisma.SortOrder
@@ -353,6 +381,8 @@ export type StudentScalarWhereWithAggregatesInput = {
   birthDate?: Prisma.DateTimeWithAggregatesFilter<"Student"> | Date | string
   insuranceDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Student"> | Date | string | null
   tkdBankChargeDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Student"> | Date | string | null
+  mobile?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
+  beltCertificateDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Student"> | Date | string | null
   beltId?: Prisma.StringWithAggregatesFilter<"Student"> | string
   coachId?: Prisma.StringWithAggregatesFilter<"Student"> | string
   profileStatus?: Prisma.EnumProfileStatusWithAggregatesFilter<"Student"> | $Enums.ProfileStatus
@@ -371,6 +401,8 @@ export type StudentCreateInput = {
   birthDate: Date | string
   insuranceDate?: Date | string | null
   tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
   approvedAt?: Date | string | null
@@ -382,6 +414,8 @@ export type StudentCreateInput = {
   documents?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutStudentInput
   transfers?: Prisma.StudentTransferCreateNestedManyWithoutStudentInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestCreateNestedManyWithoutStudentInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateInput = {
@@ -392,6 +426,8 @@ export type StudentUncheckedCreateInput = {
   birthDate: Date | string
   insuranceDate?: Date | string | null
   tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
   beltId: string
   coachId: string
   profileStatus?: $Enums.ProfileStatus
@@ -403,6 +439,8 @@ export type StudentUncheckedCreateInput = {
   documents?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutStudentInput
   transfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutStudentInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUpdateInput = {
@@ -413,6 +451,8 @@ export type StudentUpdateInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -424,6 +464,8 @@ export type StudentUpdateInput = {
   documents?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutStudentNestedInput
   transfers?: Prisma.StudentTransferUpdateManyWithoutStudentNestedInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUpdateManyWithoutStudentNestedInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateInput = {
@@ -434,6 +476,8 @@ export type StudentUncheckedUpdateInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
@@ -445,6 +489,8 @@ export type StudentUncheckedUpdateInput = {
   documents?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutStudentNestedInput
   transfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutStudentNestedInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateManyInput = {
@@ -455,6 +501,8 @@ export type StudentCreateManyInput = {
   birthDate: Date | string
   insuranceDate?: Date | string | null
   tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
   beltId: string
   coachId: string
   profileStatus?: $Enums.ProfileStatus
@@ -473,6 +521,8 @@ export type StudentUpdateManyMutationInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -488,6 +538,8 @@ export type StudentUncheckedUpdateManyInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
@@ -516,6 +568,8 @@ export type StudentCountOrderByAggregateInput = {
   birthDate?: Prisma.SortOrder
   insuranceDate?: Prisma.SortOrder
   tkdBankChargeDate?: Prisma.SortOrder
+  mobile?: Prisma.SortOrder
+  beltCertificateDate?: Prisma.SortOrder
   beltId?: Prisma.SortOrder
   coachId?: Prisma.SortOrder
   profileStatus?: Prisma.SortOrder
@@ -534,6 +588,8 @@ export type StudentMaxOrderByAggregateInput = {
   birthDate?: Prisma.SortOrder
   insuranceDate?: Prisma.SortOrder
   tkdBankChargeDate?: Prisma.SortOrder
+  mobile?: Prisma.SortOrder
+  beltCertificateDate?: Prisma.SortOrder
   beltId?: Prisma.SortOrder
   coachId?: Prisma.SortOrder
   profileStatus?: Prisma.SortOrder
@@ -552,6 +608,8 @@ export type StudentMinOrderByAggregateInput = {
   birthDate?: Prisma.SortOrder
   insuranceDate?: Prisma.SortOrder
   tkdBankChargeDate?: Prisma.SortOrder
+  mobile?: Prisma.SortOrder
+  beltCertificateDate?: Prisma.SortOrder
   beltId?: Prisma.SortOrder
   coachId?: Prisma.SortOrder
   profileStatus?: Prisma.SortOrder
@@ -719,6 +777,34 @@ export type StudentUpdateOneRequiredWithoutTransfersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutTransfersInput, Prisma.StudentUpdateWithoutTransfersInput>, Prisma.StudentUncheckedUpdateWithoutTransfersInput>
 }
 
+export type StudentCreateNestedOneWithoutPhotoChangeRequestsInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutPhotoChangeRequestsInput, Prisma.StudentUncheckedCreateWithoutPhotoChangeRequestsInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutPhotoChangeRequestsInput
+  connect?: Prisma.StudentWhereUniqueInput
+}
+
+export type StudentUpdateOneRequiredWithoutPhotoChangeRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutPhotoChangeRequestsInput, Prisma.StudentUncheckedCreateWithoutPhotoChangeRequestsInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutPhotoChangeRequestsInput
+  upsert?: Prisma.StudentUpsertWithoutPhotoChangeRequestsInput
+  connect?: Prisma.StudentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutPhotoChangeRequestsInput, Prisma.StudentUpdateWithoutPhotoChangeRequestsInput>, Prisma.StudentUncheckedUpdateWithoutPhotoChangeRequestsInput>
+}
+
+export type StudentCreateNestedOneWithoutProvinceChangeRequestsInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutProvinceChangeRequestsInput, Prisma.StudentUncheckedCreateWithoutProvinceChangeRequestsInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutProvinceChangeRequestsInput
+  connect?: Prisma.StudentWhereUniqueInput
+}
+
+export type StudentUpdateOneRequiredWithoutProvinceChangeRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.StudentCreateWithoutProvinceChangeRequestsInput, Prisma.StudentUncheckedCreateWithoutProvinceChangeRequestsInput>
+  connectOrCreate?: Prisma.StudentCreateOrConnectWithoutProvinceChangeRequestsInput
+  upsert?: Prisma.StudentUpsertWithoutProvinceChangeRequestsInput
+  connect?: Prisma.StudentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutProvinceChangeRequestsInput, Prisma.StudentUpdateWithoutProvinceChangeRequestsInput>, Prisma.StudentUncheckedUpdateWithoutProvinceChangeRequestsInput>
+}
+
 export type StudentCreateNestedOneWithoutDocumentsInput = {
   create?: Prisma.XOR<Prisma.StudentCreateWithoutDocumentsInput, Prisma.StudentUncheckedCreateWithoutDocumentsInput>
   connectOrCreate?: Prisma.StudentCreateOrConnectWithoutDocumentsInput
@@ -755,6 +841,8 @@ export type StudentCreateWithoutCoachInput = {
   birthDate: Date | string
   insuranceDate?: Date | string | null
   tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
   approvedAt?: Date | string | null
@@ -765,6 +853,8 @@ export type StudentCreateWithoutCoachInput = {
   documents?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutStudentInput
   transfers?: Prisma.StudentTransferCreateNestedManyWithoutStudentInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestCreateNestedManyWithoutStudentInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutCoachInput = {
@@ -775,6 +865,8 @@ export type StudentUncheckedCreateWithoutCoachInput = {
   birthDate: Date | string
   insuranceDate?: Date | string | null
   tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
   beltId: string
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
@@ -785,6 +877,8 @@ export type StudentUncheckedCreateWithoutCoachInput = {
   documents?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutStudentInput
   transfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutStudentInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutCoachInput = {
@@ -805,6 +899,8 @@ export type StudentCreateWithoutApprovedByInput = {
   birthDate: Date | string
   insuranceDate?: Date | string | null
   tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
   approvedAt?: Date | string | null
@@ -815,6 +911,8 @@ export type StudentCreateWithoutApprovedByInput = {
   documents?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutStudentInput
   transfers?: Prisma.StudentTransferCreateNestedManyWithoutStudentInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestCreateNestedManyWithoutStudentInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutApprovedByInput = {
@@ -825,6 +923,8 @@ export type StudentUncheckedCreateWithoutApprovedByInput = {
   birthDate: Date | string
   insuranceDate?: Date | string | null
   tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
   beltId: string
   coachId: string
   profileStatus?: $Enums.ProfileStatus
@@ -835,6 +935,8 @@ export type StudentUncheckedCreateWithoutApprovedByInput = {
   documents?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutStudentInput
   transfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutStudentInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutApprovedByInput = {
@@ -874,6 +976,8 @@ export type StudentScalarWhereInput = {
   birthDate?: Prisma.DateTimeFilter<"Student"> | Date | string
   insuranceDate?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   tkdBankChargeDate?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
+  mobile?: Prisma.StringNullableFilter<"Student"> | string | null
+  beltCertificateDate?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
   beltId?: Prisma.StringFilter<"Student"> | string
   coachId?: Prisma.StringFilter<"Student"> | string
   profileStatus?: Prisma.EnumProfileStatusFilter<"Student"> | $Enums.ProfileStatus
@@ -908,6 +1012,8 @@ export type StudentCreateWithoutBeltInput = {
   birthDate: Date | string
   insuranceDate?: Date | string | null
   tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
   approvedAt?: Date | string | null
@@ -918,6 +1024,8 @@ export type StudentCreateWithoutBeltInput = {
   documents?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutStudentInput
   transfers?: Prisma.StudentTransferCreateNestedManyWithoutStudentInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestCreateNestedManyWithoutStudentInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutBeltInput = {
@@ -928,6 +1036,8 @@ export type StudentUncheckedCreateWithoutBeltInput = {
   birthDate: Date | string
   insuranceDate?: Date | string | null
   tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
   coachId: string
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
@@ -938,6 +1048,8 @@ export type StudentUncheckedCreateWithoutBeltInput = {
   documents?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutStudentInput
   transfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutStudentInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutBeltInput = {
@@ -974,6 +1086,8 @@ export type StudentCreateWithoutTransfersInput = {
   birthDate: Date | string
   insuranceDate?: Date | string | null
   tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
   approvedAt?: Date | string | null
@@ -984,6 +1098,8 @@ export type StudentCreateWithoutTransfersInput = {
   approvedBy?: Prisma.UserCreateNestedOneWithoutReviewedProfilesInput
   documents?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutStudentInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestCreateNestedManyWithoutStudentInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutTransfersInput = {
@@ -994,6 +1110,8 @@ export type StudentUncheckedCreateWithoutTransfersInput = {
   birthDate: Date | string
   insuranceDate?: Date | string | null
   tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
   beltId: string
   coachId: string
   profileStatus?: $Enums.ProfileStatus
@@ -1004,6 +1122,8 @@ export type StudentUncheckedCreateWithoutTransfersInput = {
   updatedAt?: Date | string
   documents?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutStudentInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutTransfersInput = {
@@ -1030,6 +1150,8 @@ export type StudentUpdateWithoutTransfersInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1040,6 +1162,8 @@ export type StudentUpdateWithoutTransfersInput = {
   approvedBy?: Prisma.UserUpdateOneWithoutReviewedProfilesNestedInput
   documents?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutStudentNestedInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUpdateManyWithoutStudentNestedInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutTransfersInput = {
@@ -1050,6 +1174,8 @@ export type StudentUncheckedUpdateWithoutTransfersInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
@@ -1060,6 +1186,232 @@ export type StudentUncheckedUpdateWithoutTransfersInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   documents?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutStudentNestedInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type StudentCreateWithoutPhotoChangeRequestsInput = {
+  id?: string
+  fullName: string
+  gender: $Enums.Gender
+  nationalCode: string
+  birthDate: Date | string
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  belt: Prisma.BeltCreateNestedOneWithoutStudentsInput
+  coach: Prisma.UserCreateNestedOneWithoutStudentsInput
+  approvedBy?: Prisma.UserCreateNestedOneWithoutReviewedProfilesInput
+  documents?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
+  registrations?: Prisma.RegistrationCreateNestedManyWithoutStudentInput
+  transfers?: Prisma.StudentTransferCreateNestedManyWithoutStudentInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestCreateNestedManyWithoutStudentInput
+}
+
+export type StudentUncheckedCreateWithoutPhotoChangeRequestsInput = {
+  id?: string
+  fullName: string
+  gender: $Enums.Gender
+  nationalCode: string
+  birthDate: Date | string
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
+  beltId: string
+  coachId: string
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  documents?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
+  registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutStudentInput
+  transfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutStudentInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type StudentCreateOrConnectWithoutPhotoChangeRequestsInput = {
+  where: Prisma.StudentWhereUniqueInput
+  create: Prisma.XOR<Prisma.StudentCreateWithoutPhotoChangeRequestsInput, Prisma.StudentUncheckedCreateWithoutPhotoChangeRequestsInput>
+}
+
+export type StudentUpsertWithoutPhotoChangeRequestsInput = {
+  update: Prisma.XOR<Prisma.StudentUpdateWithoutPhotoChangeRequestsInput, Prisma.StudentUncheckedUpdateWithoutPhotoChangeRequestsInput>
+  create: Prisma.XOR<Prisma.StudentCreateWithoutPhotoChangeRequestsInput, Prisma.StudentUncheckedCreateWithoutPhotoChangeRequestsInput>
+  where?: Prisma.StudentWhereInput
+}
+
+export type StudentUpdateToOneWithWhereWithoutPhotoChangeRequestsInput = {
+  where?: Prisma.StudentWhereInput
+  data: Prisma.XOR<Prisma.StudentUpdateWithoutPhotoChangeRequestsInput, Prisma.StudentUncheckedUpdateWithoutPhotoChangeRequestsInput>
+}
+
+export type StudentUpdateWithoutPhotoChangeRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
+  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  belt?: Prisma.BeltUpdateOneRequiredWithoutStudentsNestedInput
+  coach?: Prisma.UserUpdateOneRequiredWithoutStudentsNestedInput
+  approvedBy?: Prisma.UserUpdateOneWithoutReviewedProfilesNestedInput
+  documents?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
+  registrations?: Prisma.RegistrationUpdateManyWithoutStudentNestedInput
+  transfers?: Prisma.StudentTransferUpdateManyWithoutStudentNestedInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUpdateManyWithoutStudentNestedInput
+}
+
+export type StudentUncheckedUpdateWithoutPhotoChangeRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
+  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  beltId?: Prisma.StringFieldUpdateOperationsInput | string
+  coachId?: Prisma.StringFieldUpdateOperationsInput | string
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documents?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
+  registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutStudentNestedInput
+  transfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutStudentNestedInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+}
+
+export type StudentCreateWithoutProvinceChangeRequestsInput = {
+  id?: string
+  fullName: string
+  gender: $Enums.Gender
+  nationalCode: string
+  birthDate: Date | string
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  belt: Prisma.BeltCreateNestedOneWithoutStudentsInput
+  coach: Prisma.UserCreateNestedOneWithoutStudentsInput
+  approvedBy?: Prisma.UserCreateNestedOneWithoutReviewedProfilesInput
+  documents?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
+  registrations?: Prisma.RegistrationCreateNestedManyWithoutStudentInput
+  transfers?: Prisma.StudentTransferCreateNestedManyWithoutStudentInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestCreateNestedManyWithoutStudentInput
+}
+
+export type StudentUncheckedCreateWithoutProvinceChangeRequestsInput = {
+  id?: string
+  fullName: string
+  gender: $Enums.Gender
+  nationalCode: string
+  birthDate: Date | string
+  insuranceDate?: Date | string | null
+  tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
+  beltId: string
+  coachId: string
+  profileStatus?: $Enums.ProfileStatus
+  profileNote?: string | null
+  approvedById?: string | null
+  approvedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  documents?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
+  registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutStudentInput
+  transfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutStudentInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+}
+
+export type StudentCreateOrConnectWithoutProvinceChangeRequestsInput = {
+  where: Prisma.StudentWhereUniqueInput
+  create: Prisma.XOR<Prisma.StudentCreateWithoutProvinceChangeRequestsInput, Prisma.StudentUncheckedCreateWithoutProvinceChangeRequestsInput>
+}
+
+export type StudentUpsertWithoutProvinceChangeRequestsInput = {
+  update: Prisma.XOR<Prisma.StudentUpdateWithoutProvinceChangeRequestsInput, Prisma.StudentUncheckedUpdateWithoutProvinceChangeRequestsInput>
+  create: Prisma.XOR<Prisma.StudentCreateWithoutProvinceChangeRequestsInput, Prisma.StudentUncheckedCreateWithoutProvinceChangeRequestsInput>
+  where?: Prisma.StudentWhereInput
+}
+
+export type StudentUpdateToOneWithWhereWithoutProvinceChangeRequestsInput = {
+  where?: Prisma.StudentWhereInput
+  data: Prisma.XOR<Prisma.StudentUpdateWithoutProvinceChangeRequestsInput, Prisma.StudentUncheckedUpdateWithoutProvinceChangeRequestsInput>
+}
+
+export type StudentUpdateWithoutProvinceChangeRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
+  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  belt?: Prisma.BeltUpdateOneRequiredWithoutStudentsNestedInput
+  coach?: Prisma.UserUpdateOneRequiredWithoutStudentsNestedInput
+  approvedBy?: Prisma.UserUpdateOneWithoutReviewedProfilesNestedInput
+  documents?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
+  registrations?: Prisma.RegistrationUpdateManyWithoutStudentNestedInput
+  transfers?: Prisma.StudentTransferUpdateManyWithoutStudentNestedInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUpdateManyWithoutStudentNestedInput
+}
+
+export type StudentUncheckedUpdateWithoutProvinceChangeRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  nationalCode?: Prisma.StringFieldUpdateOperationsInput | string
+  birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  beltId?: Prisma.StringFieldUpdateOperationsInput | string
+  coachId?: Prisma.StringFieldUpdateOperationsInput | string
+  profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
+  profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documents?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
+  registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutStudentNestedInput
+  transfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutStudentNestedInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateWithoutDocumentsInput = {
@@ -1070,6 +1422,8 @@ export type StudentCreateWithoutDocumentsInput = {
   birthDate: Date | string
   insuranceDate?: Date | string | null
   tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
   approvedAt?: Date | string | null
@@ -1080,6 +1434,8 @@ export type StudentCreateWithoutDocumentsInput = {
   approvedBy?: Prisma.UserCreateNestedOneWithoutReviewedProfilesInput
   registrations?: Prisma.RegistrationCreateNestedManyWithoutStudentInput
   transfers?: Prisma.StudentTransferCreateNestedManyWithoutStudentInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestCreateNestedManyWithoutStudentInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutDocumentsInput = {
@@ -1090,6 +1446,8 @@ export type StudentUncheckedCreateWithoutDocumentsInput = {
   birthDate: Date | string
   insuranceDate?: Date | string | null
   tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
   beltId: string
   coachId: string
   profileStatus?: $Enums.ProfileStatus
@@ -1100,6 +1458,8 @@ export type StudentUncheckedCreateWithoutDocumentsInput = {
   updatedAt?: Date | string
   registrations?: Prisma.RegistrationUncheckedCreateNestedManyWithoutStudentInput
   transfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutStudentInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutDocumentsInput = {
@@ -1126,6 +1486,8 @@ export type StudentUpdateWithoutDocumentsInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1136,6 +1498,8 @@ export type StudentUpdateWithoutDocumentsInput = {
   approvedBy?: Prisma.UserUpdateOneWithoutReviewedProfilesNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutStudentNestedInput
   transfers?: Prisma.StudentTransferUpdateManyWithoutStudentNestedInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUpdateManyWithoutStudentNestedInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutDocumentsInput = {
@@ -1146,6 +1510,8 @@ export type StudentUncheckedUpdateWithoutDocumentsInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
@@ -1156,6 +1522,8 @@ export type StudentUncheckedUpdateWithoutDocumentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutStudentNestedInput
   transfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutStudentNestedInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateWithoutRegistrationsInput = {
@@ -1166,6 +1534,8 @@ export type StudentCreateWithoutRegistrationsInput = {
   birthDate: Date | string
   insuranceDate?: Date | string | null
   tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
   approvedAt?: Date | string | null
@@ -1176,6 +1546,8 @@ export type StudentCreateWithoutRegistrationsInput = {
   approvedBy?: Prisma.UserCreateNestedOneWithoutReviewedProfilesInput
   documents?: Prisma.StudentDocumentCreateNestedManyWithoutStudentInput
   transfers?: Prisma.StudentTransferCreateNestedManyWithoutStudentInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestCreateNestedManyWithoutStudentInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestCreateNestedManyWithoutStudentInput
 }
 
 export type StudentUncheckedCreateWithoutRegistrationsInput = {
@@ -1186,6 +1558,8 @@ export type StudentUncheckedCreateWithoutRegistrationsInput = {
   birthDate: Date | string
   insuranceDate?: Date | string | null
   tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
   beltId: string
   coachId: string
   profileStatus?: $Enums.ProfileStatus
@@ -1196,6 +1570,8 @@ export type StudentUncheckedCreateWithoutRegistrationsInput = {
   updatedAt?: Date | string
   documents?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutStudentInput
   transfers?: Prisma.StudentTransferUncheckedCreateNestedManyWithoutStudentInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUncheckedCreateNestedManyWithoutStudentInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUncheckedCreateNestedManyWithoutStudentInput
 }
 
 export type StudentCreateOrConnectWithoutRegistrationsInput = {
@@ -1222,6 +1598,8 @@ export type StudentUpdateWithoutRegistrationsInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1232,6 +1610,8 @@ export type StudentUpdateWithoutRegistrationsInput = {
   approvedBy?: Prisma.UserUpdateOneWithoutReviewedProfilesNestedInput
   documents?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   transfers?: Prisma.StudentTransferUpdateManyWithoutStudentNestedInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUpdateManyWithoutStudentNestedInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutRegistrationsInput = {
@@ -1242,6 +1622,8 @@ export type StudentUncheckedUpdateWithoutRegistrationsInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
@@ -1252,6 +1634,8 @@ export type StudentUncheckedUpdateWithoutRegistrationsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   documents?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   transfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutStudentNestedInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentCreateManyCoachInput = {
@@ -1262,6 +1646,8 @@ export type StudentCreateManyCoachInput = {
   birthDate: Date | string
   insuranceDate?: Date | string | null
   tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
   beltId: string
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
@@ -1279,6 +1665,8 @@ export type StudentCreateManyApprovedByInput = {
   birthDate: Date | string
   insuranceDate?: Date | string | null
   tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
   beltId: string
   coachId: string
   profileStatus?: $Enums.ProfileStatus
@@ -1296,6 +1684,8 @@ export type StudentUpdateWithoutCoachInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1306,6 +1696,8 @@ export type StudentUpdateWithoutCoachInput = {
   documents?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutStudentNestedInput
   transfers?: Prisma.StudentTransferUpdateManyWithoutStudentNestedInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUpdateManyWithoutStudentNestedInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutCoachInput = {
@@ -1316,6 +1708,8 @@ export type StudentUncheckedUpdateWithoutCoachInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1326,6 +1720,8 @@ export type StudentUncheckedUpdateWithoutCoachInput = {
   documents?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutStudentNestedInput
   transfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutStudentNestedInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateManyWithoutCoachInput = {
@@ -1336,6 +1732,8 @@ export type StudentUncheckedUpdateManyWithoutCoachInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1353,6 +1751,8 @@ export type StudentUpdateWithoutApprovedByInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1363,6 +1763,8 @@ export type StudentUpdateWithoutApprovedByInput = {
   documents?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutStudentNestedInput
   transfers?: Prisma.StudentTransferUpdateManyWithoutStudentNestedInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUpdateManyWithoutStudentNestedInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutApprovedByInput = {
@@ -1373,6 +1775,8 @@ export type StudentUncheckedUpdateWithoutApprovedByInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
@@ -1383,6 +1787,8 @@ export type StudentUncheckedUpdateWithoutApprovedByInput = {
   documents?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutStudentNestedInput
   transfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutStudentNestedInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateManyWithoutApprovedByInput = {
@@ -1393,6 +1799,8 @@ export type StudentUncheckedUpdateManyWithoutApprovedByInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   beltId?: Prisma.StringFieldUpdateOperationsInput | string
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
@@ -1410,6 +1818,8 @@ export type StudentCreateManyBeltInput = {
   birthDate: Date | string
   insuranceDate?: Date | string | null
   tkdBankChargeDate?: Date | string | null
+  mobile?: string | null
+  beltCertificateDate?: Date | string | null
   coachId: string
   profileStatus?: $Enums.ProfileStatus
   profileNote?: string | null
@@ -1427,6 +1837,8 @@ export type StudentUpdateWithoutBeltInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1437,6 +1849,8 @@ export type StudentUpdateWithoutBeltInput = {
   documents?: Prisma.StudentDocumentUpdateManyWithoutStudentNestedInput
   registrations?: Prisma.RegistrationUpdateManyWithoutStudentNestedInput
   transfers?: Prisma.StudentTransferUpdateManyWithoutStudentNestedInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUpdateManyWithoutStudentNestedInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateWithoutBeltInput = {
@@ -1447,6 +1861,8 @@ export type StudentUncheckedUpdateWithoutBeltInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1457,6 +1873,8 @@ export type StudentUncheckedUpdateWithoutBeltInput = {
   documents?: Prisma.StudentDocumentUncheckedUpdateManyWithoutStudentNestedInput
   registrations?: Prisma.RegistrationUncheckedUpdateManyWithoutStudentNestedInput
   transfers?: Prisma.StudentTransferUncheckedUpdateManyWithoutStudentNestedInput
+  photoChangeRequests?: Prisma.StudentPhotoChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
+  provinceChangeRequests?: Prisma.StudentProvinceChangeRequestUncheckedUpdateManyWithoutStudentNestedInput
 }
 
 export type StudentUncheckedUpdateManyWithoutBeltInput = {
@@ -1467,6 +1885,8 @@ export type StudentUncheckedUpdateManyWithoutBeltInput = {
   birthDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   insuranceDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tkdBankChargeDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mobile?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  beltCertificateDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   coachId?: Prisma.StringFieldUpdateOperationsInput | string
   profileStatus?: Prisma.EnumProfileStatusFieldUpdateOperationsInput | $Enums.ProfileStatus
   profileNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1485,12 +1905,16 @@ export type StudentCountOutputType = {
   documents: number
   registrations: number
   transfers: number
+  photoChangeRequests: number
+  provinceChangeRequests: number
 }
 
 export type StudentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   documents?: boolean | StudentCountOutputTypeCountDocumentsArgs
   registrations?: boolean | StudentCountOutputTypeCountRegistrationsArgs
   transfers?: boolean | StudentCountOutputTypeCountTransfersArgs
+  photoChangeRequests?: boolean | StudentCountOutputTypeCountPhotoChangeRequestsArgs
+  provinceChangeRequests?: boolean | StudentCountOutputTypeCountProvinceChangeRequestsArgs
 }
 
 /**
@@ -1524,6 +1948,20 @@ export type StudentCountOutputTypeCountTransfersArgs<ExtArgs extends runtime.Typ
   where?: Prisma.StudentTransferWhereInput
 }
 
+/**
+ * StudentCountOutputType without action
+ */
+export type StudentCountOutputTypeCountPhotoChangeRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StudentPhotoChangeRequestWhereInput
+}
+
+/**
+ * StudentCountOutputType without action
+ */
+export type StudentCountOutputTypeCountProvinceChangeRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StudentProvinceChangeRequestWhereInput
+}
+
 
 export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1533,6 +1971,8 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   birthDate?: boolean
   insuranceDate?: boolean
   tkdBankChargeDate?: boolean
+  mobile?: boolean
+  beltCertificateDate?: boolean
   beltId?: boolean
   coachId?: boolean
   profileStatus?: boolean
@@ -1547,6 +1987,8 @@ export type StudentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   documents?: boolean | Prisma.Student$documentsArgs<ExtArgs>
   registrations?: boolean | Prisma.Student$registrationsArgs<ExtArgs>
   transfers?: boolean | Prisma.Student$transfersArgs<ExtArgs>
+  photoChangeRequests?: boolean | Prisma.Student$photoChangeRequestsArgs<ExtArgs>
+  provinceChangeRequests?: boolean | Prisma.Student$provinceChangeRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.StudentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["student"]>
 
@@ -1558,6 +2000,8 @@ export type StudentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   birthDate?: boolean
   insuranceDate?: boolean
   tkdBankChargeDate?: boolean
+  mobile?: boolean
+  beltCertificateDate?: boolean
   beltId?: boolean
   coachId?: boolean
   profileStatus?: boolean
@@ -1579,6 +2023,8 @@ export type StudentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   birthDate?: boolean
   insuranceDate?: boolean
   tkdBankChargeDate?: boolean
+  mobile?: boolean
+  beltCertificateDate?: boolean
   beltId?: boolean
   coachId?: boolean
   profileStatus?: boolean
@@ -1600,6 +2046,8 @@ export type StudentSelectScalar = {
   birthDate?: boolean
   insuranceDate?: boolean
   tkdBankChargeDate?: boolean
+  mobile?: boolean
+  beltCertificateDate?: boolean
   beltId?: boolean
   coachId?: boolean
   profileStatus?: boolean
@@ -1610,7 +2058,7 @@ export type StudentSelectScalar = {
   updatedAt?: boolean
 }
 
-export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "gender" | "nationalCode" | "birthDate" | "insuranceDate" | "tkdBankChargeDate" | "beltId" | "coachId" | "profileStatus" | "profileNote" | "approvedById" | "approvedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
+export type StudentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "fullName" | "gender" | "nationalCode" | "birthDate" | "insuranceDate" | "tkdBankChargeDate" | "mobile" | "beltCertificateDate" | "beltId" | "coachId" | "profileStatus" | "profileNote" | "approvedById" | "approvedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["student"]>
 export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   belt?: boolean | Prisma.BeltDefaultArgs<ExtArgs>
   coach?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1618,6 +2066,8 @@ export type StudentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   documents?: boolean | Prisma.Student$documentsArgs<ExtArgs>
   registrations?: boolean | Prisma.Student$registrationsArgs<ExtArgs>
   transfers?: boolean | Prisma.Student$transfersArgs<ExtArgs>
+  photoChangeRequests?: boolean | Prisma.Student$photoChangeRequestsArgs<ExtArgs>
+  provinceChangeRequests?: boolean | Prisma.Student$provinceChangeRequestsArgs<ExtArgs>
   _count?: boolean | Prisma.StudentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StudentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1640,6 +2090,8 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     documents: Prisma.$StudentDocumentPayload<ExtArgs>[]
     registrations: Prisma.$RegistrationPayload<ExtArgs>[]
     transfers: Prisma.$StudentTransferPayload<ExtArgs>[]
+    photoChangeRequests: Prisma.$StudentPhotoChangeRequestPayload<ExtArgs>[]
+    provinceChangeRequests: Prisma.$StudentProvinceChangeRequestPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1649,6 +2101,8 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     birthDate: Date
     insuranceDate: Date | null
     tkdBankChargeDate: Date | null
+    mobile: string | null
+    beltCertificateDate: Date | null
     beltId: string
     coachId: string
     profileStatus: $Enums.ProfileStatus
@@ -2057,6 +2511,8 @@ export interface Prisma__StudentClient<T, Null = never, ExtArgs extends runtime.
   documents<T extends Prisma.Student$documentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$documentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   registrations<T extends Prisma.Student$registrationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$registrationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RegistrationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   transfers<T extends Prisma.Student$transfersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$transfersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentTransferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  photoChangeRequests<T extends Prisma.Student$photoChangeRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$photoChangeRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPhotoChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  provinceChangeRequests<T extends Prisma.Student$provinceChangeRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Student$provinceChangeRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentProvinceChangeRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2093,6 +2549,8 @@ export interface StudentFieldRefs {
   readonly birthDate: Prisma.FieldRef<"Student", 'DateTime'>
   readonly insuranceDate: Prisma.FieldRef<"Student", 'DateTime'>
   readonly tkdBankChargeDate: Prisma.FieldRef<"Student", 'DateTime'>
+  readonly mobile: Prisma.FieldRef<"Student", 'String'>
+  readonly beltCertificateDate: Prisma.FieldRef<"Student", 'DateTime'>
   readonly beltId: Prisma.FieldRef<"Student", 'String'>
   readonly coachId: Prisma.FieldRef<"Student", 'String'>
   readonly profileStatus: Prisma.FieldRef<"Student", 'ProfileStatus'>
@@ -2590,6 +3048,54 @@ export type Student$transfersArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.StudentTransferScalarFieldEnum | Prisma.StudentTransferScalarFieldEnum[]
+}
+
+/**
+ * Student.photoChangeRequests
+ */
+export type Student$photoChangeRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudentPhotoChangeRequest
+   */
+  select?: Prisma.StudentPhotoChangeRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudentPhotoChangeRequest
+   */
+  omit?: Prisma.StudentPhotoChangeRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentPhotoChangeRequestInclude<ExtArgs> | null
+  where?: Prisma.StudentPhotoChangeRequestWhereInput
+  orderBy?: Prisma.StudentPhotoChangeRequestOrderByWithRelationInput | Prisma.StudentPhotoChangeRequestOrderByWithRelationInput[]
+  cursor?: Prisma.StudentPhotoChangeRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StudentPhotoChangeRequestScalarFieldEnum | Prisma.StudentPhotoChangeRequestScalarFieldEnum[]
+}
+
+/**
+ * Student.provinceChangeRequests
+ */
+export type Student$provinceChangeRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudentProvinceChangeRequest
+   */
+  select?: Prisma.StudentProvinceChangeRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudentProvinceChangeRequest
+   */
+  omit?: Prisma.StudentProvinceChangeRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentProvinceChangeRequestInclude<ExtArgs> | null
+  where?: Prisma.StudentProvinceChangeRequestWhereInput
+  orderBy?: Prisma.StudentProvinceChangeRequestOrderByWithRelationInput | Prisma.StudentProvinceChangeRequestOrderByWithRelationInput[]
+  cursor?: Prisma.StudentProvinceChangeRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StudentProvinceChangeRequestScalarFieldEnum | Prisma.StudentProvinceChangeRequestScalarFieldEnum[]
 }
 
 /**

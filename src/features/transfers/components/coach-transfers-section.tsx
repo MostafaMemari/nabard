@@ -13,7 +13,15 @@ function RequestRow({ request }: { request: CoachTransferRequest }) {
     <div className="flex items-center justify-between gap-3 border-b border-border py-2.5 last:border-b-0">
       <div className="min-w-0 flex-1">
         {outgoing ? (
-          <p className="truncate text-sm">انتقال به مربی «{request.toCoachName}»</p>
+          <p className="truncate text-sm">
+            {request.studentName ? (
+              <>
+                انتقال «{request.studentName}» به مربی «{request.toCoachName}»
+              </>
+            ) : (
+              <>انتقال به مربی «{request.toCoachName}»</>
+            )}
+          </p>
         ) : (
           <p className="truncate text-sm">
             {request.studentName}

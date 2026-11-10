@@ -75,7 +75,9 @@ export type DecideTransferInput = {
 export type TransfersRepository = {
   findUserById(id: string): Promise<UserIdentityRecord | null>;
   findStudentByNationalCode(nationalCode: string): Promise<StudentLookupRow | null>;
+  findStudentById(id: string): Promise<StudentLookupRow | null>;
   findPendingTransferByStudentId(studentId: string): Promise<TransferRow | null>;
+  hasPendingProvinceChange(studentId: string): Promise<boolean>;
   createTransfer(data: CreateTransferData): Promise<TransferRow>;
   countTransfers(filters: TransferFilters): Promise<number>;
   findTransfers(filters: TransferFilters, skip: number, take: number): Promise<TransferWithScope[]>;
@@ -151,6 +153,34 @@ export async function findStudentByNationalCode(nationalCode: string): Promise<S
     coachName: row.coach.fullName,
     coachProvince: row.coach.province,
   };
+}
+
+export async function findStudentById(id: string): Promise<StudentLookupRow | null> {
+  const row = await getPrisma().student.findUnique({
+    where: { id },
+    select: { id: true, fullName: true, gender: true, coach: { select: { id: true, fullName: true, province: true } } },
+  });
+  if (row === null) return null;
+
+  return {
+    id: row.id,
+    fullName: row.fullName,
+    gender: row.gender,
+    coachId: row.coach.id,
+    coachName: row.coach.fullName,
+    coachProvince: row.coach.province,
+  };
+}
+
+// A pending province change would race with a transfer approval on the same
+// student ownership, so the transfer creation checks both tables.
+export async function hasPendingProvinceChange(studentId: string): Promise<boolean> {
+  const row = await getPrisma().studentProvinceChangeRequest.findFirst({
+    where: { studentId, status: "PENDING" },
+    select: { id: true },
+  });
+
+  return row !== null;
 }
 
 export async function findPendingTransferByStudentId(studentId: string): Promise<TransferRow | null> {

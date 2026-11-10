@@ -47,4 +47,10 @@ export type CoachFormValues = z.input<typeof createCoachSchema>;
 export type CoachInput = z.output<typeof createCoachSchema>;
 export type UpdateCoachInput = z.output<typeof updateCoachSchema>;
 export type CoachListQuery = z.output<typeof coachListQuerySchema>;
+
+export const coachLookupQuerySchema = z.object({
+  province: z.enum(provinceValues).optional(),
+});
+
+export type CoachLookupQuery = z.output<typeof coachLookupQuerySchema>;
 export type ResetCoachPasswordInput = z.output<typeof resetCoachPasswordSchema>;

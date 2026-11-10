@@ -7,8 +7,9 @@ import { useState } from "react";
 import { PageHeader, SearchInput } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { useAgeCategories, useBelts } from "@/features/base-data";
-import type { CoachTransferRequest } from "@/features/transfers";
-import { CoachTransfersSection, TransferRequestDialog, useTransferRequests } from "@/features/transfers";
+import { type CoachPhotoChangeRequest, CoachPhotoChangesSection, usePhotoChangeRequests } from "@/features/photo-changes";
+import { CoachProvinceChangesSection, useProvinceChangeRequests } from "@/features/province-changes";
+import { type CoachTransferRequest, CoachTransfersSection, TransferRequestDialog, useTransferRequests } from "@/features/transfers";
 import { useSearchParamText } from "@/lib/use-search-param";
 import { useStudents } from "../hooks/use-students";
 import { birthDateInAgeCategory } from "../student-age";
@@ -29,8 +30,17 @@ export function StudentsScreen() {
   const [beltId, setBeltId] = useState("all");
   const [ageCategoryId, setAgeCategoryId] = useState("all");
   const { result: transfers, isLoading: transfersLoading, error: transfersError, mutate: reloadTransfers } = useTransferRequests();
+  const { result: photoResult, isLoading: photoLoading, error: photoError, mutate: reloadPhotoRequests } = usePhotoChangeRequests();
+  const {
+    result: provinceResult,
+    isLoading: provinceLoading,
+    error: provinceError,
+    mutate: reloadProvinceRequests,
+  } = useProvinceChangeRequests();
 
   const coachRequests = (transfers?.data ?? []).filter((request): request is CoachTransferRequest => "direction" in request);
+  const photoRequests = (photoResult?.data ?? []).filter((request): request is CoachPhotoChangeRequest => !("coachName" in request));
+  const provinceRequests = provinceResult?.data ?? [];
 
   const query = search.value.trim();
   const searched = students.filter((student) => query === "" || student.fullName.includes(query) || student.nationalCode.includes(query));
@@ -102,6 +112,20 @@ export function StudentsScreen() {
         isLoading={transfersLoading}
         error={transfersError}
         onRetry={() => void reloadTransfers()}
+      />
+
+      <CoachPhotoChangesSection
+        requests={photoRequests}
+        isLoading={photoLoading}
+        error={photoError}
+        onRetry={() => void reloadPhotoRequests()}
+      />
+
+      <CoachProvinceChangesSection
+        requests={provinceRequests}
+        isLoading={provinceLoading}
+        error={provinceError}
+        onRetry={() => void reloadProvinceRequests()}
       />
 
       <StudentDeleteDialog student={pendingDelete} onDone={mutate} onClose={() => setPendingDelete(null)} />

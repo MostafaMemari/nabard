@@ -1,7 +1,7 @@
 import { api } from "@/lib/http";
 import type { ListQuery, ListResult } from "@/lib/pagination";
 import type { CoachInput, UpdateCoachInput } from "./schemas";
-import type { User } from "./types";
+import type { CoachTarget, User } from "./types";
 
 export type CoachListParams = ListQuery & {
   search?: string;
@@ -23,6 +23,16 @@ export async function listCoaches(params: CoachListParams = {}): Promise<ListRes
 
 export function getCoach(id: string): Promise<User> {
   return api<User>(`/api/v1/coaches/${id}`);
+}
+
+// Minimal directory of active coaches of one province, used by the coach
+// change and province change request forms to pick the target coach.
+export async function listCoachTargets(province?: string): Promise<CoachTarget[]> {
+  const query = new URLSearchParams();
+  if (province) query.set("province", province);
+
+  const queryString = query.toString();
+  return api<CoachTarget[]>(`/api/v1/coaches/lookup${queryString === "" ? "" : `?${queryString}`}`);
 }
 
 export function createCoach(input: CoachInput): Promise<User> {

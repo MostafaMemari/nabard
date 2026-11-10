@@ -5,6 +5,9 @@ const validStudent = {
   fullName: "سینا مرادی",
   nationalCode: "0123456789",
   birthDate: "2013-05-10T00:00:00.000Z",
+  mobile: "09123456789",
+  beltId: "belt-blue",
+  beltCertificateDate: "",
   insuranceDate: "",
   tkdBankChargeDate: "",
 };
@@ -82,15 +85,40 @@ describe("createStudentSchema", () => {
     expect(createStudentSchema.safeParse({ ...validStudent, insuranceDate: "1400/01/01" }).success).toBe(false);
   });
 
-  it("has no gender, belt or weight in the schema", () => {
-    const result = createStudentSchema.safeParse({ ...validStudent, gender: "MALE", beltId: "belt-blue", weightKg: 54.5 });
+  it("has no gender or weight in the schema and keeps the chosen belt", () => {
+    const result = createStudentSchema.safeParse({ ...validStudent, gender: "MALE", weightKg: 54.5 });
 
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.data).not.toHaveProperty("gender");
-      expect(result.data).not.toHaveProperty("beltId");
       expect(result.data).not.toHaveProperty("weightKg");
+      expect(result.data.beltId).toBe("belt-blue");
     }
+  });
+
+  it("normalizes Persian digits in the mobile number", () => {
+    const result = createStudentSchema.safeParse({ ...validStudent, mobile: "۰۹۱۲۳۴۵۶۷۸۹" });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.mobile).toBe("09123456789");
+    }
+  });
+
+  it("rejects a mobile number without the 09 prefix", () => {
+    expect(createStudentSchema.safeParse({ ...validStudent, mobile: "9123456789" }).success).toBe(false);
+    expect(createStudentSchema.safeParse({ ...validStudent, mobile: "0912345678" }).success).toBe(false);
+    expect(createStudentSchema.safeParse({ ...validStudent, mobile: "" }).success).toBe(false);
+  });
+
+  it("accepts an optional belt certificate date and keeps an empty one empty", () => {
+    const filled = createStudentSchema.safeParse({ ...validStudent, beltCertificateDate: "2026-05-01T00:00:00.000Z" });
+
+    expect(filled.success).toBe(true);
+    if (filled.success) {
+      expect(filled.data.beltCertificateDate).toBe("2026-05-01T00:00:00.000Z");
+    }
+    expect(createStudentSchema.safeParse({ ...validStudent, beltCertificateDate: "  " }).success).toBe(true);
   });
 
   it("drops the coachId from the body", () => {

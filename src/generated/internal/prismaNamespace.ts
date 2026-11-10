@@ -407,6 +407,8 @@ export const ModelName = {
   CompetitionCounty: 'CompetitionCounty',
   CoachCountyChangeRequest: 'CoachCountyChangeRequest',
   StudentTransfer: 'StudentTransfer',
+  StudentPhotoChangeRequest: 'StudentPhotoChangeRequest',
+  StudentProvinceChangeRequest: 'StudentProvinceChangeRequest',
   AuditLog: 'AuditLog',
   DeadlineExtension: 'DeadlineExtension',
   StoredFile: 'StoredFile',
@@ -430,7 +432,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "county" | "user" | "student" | "belt" | "ageCategory" | "weightClass" | "competition" | "competitionCounty" | "coachCountyChangeRequest" | "studentTransfer" | "auditLog" | "deadlineExtension" | "storedFile" | "studentDocument" | "payment" | "loginFailure" | "registration" | "refund"
+    modelProps: "county" | "user" | "student" | "belt" | "ageCategory" | "weightClass" | "competition" | "competitionCounty" | "coachCountyChangeRequest" | "studentTransfer" | "studentPhotoChangeRequest" | "studentProvinceChangeRequest" | "auditLog" | "deadlineExtension" | "storedFile" | "studentDocument" | "payment" | "loginFailure" | "registration" | "refund"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1174,6 +1176,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    StudentPhotoChangeRequest: {
+      payload: Prisma.$StudentPhotoChangeRequestPayload<ExtArgs>
+      fields: Prisma.StudentPhotoChangeRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StudentPhotoChangeRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentPhotoChangeRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StudentPhotoChangeRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentPhotoChangeRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.StudentPhotoChangeRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentPhotoChangeRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StudentPhotoChangeRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentPhotoChangeRequestPayload>
+        }
+        findMany: {
+          args: Prisma.StudentPhotoChangeRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentPhotoChangeRequestPayload>[]
+        }
+        create: {
+          args: Prisma.StudentPhotoChangeRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentPhotoChangeRequestPayload>
+        }
+        createMany: {
+          args: Prisma.StudentPhotoChangeRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StudentPhotoChangeRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentPhotoChangeRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.StudentPhotoChangeRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentPhotoChangeRequestPayload>
+        }
+        update: {
+          args: Prisma.StudentPhotoChangeRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentPhotoChangeRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.StudentPhotoChangeRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StudentPhotoChangeRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StudentPhotoChangeRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentPhotoChangeRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.StudentPhotoChangeRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentPhotoChangeRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.StudentPhotoChangeRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStudentPhotoChangeRequest>
+        }
+        groupBy: {
+          args: Prisma.StudentPhotoChangeRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StudentPhotoChangeRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StudentPhotoChangeRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StudentPhotoChangeRequestCountAggregateOutputType> | number
+        }
+      }
+    }
+    StudentProvinceChangeRequest: {
+      payload: Prisma.$StudentProvinceChangeRequestPayload<ExtArgs>
+      fields: Prisma.StudentProvinceChangeRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StudentProvinceChangeRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentProvinceChangeRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StudentProvinceChangeRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentProvinceChangeRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.StudentProvinceChangeRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentProvinceChangeRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StudentProvinceChangeRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentProvinceChangeRequestPayload>
+        }
+        findMany: {
+          args: Prisma.StudentProvinceChangeRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentProvinceChangeRequestPayload>[]
+        }
+        create: {
+          args: Prisma.StudentProvinceChangeRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentProvinceChangeRequestPayload>
+        }
+        createMany: {
+          args: Prisma.StudentProvinceChangeRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StudentProvinceChangeRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentProvinceChangeRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.StudentProvinceChangeRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentProvinceChangeRequestPayload>
+        }
+        update: {
+          args: Prisma.StudentProvinceChangeRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentProvinceChangeRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.StudentProvinceChangeRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StudentProvinceChangeRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StudentProvinceChangeRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentProvinceChangeRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.StudentProvinceChangeRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentProvinceChangeRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.StudentProvinceChangeRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStudentProvinceChangeRequest>
+        }
+        groupBy: {
+          args: Prisma.StudentProvinceChangeRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StudentProvinceChangeRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StudentProvinceChangeRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StudentProvinceChangeRequestCountAggregateOutputType> | number
+        }
+      }
+    }
     AuditLog: {
       payload: Prisma.$AuditLogPayload<ExtArgs>
       fields: Prisma.AuditLogFieldRefs
@@ -1843,6 +1993,8 @@ export const StudentScalarFieldEnum = {
   birthDate: 'birthDate',
   insuranceDate: 'insuranceDate',
   tkdBankChargeDate: 'tkdBankChargeDate',
+  mobile: 'mobile',
+  beltCertificateDate: 'beltCertificateDate',
   beltId: 'beltId',
   coachId: 'coachId',
   profileStatus: 'profileStatus',
@@ -1966,6 +2118,39 @@ export const StudentTransferScalarFieldEnum = {
 } as const
 
 export type StudentTransferScalarFieldEnum = (typeof StudentTransferScalarFieldEnum)[keyof typeof StudentTransferScalarFieldEnum]
+
+
+export const StudentPhotoChangeRequestScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  newFileId: 'newFileId',
+  status: 'status',
+  note: 'note',
+  decidedById: 'decidedById',
+  decidedAt: 'decidedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentPhotoChangeRequestScalarFieldEnum = (typeof StudentPhotoChangeRequestScalarFieldEnum)[keyof typeof StudentPhotoChangeRequestScalarFieldEnum]
+
+
+export const StudentProvinceChangeRequestScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  fromCoachId: 'fromCoachId',
+  fromProvince: 'fromProvince',
+  toProvince: 'toProvince',
+  toCoachId: 'toCoachId',
+  status: 'status',
+  note: 'note',
+  decidedById: 'decidedById',
+  decidedAt: 'decidedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentProvinceChangeRequestScalarFieldEnum = (typeof StudentProvinceChangeRequestScalarFieldEnum)[keyof typeof StudentProvinceChangeRequestScalarFieldEnum]
 
 
 export const AuditLogScalarFieldEnum = {
@@ -2365,6 +2550,34 @@ export type ListEnumStudentTransferStatusFieldRefInput<$PrismaModel> = FieldRefI
 
 
 /**
+ * Reference to a field of type 'StudentPhotoChangeStatus'
+ */
+export type EnumStudentPhotoChangeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentPhotoChangeStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'StudentPhotoChangeStatus[]'
+ */
+export type ListEnumStudentPhotoChangeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentPhotoChangeStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'StudentProvinceChangeStatus'
+ */
+export type EnumStudentProvinceChangeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentProvinceChangeStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'StudentProvinceChangeStatus[]'
+ */
+export type ListEnumStudentProvinceChangeStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentProvinceChangeStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'StoredFileProvider'
  */
 export type EnumStoredFileProviderFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StoredFileProvider'>
@@ -2650,6 +2863,8 @@ export type GlobalOmitConfig = {
   competitionCounty?: Prisma.CompetitionCountyOmit
   coachCountyChangeRequest?: Prisma.CoachCountyChangeRequestOmit
   studentTransfer?: Prisma.StudentTransferOmit
+  studentPhotoChangeRequest?: Prisma.StudentPhotoChangeRequestOmit
+  studentProvinceChangeRequest?: Prisma.StudentProvinceChangeRequestOmit
   auditLog?: Prisma.AuditLogOmit
   deadlineExtension?: Prisma.DeadlineExtensionOmit
   storedFile?: Prisma.StoredFileOmit

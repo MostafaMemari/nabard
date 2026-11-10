@@ -1,7 +1,7 @@
 import type { Gender } from "@/features/base-data";
 import { api } from "@/lib/http";
 import type { ListQuery, ListResult } from "@/lib/pagination";
-import type { PendingReviewStudent, Student, StudentDetail, StudentDocument, StudentDocumentType, StudentInput } from "./types";
+import type { PendingReviewStudent, Student, StudentDetail, StudentInput } from "./types";
 
 export type StudentListParams = ListQuery & {
   coachId?: string;
@@ -37,17 +37,6 @@ export function updateStudentBelt(id: string, beltId: string): Promise<Student> 
 
 export function deleteStudent(id: string): Promise<{ id: string }> {
   return api<{ id: string }>(`/api/v1/students/${id}`, { method: "DELETE" });
-}
-
-export async function uploadStudentDocument(studentId: string, type: StudentDocumentType, file: File): Promise<StudentDocument> {
-  const form = new FormData();
-  form.append("file", file);
-
-  return api<StudentDocument>(`/api/v1/students/${studentId}/documents/${type}`, { method: "PUT", body: form });
-}
-
-export function deleteStudentDocument(studentId: string, type: StudentDocumentType): Promise<{ type: StudentDocumentType }> {
-  return api<{ type: StudentDocumentType }>(`/api/v1/students/${studentId}/documents/${type}`, { method: "DELETE" });
 }
 
 export type PendingReviewParams = ListQuery & { status?: "PENDING" | "REJECTED" };

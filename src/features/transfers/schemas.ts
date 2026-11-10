@@ -14,6 +14,10 @@ export const createTransferRequestSchema = z.object({
   nationalCode: nationalCodeField,
 });
 
+export const createCoachChangeSchema = z.object({
+  toCoachId: z.string().min(1, "مربی مقصد را انتخاب کنید."),
+});
+
 export const approveTransferSchema = z.object({});
 
 export const rejectTransferSchema = z.object({
@@ -32,6 +36,8 @@ export const transferListQuerySchema = z.object({
 
 export type TransferLookupInput = z.output<typeof transferLookupSchema>;
 export type CreateTransferRequestInput = z.output<typeof createTransferRequestSchema>;
+export type CreateCoachChangeInput = z.output<typeof createCoachChangeSchema>;
+export type CreateCoachChangeValues = z.input<typeof createCoachChangeSchema>;
 export type RejectTransferInput = z.output<typeof rejectTransferSchema>;
 export type RejectTransferValues = z.input<typeof rejectTransferSchema>;
 export type ReassignStudentsInput = z.output<typeof reassignStudentsSchema>;

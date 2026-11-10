@@ -92,6 +92,16 @@ export type CoachCountyChangeRequest = Prisma.CoachCountyChangeRequestModel
  */
 export type StudentTransfer = Prisma.StudentTransferModel
 /**
+ * Model StudentPhotoChangeRequest
+ * 
+ */
+export type StudentPhotoChangeRequest = Prisma.StudentPhotoChangeRequestModel
+/**
+ * Model StudentProvinceChangeRequest
+ * 
+ */
+export type StudentProvinceChangeRequest = Prisma.StudentProvinceChangeRequestModel
+/**
  * Model AuditLog
  * 
  */

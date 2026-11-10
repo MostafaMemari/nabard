@@ -3,16 +3,14 @@
 import { DetailPageHeader, ErrorBanner, SkeletonRows } from "@/components/shared";
 import { useBelts } from "@/features/base-data";
 import { useStudent } from "../hooks/use-student";
-import { useStudentDocuments } from "../hooks/use-student-documents";
-import { StudentDocumentsSection } from "./student-documents-section";
 import { StudentFieldTiles } from "./student-field-tiles";
 import { StudentProfileHeader } from "./student-profile-header";
 import { StudentRegistrationHistory } from "./student-registration-history";
+import { StudentRequestActions } from "./student-request-actions";
 
 export function StudentProfileScreen({ studentId }: { studentId: string }) {
   const { student, isLoading, error, mutate } = useStudent(studentId);
   const { belts } = useBelts();
-  const documents = useStudentDocuments(studentId, mutate);
 
   if (isLoading) {
     return (
@@ -40,7 +38,7 @@ export function StudentProfileScreen({ studentId }: { studentId: string }) {
       <DetailPageHeader backHref="/coach/students" backLabel="هنرجویان" title="پروفایل هنرجو" />
       <StudentProfileHeader student={student} />
       <StudentFieldTiles student={student} beltLabel={belt?.label ?? null} beltCode={belt?.code ?? null} />
-      <StudentDocumentsSection student={student} documents={documents} />
+      <StudentRequestActions student={student} />
       <StudentRegistrationHistory studentId={student.id} />
     </div>
   );

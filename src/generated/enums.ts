@@ -149,6 +149,24 @@ export const StudentTransferStatus = {
 export type StudentTransferStatus = (typeof StudentTransferStatus)[keyof typeof StudentTransferStatus]
 
 
+export const StudentPhotoChangeStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type StudentPhotoChangeStatus = (typeof StudentPhotoChangeStatus)[keyof typeof StudentPhotoChangeStatus]
+
+
+export const StudentProvinceChangeStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type StudentProvinceChangeStatus = (typeof StudentProvinceChangeStatus)[keyof typeof StudentProvinceChangeStatus]
+
+
 export const WeighInVerdict = {
   MATCH: 'MATCH',
   MOVED: 'MOVED',

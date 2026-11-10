@@ -3,6 +3,7 @@
 import {
   ArrowLeftRightIcon,
   HouseIcon,
+  ImageUpIcon,
   MapPinnedIcon,
   ReceiptTextIcon,
   TrophyIcon,
@@ -46,6 +47,20 @@ const transferRequests: SidebarNavItem = {
   href: "/admin/transfer-requests",
   icon: UsersIcon,
 };
+const photoChanges: SidebarNavItem = {
+  id: "photo-changes",
+  label: "تغییر عکس ها",
+  shortLabel: "عکس ها",
+  href: "/admin/photo-changes",
+  icon: ImageUpIcon,
+};
+const provinceChanges: SidebarNavItem = {
+  id: "province-changes",
+  label: "تغییر استان هنرجو",
+  shortLabel: "تغییر استان",
+  href: "/admin/province-changes",
+  icon: MapPinnedIcon,
+};
 const counties: SidebarNavItem = { id: "counties", label: "شهرستان ها", href: "/admin/counties", icon: MapPinnedIcon };
 const refunds: SidebarNavItem = {
   id: "refunds",
@@ -56,11 +71,23 @@ const refunds: SidebarNavItem = {
 };
 const coaches: SidebarNavItem = { id: "coaches", label: "مربیان", href: "/admin/coaches", icon: UsersIcon };
 
-const navItems: SidebarNavItem[] = [home, competitions, payments, profiles, countyChanges, transferRequests, counties, refunds, coaches];
+const navItems: SidebarNavItem[] = [
+  home,
+  competitions,
+  payments,
+  profiles,
+  countyChanges,
+  transferRequests,
+  photoChanges,
+  provinceChanges,
+  counties,
+  refunds,
+  coaches,
+];
 
 const navGroups: SidebarNavGroup[] = [
   { label: "کار روزانه", items: [home, competitions, payments, profiles] },
-  { label: "مدیریت", items: [countyChanges, transferRequests, coaches, refunds] },
+  { label: "مدیریت", items: [countyChanges, transferRequests, photoChanges, provinceChanges, coaches, refunds] },
   { label: "تنظیمات", items: [counties] },
 ];
 

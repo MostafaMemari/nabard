@@ -3,7 +3,6 @@ import { AppError } from "@/lib/api";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
 import { deleteStorageFileQuietly } from "@/lib/storage";
-import { readProfileImage } from "@/lib/storage/image";
 import type { Storage } from "@/lib/storage/types";
 import type { CreateStudentInput, PendingReviewQuery, StudentListQuery, UpdateStudentBeltInput } from "../schemas";
 import type {
@@ -12,7 +11,6 @@ import type {
   PendingReviewStudent,
   StudentDetail,
   StudentDocumentRecord,
-  StudentDocumentType,
   StudentFilters,
   StudentRecord,
   StudentRepository,
@@ -22,7 +20,6 @@ import type {
 import { isStudentDocumentType } from "./repository";
 
 const DEFAULT_PAGE_SIZE = 100;
-const DEFAULT_BELT_CODE = "white";
 
 // Photos live in R2 and are displayed straight from its public endpoint:
 // no signature and no backend hop. When a file url cannot be resolved
@@ -80,10 +77,6 @@ function invalidBelt(): AppError {
   return new AppError(400, "VALIDATION_ERROR", "کمربند انتخاب شده معتبر نیست.");
 }
 
-function defaultBeltMissing(): AppError {
-  return new AppError(400, "VALIDATION_ERROR", "کمربند پیش فرض یافت نشد؛ با ادمین استان تماس بگیرید.");
-}
-
 function coachGenderMissing(): AppError {
   return new AppError(400, "VALIDATION_ERROR", "جنسیت شما ثبت نشده است؛ با ادمین استان تماس بگیرید.");
 }
@@ -103,8 +96,10 @@ function toStudentRecord(student: StudentWithCoach): StudentRecord {
     gender: student.gender,
     nationalCode: student.nationalCode,
     birthDate: student.birthDate,
+    mobile: student.mobile,
     insuranceDate: student.insuranceDate,
     tkdBankChargeDate: student.tkdBankChargeDate,
+    beltCertificateDate: student.beltCertificateDate,
     beltId: student.beltId,
     coachId: student.coachId,
     profileStatus: student.profileStatus,
@@ -180,18 +175,18 @@ export async function createStudent(repo: StudentRepository, user: CurrentUser, 
   if (!identity.gender) throw coachGenderMissing();
 
   if (await repo.findNationalCodeOwner(input.nationalCode)) throw duplicateNationalCode();
-
-  const beltId = await repo.findBeltIdByCode(DEFAULT_BELT_CODE);
-  if (!beltId) throw defaultBeltMissing();
+  if (!(await repo.activeBeltExists(input.beltId))) throw invalidBelt();
 
   const data: NewStudentData = {
     fullName: input.fullName,
     gender: identity.gender,
     nationalCode: input.nationalCode,
     birthDate: new Date(input.birthDate),
+    mobile: input.mobile,
+    beltCertificateDate: input.beltCertificateDate ? new Date(input.beltCertificateDate) : null,
     insuranceDate: input.insuranceDate ? new Date(input.insuranceDate) : null,
     tkdBankChargeDate: input.tkdBankChargeDate ? new Date(input.tkdBankChargeDate) : null,
-    beltId,
+    beltId: input.beltId,
     coachId: user.id,
   };
 
@@ -234,6 +229,16 @@ export async function deleteStudent(repo: StudentRepository, storage: Storage, u
     throw new AppError(409, "CONFLICT", "این هنرجو سابقه درخواست انتقال دارد و قابل حذف نیست.");
   }
 
+  const photoChanges = await repo.countStudentPhotoChangeRequests(id);
+  if (photoChanges > 0) {
+    throw new AppError(409, "CONFLICT", "این هنرجو سابقه درخواست تغییر عکس دارد و قابل حذف نیست.");
+  }
+
+  const provinceChanges = await repo.countStudentProvinceChangeRequests(id);
+  if (provinceChanges > 0) {
+    throw new AppError(409, "CONFLICT", "این هنرجو سابقه درخواست تغییر استان دارد و قابل حذف نیست.");
+  }
+
   const fileIds = await repo.deleteStudent(id);
   for (const fileId of fileIds) {
     await deleteStorageFileQuietly(storage, fileId);
@@ -244,42 +249,6 @@ export async function deleteStudent(repo: StudentRepository, storage: Storage, u
 
 function documentNotFound(): AppError {
   return new AppError(404, "NOT_FOUND", "مدرک یافت نشد.");
-}
-
-async function requireOwnedStudent(repo: StudentRepository, user: CurrentUser, studentId: string): Promise<void> {
-  const student = await repo.findStudentById(studentId);
-  if (!student || student.coachId !== user.id) throw studentNotFound();
-}
-
-export async function uploadStudentDocument(
-  repo: StudentRepository,
-  storage: Storage,
-  user: CurrentUser,
-  studentId: string,
-  type: string,
-  file: File,
-): Promise<StudentDocumentRecord> {
-  const identity = await requireActiveUser(repo, user);
-  if (identity.role !== "COACH") throw forbidden();
-  if (!isStudentDocumentType(type)) throw documentNotFound();
-  await requireOwnedStudent(repo, user, studentId);
-
-  const image = await readProfileImage(file);
-  const existing = await repo.findStudentDocument(studentId, type);
-  const stored = await storage.put({ ...image, folder: "student-photos" });
-
-  try {
-    const record = await repo.upsertStudentDocument(studentId, type, stored.id);
-    if (existing && existing.fileId !== stored.id) {
-      await deleteStorageFileQuietly(storage, existing.fileId);
-    }
-
-    const urls = await storage.getUrls([stored.id]);
-    return { ...record, url: urls.get(stored.id) ?? null };
-  } catch (error) {
-    await deleteStorageFileQuietly(storage, stored.id);
-    throw error;
-  }
 }
 
 export async function readStudentDocument(
@@ -306,26 +275,6 @@ export async function readStudentDocument(
   if (!file) throw new AppError(404, "NOT_FOUND", "فایل مدرک یافت نشد.");
 
   return { stream: file.stream, mime: file.mime, size: file.size };
-}
-
-export async function deleteStudentDocument(
-  repo: StudentRepository,
-  storage: Storage,
-  user: CurrentUser,
-  studentId: string,
-  type: string,
-): Promise<{ type: StudentDocumentType }> {
-  const identity = await requireActiveUser(repo, user);
-  if (identity.role !== "COACH") throw forbidden();
-  if (!isStudentDocumentType(type)) throw documentNotFound();
-  await requireOwnedStudent(repo, user, studentId);
-
-  const deleted = await repo.deleteStudentDocument(studentId, type);
-  if (!deleted) throw documentNotFound();
-
-  await deleteStorageFileQuietly(storage, deleted.fileId);
-
-  return { type };
 }
 
 export async function listPendingReviewStudents(

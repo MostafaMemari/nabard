@@ -26,13 +26,15 @@ export type CoachTransferTarget = {
 };
 
 // A coach sees their own requests. The requester sees the student and the old
-// coach; the old coach sees only the status and the new coach's name.
+// coach; the old coach (in the receiving-coach flow) sees only the status and
+// the new coach's name.
 export type CoachTransferRequest = {
   id: string;
   direction: "incoming" | "outgoing";
   status: TransferStatus;
   toCoachId: string;
   toCoachName: string;
+  studentId: string | null;
   fromCoachName: string | null;
   studentName: string | null;
   note: string | null;

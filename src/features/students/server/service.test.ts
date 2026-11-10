@@ -7,14 +7,11 @@ import {
   approveStudentProfile,
   createStudent,
   deleteStudent,
-  deleteStudentDocument,
   getStudent,
   listPendingReviewStudents,
   listStudents,
-  readStudentDocument,
   rejectStudentProfile,
   updateStudentBelt,
-  uploadStudentDocument,
 } from "./service";
 
 const admin: CurrentUser = { id: "admin-1", role: "ADMIN" };
@@ -40,8 +37,10 @@ const ownStudent: StudentWithCoach = {
   gender: "MALE",
   nationalCode: "1234567890",
   birthDate: new Date("2013-05-10T00:00:00.000Z"),
+  mobile: "09123456789",
   insuranceDate: null,
   tkdBankChargeDate: null,
+  beltCertificateDate: null,
   beltId: "belt-blue",
   coachId: "coach-1",
   coachName: "رضا کریمی",
@@ -69,7 +68,7 @@ function repoWith(overrides: Partial<StudentRepository> = {}): StudentRepository
     findStudentById: vi.fn().mockResolvedValue(ownStudent),
     findStudentDocuments: vi.fn().mockResolvedValue([documentRow]),
     findNationalCodeOwner: vi.fn().mockResolvedValue(null),
-    findBeltIdByCode: vi.fn().mockResolvedValue("belt-white"),
+    activeBeltExists: vi.fn().mockResolvedValue(true),
     beltExists: vi.fn().mockResolvedValue(true),
     countRegistrations: vi.fn().mockResolvedValue(0),
     countStudentTransfers: vi.fn().mockResolvedValue(0),
@@ -79,9 +78,9 @@ function repoWith(overrides: Partial<StudentRepository> = {}): StudentRepository
     countPendingReviewStudents: vi.fn().mockResolvedValue(1),
     findPendingReviewStudents: vi.fn().mockResolvedValue([]),
     updateProfileStatusFromPendingOrRejected: vi.fn().mockResolvedValue(recordOf(ownStudent)),
-    upsertStudentDocument: vi.fn().mockResolvedValue(documentRow),
     findStudentDocument: vi.fn().mockResolvedValue(documentRow),
-    deleteStudentDocument: vi.fn().mockResolvedValue(documentRow),
+    countStudentPhotoChangeRequests: vi.fn().mockResolvedValue(0),
+    countStudentProvinceChangeRequests: vi.fn().mockResolvedValue(0),
     ...overrides,
   };
 }
@@ -94,6 +93,9 @@ const createInput = {
   fullName: "سینا مرادی",
   nationalCode: "1234567890",
   birthDate: "2013-05-10T00:00:00.000Z",
+  mobile: "09123456789",
+  beltId: "belt-blue",
+  beltCertificateDate: "",
   insuranceDate: "",
   tkdBankChargeDate: "",
 };
@@ -261,23 +263,41 @@ describe("getStudent", () => {
 });
 
 describe("createStudent", () => {
-  it("creates the student under the session coach with the coach gender and the white belt", async () => {
+  it("creates the student under the session coach with the coach gender and the chosen belt", async () => {
     const repo = repoWith();
     await createStudent(repo, coach, createInput);
 
-    expect(repo.findBeltIdByCode).toHaveBeenCalledWith("white");
+    expect(repo.activeBeltExists).toHaveBeenCalledWith("belt-blue");
     expect(repo.createStudent).toHaveBeenCalledTimes(1);
     const data = vi.mocked(repo.createStudent).mock.calls[0][0];
     expect(data).toMatchObject({
       fullName: "سینا مرادی",
       gender: "MALE",
       nationalCode: "1234567890",
-      beltId: "belt-white",
+      mobile: "09123456789",
+      beltId: "belt-blue",
       coachId: "coach-1",
+      beltCertificateDate: null,
       insuranceDate: null,
       tkdBankChargeDate: null,
     });
     expect(data.birthDate).toEqual(new Date("2013-05-10T00:00:00.000Z"));
+  });
+
+  it("stores the optional belt certificate date as a Date value", async () => {
+    const repo = repoWith();
+    await createStudent(repo, coach, { ...createInput, beltCertificateDate: "2026-05-01T00:00:00.000Z" });
+
+    const data = vi.mocked(repo.createStudent).mock.calls[0][0];
+    expect(data.beltCertificateDate).toEqual(new Date("2026-05-01T00:00:00.000Z"));
+  });
+
+  it("rejects an inactive belt with 400", async () => {
+    const repo = repoWith({ activeBeltExists: vi.fn().mockResolvedValue(false) });
+    const failure = await failureOf(createStudent(repo, coach, createInput));
+
+    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
+    expect(repo.createStudent).not.toHaveBeenCalled();
   });
 
   it("stores the optional dates as Date values", async () => {
@@ -315,14 +335,6 @@ describe("createStudent", () => {
     const failure = await failureOf(createStudent(repo, coach, createInput));
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
-    expect(repo.createStudent).not.toHaveBeenCalled();
-  });
-
-  it("rejects a missing white belt with 400", async () => {
-    const repo = repoWith({ findBeltIdByCode: vi.fn().mockResolvedValue(null) });
-    const failure = await failureOf(createStudent(repo, coach, createInput));
-
-    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
     expect(repo.createStudent).not.toHaveBeenCalled();
   });
 
@@ -422,7 +434,7 @@ describe("deleteStudent", () => {
 
 const JPEG_BYTES = new Uint8Array([0xff, 0xd8, 0xff, 0xdb, 0, 5, 6, 7]);
 
-function documentFile(): File {
+function _documentFile(): File {
   return new File([JPEG_BYTES], "photo.jpg", { type: "image/jpeg" });
 }
 
@@ -438,137 +450,6 @@ function storageWith(): Storage {
 function storageWithUrls(urls: Record<string, string>): Storage {
   return { ...storageWith(), getUrls: vi.fn().mockResolvedValue(new Map(Object.entries(urls))) };
 }
-
-describe("uploadStudentDocument", () => {
-  it("stores the image and upserts the document of the own student", async () => {
-    const repo = repoWith();
-    const storage = storageWith();
-    const result = await uploadStudentDocument(repo, storage, coach, "student-1", "PHOTO", documentFile());
-
-    expect(storage.put).toHaveBeenCalledWith({ data: JPEG_BYTES, mime: "image/jpeg", folder: "student-photos" });
-    expect(repo.upsertStudentDocument).toHaveBeenCalledWith("student-1", "PHOTO", "file-9");
-    expect(storage.delete).toHaveBeenCalledWith("file-1");
-    expect(result).toEqual({ ...documentRow, url: null });
-  });
-
-  it("rejects an admin with 403", async () => {
-    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    const failure = await failureOf(uploadStudentDocument(repo, storageWith(), admin, "student-1", "PHOTO", documentFile()));
-
-    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
-    expect(repo.upsertStudentDocument).not.toHaveBeenCalled();
-  });
-
-  it("hides another coach student behind 404", async () => {
-    const repo = repoWith({ findStudentById: vi.fn().mockResolvedValue(otherCoachStudent) });
-    const failure = await failureOf(uploadStudentDocument(repo, storageWith(), coach, "student-2", "PHOTO", documentFile()));
-
-    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
-    expect(repo.upsertStudentDocument).not.toHaveBeenCalled();
-  });
-
-  it("rejects an unknown document type with 404", async () => {
-    const repo = repoWith();
-    const failure = await failureOf(uploadStudentDocument(repo, storageWith(), coach, "student-1", "PASSPORT", documentFile()));
-
-    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
-    expect(repo.upsertStudentDocument).not.toHaveBeenCalled();
-  });
-});
-
-describe("readStudentDocument", () => {
-  it("returns the file of the owning coach", async () => {
-    const repo = repoWith();
-    const storage = storageWith();
-    const result = await readStudentDocument(repo, storage, coach, "student-1", "PHOTO");
-
-    expect(storage.get).toHaveBeenCalledWith("file-1");
-    expect(result).toMatchObject({ mime: "image/jpeg", size: JPEG_BYTES.byteLength });
-  });
-
-  it("lets an admin of the same province read the document", async () => {
-    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    const storage = storageWith();
-    await readStudentDocument(repo, storage, admin, "student-1", "PHOTO");
-
-    expect(storage.get).toHaveBeenCalledWith("file-1");
-  });
-
-  it("answers 404 for the retired document types", async () => {
-    const repo = repoWith();
-
-    for (const type of ["NATIONAL_ID_OR_BIRTH_CERTIFICATE", "INSURANCE", "BELT_CERTIFICATE"]) {
-      const failure = await failureOf(readStudentDocument(repo, storageWith(), coach, "student-1", type));
-      expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
-    }
-
-    expect(storageWith().get).not.toHaveBeenCalled();
-  });
-
-  it("hides documents outside the admin province behind 404", async () => {
-    const repo = repoWith({
-      findUserById: vi.fn().mockResolvedValue(adminRecord),
-      findStudentById: vi.fn().mockResolvedValue(farsStudent),
-    });
-    const failure = await failureOf(readStudentDocument(repo, storageWith(), admin, "student-3", "PHOTO"));
-
-    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
-  });
-
-  it("answers 404 when the document is not uploaded yet", async () => {
-    const repo = repoWith({ findStudentDocument: vi.fn().mockResolvedValue(null) });
-    const failure = await failureOf(readStudentDocument(repo, storageWith(), coach, "student-1", "PHOTO"));
-
-    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
-  });
-});
-
-describe("deleteStudentDocument", () => {
-  it("deletes the document and the stored file of the owning coach", async () => {
-    const repo = repoWith();
-    const storage = storageWith();
-    const result = await deleteStudentDocument(repo, storage, coach, "student-1", "PHOTO");
-
-    expect(repo.deleteStudentDocument).toHaveBeenCalledWith("student-1", "PHOTO");
-    expect(storage.delete).toHaveBeenCalledWith("file-1");
-    expect(result).toEqual({ type: "PHOTO" });
-  });
-
-  it("answers 404 for the retired document types", async () => {
-    const repo = repoWith();
-
-    for (const type of ["NATIONAL_ID_OR_BIRTH_CERTIFICATE", "INSURANCE", "BELT_CERTIFICATE"]) {
-      const failure = await failureOf(deleteStudentDocument(repo, storageWith(), coach, "student-1", type));
-      expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
-    }
-
-    expect(repo.deleteStudentDocument).not.toHaveBeenCalled();
-  });
-
-  it("rejects an admin with 403", async () => {
-    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    const failure = await failureOf(deleteStudentDocument(repo, storageWith(), admin, "student-1", "PHOTO"));
-
-    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
-    expect(repo.deleteStudentDocument).not.toHaveBeenCalled();
-  });
-
-  it("hides another coach student behind 404", async () => {
-    const repo = repoWith({ findStudentById: vi.fn().mockResolvedValue(otherCoachStudent) });
-    const failure = await failureOf(deleteStudentDocument(repo, storageWith(), coach, "student-2", "PHOTO"));
-
-    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
-  });
-
-  it("answers 404 when the document does not exist", async () => {
-    const repo = repoWith({ deleteStudentDocument: vi.fn().mockResolvedValue(null) });
-    const storage = storageWith();
-    const failure = await failureOf(deleteStudentDocument(repo, storage, coach, "student-1", "PHOTO"));
-
-    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
-    expect(storage.delete).not.toHaveBeenCalled();
-  });
-});
 
 describe("listPendingReviewStudents", () => {
   it("scopes an admin to its province with the status filter and pagination", async () => {

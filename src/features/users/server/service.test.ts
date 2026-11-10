@@ -50,6 +50,7 @@ function repoWith(overrides: Partial<CoachRepository> = {}): CoachRepository {
     findUserById: vi.fn().mockResolvedValue(adminRecord),
     countCoaches: vi.fn().mockResolvedValue(1),
     findCoaches: vi.fn().mockResolvedValue([tehranCoach]),
+    findActiveCoachTargets: vi.fn().mockResolvedValue([]),
     findCoachById: vi.fn().mockResolvedValue(tehranCoach),
     findMobileOwner: vi.fn().mockResolvedValue(null),
     findNationalCodeOwner: vi.fn().mockResolvedValue(null),

@@ -19,16 +19,19 @@ export function useStudentForm() {
       fullName: values.fullName.trim(),
       nationalCode: values.nationalCode,
       birthDate: values.birthDate,
+      mobile: values.mobile,
+      beltId: values.beltId,
+      beltCertificateDate: values.beltCertificateDate,
       insuranceDate: values.insuranceDate,
       tkdBankChargeDate: values.tkdBankChargeDate,
     };
 
     try {
       await createStudent(input);
-      toast.success("هنرجو اضافه شد.");
+      toast.success("درخواست ثبت هنرجو ثبت شد و برای بررسی به ادمین استان ارسال شد.");
       router.push("/coach/students");
-    } catch {
-      toast.error("ذخیره انجام نشد. دوباره تلاش کنید.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید.");
     }
   }
 

@@ -27,8 +27,8 @@ enum Gender {
 }
 
 enum Role {
-  ADMIN @map("admin") // province admin (province is set on the user)
-  COACH @map("coach")
+  ADMIN       @map("admin") // province admin (province is set on the user)
+  COACH       @map("coach")
   SUPER_ADMIN @map("super_admin") // manages admins, counties and base data; has no province
 }
 
@@ -122,6 +122,18 @@ enum StudentTransferStatus {
   REJECTED @map("rejected")
 }
 
+enum StudentPhotoChangeStatus {
+  PENDING  @map("pending")
+  APPROVED @map("approved")
+  REJECTED @map("rejected")
+}
+
+enum StudentProvinceChangeStatus {
+  PENDING  @map("pending")
+  APPROVED @map("approved")
+  REJECTED @map("rejected")
+}
+
 enum WeighInVerdict {
   MATCH         @map("match")
   MOVED         @map("moved")
@@ -169,35 +181,39 @@ model County {
 
 // Accounts are created by an admin. Coaches belong to a province and a county.
 model User {
-  id           String   @id @default(uuid()) @map("id")
-  mobile       String   @unique @map("mobile") @db.VarChar(11)
-  passwordHash String   @map("password_hash")
-  fullName     String   @map("full_name") @db.VarChar(80)
-  nationalCode String?  @unique @map("national_code") @db.VarChar(10)
-  role         Role      @map("role")
-  gender       Gender?   @map("gender") // required for COACH (set at creation, CHECK users_coach_gender_required); students inherit it
-  province     Province? @map("province") // required for ADMIN and COACH (CHECK users_coach_province_required), null for SUPER_ADMIN (enforced in services)
-  isActive     Boolean   @default(true) @map("is_active")
-  countyId     String?   @map("county_id") // required for COACH (CHECK users_coach_county_required), null for admins and super admin
-  county       County?   @relation(fields: [countyId], references: [id])
-  photoFileId  String?   @unique @map("photo_file_id")
+  id           String      @id @default(uuid()) @map("id")
+  mobile       String      @unique @map("mobile") @db.VarChar(11)
+  passwordHash String      @map("password_hash")
+  fullName     String      @map("full_name") @db.VarChar(80)
+  nationalCode String?     @unique @map("national_code") @db.VarChar(10)
+  role         Role        @map("role")
+  gender       Gender?     @map("gender") // required for COACH (set at creation, CHECK users_coach_gender_required); students inherit it
+  province     Province?   @map("province") // required for ADMIN and COACH (CHECK users_coach_province_required), null for SUPER_ADMIN (enforced in services)
+  isActive     Boolean     @default(true) @map("is_active")
+  countyId     String?     @map("county_id") // required for COACH (CHECK users_coach_county_required), null for admins and super admin
+  county       County?     @relation(fields: [countyId], references: [id])
+  photoFileId  String?     @unique @map("photo_file_id")
   photoFile    StoredFile? @relation("CoachPhotoFile", fields: [photoFileId], references: [id])
 
-  students             Student[]
-  registrations        Registration[]
-  payments             Payment[]
-  deadlineExtensions   DeadlineExtension[] @relation("DeadlineExtensionCreatedBy")
-  refunds              Refund[]            @relation("RefundCoach")
-  processedRefunds     Refund[]            @relation("RefundProcessedBy")
-  reviewedProfiles     Student[]           @relation("StudentProfileReviewedBy")
-  countyChangeRequests CoachCountyChangeRequest[] @relation("CountyChangeCoach")
-  decidedCountyChanges CoachCountyChangeRequest[] @relation("CountyChangeDecidedBy")
-  transfersFrom        StudentTransfer[]          @relation("TransferFromCoach")
-  transfersTo          StudentTransfer[]          @relation("TransferToCoach")
-  decidedTransfers     StudentTransfer[]          @relation("TransferDecidedBy")
-  auditLogs            AuditLog[]                 @relation("AuditLogActor")
-  checkedInRegistrations Registration[]           @relation("RegistrationCheckInBy")
-  weighedRegistrations   Registration[]           @relation("RegistrationWeighInBy")
+  students               Student[]
+  registrations          Registration[]
+  payments               Payment[]
+  deadlineExtensions     DeadlineExtension[]            @relation("DeadlineExtensionCreatedBy")
+  refunds                Refund[]                       @relation("RefundCoach")
+  processedRefunds       Refund[]                       @relation("RefundProcessedBy")
+  reviewedProfiles       Student[]                      @relation("StudentProfileReviewedBy")
+  countyChangeRequests   CoachCountyChangeRequest[]     @relation("CountyChangeCoach")
+  decidedCountyChanges   CoachCountyChangeRequest[]     @relation("CountyChangeDecidedBy")
+  transfersFrom          StudentTransfer[]              @relation("TransferFromCoach")
+  transfersTo            StudentTransfer[]              @relation("TransferToCoach")
+  decidedTransfers       StudentTransfer[]              @relation("TransferDecidedBy")
+  provinceChangesTo      StudentProvinceChangeRequest[] @relation("ProvinceChangeToCoach")
+  provinceChangesFrom    StudentProvinceChangeRequest[] @relation("ProvinceChangeFromCoach")
+  decidedProvinceChanges StudentProvinceChangeRequest[] @relation("ProvinceChangeDecidedBy")
+  decidedPhotoChanges    StudentPhotoChangeRequest[]    @relation("PhotoChangeDecidedBy")
+  auditLogs              AuditLog[]                     @relation("AuditLogActor")
+  checkedInRegistrations Registration[]                 @relation("RegistrationCheckInBy")
+  weighedRegistrations   Registration[]                 @relation("RegistrationWeighInBy")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -212,8 +228,13 @@ model Student {
   nationalCode String   @unique @map("national_code") @db.VarChar(10)
   birthDate    DateTime @map("birth_date") @db.Date
 
-  insuranceDate    DateTime? @map("insurance_date") @db.Date
+  insuranceDate     DateTime? @map("insurance_date") @db.Date
   tkdBankChargeDate DateTime? @map("tkd_bank_charge_date") @db.Date
+
+  // Contact and rank metadata captured by the coach at registration; both are
+  // optional so pre-existing rows stay valid.
+  mobile              String?   @map("mobile") @db.VarChar(11)
+  beltCertificateDate DateTime? @map("belt_certificate_date") @db.Date
 
   beltId  String @map("belt_id")
   belt    Belt   @relation(fields: [beltId], references: [id])
@@ -228,8 +249,10 @@ model Student {
 
   documents StudentDocument[]
 
-  registrations Registration[]
-  transfers     StudentTransfer[] @relation("StudentTransferStudent")
+  registrations          Registration[]
+  transfers              StudentTransfer[]              @relation("StudentTransferStudent")
+  photoChangeRequests    StudentPhotoChangeRequest[]    @relation("StudentPhotoChangeStudent")
+  provinceChangeRequests StudentProvinceChangeRequest[] @relation("StudentProvinceChangeStudent")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -305,8 +328,8 @@ model Competition {
   description String?  @map("description") @db.VarChar(2000) // optional note for coaches, written by the province admin
   province    Province @map("province")
 
-  level     CompetitionLevel    @default(PROVINCIAL) @map("level")
-  counties  CompetitionCounty[] // one or more counties when level is COUNTY, none when PROVINCIAL
+  level    CompetitionLevel    @default(PROVINCIAL) @map("level")
+  counties CompetitionCounty[] // one or more counties when level is COUNTY, none when PROVINCIAL
 
   discipline    Discipline  @map("discipline")
   gender        Gender      @map("gender")
@@ -402,16 +425,67 @@ model StudentTransfer {
   @@map("student_transfers")
 }
 
+// A coach asks to replace the profile photo of their own student. The photo
+// lives behind the request until the province admin approves it; only then it
+// becomes the student PHOTO document. Rows are history, like transfers.
+model StudentPhotoChangeRequest {
+  id          String                   @id @default(uuid()) @map("id")
+  studentId   String                   @map("student_id")
+  student     Student                  @relation("StudentPhotoChangeStudent", fields: [studentId], references: [id])
+  newFileId   String                   @unique @map("new_file_id")
+  newFile     StoredFile               @relation("StudentPhotoChangeFile", fields: [newFileId], references: [id])
+  status      StudentPhotoChangeStatus @default(PENDING) @map("status")
+  note        String?                  @map("note") @db.VarChar(500) // admin note on rejection
+  decidedById String?                  @map("decided_by_id")
+  decidedBy   User?                    @relation("PhotoChangeDecidedBy", fields: [decidedById], references: [id])
+  decidedAt   DateTime?                @map("decided_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([studentId])
+  @@index([status, createdAt])
+  @@map("student_photo_change_requests")
+}
+
+// A coach asks to move their own student to a coach of another province. The
+// admin of the destination province decides; approval moves the student to
+// the target coach. Provinces are snapshots taken when the request is made.
+model StudentProvinceChangeRequest {
+  id           String                      @id @default(uuid()) @map("id")
+  studentId    String                      @map("student_id")
+  student      Student                     @relation("StudentProvinceChangeStudent", fields: [studentId], references: [id])
+  fromCoachId  String                      @map("from_coach_id")
+  fromCoach    User                        @relation("ProvinceChangeFromCoach", fields: [fromCoachId], references: [id])
+  fromProvince Province                    @map("from_province")
+  toProvince   Province                    @map("to_province")
+  toCoachId    String                      @map("to_coach_id")
+  toCoach      User                        @relation("ProvinceChangeToCoach", fields: [toCoachId], references: [id])
+  status       StudentProvinceChangeStatus @default(PENDING) @map("status")
+  note         String?                     @map("note") @db.VarChar(500) // admin note on rejection
+  decidedById  String?                     @map("decided_by_id")
+  decidedBy    User?                       @relation("ProvinceChangeDecidedBy", fields: [decidedById], references: [id])
+  decidedAt    DateTime?                   @map("decided_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([studentId])
+  @@index([status, createdAt])
+  @@index([toProvince, status])
+  @@map("student_province_change_requests")
+}
+
 // Who changed what across provinces: admins, counties and age category dates.
 // details holds no personal data (no names, mobiles, national codes).
 model AuditLog {
-  id         String   @id @default(uuid()) @map("id")
-  actorId    String   @map("actor_id")
-  actor      User     @relation("AuditLogActor", fields: [actorId], references: [id])
-  action     String   @map("action") @db.VarChar(60)
-  entityType String   @map("entity_type") @db.VarChar(60)
-  entityId   String?  @map("entity_id")
-  details    Json?    @map("details")
+  id         String  @id @default(uuid()) @map("id")
+  actorId    String  @map("actor_id")
+  actor      User    @relation("AuditLogActor", fields: [actorId], references: [id])
+  action     String  @map("action") @db.VarChar(60)
+  entityType String  @map("entity_type") @db.VarChar(60)
+  entityId   String? @map("entity_id")
+  details    Json?   @map("details")
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -453,8 +527,9 @@ model StoredFile {
   data      Bytes?             @map("data")
   createdAt DateTime           @default(now()) @map("created_at")
 
-  coachPhoto       User?             @relation("CoachPhotoFile")
-  studentDocuments StudentDocument[]
+  coachPhoto         User?                      @relation("CoachPhotoFile")
+  studentDocuments   StudentDocument[]
+  photoChangeRequest StudentPhotoChangeRequest? @relation("StudentPhotoChangeFile")
 
   @@map("stored_files")
 }
@@ -522,11 +597,11 @@ model Registration {
   payment       Payment?    @relation(fields: [paymentId], references: [id])
 
   // Kyorugi only: resolved from the competition rules snapshot at registration
-  weightClassId    String?   @map("weight_class_id")
+  weightClassId    String?      @map("weight_class_id")
   weightClass      WeightClass? @relation(fields: [weightClassId], references: [id])
-  weightClassLabel String?   @map("weight_class_label") @db.VarChar(60)
-  weightClassMin   Decimal?  @map("weight_class_min") @db.Decimal(5, 3)
-  weightClassMax   Decimal?  @map("weight_class_max") @db.Decimal(5, 3)
+  weightClassLabel String?      @map("weight_class_label") @db.VarChar(60)
+  weightClassMin   Decimal?     @map("weight_class_min") @db.Decimal(5, 3)
+  weightClassMax   Decimal?     @map("weight_class_max") @db.Decimal(5, 3)
 
   status RegistrationStatus @default(PENDING) @map("status")
   note   String?            @map("note") @db.VarChar(500) // admin note on rejection

@@ -23,6 +23,12 @@ export const auditActions = {
   transferRejected: "transfer.rejected",
   studentsReassigned: "students.reassigned",
   registrationWeighed: "registration.weighed",
+  photoChangeRequested: "photo_change.requested",
+  photoChangeApproved: "photo_change.approved",
+  photoChangeRejected: "photo_change.rejected",
+  provinceChangeRequested: "province_change.requested",
+  provinceChangeApproved: "province_change.approved",
+  provinceChangeRejected: "province_change.rejected",
 } as const;
 
 export const auditEntityTypes = {
@@ -34,6 +40,8 @@ export const auditEntityTypes = {
   transfer: "transfer",
   coach: "coach",
   registration: "registration",
+  photoChange: "photo_change",
+  provinceChange: "province_change",
 } as const;
 
 export type AuditEntry = {

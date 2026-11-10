@@ -15,6 +15,12 @@ export function createTransferRequest(nationalCode: string): Promise<TransferReq
   return api<TransferRequest>("/api/v1/students/transfer-requests", { method: "POST", body: { nationalCode } });
 }
 
+// Owner initiated coach change: the student's current coach picks the target
+// coach of the same province.
+export function createCoachChangeRequest(studentId: string, toCoachId: string): Promise<TransferRequest> {
+  return api<TransferRequest>(`/api/v1/students/${studentId}/transfer-requests`, { method: "POST", body: { toCoachId } });
+}
+
 export async function listTransferRequests(params: TransferListParams = {}): Promise<ListResult<TransferRequest | CoachTransferRequest>> {
   const query = new URLSearchParams();
   if (params.status) query.set("status", params.status);

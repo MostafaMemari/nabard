@@ -4,7 +4,7 @@ import { AppError } from "@/lib/api";
 import { toPersianDigits } from "@/lib/format";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
-import type { CreateTransferRequestInput, ReassignStudentsInput, TransferListQuery } from "../schemas";
+import type { CreateCoachChangeInput, CreateTransferRequestInput, ReassignStudentsInput, TransferListQuery } from "../schemas";
 import type { CoachTransferRequest, TransferLookupResult, TransferRequest, TransferStatus } from "../types";
 import type { StudentLookupRow, TransferFilters, TransfersRepository, TransferWithScope, UserIdentityRecord } from "./repository";
 import { StudentOwnerChangedError, TransferGenderMismatchError } from "./repository";
@@ -74,6 +74,7 @@ function toClientRecord(row: {
 function toCoachRecord(
   row: {
     id: string;
+    studentId: string;
     status: TransferStatus;
     studentName: string;
     fromCoachId: string;
@@ -87,6 +88,10 @@ function toCoachRecord(
   coachId: string,
 ): CoachTransferRequest {
   const incoming = row.toCoachId === coachId;
+  // Rows initiated by the student's own coach (owner change requests) show
+  // the student to their current coach; the old receiving-coach flow keeps
+  // hiding the student from the coach who loses them.
+  const ownerInitiated = !incoming && row.fromCoachId === coachId;
 
   return {
     id: row.id,
@@ -94,10 +99,11 @@ function toCoachRecord(
     status: row.status,
     toCoachId: row.toCoachId,
     toCoachName: row.toCoachName,
+    studentId: incoming || ownerInitiated ? row.studentId : null,
     fromCoachName: incoming ? row.fromCoachName : null,
-    studentName: incoming ? row.studentName : null,
-    note: incoming ? row.note : null,
-    createdAt: incoming ? row.createdAt.toISOString() : null,
+    studentName: incoming || ownerInitiated ? row.studentName : null,
+    note: incoming || ownerInitiated ? row.note : null,
+    createdAt: incoming || ownerInitiated ? row.createdAt.toISOString() : null,
     decidedAt: row.decidedAt === null ? null : row.decidedAt.toISOString(),
   };
 }
@@ -136,6 +142,7 @@ export async function lookupTransferStudent(
   return { maskedName: maskStudentName(student.fullName), currentCoachName: student.coachName };
 }
 
+// The receiving coach asks to take a student from their current coach.
 export async function createTransferRequest(
   repo: TransfersRepository,
   audit: AuditRepository,
@@ -151,8 +158,8 @@ export async function createTransferRequest(
   validateStudentForTransfer(identity, student);
 
   const pending = await repo.findPendingTransferByStudentId(student.id);
-  if (pending) {
-    throw new AppError(409, "CONFLICT", "یک درخواست انتقال در انتظار بررسی برای این هنرجو وجود دارد.");
+  if (pending || (await repo.hasPendingProvinceChange(student.id))) {
+    throw new AppError(409, "CONFLICT", "یک درخواست انتقال یا تغییر استان در انتظار بررسی برای این هنرجو وجود دارد.");
   }
 
   const row = await repo.createTransfer({ studentId: student.id, fromCoachId: student.coachId, toCoachId: identity.id });
@@ -162,6 +169,58 @@ export async function createTransferRequest(
     entityType: auditEntityTypes.transfer,
     entityId: row.id,
     details: { province: identity.province },
+  });
+
+  return toClientRecord(row);
+}
+
+// The student's own coach hands the student over to a coach of the same
+// province. Same rules as the receiving-coach flow: active target coach,
+// same province, matching gender, one pending request per student.
+export async function createCoachChangeRequest(
+  repo: TransfersRepository,
+  audit: AuditRepository,
+  user: CurrentUser,
+  studentId: string,
+  input: CreateCoachChangeInput,
+): Promise<TransferRequest> {
+  const identity = await requireActiveUser(repo, user);
+  if (identity.role !== "COACH") throw forbidden();
+  if (identity.gender === null) {
+    throw new AppError(403, "FORBIDDEN", "جنسیت شما ثبت نشده است؛ با ادمین استان تماس بگیرید.");
+  }
+
+  const student = await repo.findStudentById(studentId);
+  if (!student || student.coachId !== user.id) {
+    throw new AppError(404, "NOT_FOUND", "هنرجو یافت نشد.");
+  }
+
+  const target = await repo.findCoachTargetById(input.toCoachId);
+  if (!target || target.province !== student.coachProvince) {
+    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد باید در استان شما باشد.");
+  }
+  if (!target.isActive) {
+    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد فعال نیست.");
+  }
+  if (target.id === student.coachId) {
+    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد نباید همان مربی فعلی باشد.");
+  }
+  if (target.gender === null || target.gender !== student.gender) {
+    throw new AppError(400, "VALIDATION_ERROR", "جنسیت مربی مقصد باید با جنسیت هنرجو یکسان باشد.");
+  }
+
+  const pending = await repo.findPendingTransferByStudentId(student.id);
+  if (pending || (await repo.hasPendingProvinceChange(student.id))) {
+    throw new AppError(409, "CONFLICT", "یک درخواست انتقال یا تغییر استان در انتظار بررسی برای این هنرجو وجود دارد.");
+  }
+
+  const row = await repo.createTransfer({ studentId: student.id, fromCoachId: user.id, toCoachId: input.toCoachId });
+  await audit.createAuditLog({
+    actorId: user.id,
+    action: auditActions.transferRequested,
+    entityType: auditEntityTypes.transfer,
+    entityId: row.id,
+    details: { province: identity.province, initiatedBy: "owner" },
   });
 
   return toClientRecord(row);

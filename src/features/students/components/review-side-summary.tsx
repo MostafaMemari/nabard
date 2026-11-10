@@ -35,7 +35,22 @@ export function ReviewSideSummary({
         items={[
           { term: "مربی", value: student.coachName },
           { term: "کد ملی", value: <span className="tabular-nums">{student.nationalCode}</span> },
+          {
+            term: "تلفن همراه",
+            value:
+              student.mobile !== null ? (
+                <span dir="ltr" className="tabular-nums">
+                  {student.mobile}
+                </span>
+              ) : (
+                "ثبت نشده"
+              ),
+          },
           { term: "تاریخ تولد", value: formatJalaliDate(new Date(student.birthDate)) },
+          {
+            term: "تاریخ حکم کمربند",
+            value: student.beltCertificateDate !== null ? formatJalaliDate(new Date(student.beltCertificateDate)) : "ثبت نشده",
+          },
           {
             term: "تاریخ بیمه ورزشی",
             value: student.insuranceDate !== null ? formatJalaliDate(new Date(student.insuranceDate)) : "ثبت نشده",

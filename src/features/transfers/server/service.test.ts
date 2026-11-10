@@ -10,6 +10,7 @@ import {
   type UserIdentityRecord,
 } from "./repository";
 import {
+  createCoachChangeRequest,
   createTransferRequest,
   decideTransferRequest,
   listTransferRequests,
@@ -68,6 +69,8 @@ function repoWith(overrides: Partial<TransfersRepository> = {}): TransfersReposi
   return {
     findUserById: vi.fn().mockResolvedValue(coachRecord),
     findStudentByNationalCode: vi.fn().mockResolvedValue(studentRow),
+    findStudentById: vi.fn().mockResolvedValue(studentRow),
+    hasPendingProvinceChange: vi.fn().mockResolvedValue(false),
     findPendingTransferByStudentId: vi.fn().mockResolvedValue(null),
     createTransfer: vi.fn().mockResolvedValue(transferWith()),
     countTransfers: vi.fn().mockResolvedValue(1),
@@ -218,6 +221,90 @@ describe("createTransferRequest", () => {
   });
 });
 
+describe("createCoachChangeRequest", () => {
+  const ownStudentRow = { ...studentRow, coachId: "coach-2" };
+  const activeTarget = { id: "coach-3", fullName: "حسین موسوی", province: "TEHRAN" as const, isActive: true, gender: "MALE" as const };
+
+  it("creates a PENDING owner initiated request and writes an audit entry", async () => {
+    const repo = repoWith({
+      findStudentById: vi.fn().mockResolvedValue(ownStudentRow),
+      findCoachTargetById: vi.fn().mockResolvedValue(activeTarget),
+    });
+    const audit = auditWith();
+    const result = await createCoachChangeRequest(repo, audit, coach, "student-1", { toCoachId: "coach-3" });
+
+    expect(repo.createTransfer).toHaveBeenCalledWith({ studentId: "student-1", fromCoachId: "coach-2", toCoachId: "coach-3" });
+    expect(result).toMatchObject({ id: "transfer-1", status: "PENDING" });
+    expect(audit.entries[0]).toMatchObject({
+      actorId: "coach-2",
+      action: "transfer.requested",
+      entityType: "transfer",
+      details: { province: "TEHRAN", initiatedBy: "owner" },
+    });
+  });
+
+  it("rejects a coach who does not own the student with 404", async () => {
+    const repo = repoWith();
+    const failure = await failureOf(createCoachChangeRequest(repo, auditWith(), coach, "student-1", { toCoachId: "coach-3" }));
+
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+    expect(repo.createTransfer).not.toHaveBeenCalled();
+  });
+
+  it("blocks a target coach outside the student province", async () => {
+    const repo = repoWith({
+      findStudentById: vi.fn().mockResolvedValue(ownStudentRow),
+      findCoachTargetById: vi.fn().mockResolvedValue({ ...activeTarget, province: "FARS" as const }),
+    });
+    const failure = await failureOf(createCoachChangeRequest(repo, auditWith(), coach, "student-1", { toCoachId: "coach-3" }));
+
+    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
+    expect(repo.createTransfer).not.toHaveBeenCalled();
+  });
+
+  it("blocks an inactive or gender mismatched target coach", async () => {
+    const inactiveRepo = repoWith({
+      findStudentById: vi.fn().mockResolvedValue(ownStudentRow),
+      findCoachTargetById: vi.fn().mockResolvedValue({ ...activeTarget, isActive: false }),
+    });
+    const inactiveFailure = await failureOf(
+      createCoachChangeRequest(inactiveRepo, auditWith(), coach, "student-1", { toCoachId: "coach-3" }),
+    );
+
+    expect(inactiveFailure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
+
+    const genderRepo = repoWith({
+      findStudentById: vi.fn().mockResolvedValue(ownStudentRow),
+      findCoachTargetById: vi.fn().mockResolvedValue({ ...activeTarget, gender: "FEMALE" as const }),
+    });
+    const genderFailure = await failureOf(createCoachChangeRequest(genderRepo, auditWith(), coach, "student-1", { toCoachId: "coach-3" }));
+
+    expect(genderFailure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
+  });
+
+  it("blocks a second pending request of any move type", async () => {
+    const repo = repoWith({
+      findStudentById: vi.fn().mockResolvedValue(ownStudentRow),
+      findCoachTargetById: vi.fn().mockResolvedValue(activeTarget),
+      findPendingTransferByStudentId: vi.fn().mockResolvedValue(transferWith()),
+    });
+    const failure = await failureOf(createCoachChangeRequest(repo, auditWith(), coach, "student-1", { toCoachId: "coach-3" }));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+
+    const provinceRepo = repoWith({
+      findStudentById: vi.fn().mockResolvedValue(ownStudentRow),
+      findCoachTargetById: vi.fn().mockResolvedValue(activeTarget),
+      hasPendingProvinceChange: vi.fn().mockResolvedValue(true),
+    });
+    const provinceFailure = await failureOf(
+      createCoachChangeRequest(provinceRepo, auditWith(), coach, "student-1", { toCoachId: "coach-3" }),
+    );
+
+    expect(provinceFailure).toMatchObject({ status: 409, code: "CONFLICT" });
+  });
+});
+
 describe("listTransferRequests", () => {
   it("scopes an admin to the province of the previous coach", async () => {
     const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
@@ -237,18 +324,27 @@ describe("listTransferRequests", () => {
     expect(incoming.studentName).toBe("علی رضایی");
   });
 
-  it("restricts the old coach view to the status and the new coach name", async () => {
+  it("shows the losing coach the student name, the status and the new coach name", async () => {
     const repo = repoWith({
       findUserById: vi.fn().mockResolvedValue(oldCoachRecord),
       findCoachTransfers: vi.fn().mockResolvedValue([transferWith()]),
     });
     const result = await listTransferRequests(repo, otherCoach, {});
 
-    const outgoing = result.data[0] as { direction: string; studentName: string | null; fromCoachName: string | null; toCoachName: string };
+    const outgoing = result.data[0] as {
+      direction: string;
+      studentId: string | null;
+      studentName: string | null;
+      fromCoachName: string | null;
+      toCoachName: string;
+      createdAt: string | null;
+    };
     expect(outgoing.direction).toBe("outgoing");
-    expect(outgoing.studentName).toBeNull();
+    expect(outgoing.studentId).toBe("student-1");
+    expect(outgoing.studentName).toBe("علی رضایی");
     expect(outgoing.fromCoachName).toBeNull();
     expect(outgoing.toCoachName).toBe("رضا کریمی");
+    expect(outgoing.createdAt).not.toBeNull();
   });
 
   it("rejects a super admin with 403", async () => {

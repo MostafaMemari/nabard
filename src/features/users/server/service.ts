@@ -8,11 +8,12 @@ import type { CurrentUser } from "@/lib/session";
 import { deleteStorageFileQuietly } from "@/lib/storage";
 import { readProfileImage } from "@/lib/storage/image";
 import type { Storage } from "@/lib/storage/types";
-import type { CoachInput, CoachListQuery, UpdateCoachInput } from "../schemas";
+import type { CoachInput, CoachListQuery, CoachLookupQuery, UpdateCoachInput } from "../schemas";
 import type {
   CoachFilters,
   CoachRecord,
   CoachRepository,
+  CoachTargetRow,
   CoachUpdateData,
   CountyRecord,
   NewCoachData,
@@ -92,6 +93,24 @@ export async function listCoaches(repo: CoachRepository, user: CurrentUser, quer
   ]);
 
   return { data: coaches, meta: { page, pageSize, total } };
+}
+
+// Minimal target-coach directory used by coach change and province change
+// request forms. Admins and coaches may look up any province (the province
+// change form needs the destination province); the super admin must pass one.
+export async function listCoachTargets(repo: CoachRepository, user: CurrentUser, query: CoachLookupQuery): Promise<CoachTargetRow[]> {
+  const identity = await requireActiveUser(repo, user);
+
+  let province: Province;
+  if (query.province !== undefined) {
+    province = query.province;
+  } else if (identity.role === "SUPER_ADMIN") {
+    throw new AppError(400, "VALIDATION_ERROR", "استان را انتخاب کنید.");
+  } else {
+    province = provinceOf(identity);
+  }
+
+  return repo.findActiveCoachTargets(province);
 }
 
 export async function getCoach(repo: CoachRepository, user: CurrentUser, id: string): Promise<CoachRecord> {

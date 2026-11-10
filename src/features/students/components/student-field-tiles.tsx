@@ -1,6 +1,6 @@
 "use client";
 
-import { LandmarkIcon, type LucideIcon, MedalIcon, ShieldCheckIcon } from "lucide-react";
+import { FileBadgeIcon, LandmarkIcon, type LucideIcon, MedalIcon, PhoneIcon, ShieldCheckIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { BeltDot, IconTile } from "@/components/shared";
 import { formatJalaliDate } from "@/lib/format";
@@ -33,8 +33,7 @@ export function StudentFieldTiles({
 }) {
   return (
     <div className="grid gap-3 sm:grid-cols-3">
-      <FieldTile icon={ShieldCheckIcon} label="تاریخ بیمه ورزشی" value={dateValue(student.insuranceDate)} />
-      <FieldTile icon={LandmarkIcon} label="تاریخ شارژ بانک اطلاعات تکواندو" value={dateValue(student.tkdBankChargeDate)} />
+      <FieldTile icon={PhoneIcon} label="تلفن همراه" value={student.mobile ? <span dir="ltr">{student.mobile}</span> : "ثبت نشده"} />
       <FieldTile
         icon={MedalIcon}
         label="کمربند"
@@ -49,6 +48,9 @@ export function StudentFieldTiles({
           )
         }
       />
+      <FieldTile icon={FileBadgeIcon} label="تاریخ حکم کمربند" value={dateValue(student.beltCertificateDate)} />
+      <FieldTile icon={ShieldCheckIcon} label="تاریخ بیمه ورزشی" value={dateValue(student.insuranceDate)} />
+      <FieldTile icon={LandmarkIcon} label="تاریخ شارژ بانک اطلاعات تکواندو" value={dateValue(student.tkdBankChargeDate)} />
     </div>
   );
 }

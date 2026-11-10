@@ -24,11 +24,18 @@ const optionalDateField = z
   .transform((value) => value.trim())
   .pipe(z.string().refine((value) => value === "" || isIsoDate(value), "تاریخ انتخاب شده معتبر نیست."));
 const beltIdField = z.string().min(1, "کمربند را انتخاب کنید.");
+const mobileField = z
+  .string()
+  .transform(normalizeDigits)
+  .pipe(z.string().regex(/^09\d{9}$/, "شماره همراه باید ۱۱ رقم و با ۰۹ شروع شود."));
 
 export const studentSchema = z.object({
   fullName: fullNameField,
   nationalCode: nationalCodeField,
   birthDate: birthDateField,
+  mobile: mobileField,
+  beltId: beltIdField,
+  beltCertificateDate: optionalDateField,
   insuranceDate: optionalDateField,
   tkdBankChargeDate: optionalDateField,
 });
@@ -72,6 +79,9 @@ export const emptyStudentForm: StudentFormValues = {
   fullName: "",
   nationalCode: "",
   birthDate: "",
+  mobile: "",
+  beltId: "",
+  beltCertificateDate: "",
   insuranceDate: "",
   tkdBankChargeDate: "",
 };

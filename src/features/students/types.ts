@@ -21,8 +21,10 @@ export type Student = {
   gender: Gender;
   nationalCode: string;
   birthDate: string;
+  mobile: string | null;
   insuranceDate: string | null;
   tkdBankChargeDate: string | null;
+  beltCertificateDate: string | null;
   beltId: string;
   coachId: string;
   profileStatus: ProfileStatus;
@@ -43,6 +45,9 @@ export type StudentInput = {
   fullName: string;
   nationalCode: string;
   birthDate: string;
+  mobile: string;
+  beltId: string;
+  beltCertificateDate?: string;
   insuranceDate?: string;
   tkdBankChargeDate?: string;
 };

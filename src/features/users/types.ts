@@ -2,6 +2,12 @@ import type { Gender } from "@/generated/enums";
 
 export type Role = "ADMIN" | "COACH";
 
+// Minimal target-coach row of the lookup endpoint (id + name only).
+export type CoachTarget = {
+  id: string;
+  fullName: string;
+};
+
 export type Province =
   | "TEHRAN"
   | "ISFAHAN"

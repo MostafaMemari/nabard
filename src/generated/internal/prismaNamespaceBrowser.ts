@@ -61,6 +61,8 @@ export const ModelName = {
   CompetitionCounty: 'CompetitionCounty',
   CoachCountyChangeRequest: 'CoachCountyChangeRequest',
   StudentTransfer: 'StudentTransfer',
+  StudentPhotoChangeRequest: 'StudentPhotoChangeRequest',
+  StudentProvinceChangeRequest: 'StudentProvinceChangeRequest',
   AuditLog: 'AuditLog',
   DeadlineExtension: 'DeadlineExtension',
   StoredFile: 'StoredFile',
@@ -125,6 +127,8 @@ export const StudentScalarFieldEnum = {
   birthDate: 'birthDate',
   insuranceDate: 'insuranceDate',
   tkdBankChargeDate: 'tkdBankChargeDate',
+  mobile: 'mobile',
+  beltCertificateDate: 'beltCertificateDate',
   beltId: 'beltId',
   coachId: 'coachId',
   profileStatus: 'profileStatus',
@@ -248,6 +252,39 @@ export const StudentTransferScalarFieldEnum = {
 } as const
 
 export type StudentTransferScalarFieldEnum = (typeof StudentTransferScalarFieldEnum)[keyof typeof StudentTransferScalarFieldEnum]
+
+
+export const StudentPhotoChangeRequestScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  newFileId: 'newFileId',
+  status: 'status',
+  note: 'note',
+  decidedById: 'decidedById',
+  decidedAt: 'decidedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentPhotoChangeRequestScalarFieldEnum = (typeof StudentPhotoChangeRequestScalarFieldEnum)[keyof typeof StudentPhotoChangeRequestScalarFieldEnum]
+
+
+export const StudentProvinceChangeRequestScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  fromCoachId: 'fromCoachId',
+  fromProvince: 'fromProvince',
+  toProvince: 'toProvince',
+  toCoachId: 'toCoachId',
+  status: 'status',
+  note: 'note',
+  decidedById: 'decidedById',
+  decidedAt: 'decidedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentProvinceChangeRequestScalarFieldEnum = (typeof StudentProvinceChangeRequestScalarFieldEnum)[keyof typeof StudentProvinceChangeRequestScalarFieldEnum]
 
 
 export const AuditLogScalarFieldEnum = {

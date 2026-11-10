@@ -2,7 +2,14 @@
 
 import { toast } from "sonner";
 import useSWR from "swr";
-import { approveTransferRequest, createTransferRequest, listTransferRequests, lookupTransferStudent, rejectTransferRequest } from "../api";
+import {
+  approveTransferRequest,
+  createCoachChangeRequest,
+  createTransferRequest,
+  listTransferRequests,
+  lookupTransferStudent,
+  rejectTransferRequest,
+} from "../api";
 
 export function useTransferRequests() {
   const { data, error, isLoading, mutate } = useSWR("transfer-requests", () => listTransferRequests());
@@ -27,6 +34,25 @@ export function useTransferRequestCreate(onRequested: () => void) {
     try {
       await createTransferRequest(nationalCode);
       toast.success("درخواست انتقال هنرجو ثبت شد.");
+      onRequested();
+
+      return true;
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "ثبت درخواست انجام نشد. دوباره تلاش کنید.");
+
+      return false;
+    }
+  }
+
+  return { request };
+}
+
+// Coach change initiated by the student's own coach.
+export function useCoachChangeRequest(onRequested: () => void) {
+  async function request(studentId: string, toCoachId: string): Promise<boolean> {
+    try {
+      await createCoachChangeRequest(studentId, toCoachId);
+      toast.success("درخواست تغییر مربی ثبت شد و برای ادمین استان ارسال شد.");
       onRequested();
 
       return true;

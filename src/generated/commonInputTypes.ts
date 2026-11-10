@@ -538,6 +538,40 @@ export type EnumStudentTransferStatusWithAggregatesFilter<$PrismaModel = never> 
   _max?: Prisma.NestedEnumStudentTransferStatusFilter<$PrismaModel>
 }
 
+export type EnumStudentPhotoChangeStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.StudentPhotoChangeStatus | Prisma.EnumStudentPhotoChangeStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.StudentPhotoChangeStatus[] | Prisma.ListEnumStudentPhotoChangeStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StudentPhotoChangeStatus[] | Prisma.ListEnumStudentPhotoChangeStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStudentPhotoChangeStatusFilter<$PrismaModel> | $Enums.StudentPhotoChangeStatus
+}
+
+export type EnumStudentPhotoChangeStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StudentPhotoChangeStatus | Prisma.EnumStudentPhotoChangeStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.StudentPhotoChangeStatus[] | Prisma.ListEnumStudentPhotoChangeStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StudentPhotoChangeStatus[] | Prisma.ListEnumStudentPhotoChangeStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStudentPhotoChangeStatusWithAggregatesFilter<$PrismaModel> | $Enums.StudentPhotoChangeStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStudentPhotoChangeStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStudentPhotoChangeStatusFilter<$PrismaModel>
+}
+
+export type EnumStudentProvinceChangeStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.StudentProvinceChangeStatus | Prisma.EnumStudentProvinceChangeStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.StudentProvinceChangeStatus[] | Prisma.ListEnumStudentProvinceChangeStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StudentProvinceChangeStatus[] | Prisma.ListEnumStudentProvinceChangeStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStudentProvinceChangeStatusFilter<$PrismaModel> | $Enums.StudentProvinceChangeStatus
+}
+
+export type EnumStudentProvinceChangeStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StudentProvinceChangeStatus | Prisma.EnumStudentProvinceChangeStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.StudentProvinceChangeStatus[] | Prisma.ListEnumStudentProvinceChangeStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StudentProvinceChangeStatus[] | Prisma.ListEnumStudentProvinceChangeStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStudentProvinceChangeStatusWithAggregatesFilter<$PrismaModel> | $Enums.StudentProvinceChangeStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStudentProvinceChangeStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStudentProvinceChangeStatusFilter<$PrismaModel>
+}
+
 export type EnumStoredFileProviderFilter<$PrismaModel = never> = {
   equals?: $Enums.StoredFileProvider | Prisma.EnumStoredFileProviderFieldRefInput<$PrismaModel>
   in?: $Enums.StoredFileProvider[] | Prisma.ListEnumStoredFileProviderFieldRefInput<$PrismaModel>
@@ -1182,6 +1216,40 @@ export type NestedEnumStudentTransferStatusWithAggregatesFilter<$PrismaModel = n
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumStudentTransferStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumStudentTransferStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumStudentPhotoChangeStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.StudentPhotoChangeStatus | Prisma.EnumStudentPhotoChangeStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.StudentPhotoChangeStatus[] | Prisma.ListEnumStudentPhotoChangeStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StudentPhotoChangeStatus[] | Prisma.ListEnumStudentPhotoChangeStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStudentPhotoChangeStatusFilter<$PrismaModel> | $Enums.StudentPhotoChangeStatus
+}
+
+export type NestedEnumStudentPhotoChangeStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StudentPhotoChangeStatus | Prisma.EnumStudentPhotoChangeStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.StudentPhotoChangeStatus[] | Prisma.ListEnumStudentPhotoChangeStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StudentPhotoChangeStatus[] | Prisma.ListEnumStudentPhotoChangeStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStudentPhotoChangeStatusWithAggregatesFilter<$PrismaModel> | $Enums.StudentPhotoChangeStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStudentPhotoChangeStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStudentPhotoChangeStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumStudentProvinceChangeStatusFilter<$PrismaModel = never> = {
+  equals?: $Enums.StudentProvinceChangeStatus | Prisma.EnumStudentProvinceChangeStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.StudentProvinceChangeStatus[] | Prisma.ListEnumStudentProvinceChangeStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StudentProvinceChangeStatus[] | Prisma.ListEnumStudentProvinceChangeStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStudentProvinceChangeStatusFilter<$PrismaModel> | $Enums.StudentProvinceChangeStatus
+}
+
+export type NestedEnumStudentProvinceChangeStatusWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.StudentProvinceChangeStatus | Prisma.EnumStudentProvinceChangeStatusFieldRefInput<$PrismaModel>
+  in?: $Enums.StudentProvinceChangeStatus[] | Prisma.ListEnumStudentProvinceChangeStatusFieldRefInput<$PrismaModel>
+  notIn?: $Enums.StudentProvinceChangeStatus[] | Prisma.ListEnumStudentProvinceChangeStatusFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumStudentProvinceChangeStatusWithAggregatesFilter<$PrismaModel> | $Enums.StudentProvinceChangeStatus
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumStudentProvinceChangeStatusFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumStudentProvinceChangeStatusFilter<$PrismaModel>
 }
 
 export type NestedEnumStoredFileProviderFilter<$PrismaModel = never> = {

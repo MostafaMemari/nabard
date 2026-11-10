@@ -67,6 +67,7 @@ export type CoachRepository = {
   createCoach(data: NewCoachData): Promise<CoachRecord>;
   updateCoach(id: string, data: CoachUpdateData): Promise<CoachRecord>;
   updateCoachPassword(id: string, passwordHash: string): Promise<CoachRecord>;
+  findActiveCoachTargets(province: Province): Promise<CoachTargetRow[]>;
   countStudentsByGender(coachId: string, gender: Gender): Promise<number>;
   findPhotoFileId(id: string): Promise<string | null>;
   setPhotoFileId(id: string, fileId: string | null): Promise<string | null>;
@@ -98,6 +99,11 @@ type CoachRowInput = {
   county: { id: string; name: string } | null;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type CoachTargetRow = {
+  id: string;
+  fullName: string;
 };
 
 function toCoachRecord(row: CoachRowInput): CoachRecord {
@@ -158,6 +164,18 @@ export async function findCoaches(
   });
 
   return rows.map(toCoachRecord);
+}
+
+// Minimal coach directory for request forms (coach change, province change):
+// only active coaches of one province, only id and name.
+export async function findActiveCoachTargets(province: Province): Promise<CoachTargetRow[]> {
+  const rows = await getPrisma().user.findMany({
+    where: { role: "COACH", province, isActive: true },
+    select: { id: true, fullName: true },
+    orderBy: { fullName: "asc" },
+  });
+
+  return rows;
 }
 
 export async function findCoachById(id: string): Promise<CoachRecord | null> {

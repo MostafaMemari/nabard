@@ -38,7 +38,13 @@ export function ControlledSelectField<T extends FieldValues>({
   name,
   label,
   items,
-}: SharedFieldProps<T> & { items: Record<string, ReactNode> }) {
+  placeholder,
+  onValueChange,
+}: SharedFieldProps<T> & {
+  items: Record<string, ReactNode>;
+  placeholder?: string;
+  onValueChange?: (value: string) => void;
+}) {
   return (
     <FieldBody control={control} name={name} label={label}>
       {({ value, onChange }) => (
@@ -48,11 +54,12 @@ export function ControlledSelectField<T extends FieldValues>({
           onValueChange={(next) => {
             if (next !== null) {
               onChange(String(next));
+              onValueChange?.(String(next));
             }
           }}
         >
           <SelectTrigger className="w-full">
-            <SelectValue placeholder="انتخاب کنید" />
+            <SelectValue placeholder={placeholder ?? "انتخاب کنید"} />
           </SelectTrigger>
           <SelectContent>
             {Object.keys(items).map((item) => (

@@ -30,8 +30,10 @@ export type StudentRecord = {
   gender: Gender;
   nationalCode: string;
   birthDate: Date;
+  mobile: string | null;
   insuranceDate: Date | null;
   tkdBankChargeDate: Date | null;
+  beltCertificateDate: Date | null;
   beltId: string;
   coachId: string;
   profileStatus: ProfileStatus;
@@ -77,6 +79,8 @@ export type NewStudentData = {
   gender: Gender;
   nationalCode: string;
   birthDate: Date;
+  mobile: string;
+  beltCertificateDate: Date | null;
   insuranceDate: Date | null;
   tkdBankChargeDate: Date | null;
   beltId: string;
@@ -105,7 +109,7 @@ export type StudentRepository = {
   findStudentById(id: string): Promise<StudentWithCoach | null>;
   findStudentDocuments(studentId: string): Promise<StudentDocumentRecord[]>;
   findNationalCodeOwner(nationalCode: string): Promise<{ id: string } | null>;
-  findBeltIdByCode(code: string): Promise<string | null>;
+  activeBeltExists(beltId: string): Promise<boolean>;
   beltExists(beltId: string): Promise<boolean>;
   countRegistrations(studentId: string): Promise<number>;
   countStudentTransfers(studentId: string): Promise<number>;
@@ -115,9 +119,9 @@ export type StudentRepository = {
   countPendingReviewStudents(filters: PendingReviewFilters): Promise<number>;
   findPendingReviewStudents(filters: PendingReviewFilters, skip: number, take: number): Promise<PendingReviewStudent[]>;
   updateProfileStatusFromPendingOrRejected(id: string, input: ProfileReviewInput): Promise<StudentRecord | null>;
-  upsertStudentDocument(studentId: string, type: StudentDocumentType, fileId: string): Promise<StudentDocumentRecord>;
   findStudentDocument(studentId: string, type: StudentDocumentType): Promise<StudentDocumentRecord | null>;
-  deleteStudentDocument(studentId: string, type: StudentDocumentType): Promise<StudentDocumentRecord | null>;
+  countStudentPhotoChangeRequests(studentId: string): Promise<number>;
+  countStudentProvinceChangeRequests(studentId: string): Promise<number>;
 };
 
 const studentSelection = {
@@ -126,8 +130,10 @@ const studentSelection = {
   gender: true,
   nationalCode: true,
   birthDate: true,
+  mobile: true,
   insuranceDate: true,
   tkdBankChargeDate: true,
+  beltCertificateDate: true,
   beltId: true,
   coachId: true,
   profileStatus: true,
@@ -157,8 +163,10 @@ function toStudentRecord(row: {
   gender: Gender;
   nationalCode: string;
   birthDate: Date;
+  mobile: string | null;
   insuranceDate: Date | null;
   tkdBankChargeDate: Date | null;
+  beltCertificateDate: Date | null;
   beltId: string;
   coachId: string;
   profileStatus: ProfileStatus;
@@ -173,8 +181,10 @@ function toStudentRecord(row: {
     gender: row.gender,
     nationalCode: row.nationalCode,
     birthDate: row.birthDate,
+    mobile: row.mobile,
     insuranceDate: row.insuranceDate,
     tkdBankChargeDate: row.tkdBankChargeDate,
+    beltCertificateDate: row.beltCertificateDate,
     beltId: row.beltId,
     coachId: row.coachId,
     profileStatus: row.profileStatus,
@@ -234,9 +244,9 @@ export async function findNationalCodeOwner(nationalCode: string): Promise<{ id:
   return getPrisma().student.findUnique({ where: { nationalCode }, select: { id: true } });
 }
 
-export async function findBeltIdByCode(code: string): Promise<string | null> {
-  const belt = await getPrisma().belt.findUnique({ where: { code }, select: { id: true } });
-  return belt?.id ?? null;
+export async function activeBeltExists(beltId: string): Promise<boolean> {
+  const belt = await getPrisma().belt.findUnique({ where: { id: beltId }, select: { isActive: true } });
+  return belt?.isActive === true;
 }
 
 export async function beltExists(beltId: string): Promise<boolean> {
@@ -259,8 +269,10 @@ export async function createStudent(data: NewStudentData): Promise<StudentRecord
       gender: data.gender,
       nationalCode: data.nationalCode,
       birthDate: data.birthDate,
+      mobile: data.mobile,
       insuranceDate: data.insuranceDate,
       tkdBankChargeDate: data.tkdBankChargeDate,
+      beltCertificateDate: data.beltCertificateDate,
       beltId: data.beltId,
       coachId: data.coachId,
     },
@@ -348,17 +360,6 @@ export async function updateProfileStatusFromPendingOrRejected(id: string, input
   });
 }
 
-export async function upsertStudentDocument(studentId: string, type: StudentDocumentType, fileId: string): Promise<StudentDocumentRecord> {
-  const row = await getPrisma().studentDocument.upsert({
-    where: { studentId_type: { studentId, type } },
-    create: { studentId, type, fileId },
-    update: { fileId },
-    select: documentSelection,
-  });
-
-  return toDocumentRecord(row);
-}
-
 export async function findStudentDocument(studentId: string, type: StudentDocumentType): Promise<StudentDocumentRecord | null> {
   const row = await getPrisma().studentDocument.findUnique({
     where: { studentId_type: { studentId, type } },
@@ -368,13 +369,10 @@ export async function findStudentDocument(studentId: string, type: StudentDocume
   return row ? toDocumentRecord(row) : null;
 }
 
-export async function deleteStudentDocument(studentId: string, type: StudentDocumentType): Promise<StudentDocumentRecord | null> {
-  return getPrisma().$transaction(async (tx) => {
-    const row = await tx.studentDocument.findUnique({ where: { studentId_type: { studentId, type } }, select: documentSelection });
-    if (row === null) return null;
+export async function countStudentPhotoChangeRequests(studentId: string): Promise<number> {
+  return getPrisma().studentPhotoChangeRequest.count({ where: { studentId } });
+}
 
-    await tx.studentDocument.delete({ where: { id: row.id } });
-
-    return toDocumentRecord(row);
-  });
+export async function countStudentProvinceChangeRequests(studentId: string): Promise<number> {
+  return getPrisma().studentProvinceChangeRequest.count({ where: { studentId } });
 }
