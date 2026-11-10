@@ -23,7 +23,9 @@ export type PhotoChangeRow = {
   coachName: string;
   coachProvince: Province | null;
   hasCurrentPhoto: boolean;
-  newFileId: string;
+  // Null once the request file was purged from storage (rejected photo or a
+  // photo later replaced by another approval).
+  newFileId: string | null;
   status: PhotoChangeStatus;
   note: string | null;
   decidedAt: Date | null;
@@ -59,7 +61,9 @@ export type PhotoChangeRepository = {
   findPhotoChanges(filters: PhotoChangeFilters, skip: number, take: number): Promise<PhotoChangeRow[]>;
   findPhotoChangeById(id: string): Promise<PhotoChangeRow | null>;
   decidePhotoChangeFromPending(id: string, input: DecidePhotoChangeInput): Promise<DecidePhotoChangeResult | null>;
-  findPhotoChangeFileId(id: string): Promise<{ fileId: string; studentCoachId: string; studentCoachProvince: Province | null } | null>;
+  findPhotoChangeFileId(
+    id: string,
+  ): Promise<{ fileId: string | null; studentCoachId: string; studentCoachProvince: Province | null } | null>;
 };
 
 const photoChangeSelection = {
@@ -85,7 +89,7 @@ type PhotoChangeRowInput = {
   note: string | null;
   decidedAt: Date | null;
   createdAt: Date;
-  newFileId: string;
+  newFileId: string | null;
   student: {
     id: string;
     fullName: string;
@@ -193,7 +197,7 @@ export async function decidePhotoChangeFromPending(id: string, input: DecidePhot
         where: { id },
         select: { studentId: true, newFileId: true },
       });
-      if (row) {
+      if (row && row.newFileId !== null) {
         const current = await tx.studentDocument.findUnique({
           where: { studentId_type: { studentId: row.studentId, type: "PHOTO" } },
           select: { fileId: true },

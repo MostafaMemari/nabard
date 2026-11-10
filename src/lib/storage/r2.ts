@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import type { GetObjectCommandOutput } from "@aws-sdk/client-s3";
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import type { R2Env } from "@/lib/env";
@@ -102,7 +103,18 @@ export function createR2Storage(env: R2Env, client: S3Client = createR2Client(en
 
       if (!row?.objectKey) return null;
 
-      const object = await client.send(new GetObjectCommand({ Bucket: bucketForKey(row.objectKey), Key: row.objectKey }));
+      let object: GetObjectCommandOutput;
+      try {
+        object = await client.send(new GetObjectCommand({ Bucket: bucketForKey(row.objectKey), Key: row.objectKey }));
+      } catch (error) {
+        // The object can be gone while its metadata row still exists (for
+        // example an old row left behind before the SetNull migration). The
+        // callers turn null into a clean 404 instead of a 500.
+        const name = (error as { name?: string }).name;
+        if (name === "NoSuchKey" || name === "NotFound") return null;
+
+        throw error;
+      }
       const body = object.Body;
       if (!body) return null;
 

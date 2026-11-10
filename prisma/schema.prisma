@@ -432,8 +432,10 @@ model StudentPhotoChangeRequest {
   id          String                   @id @default(uuid()) @map("id")
   studentId   String                   @map("student_id")
   student     Student                  @relation("StudentPhotoChangeStudent", fields: [studentId], references: [id])
-  newFileId   String                   @unique @map("new_file_id")
-  newFile     StoredFile               @relation("StudentPhotoChangeFile", fields: [newFileId], references: [id])
+  // Nullable with ON DELETE SET NULL: rejected (and replaced) photos are
+  // purged from storage, while the request row stays as history.
+  newFileId   String?                  @unique @map("new_file_id")
+  newFile     StoredFile?              @relation("StudentPhotoChangeFile", fields: [newFileId], references: [id], onDelete: SetNull)
   status      StudentPhotoChangeStatus @default(PENDING) @map("status")
   note        String?                  @map("note") @db.VarChar(500) // admin note on rejection
   decidedById String?                  @map("decided_by_id")

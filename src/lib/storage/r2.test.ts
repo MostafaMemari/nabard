@@ -102,7 +102,12 @@ class FakeS3 {
     if (command instanceof GetObjectCommand) {
       const ref = FakeS3.ref(command.input.Bucket as string, command.input.Key as string);
       const data = this.objects.get(ref);
-      if (!data) throw new Error("NoSuchKey");
+      if (!data) {
+        // Same shape as the real SDK: the error name carries the S3 code.
+        const error = new Error("The specified key does not exist.");
+        error.name = "NoSuchKey";
+        throw error;
+      }
 
       return {
         Body: {
@@ -222,6 +227,18 @@ describe("r2 storage", () => {
 
     await storage.delete(info.id);
     expect((client as unknown as FakeS3).objects.size).toBe(0);
+  });
+
+  it("returns null instead of throwing when the bucket object is already gone", async () => {
+    const client = fakeClient();
+    const storage = createR2Storage(env, client);
+    const info = await storage.put({ data: bytes, mime: "image/png", folder: "student-photos" });
+
+    // Simulate the legacy inconsistent state: metadata row exists, object purged.
+    const objectKey = state.rows.get(info.id)?.objectKey ?? "";
+    (client as unknown as FakeS3).objects.delete(FakeS3.ref("bucket", objectKey));
+
+    expect(await storage.get(info.id)).toBeNull();
   });
 
   it("never hands out a public url for a receipt, even with R2_PUBLIC_URL set", async () => {

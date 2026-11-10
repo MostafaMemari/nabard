@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { formatJalaliDate } from "@/lib/format";
 import { photoChangeStatusKey } from "../labels";
 import type { PhotoChangeRequest } from "../types";
-import { PhotoChangeThumb } from "./photo-change-columns";
+import { PhotoChangeThumbOrEmpty } from "./photo-change-columns";
 
 export function PhotoChangeCard({
   request,
@@ -18,7 +18,7 @@ export function PhotoChangeCard({
     <div className="rounded-xl border border-border bg-card shadow-card">
       <div className="p-4 pb-2.5">
         <MobileCardTop
-          leading={<PhotoChangeThumb requestId={request.id} className="size-12 shrink-0" />}
+          leading={<PhotoChangeThumbOrEmpty request={request} className="size-12 shrink-0" />}
           title={request.studentName}
           subtitle={request.coachName}
           end={<StatusBadge status={photoChangeStatusKey(request.status)} />}

@@ -1,5 +1,6 @@
 "use client";
 
+import { ImageOffIcon } from "lucide-react";
 import { Avatar, type DataTableColumn, StatusBadge } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { formatJalaliDate } from "@/lib/format";
@@ -8,7 +9,8 @@ import { photoChangeStatusKey } from "../labels";
 import type { PhotoChangeRequest } from "../types";
 
 // Thumbnail of the pending photo, streamed from the authenticated file
-// endpoint with the session cookie.
+// endpoint with the session cookie. Decided rows whose photo was purged from
+// storage show a quiet placeholder instead of a broken image.
 export function PhotoChangeThumb({ requestId, className = "size-10" }: { requestId: string; className?: string }) {
   return (
     // biome-ignore lint/performance/noImgElement: authenticated session-cookie url, not a static import
@@ -21,6 +23,21 @@ export function PhotoChangeThumb({ requestId, className = "size-10" }: { request
   );
 }
 
+export function PhotoChangeThumbOrEmpty({ request, className = "size-10" }: { request: PhotoChangeRequest; className?: string }) {
+  if (request.newFileId === null) {
+    return (
+      <span
+        aria-hidden
+        className={`${className} flex items-center justify-center rounded-lg border border-dashed border-border bg-muted/40 text-muted-foreground`}
+      >
+        <ImageOffIcon className="size-4" />
+      </span>
+    );
+  }
+
+  return <PhotoChangeThumb requestId={request.id} className={className} />;
+}
+
 export function usePhotoChangeColumns({
   onDecide,
 }: {
@@ -30,7 +47,7 @@ export function usePhotoChangeColumns({
     {
       id: "photo",
       header: "عکس جدید",
-      cell: (row) => <PhotoChangeThumb requestId={row.id} />,
+      cell: (row) => <PhotoChangeThumbOrEmpty request={row} />,
     },
     {
       id: "student",

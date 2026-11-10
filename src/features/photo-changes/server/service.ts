@@ -126,6 +126,10 @@ export async function readPhotoChangeFile(
       : identity.role === "COACH" && request.studentCoachId === user.id;
   if (!inScope) throw requestNotFound();
 
+  // The request row stays as history after its photo was purged from storage
+  // (rejection or a later approval replacing it).
+  if (request.fileId === null) throw new AppError(404, "NOT_FOUND", "فایل تصویر یافت نشد.");
+
   const file = await storage.get(request.fileId);
   if (!file) throw new AppError(404, "NOT_FOUND", "فایل تصویر یافت نشد.");
 
@@ -153,9 +157,10 @@ async function decidePhotoChange(
     await deleteStorageFileQuietly(storage, result.replacedFileId);
   }
 
-  if (input.status === "REJECTED") {
+  if (input.status === "REJECTED" && result.row.newFileId !== null) {
     // The pending photo was never attached to the profile; remove its object
-    // from storage. The request row stays as history.
+    // from storage. The request row stays as history (its file link is nulled
+    // by the database when the stored file row is deleted).
     await deleteStorageFileQuietly(storage, result.row.newFileId);
   }
 

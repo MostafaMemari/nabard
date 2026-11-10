@@ -173,6 +173,19 @@ describe("readPhotoChangeFile", () => {
 
     expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
   });
+
+  it("answers 404 once the request photo was purged from storage", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findPhotoChangeFileId: vi.fn().mockResolvedValue({ fileId: null, studentCoachId: "coach-1", studentCoachProvince: "TEHRAN" }),
+    });
+    const storage = storageWith();
+
+    const failure = await failureOf(readPhotoChangeFile(repo, storage, admin, "request-1"));
+
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+    expect(storage.get).not.toHaveBeenCalled();
+  });
 });
 
 describe("approvePhotoChangeRequest", () => {

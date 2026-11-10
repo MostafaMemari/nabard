@@ -381,11 +381,6 @@ export type StoredFileNullableScalarRelationFilter = {
   isNot?: Prisma.StoredFileWhereInput | null
 }
 
-export type StoredFileScalarRelationFilter = {
-  is?: Prisma.StoredFileWhereInput
-  isNot?: Prisma.StoredFileWhereInput
-}
-
 export type StoredFileCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   mime?: Prisma.SortOrder
@@ -424,6 +419,11 @@ export type StoredFileSumOrderByAggregateInput = {
   size?: Prisma.SortOrder
 }
 
+export type StoredFileScalarRelationFilter = {
+  is?: Prisma.StoredFileWhereInput
+  isNot?: Prisma.StoredFileWhereInput
+}
+
 export type StoredFileCreateNestedOneWithoutCoachPhotoInput = {
   create?: Prisma.XOR<Prisma.StoredFileCreateWithoutCoachPhotoInput, Prisma.StoredFileUncheckedCreateWithoutCoachPhotoInput>
   connectOrCreate?: Prisma.StoredFileCreateOrConnectWithoutCoachPhotoInput
@@ -446,10 +446,12 @@ export type StoredFileCreateNestedOneWithoutPhotoChangeRequestInput = {
   connect?: Prisma.StoredFileWhereUniqueInput
 }
 
-export type StoredFileUpdateOneRequiredWithoutPhotoChangeRequestNestedInput = {
+export type StoredFileUpdateOneWithoutPhotoChangeRequestNestedInput = {
   create?: Prisma.XOR<Prisma.StoredFileCreateWithoutPhotoChangeRequestInput, Prisma.StoredFileUncheckedCreateWithoutPhotoChangeRequestInput>
   connectOrCreate?: Prisma.StoredFileCreateOrConnectWithoutPhotoChangeRequestInput
   upsert?: Prisma.StoredFileUpsertWithoutPhotoChangeRequestInput
+  disconnect?: Prisma.StoredFileWhereInput | boolean
+  delete?: Prisma.StoredFileWhereInput | boolean
   connect?: Prisma.StoredFileWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.StoredFileUpdateToOneWithWhereWithoutPhotoChangeRequestInput, Prisma.StoredFileUpdateWithoutPhotoChangeRequestInput>, Prisma.StoredFileUncheckedUpdateWithoutPhotoChangeRequestInput>
 }

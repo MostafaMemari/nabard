@@ -174,7 +174,7 @@ export type StudentPhotoChangeRequestGroupByArgs<ExtArgs extends runtime.Types.E
 export type StudentPhotoChangeRequestGroupByOutputType = {
   id: string
   studentId: string
-  newFileId: string
+  newFileId: string | null
   status: $Enums.StudentPhotoChangeStatus
   note: string | null
   decidedById: string | null
@@ -207,7 +207,7 @@ export type StudentPhotoChangeRequestWhereInput = {
   NOT?: Prisma.StudentPhotoChangeRequestWhereInput | Prisma.StudentPhotoChangeRequestWhereInput[]
   id?: Prisma.StringFilter<"StudentPhotoChangeRequest"> | string
   studentId?: Prisma.StringFilter<"StudentPhotoChangeRequest"> | string
-  newFileId?: Prisma.StringFilter<"StudentPhotoChangeRequest"> | string
+  newFileId?: Prisma.StringNullableFilter<"StudentPhotoChangeRequest"> | string | null
   status?: Prisma.EnumStudentPhotoChangeStatusFilter<"StudentPhotoChangeRequest"> | $Enums.StudentPhotoChangeStatus
   note?: Prisma.StringNullableFilter<"StudentPhotoChangeRequest"> | string | null
   decidedById?: Prisma.StringNullableFilter<"StudentPhotoChangeRequest"> | string | null
@@ -215,14 +215,14 @@ export type StudentPhotoChangeRequestWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"StudentPhotoChangeRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StudentPhotoChangeRequest"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
-  newFile?: Prisma.XOR<Prisma.StoredFileScalarRelationFilter, Prisma.StoredFileWhereInput>
+  newFile?: Prisma.XOR<Prisma.StoredFileNullableScalarRelationFilter, Prisma.StoredFileWhereInput> | null
   decidedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
 export type StudentPhotoChangeRequestOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
-  newFileId?: Prisma.SortOrder
+  newFileId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
   decidedById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -248,14 +248,14 @@ export type StudentPhotoChangeRequestWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"StudentPhotoChangeRequest"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"StudentPhotoChangeRequest"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
-  newFile?: Prisma.XOR<Prisma.StoredFileScalarRelationFilter, Prisma.StoredFileWhereInput>
+  newFile?: Prisma.XOR<Prisma.StoredFileNullableScalarRelationFilter, Prisma.StoredFileWhereInput> | null
   decidedBy?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }, "id" | "newFileId">
 
 export type StudentPhotoChangeRequestOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
-  newFileId?: Prisma.SortOrder
+  newFileId?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   note?: Prisma.SortOrderInput | Prisma.SortOrder
   decidedById?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -273,7 +273,7 @@ export type StudentPhotoChangeRequestScalarWhereWithAggregatesInput = {
   NOT?: Prisma.StudentPhotoChangeRequestScalarWhereWithAggregatesInput | Prisma.StudentPhotoChangeRequestScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"StudentPhotoChangeRequest"> | string
   studentId?: Prisma.StringWithAggregatesFilter<"StudentPhotoChangeRequest"> | string
-  newFileId?: Prisma.StringWithAggregatesFilter<"StudentPhotoChangeRequest"> | string
+  newFileId?: Prisma.StringNullableWithAggregatesFilter<"StudentPhotoChangeRequest"> | string | null
   status?: Prisma.EnumStudentPhotoChangeStatusWithAggregatesFilter<"StudentPhotoChangeRequest"> | $Enums.StudentPhotoChangeStatus
   note?: Prisma.StringNullableWithAggregatesFilter<"StudentPhotoChangeRequest"> | string | null
   decidedById?: Prisma.StringNullableWithAggregatesFilter<"StudentPhotoChangeRequest"> | string | null
@@ -290,14 +290,14 @@ export type StudentPhotoChangeRequestCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutPhotoChangeRequestsInput
-  newFile: Prisma.StoredFileCreateNestedOneWithoutPhotoChangeRequestInput
+  newFile?: Prisma.StoredFileCreateNestedOneWithoutPhotoChangeRequestInput
   decidedBy?: Prisma.UserCreateNestedOneWithoutDecidedPhotoChangesInput
 }
 
 export type StudentPhotoChangeRequestUncheckedCreateInput = {
   id?: string
   studentId: string
-  newFileId: string
+  newFileId?: string | null
   status?: $Enums.StudentPhotoChangeStatus
   note?: string | null
   decidedById?: string | null
@@ -314,14 +314,14 @@ export type StudentPhotoChangeRequestUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutPhotoChangeRequestsNestedInput
-  newFile?: Prisma.StoredFileUpdateOneRequiredWithoutPhotoChangeRequestNestedInput
+  newFile?: Prisma.StoredFileUpdateOneWithoutPhotoChangeRequestNestedInput
   decidedBy?: Prisma.UserUpdateOneWithoutDecidedPhotoChangesNestedInput
 }
 
 export type StudentPhotoChangeRequestUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  newFileId?: Prisma.StringFieldUpdateOperationsInput | string
+  newFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStudentPhotoChangeStatusFieldUpdateOperationsInput | $Enums.StudentPhotoChangeStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decidedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -333,7 +333,7 @@ export type StudentPhotoChangeRequestUncheckedUpdateInput = {
 export type StudentPhotoChangeRequestCreateManyInput = {
   id?: string
   studentId: string
-  newFileId: string
+  newFileId?: string | null
   status?: $Enums.StudentPhotoChangeStatus
   note?: string | null
   decidedById?: string | null
@@ -354,7 +354,7 @@ export type StudentPhotoChangeRequestUpdateManyMutationInput = {
 export type StudentPhotoChangeRequestUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  newFileId?: Prisma.StringFieldUpdateOperationsInput | string
+  newFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStudentPhotoChangeStatusFieldUpdateOperationsInput | $Enums.StudentPhotoChangeStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decidedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -542,13 +542,13 @@ export type StudentPhotoChangeRequestCreateWithoutDecidedByInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   student: Prisma.StudentCreateNestedOneWithoutPhotoChangeRequestsInput
-  newFile: Prisma.StoredFileCreateNestedOneWithoutPhotoChangeRequestInput
+  newFile?: Prisma.StoredFileCreateNestedOneWithoutPhotoChangeRequestInput
 }
 
 export type StudentPhotoChangeRequestUncheckedCreateWithoutDecidedByInput = {
   id?: string
   studentId: string
-  newFileId: string
+  newFileId?: string | null
   status?: $Enums.StudentPhotoChangeStatus
   note?: string | null
   decidedAt?: Date | string | null
@@ -588,7 +588,7 @@ export type StudentPhotoChangeRequestScalarWhereInput = {
   NOT?: Prisma.StudentPhotoChangeRequestScalarWhereInput | Prisma.StudentPhotoChangeRequestScalarWhereInput[]
   id?: Prisma.StringFilter<"StudentPhotoChangeRequest"> | string
   studentId?: Prisma.StringFilter<"StudentPhotoChangeRequest"> | string
-  newFileId?: Prisma.StringFilter<"StudentPhotoChangeRequest"> | string
+  newFileId?: Prisma.StringNullableFilter<"StudentPhotoChangeRequest"> | string | null
   status?: Prisma.EnumStudentPhotoChangeStatusFilter<"StudentPhotoChangeRequest"> | $Enums.StudentPhotoChangeStatus
   note?: Prisma.StringNullableFilter<"StudentPhotoChangeRequest"> | string | null
   decidedById?: Prisma.StringNullableFilter<"StudentPhotoChangeRequest"> | string | null
@@ -604,13 +604,13 @@ export type StudentPhotoChangeRequestCreateWithoutStudentInput = {
   decidedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  newFile: Prisma.StoredFileCreateNestedOneWithoutPhotoChangeRequestInput
+  newFile?: Prisma.StoredFileCreateNestedOneWithoutPhotoChangeRequestInput
   decidedBy?: Prisma.UserCreateNestedOneWithoutDecidedPhotoChangesInput
 }
 
 export type StudentPhotoChangeRequestUncheckedCreateWithoutStudentInput = {
   id?: string
-  newFileId: string
+  newFileId?: string | null
   status?: $Enums.StudentPhotoChangeStatus
   note?: string | null
   decidedById?: string | null
@@ -708,7 +708,7 @@ export type StudentPhotoChangeRequestUncheckedUpdateWithoutNewFileInput = {
 export type StudentPhotoChangeRequestCreateManyDecidedByInput = {
   id?: string
   studentId: string
-  newFileId: string
+  newFileId?: string | null
   status?: $Enums.StudentPhotoChangeStatus
   note?: string | null
   decidedAt?: Date | string | null
@@ -724,13 +724,13 @@ export type StudentPhotoChangeRequestUpdateWithoutDecidedByInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   student?: Prisma.StudentUpdateOneRequiredWithoutPhotoChangeRequestsNestedInput
-  newFile?: Prisma.StoredFileUpdateOneRequiredWithoutPhotoChangeRequestNestedInput
+  newFile?: Prisma.StoredFileUpdateOneWithoutPhotoChangeRequestNestedInput
 }
 
 export type StudentPhotoChangeRequestUncheckedUpdateWithoutDecidedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  newFileId?: Prisma.StringFieldUpdateOperationsInput | string
+  newFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStudentPhotoChangeStatusFieldUpdateOperationsInput | $Enums.StudentPhotoChangeStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -741,7 +741,7 @@ export type StudentPhotoChangeRequestUncheckedUpdateWithoutDecidedByInput = {
 export type StudentPhotoChangeRequestUncheckedUpdateManyWithoutDecidedByInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
-  newFileId?: Prisma.StringFieldUpdateOperationsInput | string
+  newFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStudentPhotoChangeStatusFieldUpdateOperationsInput | $Enums.StudentPhotoChangeStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -751,7 +751,7 @@ export type StudentPhotoChangeRequestUncheckedUpdateManyWithoutDecidedByInput = 
 
 export type StudentPhotoChangeRequestCreateManyStudentInput = {
   id?: string
-  newFileId: string
+  newFileId?: string | null
   status?: $Enums.StudentPhotoChangeStatus
   note?: string | null
   decidedById?: string | null
@@ -767,13 +767,13 @@ export type StudentPhotoChangeRequestUpdateWithoutStudentInput = {
   decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  newFile?: Prisma.StoredFileUpdateOneRequiredWithoutPhotoChangeRequestNestedInput
+  newFile?: Prisma.StoredFileUpdateOneWithoutPhotoChangeRequestNestedInput
   decidedBy?: Prisma.UserUpdateOneWithoutDecidedPhotoChangesNestedInput
 }
 
 export type StudentPhotoChangeRequestUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  newFileId?: Prisma.StringFieldUpdateOperationsInput | string
+  newFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStudentPhotoChangeStatusFieldUpdateOperationsInput | $Enums.StudentPhotoChangeStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decidedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -784,7 +784,7 @@ export type StudentPhotoChangeRequestUncheckedUpdateWithoutStudentInput = {
 
 export type StudentPhotoChangeRequestUncheckedUpdateManyWithoutStudentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  newFileId?: Prisma.StringFieldUpdateOperationsInput | string
+  newFileId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   status?: Prisma.EnumStudentPhotoChangeStatusFieldUpdateOperationsInput | $Enums.StudentPhotoChangeStatus
   note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   decidedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -806,7 +806,7 @@ export type StudentPhotoChangeRequestSelect<ExtArgs extends runtime.Types.Extens
   createdAt?: boolean
   updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
-  newFile?: boolean | Prisma.StoredFileDefaultArgs<ExtArgs>
+  newFile?: boolean | Prisma.StudentPhotoChangeRequest$newFileArgs<ExtArgs>
   decidedBy?: boolean | Prisma.StudentPhotoChangeRequest$decidedByArgs<ExtArgs>
 }, ExtArgs["result"]["studentPhotoChangeRequest"]>
 
@@ -821,7 +821,7 @@ export type StudentPhotoChangeRequestSelectCreateManyAndReturn<ExtArgs extends r
   createdAt?: boolean
   updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
-  newFile?: boolean | Prisma.StoredFileDefaultArgs<ExtArgs>
+  newFile?: boolean | Prisma.StudentPhotoChangeRequest$newFileArgs<ExtArgs>
   decidedBy?: boolean | Prisma.StudentPhotoChangeRequest$decidedByArgs<ExtArgs>
 }, ExtArgs["result"]["studentPhotoChangeRequest"]>
 
@@ -836,7 +836,7 @@ export type StudentPhotoChangeRequestSelectUpdateManyAndReturn<ExtArgs extends r
   createdAt?: boolean
   updatedAt?: boolean
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
-  newFile?: boolean | Prisma.StoredFileDefaultArgs<ExtArgs>
+  newFile?: boolean | Prisma.StudentPhotoChangeRequest$newFileArgs<ExtArgs>
   decidedBy?: boolean | Prisma.StudentPhotoChangeRequest$decidedByArgs<ExtArgs>
 }, ExtArgs["result"]["studentPhotoChangeRequest"]>
 
@@ -855,17 +855,17 @@ export type StudentPhotoChangeRequestSelectScalar = {
 export type StudentPhotoChangeRequestOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "newFileId" | "status" | "note" | "decidedById" | "decidedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["studentPhotoChangeRequest"]>
 export type StudentPhotoChangeRequestInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
-  newFile?: boolean | Prisma.StoredFileDefaultArgs<ExtArgs>
+  newFile?: boolean | Prisma.StudentPhotoChangeRequest$newFileArgs<ExtArgs>
   decidedBy?: boolean | Prisma.StudentPhotoChangeRequest$decidedByArgs<ExtArgs>
 }
 export type StudentPhotoChangeRequestIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
-  newFile?: boolean | Prisma.StoredFileDefaultArgs<ExtArgs>
+  newFile?: boolean | Prisma.StudentPhotoChangeRequest$newFileArgs<ExtArgs>
   decidedBy?: boolean | Prisma.StudentPhotoChangeRequest$decidedByArgs<ExtArgs>
 }
 export type StudentPhotoChangeRequestIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
-  newFile?: boolean | Prisma.StoredFileDefaultArgs<ExtArgs>
+  newFile?: boolean | Prisma.StudentPhotoChangeRequest$newFileArgs<ExtArgs>
   decidedBy?: boolean | Prisma.StudentPhotoChangeRequest$decidedByArgs<ExtArgs>
 }
 
@@ -873,13 +873,13 @@ export type $StudentPhotoChangeRequestPayload<ExtArgs extends runtime.Types.Exte
   name: "StudentPhotoChangeRequest"
   objects: {
     student: Prisma.$StudentPayload<ExtArgs>
-    newFile: Prisma.$StoredFilePayload<ExtArgs>
+    newFile: Prisma.$StoredFilePayload<ExtArgs> | null
     decidedBy: Prisma.$UserPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     studentId: string
-    newFileId: string
+    newFileId: string | null
     status: $Enums.StudentPhotoChangeStatus
     note: string | null
     decidedById: string | null
@@ -1281,7 +1281,7 @@ readonly fields: StudentPhotoChangeRequestFieldRefs;
 export interface Prisma__StudentPhotoChangeRequestClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   student<T extends Prisma.StudentDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentDefaultArgs<ExtArgs>>): Prisma.Prisma__StudentClient<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  newFile<T extends Prisma.StoredFileDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StoredFileDefaultArgs<ExtArgs>>): Prisma.Prisma__StoredFileClient<runtime.Types.Result.GetResult<Prisma.$StoredFilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  newFile<T extends Prisma.StudentPhotoChangeRequest$newFileArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentPhotoChangeRequest$newFileArgs<ExtArgs>>): Prisma.Prisma__StoredFileClient<runtime.Types.Result.GetResult<Prisma.$StoredFilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   decidedBy<T extends Prisma.StudentPhotoChangeRequest$decidedByArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StudentPhotoChangeRequest$decidedByArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1719,6 +1719,25 @@ export type StudentPhotoChangeRequestDeleteManyArgs<ExtArgs extends runtime.Type
    * Limit how many StudentPhotoChangeRequests to delete.
    */
   limit?: number
+}
+
+/**
+ * StudentPhotoChangeRequest.newFile
+ */
+export type StudentPhotoChangeRequest$newFileArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StoredFile
+   */
+  select?: Prisma.StoredFileSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StoredFile
+   */
+  omit?: Prisma.StoredFileOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StoredFileInclude<ExtArgs> | null
+  where?: Prisma.StoredFileWhereInput
 }
 
 /**
