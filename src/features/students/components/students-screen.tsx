@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeftRightIcon, PlusIcon } from "lucide-react";
+import { ArrowLeftRightIcon, FileSpreadsheetIcon, PlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -15,6 +15,7 @@ import { useStudents } from "../hooks/use-students";
 import { birthDateInAgeCategory } from "../student-age";
 import type { Student } from "../types";
 import { StudentDeleteDialog } from "./student-delete-dialog";
+import { StudentImportDialog } from "./student-import-dialog";
 import { StudentsActiveFilters } from "./students-active-filters";
 import { StudentsFilterSheet } from "./students-filter-sheet";
 import { StudentsResults } from "./students-results";
@@ -27,6 +28,7 @@ export function StudentsScreen() {
   const { ageCategories } = useAgeCategories();
   const [pendingDelete, setPendingDelete] = useState<Student | null>(null);
   const [transferOpen, setTransferOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const [beltId, setBeltId] = useState("all");
   const [ageCategoryId, setAgeCategoryId] = useState("all");
   const { result: transfers, isLoading: transfersLoading, error: transfersError, mutate: reloadTransfers } = useTransferRequests();
@@ -64,6 +66,10 @@ export function StudentsScreen() {
             <Button variant="outline" onClick={() => setTransferOpen(true)}>
               <ArrowLeftRightIcon data-icon="inline-start" />
               انتقال هنرجو به من
+            </Button>
+            <Button variant="outline" onClick={() => setImportOpen(true)}>
+              <FileSpreadsheetIcon data-icon="inline-start" />
+              وارد کردن با اکسل
             </Button>
             <Button render={<Link href="/coach/students/new" />}>
               <PlusIcon data-icon="inline-start" />
@@ -129,6 +135,7 @@ export function StudentsScreen() {
       />
 
       <StudentDeleteDialog student={pendingDelete} onDone={mutate} onClose={() => setPendingDelete(null)} />
+      <StudentImportDialog open={importOpen} onOpenChange={setImportOpen} onImported={() => void mutate()} />
       <TransferRequestDialog open={transferOpen} onOpenChange={setTransferOpen} onRequested={() => void reloadTransfers()} />
     </>
   );

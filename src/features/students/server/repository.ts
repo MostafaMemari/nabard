@@ -109,6 +109,9 @@ export type StudentRepository = {
   findStudentById(id: string): Promise<StudentWithCoach | null>;
   findStudentDocuments(studentId: string): Promise<StudentDocumentRecord[]>;
   findNationalCodeOwner(nationalCode: string): Promise<{ id: string } | null>;
+  findExistingNationalCodes(codes: string[]): Promise<Set<string>>;
+  findActiveBelts(): Promise<Array<{ id: string; label: string }>>;
+  createStudents(rows: NewStudentData[]): Promise<number>;
   activeBeltExists(beltId: string): Promise<boolean>;
   beltExists(beltId: string): Promise<boolean>;
   countRegistrations(studentId: string): Promise<number>;
@@ -242,6 +245,34 @@ export async function findStudentDocuments(studentId: string): Promise<StudentDo
 
 export async function findNationalCodeOwner(nationalCode: string): Promise<{ id: string } | null> {
   return getPrisma().student.findUnique({ where: { nationalCode }, select: { id: true } });
+}
+
+export async function findExistingNationalCodes(codes: string[]): Promise<Set<string>> {
+  if (codes.length === 0) return new Set();
+  const rows = await getPrisma().student.findMany({ where: { nationalCode: { in: codes } }, select: { nationalCode: true } });
+  return new Set(rows.map((row) => row.nationalCode));
+}
+
+export async function findActiveBelts(): Promise<Array<{ id: string; label: string }>> {
+  return getPrisma().belt.findMany({ where: { isActive: true }, select: { id: true, label: true }, orderBy: { level: "asc" } });
+}
+
+export async function createStudents(rows: NewStudentData[]): Promise<number> {
+  const result = await getPrisma().student.createMany({
+    data: rows.map((row) => ({
+      fullName: row.fullName,
+      gender: row.gender,
+      nationalCode: row.nationalCode,
+      birthDate: row.birthDate,
+      mobile: row.mobile,
+      insuranceDate: row.insuranceDate,
+      tkdBankChargeDate: row.tkdBankChargeDate,
+      beltCertificateDate: row.beltCertificateDate,
+      beltId: row.beltId,
+      coachId: row.coachId,
+    })),
+  });
+  return result.count;
 }
 
 export async function activeBeltExists(beltId: string): Promise<boolean> {

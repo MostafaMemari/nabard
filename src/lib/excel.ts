@@ -1,6 +1,6 @@
 import ExcelJS from "exceljs";
 
-export type ExcelColumn = { header: string; width?: number; align?: "start" | "center" };
+export type ExcelColumn = { header: string; width?: number; align?: "start" | "center"; numFmt?: string };
 
 export type ExcelCell = string | number | null | { richText: Array<{ text: string }> };
 
@@ -69,6 +69,7 @@ export async function renderWorkbookXlsx(sheets: ExcelSheetInput[]): Promise<Buf
       const sheetColumn = worksheet.getColumn(columnIndex + 1);
       sheetColumn.width = column.width ?? 16;
       sheetColumn.alignment = { horizontal: column.align === "center" ? "center" : "right", vertical: "middle" };
+      if (column.numFmt) sheetColumn.numFmt = column.numFmt;
     });
     headerRow.commit();
 

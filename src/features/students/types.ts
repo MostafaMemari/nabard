@@ -52,6 +52,10 @@ export type StudentInput = {
   tkdBankChargeDate?: string;
 };
 
+export type StudentImportRowError = { row: number; message: string };
+
+export type StudentImportResult = { imported: number; errors: StudentImportRowError[] };
+
 export const requiredDocumentTypes: StudentDocumentType[] = ["PHOTO"];
 
 export function profileStatusKey(status: ProfileStatus): "PROFILE_PENDING" | "PROFILE_APPROVED" | "PROFILE_REJECTED" {

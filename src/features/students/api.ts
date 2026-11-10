@@ -1,7 +1,7 @@
 import type { Gender } from "@/features/base-data";
 import { api } from "@/lib/http";
 import type { ListQuery, ListResult } from "@/lib/pagination";
-import type { PendingReviewStudent, Student, StudentDetail, StudentInput } from "./types";
+import type { PendingReviewStudent, Student, StudentDetail, StudentImportResult, StudentInput } from "./types";
 
 export type StudentListParams = ListQuery & {
   coachId?: string;
@@ -29,6 +29,13 @@ export function getStudent(id: string): Promise<StudentDetail> {
 
 export function createStudent(input: StudentInput): Promise<Student> {
   return api<Student>("/api/v1/students", { method: "POST", body: input });
+}
+
+export function importStudents(file: File, coachId?: string): Promise<StudentImportResult> {
+  const form = new FormData();
+  form.append("file", file);
+  const path = coachId === undefined ? "/api/v1/students/import" : `/api/v1/coaches/${coachId}/students/import`;
+  return api<StudentImportResult>(path, { method: "POST", body: form });
 }
 
 export function updateStudentBelt(id: string, beltId: string): Promise<Student> {

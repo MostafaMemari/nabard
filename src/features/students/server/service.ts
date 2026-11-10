@@ -55,7 +55,7 @@ function documentsWithUrls(documents: StudentDocumentRecord[], urls: Map<string,
   return documents.map((document) => ({ ...document, url: urls.get(document.fileId) ?? null }));
 }
 
-function forbidden(): AppError {
+export function forbidden(): AppError {
   return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
 }
 
@@ -63,7 +63,7 @@ function studentNotFound(): AppError {
   return new AppError(404, "NOT_FOUND", "هنرجو یافت نشد.");
 }
 
-function provinceOf(identity: UserIdentityRecord): Province {
+export function provinceOf(identity: UserIdentityRecord): Province {
   if (identity.province === null) throw forbidden();
 
   return identity.province;
@@ -77,11 +77,11 @@ function invalidBelt(): AppError {
   return new AppError(400, "VALIDATION_ERROR", "کمربند انتخاب شده معتبر نیست.");
 }
 
-function coachGenderMissing(): AppError {
+export function coachGenderMissing(): AppError {
   return new AppError(400, "VALIDATION_ERROR", "جنسیت شما ثبت نشده است؛ با ادمین استان تماس بگیرید.");
 }
 
-async function requireActiveUser(repo: StudentRepository, user: CurrentUser): Promise<UserIdentityRecord> {
+export async function requireActiveUser(repo: StudentRepository, user: CurrentUser): Promise<UserIdentityRecord> {
   const record = await repo.findUserById(user.id);
   if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
   if (!record.isActive || record.role !== user.role) throw forbidden();

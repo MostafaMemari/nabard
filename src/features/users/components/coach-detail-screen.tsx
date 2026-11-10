@@ -1,12 +1,12 @@
 "use client";
 
-import { UsersIcon } from "lucide-react";
+import { FileSpreadsheetIcon, UsersIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Avatar, DetailPageHeader, ErrorBanner, SectionCard, StatusBadge } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useStudents } from "@/features/students";
+import { StudentImportDialog, useStudents } from "@/features/students";
 import { CoachReassignDialog } from "@/features/transfers";
 import { toPersianDigits } from "@/lib/format";
 import { useCoach, useCoaches } from "../hooks/use-coaches";
@@ -25,6 +25,7 @@ export function CoachDetailScreen({ coachId }: { coachId: string }) {
   const [resetOpen, setResetOpen] = useState(false);
   const [reassignOpen, setReassignOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
 
   if (isLoading) {
     return (
@@ -50,6 +51,10 @@ export function CoachDetailScreen({ coachId }: { coachId: string }) {
         title={coach.fullName}
         action={
           <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={() => setImportOpen(true)}>
+              <FileSpreadsheetIcon data-icon="inline-start" />
+              ورود گروهی با اکسل
+            </Button>
             <Button variant="outline" onClick={() => setEditOpen(true)}>
               ویرایش
             </Button>
@@ -99,6 +104,15 @@ export function CoachDetailScreen({ coachId }: { coachId: string }) {
       </div>
 
       <CoachStatusDialog coach={coach} targetActive={pendingStatus} onDone={mutate} onClose={() => setPendingStatus(null)} />
+      <StudentImportDialog
+        open={importOpen}
+        onOpenChange={setImportOpen}
+        coachId={coach.id}
+        onImported={() => {
+          void mutate();
+          void reloadStudents();
+        }}
+      />
       <CoachEditSheet coach={editOpen ? coach : null} onOpenChange={setEditOpen} onSaved={() => void mutate()} />
       <CoachResetPasswordDialog coach={resetOpen ? coach : null} onDone={mutate} onClose={() => setResetOpen(false)} />
       <CoachReassignDialog
