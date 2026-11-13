@@ -8,8 +8,8 @@ import { useSearchParam, useSearchParamText } from "@/lib/use-search-param";
 import { useAdmins } from "../hooks/use-admins";
 import type { AdminUser } from "../types";
 import { AdminCard } from "./admin-card";
-import { AdminCreateSheet } from "./admin-create-sheet";
-import { AdminEditSheet } from "./admin-edit-sheet";
+import { AdminCreateDialog } from "./admin-create-dialog";
+import { AdminEditDialog } from "./admin-edit-dialog";
 import { AdminResetPasswordDialog } from "./admin-reset-password-dialog";
 import { AdminStatusDialog } from "./admin-status-dialog";
 import { adminsColumns } from "./admins-columns";
@@ -75,11 +75,6 @@ export function AdminsScreen() {
         )}
         emptyIcon={ShieldCheckIcon}
         emptyTitle={search.value.trim() !== "" ? `نتیجه ای برای «${search.value.trim()}» پیدا نشد.` : "هنوز ادمینی اضافه نشده است."}
-        emptyAction={
-          <Button size="sm" onClick={() => setCreateOpen(true)}>
-            ادمین جدید
-          </Button>
-        }
         toolbar={
           <ListToolbar
             tabs={statusTabs}
@@ -92,8 +87,8 @@ export function AdminsScreen() {
         }
       />
 
-      <AdminCreateSheet open={createOpen} onOpenChange={setCreateOpen} onSaved={() => void mutate()} />
-      <AdminEditSheet admin={editing} onOpenChange={(open) => (open ? null : setEditing(null))} onSaved={() => void mutate()} />
+      <AdminCreateDialog open={createOpen} onOpenChange={setCreateOpen} onSaved={() => void mutate()} />
+      <AdminEditDialog admin={editing} onOpenChange={(open) => (open ? null : setEditing(null))} onSaved={() => void mutate()} />
       <AdminStatusDialog
         admin={pendingStatus?.admin ?? null}
         targetActive={pendingStatus?.isActive ?? null}

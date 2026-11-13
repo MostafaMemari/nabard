@@ -8,12 +8,12 @@ import { toPersianDigits } from "@/lib/format";
 import { useCounties } from "../hooks/use-counties";
 import type { County } from "../types";
 import { CountyDeleteDialog } from "./county-delete-dialog";
-import { CountyFormSheet } from "./county-form-sheet";
+import { CountyFormDialog } from "./county-form-dialog";
 import { CountyRow } from "./county-row";
 
 export function CountiesAdminScreen() {
   const { counties, isLoading, error, mutate } = useCounties();
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
   const [editing, setEditing] = useState<County | null>(null);
   const [deleting, setDeleting] = useState<County | null>(null);
 
@@ -23,7 +23,7 @@ export function CountiesAdminScreen() {
         title="شهرستان ها"
         description="شهرستان های استان شما؛ مربیان و مسابقات شهرستانی از این فهرست استفاده می کنند."
         action={
-          <Button onClick={() => setSheetOpen(true)}>
+          <Button onClick={() => setCreateOpen(true)}>
             <PlusIcon data-icon="inline-start" />
             شهرستان جدید
           </Button>
@@ -42,11 +42,6 @@ export function CountiesAdminScreen() {
             icon={MapPinnedIcon}
             title="هنوز شهرستانی ثبت نشده است."
             description="شهرستان های پیش فرض همه استان ها با مهاجرت پایگاه داده ثبت شده اند؛ با مدیر استان تماس بگیرید."
-            action={
-              <Button size="sm" onClick={() => setSheetOpen(true)}>
-                شهرستان جدید
-              </Button>
-            }
           />
         </StateCard>
       ) : (
@@ -63,8 +58,8 @@ export function CountiesAdminScreen() {
         </StateCard>
       )}
 
-      <CountyFormSheet open={sheetOpen} onOpenChange={setSheetOpen} onSaved={() => void mutate()} county={null} />
-      <CountyFormSheet
+      <CountyFormDialog open={createOpen} onOpenChange={setCreateOpen} onSaved={() => void mutate()} county={null} />
+      <CountyFormDialog
         open={editing !== null}
         onOpenChange={(open) => (open ? null : setEditing(null))}
         onSaved={() => void mutate()}

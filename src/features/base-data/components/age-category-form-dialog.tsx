@@ -6,12 +6,12 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ControlledDateField, ControlledTextField } from "@/components/shared";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ApiError } from "@/lib/http";
 import { type AgeCategoryAdmin, createAgeCategory, updateAgeCategory } from "../api-admin";
 import { type AgeCategoryFormValues, ageCategoryFormSchema } from "../schemas-forms";
 
-export function AgeCategoryFormSheet({
+export function AgeCategoryFormDialog({
   open,
   onOpenChange,
   onSaved,
@@ -67,26 +67,26 @@ export function AgeCategoryFormSheet({
   }
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="gap-0 p-6 sm:max-w-md">
-        <SheetHeader className="p-0">
-          <SheetTitle>{isEdit ? "ویرایش رده سنی" : "رده سنی جدید"}</SheetTitle>
-          <SheetDescription>بازه تاریخ تولد را وارد کنید؛ سال های تولد به صورت خودکار محاسبه می شوند.</SheetDescription>
-        </SheetHeader>
-        <form onSubmit={form.handleSubmit(submit)} noValidate className="mt-6 flex flex-col gap-4">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>{isEdit ? "ویرایش رده سنی" : "رده سنی جدید"}</DialogTitle>
+          <DialogDescription>بازه تاریخ تولد را وارد کنید؛ سال های تولد به صورت خودکار محاسبه می شوند.</DialogDescription>
+        </DialogHeader>
+        <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <ControlledTextField control={form.control} name="label" label="نام رده سنی" placeholder="مثلاً بزرگسال" />
           <ControlledDateField control={form.control} name="startDate" label="تاریخ شروع تولد" variant="birth" />
           <ControlledDateField control={form.control} name="endDate" label="تاریخ پایان تولد" variant="birth" />
-          <div className="mt-2 flex items-center justify-end gap-3">
-            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               انصراف
             </Button>
             <Button type="submit" disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting ? "در حال ذخیره…" : "ذخیره"}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }

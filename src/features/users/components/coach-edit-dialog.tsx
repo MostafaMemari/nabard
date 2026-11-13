@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import type { z } from "zod";
 import { ControlledSelectField, ControlledTextField } from "@/components/shared";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { personGenderLabels } from "@/features/base-data/labels";
 import { useCounties } from "@/features/counties";
 import { updateCoach } from "../api";
@@ -17,7 +17,7 @@ type CoachEditValues = z.input<typeof updateCoachSchema>;
 
 const emptyForm: CoachEditValues = { fullName: "", mobile: "", nationalCode: "", countyId: "" };
 
-export function CoachEditSheet({
+export function CoachEditDialog({
   coach,
   onOpenChange,
   onSaved,
@@ -55,28 +55,28 @@ export function CoachEditSheet({
   }
 
   return (
-    <Sheet open={coach !== null} onOpenChange={onOpenChange}>
-      <SheetContent className="gap-0 p-6 sm:max-w-md">
-        <SheetHeader className="p-0">
-          <SheetTitle>ویرایش مربی</SheetTitle>
-          <SheetDescription>جنسیت مربی وقتی تغییر می کند که هنرجوی هم جنسیت دیگری نداشته باشد.</SheetDescription>
-        </SheetHeader>
-        <form onSubmit={form.handleSubmit(submit)} noValidate className="mt-6 flex flex-col gap-4">
+    <Dialog open={coach !== null} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>ویرایش مربی</DialogTitle>
+          <DialogDescription>جنسیت مربی وقتی تغییر می کند که هنرجوی هم جنسیت دیگری نداشته باشد.</DialogDescription>
+        </DialogHeader>
+        <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <ControlledTextField control={form.control} name="fullName" label="نام و نام خانوادگی" placeholder="مثلاً رضا محمدی" />
           <ControlledTextField control={form.control} name="mobile" label="شماره همراه" inputMode="numeric" dir="ltr" autoComplete="off" />
           <ControlledTextField control={form.control} name="nationalCode" label="کد ملی" inputMode="numeric" dir="ltr" autoComplete="off" />
           <ControlledSelectField control={form.control} name="countyId" label="شهرستان" items={countyItems} />
           <ControlledSelectField control={form.control} name="gender" label="جنسیت" items={personGenderLabels} />
-          <div className="mt-2 flex items-center justify-end gap-3">
-            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               انصراف
             </Button>
             <Button type="submit" disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting ? "در حال ذخیره…" : "ذخیره"}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -6,14 +6,14 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ControlledSelectField, ControlledTextField } from "@/components/shared";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ApiError } from "@/lib/http";
 import { type BeltAdmin, createBelt, updateBelt } from "../api-admin";
 import { type BeltFormValues, beltFormSchema } from "../schemas-forms";
 
 const rankTypeItems = { COLOR: "رنگی", POOM: "پوم", DAN: "دان" };
 
-export function BeltFormSheet({
+export function BeltFormDialog({
   open,
   onOpenChange,
   onSaved,
@@ -71,28 +71,28 @@ export function BeltFormSheet({
   }
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="gap-0 p-6 sm:max-w-md">
-        <SheetHeader className="p-0">
-          <SheetTitle>{isEdit ? "ویرایش کمربند" : "کمربند جدید"}</SheetTitle>
-          <SheetDescription>نام و سطح کمربند را وارد کنید؛ سطح ها باید یکتا باشند.</SheetDescription>
-        </SheetHeader>
-        <form onSubmit={form.handleSubmit(submit)} noValidate className="mt-6 flex flex-col gap-4">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>{isEdit ? "ویرایش کمربند" : "کمربند جدید"}</DialogTitle>
+          <DialogDescription>نام و سطح کمربند را وارد کنید؛ سطح ها باید یکتا باشند.</DialogDescription>
+        </DialogHeader>
+        <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <ControlledTextField control={form.control} name="label" label="نام کمربند" placeholder="مثلاً سبز با یک نوار" />
           <ControlledTextField control={form.control} name="level" label="سطح" inputMode="numeric" />
           <ControlledSelectField control={form.control} name="rankType" label="نوع" items={rankTypeItems} />
           <ControlledTextField control={form.control} name="color" label="نام رنگ (اختیاری)" placeholder="مثلاً سبز" />
           <ControlledTextField control={form.control} name="colorHex" label="کد رنگ" placeholder="#16a34a" />
-          <div className="mt-2 flex items-center justify-end gap-3">
-            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               انصراف
             </Button>
             <Button type="submit" disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting ? "در حال ذخیره…" : "ذخیره"}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }

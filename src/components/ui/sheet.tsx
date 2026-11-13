@@ -38,11 +38,11 @@ function SheetOverlay({ className, ...props }: SheetPrimitive.Backdrop.Props) {
 function SheetContent({
   className,
   children,
-  side = "right",
+  side,
   showCloseButton = true,
   ...props
 }: SheetPrimitive.Popup.Props & {
-  side?: "top" | "right" | "bottom" | "left";
+  side: "top" | "right" | "bottom" | "left";
   showCloseButton?: boolean;
 }) {
   return (

@@ -1,5 +1,5 @@
-import ExcelJS from "exceljs";
 import { getDaysInMonth, newDate } from "date-fns-jalali";
+import ExcelJS from "exceljs";
 import { AppError } from "@/lib/api";
 
 export const STUDENT_IMPORT_MAX_ROWS = 100;
@@ -207,9 +207,7 @@ export async function parseStudentsWorkbook(buffer: ArrayBuffer): Promise<Parsed
       errors.push(
         rowError(
           rowNumber,
-          birthDate.text === ""
-            ? "تاریخ تولد را وارد کنید."
-            : "تاریخ تولد معتبر نیست؛ تاریخ را شمسی مثل ۱۳۸۰/۰۵/۱۲ وارد کنید.",
+          birthDate.text === "" ? "تاریخ تولد را وارد کنید." : "تاریخ تولد معتبر نیست؛ تاریخ را شمسی مثل ۱۳۸۰/۰۵/۱۲ وارد کنید.",
         ),
       );
       valid = false;

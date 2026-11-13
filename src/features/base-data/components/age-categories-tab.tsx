@@ -13,7 +13,7 @@ import { formatJalaliDate, toPersianDigits } from "@/lib/format";
 import { type AgeCategoryAdmin, updateAgeCategory } from "../api-admin";
 import { useAgeCategoriesAdmin } from "../hooks/use-base-data-admin";
 import { AgeCategoryDeleteDialog } from "./age-category-delete-dialog";
-import { AgeCategoryFormSheet } from "./age-category-form-sheet";
+import { AgeCategoryFormDialog } from "./age-category-form-dialog";
 
 function RowMenu({ category, onEdit, onDelete }: { category: AgeCategoryAdmin; onEdit: () => void; onDelete: () => void }) {
   return (
@@ -67,13 +67,13 @@ function AgeCategoryCard({
 
 export function AgeCategoriesTab() {
   const { ageCategories, isLoading, error, mutate } = useAgeCategoriesAdmin(true);
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<AgeCategoryAdmin | null>(null);
   const [deleting, setDeleting] = useState<AgeCategoryAdmin | null>(null);
 
   function openEdit(category: AgeCategoryAdmin) {
     setEditing(category);
-    setSheetOpen(true);
+    setDialogOpen(true);
   }
 
   async function toggle(category: AgeCategoryAdmin) {
@@ -96,7 +96,7 @@ export function AgeCategoriesTab() {
           size="sm"
           onClick={() => {
             setEditing(null);
-            setSheetOpen(true);
+            setDialogOpen(true);
           }}
         >
           <PlusIcon data-icon="inline-start" />
@@ -175,7 +175,7 @@ export function AgeCategoriesTab() {
         </>
       )}
 
-      <AgeCategoryFormSheet open={sheetOpen} onOpenChange={setSheetOpen} onSaved={() => void mutate()} category={editing} />
+      <AgeCategoryFormDialog open={dialogOpen} onOpenChange={setDialogOpen} onSaved={() => void mutate()} category={editing} />
       <AgeCategoryDeleteDialog category={deleting} onDone={() => void mutate()} onClose={() => setDeleting(null)} />
     </section>
   );

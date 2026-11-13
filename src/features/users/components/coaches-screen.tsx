@@ -9,7 +9,7 @@ import { useStudents } from "@/features/students";
 import { useCoaches } from "../hooks/use-coaches";
 import type { User } from "../types";
 import { CoachCard } from "./coach-card";
-import { CoachFormSheet } from "./coach-form-sheet";
+import { CoachFormDialog } from "./coach-form-dialog";
 import { CoachStatusDialog } from "./coach-status-dialog";
 import { coachColumns } from "./coaches-columns";
 import { useCoachFilters } from "./use-coach-filters";
@@ -18,7 +18,7 @@ export function CoachesScreen() {
   const router = useRouter();
   const { coaches, isLoading, error, mutate } = useCoaches();
   const { students } = useStudents();
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
   const [pendingStatus, setPendingStatus] = useState<{ coach: User; isActive: boolean } | null>(null);
   const filters = useCoachFilters(coaches);
 
@@ -30,7 +30,7 @@ export function CoachesScreen() {
         title="مربیان"
         description="مربیان استان و هنرجویان هر مربی."
         action={
-          <Button onClick={() => setSheetOpen(true)}>
+          <Button onClick={() => setCreateOpen(true)}>
             <PlusIcon data-icon="inline-start" />
             مربی جدید
           </Button>
@@ -56,12 +56,6 @@ export function CoachesScreen() {
         emptyTitle={
           filters.search.value.trim() !== "" ? `نتیجه ای برای «${filters.search.value.trim()}» پیدا نشد.` : "هنوز مربی ای اضافه نشده است."
         }
-        emptyAction={
-          <Button size="sm" onClick={() => setSheetOpen(true)}>
-            <PlusIcon data-icon="inline-start" />
-            مربی جدید
-          </Button>
-        }
         toolbar={
           <ListToolbar
             tabs={filters.statusTabs}
@@ -74,7 +68,7 @@ export function CoachesScreen() {
         }
       />
 
-      <CoachFormSheet open={sheetOpen} onOpenChange={setSheetOpen} onSaved={() => void mutate()} />
+      <CoachFormDialog open={createOpen} onOpenChange={setCreateOpen} onSaved={() => void mutate()} />
 
       <CoachStatusDialog
         coach={pendingStatus?.coach ?? null}

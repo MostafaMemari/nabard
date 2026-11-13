@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ControlledSelectField, ControlledTextField } from "@/components/shared";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { provinceLabels, provinceValues } from "@/lib/provinces";
 import { createAdmin } from "../api";
 import { type AdminFormValues, createAdminFormSchema } from "../schemas";
@@ -13,7 +13,7 @@ import type { AdminUser } from "../types";
 
 const emptyForm: AdminFormValues = { fullName: "", mobile: "", initialPassword: "", province: "" };
 
-export function AdminCreateSheet({
+export function AdminCreateDialog({
   open,
   onOpenChange,
   onSaved,
@@ -46,13 +46,13 @@ export function AdminCreateSheet({
   }
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="gap-0 p-6 sm:max-w-md">
-        <SheetHeader className="p-0">
-          <SheetTitle>ادمین استان جدید</SheetTitle>
-          <SheetDescription>اطلاعات ادمین استان را وارد کنید؛ حساب به صورت فعال ساخته می شود.</SheetDescription>
-        </SheetHeader>
-        <form onSubmit={form.handleSubmit(submit)} noValidate className="mt-6 flex flex-col gap-4">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>ادمین استان جدید</DialogTitle>
+          <DialogDescription>اطلاعات ادمین استان را وارد کنید؛ حساب به صورت فعال ساخته می شود.</DialogDescription>
+        </DialogHeader>
+        <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <ControlledTextField control={form.control} name="fullName" label="نام و نام خانوادگی" placeholder="مثلاً سارا احمدی" />
           <ControlledTextField
             control={form.control}
@@ -71,16 +71,16 @@ export function AdminCreateSheet({
             type="password"
             placeholder="حداقل ۸ کاراکتر"
           />
-          <div className="mt-2 flex items-center justify-end gap-3">
-            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               انصراف
             </Button>
             <Button type="submit" disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting ? "در حال ذخیره…" : "ذخیره"}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }

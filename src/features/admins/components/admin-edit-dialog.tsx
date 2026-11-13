@@ -6,13 +6,13 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ControlledSelectField, ControlledTextField } from "@/components/shared";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { provinceLabels, provinceValues } from "@/lib/provinces";
 import { updateAdmin } from "../api";
 import { type EditAdminFormValues, editAdminFormSchema } from "../schemas";
 import type { AdminUser } from "../types";
 
-export function AdminEditSheet({
+export function AdminEditDialog({
   admin,
   onOpenChange,
   onSaved,
@@ -50,26 +50,26 @@ export function AdminEditSheet({
   }
 
   return (
-    <Sheet open={admin !== null} onOpenChange={onOpenChange}>
-      <SheetContent className="gap-0 p-6 sm:max-w-md">
-        <SheetHeader className="p-0">
-          <SheetTitle>ویرایش ادمین استان</SheetTitle>
-          <SheetDescription>اطلاعات «{admin?.fullName}» را ویرایش کنید.</SheetDescription>
-        </SheetHeader>
-        <form onSubmit={form.handleSubmit(submit)} noValidate className="mt-6 flex flex-col gap-4">
+    <Dialog open={admin !== null} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle>ویرایش ادمین استان</DialogTitle>
+          <DialogDescription>اطلاعات «{admin?.fullName}» را ویرایش کنید.</DialogDescription>
+        </DialogHeader>
+        <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <ControlledTextField control={form.control} name="fullName" label="نام و نام خانوادگی" />
           <ControlledTextField control={form.control} name="mobile" label="شماره همراه" inputMode="numeric" dir="ltr" autoComplete="off" />
           <ControlledSelectField control={form.control} name="province" label="استان" items={provinceItems} />
-          <div className="mt-2 flex items-center justify-end gap-3">
-            <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
+          <DialogFooter>
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               انصراف
             </Button>
             <Button type="submit" disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting ? "در حال ذخیره…" : "ذخیره"}
             </Button>
-          </div>
+          </DialogFooter>
         </form>
-      </SheetContent>
-    </Sheet>
+      </DialogContent>
+    </Dialog>
   );
 }

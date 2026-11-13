@@ -13,7 +13,7 @@ import { toPersianDigits } from "@/lib/format";
 import { type BeltAdmin, updateBelt } from "../api-admin";
 import { useBeltsAdmin } from "../hooks/use-base-data-admin";
 import { BeltDeleteDialog } from "./belt-delete-dialog";
-import { BeltFormSheet } from "./belt-form-sheet";
+import { BeltFormDialog } from "./belt-form-dialog";
 
 function RowMenu({ belt, onEdit, onDelete }: { belt: BeltAdmin; onEdit: () => void; onDelete: () => void }) {
   return (
@@ -61,13 +61,13 @@ function BeltCard({
 
 export function BeltsTab() {
   const { belts, isLoading, error, mutate } = useBeltsAdmin(true);
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<BeltAdmin | null>(null);
   const [deleting, setDeleting] = useState<BeltAdmin | null>(null);
 
   function openEdit(belt: BeltAdmin) {
     setEditing(belt);
-    setSheetOpen(true);
+    setDialogOpen(true);
   }
 
   async function toggle(belt: BeltAdmin) {
@@ -90,7 +90,7 @@ export function BeltsTab() {
           size="sm"
           onClick={() => {
             setEditing(null);
-            setSheetOpen(true);
+            setDialogOpen(true);
           }}
         >
           <PlusIcon data-icon="inline-start" />
@@ -160,7 +160,7 @@ export function BeltsTab() {
         </>
       )}
 
-      <BeltFormSheet open={sheetOpen} onOpenChange={setSheetOpen} onSaved={() => void mutate()} belt={editing} />
+      <BeltFormDialog open={dialogOpen} onOpenChange={setDialogOpen} onSaved={() => void mutate()} belt={editing} />
       <BeltDeleteDialog belt={deleting} onDone={() => void mutate()} onClose={() => setDeleting(null)} />
     </section>
   );

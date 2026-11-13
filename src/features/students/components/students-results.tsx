@@ -1,9 +1,7 @@
 "use client";
 
-import { PlusIcon, UsersIcon } from "lucide-react";
-import Link from "next/link";
+import { UsersIcon } from "lucide-react";
 import { DataTable, EmptyState, ErrorBanner, StateCard } from "@/components/shared";
-import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Belt } from "@/features/base-data";
 import type { Student } from "../types";
@@ -46,18 +44,7 @@ export function StudentsResults({
   if (rows.length === 0) {
     return (
       <StateCard>
-        <EmptyState
-          icon={UsersIcon}
-          title={query !== "" ? `نتیجه ای برای «${query}» پیدا نشد.` : "هنوز هنرجویی اضافه نکرده اید."}
-          action={
-            query === "" ? (
-              <Button size="sm" render={<Link href="/coach/students/new" />}>
-                <PlusIcon data-icon="inline-start" />
-                هنرجوی جدید
-              </Button>
-            ) : undefined
-          }
-        />
+        <EmptyState icon={UsersIcon} title={query !== "" ? `نتیجه ای برای «${query}» پیدا نشد.` : "هنوز هنرجویی اضافه نکرده اید."} />
       </StateCard>
     );
   }

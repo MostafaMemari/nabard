@@ -11,7 +11,7 @@ import { CoachReassignDialog } from "@/features/transfers";
 import { toPersianDigits } from "@/lib/format";
 import { useCoach, useCoaches } from "../hooks/use-coaches";
 import { CoachAccountSection } from "./coach-account-section";
-import { CoachEditSheet } from "./coach-edit-sheet";
+import { CoachEditDialog } from "./coach-edit-dialog";
 import { CoachResetPasswordDialog } from "./coach-reset-password-dialog";
 import { CoachStatusDialog } from "./coach-status-dialog";
 import { CoachStudentsTable } from "./coach-students-table";
@@ -113,7 +113,7 @@ export function CoachDetailScreen({ coachId }: { coachId: string }) {
           void reloadStudents();
         }}
       />
-      <CoachEditSheet coach={editOpen ? coach : null} onOpenChange={setEditOpen} onSaved={() => void mutate()} />
+      <CoachEditDialog coach={editOpen ? coach : null} onOpenChange={setEditOpen} onSaved={() => void mutate()} />
       <CoachResetPasswordDialog coach={resetOpen ? coach : null} onDone={mutate} onClose={() => setResetOpen(false)} />
       <CoachReassignDialog
         coachId={coach.id}
