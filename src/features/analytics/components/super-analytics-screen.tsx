@@ -52,14 +52,14 @@ function Dashboard({ analytics }: { analytics: SuperAnalytics }) {
   return (
     <div className="flex flex-col gap-4">
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <KpiCard icon={ClipboardListIcon} label="ثبت‌نام‌ها" value={kpis.registrations} />
+        <KpiCard icon={ClipboardListIcon} label="ثبت نام ها" value={kpis.registrations} />
         <KpiCard icon={UsersIcon} label="هنرجویان" value={kpis.students} />
         <KpiCard icon={UserRoundIcon} label="مربیان" value={kpis.coaches} />
         <KpiCard icon={TrophyIcon} label="مسابقات" value={kpis.competitions} />
       </div>
 
       <SectionCard
-        title="روند ثبت‌نام‌ها"
+        title="روند ثبت نام ها"
         description={trendRange}
         icon={TrendingUpIcon}
         action={
@@ -72,7 +72,7 @@ function Dashboard({ analytics }: { analytics: SuperAnalytics }) {
       </SectionCard>
 
       <div className="grid gap-4 lg:grid-cols-5">
-        <SectionCard title="مقایسه شهرستان‌ها" description="بر اساس تعداد ثبت‌نام" icon={MapPinnedIcon} className="lg:col-span-3">
+        <SectionCard title="مقایسه شهرستان ها" description="بر اساس تعداد ثبت نام" icon={MapPinnedIcon} className="lg:col-span-3">
           <BarList
             items={counties.map((county) => ({
               id: county.id,
@@ -83,14 +83,14 @@ function Dashboard({ analytics }: { analytics: SuperAnalytics }) {
                   : `${toPersianDigits(county.students)} هنرجو`,
               value: county.registrations,
             }))}
-            emptyMessage="هنوز ثبت‌نامی برای مقایسه وجود ندارد."
+            emptyMessage="هنوز ثبت نامی برای مقایسه وجود ندارد"
           />
           {hiddenCounties > 0 ? (
             <p className="text-subtle text-sm text-muted-foreground">و {toPersianDigits(hiddenCounties)} شهرستان دیگر…</p>
           ) : null}
         </SectionCard>
 
-        <SectionCard title="نرخ تأیید پروفایل‌ها" description="وضعیت پروفایل هنرجویان" icon={ChartPieIcon} className="lg:col-span-2">
+        <SectionCard title="نرخ تأیید پروفایل ها" description="وضعیت پروفایل هنرجویان" icon={ChartPieIcon} className="lg:col-span-2">
           <DonutChart
             centerValue={`${toPersianDigits(approvalRate)}٪`}
             centerLabel="تأیید شده"
@@ -102,7 +102,7 @@ function Dashboard({ analytics }: { analytics: SuperAnalytics }) {
           />
           <p className="text-subtle text-sm text-muted-foreground">
             {toPersianDigits(formatNumber(profiles.approved))} پروفایل تأیید شده از مجموع {toPersianDigits(formatNumber(profileTotal))}{" "}
-            پروفایل.
+            پروفایل
           </p>
         </SectionCard>
       </div>
@@ -120,7 +120,7 @@ export function SuperAnalyticsScreen() {
     <>
       <PageHeader
         title="داشبورد آماری"
-        description="نمای کلان آمار سامانه در سطح استان ها."
+        description="نمای کلان آمار سامانه در سطح استان ها"
         action={
           <div className="flex flex-wrap items-center gap-2">
             <DownloadMenu

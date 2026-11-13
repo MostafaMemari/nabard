@@ -22,10 +22,10 @@ export function useRegistrationSubmit({
     setSubmitting(true);
     try {
       await createRegistrations({ competitionId, studentIds, weights, receipt });
-      toast.success("ثبت نام انجام شد و رسید برای بررسی ارسال شد.");
+      toast.success("ثبت نام انجام شد و رسید برای بررسی ارسال شد");
       router.push("/coach/registrations");
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : "انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof ApiError ? error.message : "انجام نشد. دوباره تلاش کنید");
       setSubmitting(false);
     }
   }

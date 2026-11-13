@@ -523,11 +523,11 @@ describe("rejectStudentProfile", () => {
       findUserById: vi.fn().mockResolvedValue(adminRecord),
       findStudentById: vi.fn().mockResolvedValue({ ...ownStudent, profileStatus: "PENDING" }),
     });
-    await rejectStudentProfile(repo, admin, "student-1", "عکس پرسنلی ناخوانا است.");
+    await rejectStudentProfile(repo, admin, "student-1", "عکس پرسنلی ناخوانا است");
 
     expect(repo.updateProfileStatusFromPendingOrRejected).toHaveBeenCalledWith("student-1", {
       status: "REJECTED",
-      note: "عکس پرسنلی ناخوانا است.",
+      note: "عکس پرسنلی ناخوانا است",
       reviewedById: "admin-1",
     });
   });

@@ -77,8 +77,8 @@ export function PhotoChangeDecisionDialog({
           <DialogTitle>{approving ? "تأیید تغییر عکس هنرجو" : "رد درخواست تغییر عکس"}</DialogTitle>
           <DialogDescription>
             {approving
-              ? `عکس جدید جایگزین عکس پروفایل «${request?.studentName ?? ""}» می شود.`
-              : `درخواست تغییر عکس «${request?.studentName ?? ""}» رد می شود.`}
+              ? `عکس جدید جایگزین عکس پروفایل «${request?.studentName ?? ""}» می شود`
+              : `درخواست تغییر عکس «${request?.studentName ?? ""}» رد می شود`}
           </DialogDescription>
         </DialogHeader>
         {approving ? (
@@ -113,7 +113,7 @@ export function PhotoChangeDecisionDialog({
               <Textarea
                 id="photo-change-note"
                 rows={3}
-                placeholder="مثلاً کیفیت عکس مناسب نیست؛ عکس پرسنلی واضح بارگذاری کنید."
+                placeholder="مثلاً کیفیت عکس مناسب نیست؛ عکس پرسنلی واضح بارگذاری کنید"
                 {...form.register("note")}
               />
               {form.formState.errors.note ? <FieldError errors={[form.formState.errors.note]} /> : null}

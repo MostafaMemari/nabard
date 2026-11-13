@@ -20,7 +20,7 @@ export function DataTable<T>({
   error,
   onRetry,
   toolbar,
-  emptyTitle = "موردی برای نمایش وجود ندارد.",
+  emptyTitle = "موردی برای نمایش وجود ندارد",
   emptyAction,
   emptyIcon,
   pageSize = 10,

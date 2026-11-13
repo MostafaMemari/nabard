@@ -16,7 +16,7 @@ export const POST = route({ roles: ["COACH"] }, async ({ request, user, params }
   const file = form.get("file");
 
   if (!(file instanceof File)) {
-    throw new AppError(400, "VALIDATION_ERROR", "تصویر جدید را بارگذاری کنید.");
+    throw new AppError(400, "VALIDATION_ERROR", "تصویر جدید را بارگذاری کنید");
   }
 
   return createPhotoChangeRequest(repository, storage, auditRepository, user, id, file);

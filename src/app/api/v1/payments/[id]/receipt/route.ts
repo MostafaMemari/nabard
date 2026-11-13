@@ -28,7 +28,7 @@ export const PUT = route({ roles: ["COACH"] }, async ({ request, user, params })
   const receiptFile = form.get("receipt");
 
   if (!(receiptFile instanceof File)) {
-    throw new AppError(400, "VALIDATION_ERROR", "تصویر رسید را بارگذاری کنید.");
+    throw new AppError(400, "VALIDATION_ERROR", "تصویر رسید را بارگذاری کنید");
   }
 
   return uploadReceipt(repository, storage, user, id, receiptFile);

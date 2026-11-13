@@ -3,11 +3,11 @@ import { rejectPaymentSchema } from "./schemas";
 
 describe("rejectPaymentSchema", () => {
   it("accepts a meaningful note", () => {
-    const result = rejectPaymentSchema.safeParse({ note: "  مبلغ واریزی با تعداد هنرجویان مطابقت ندارد.  " });
+    const result = rejectPaymentSchema.safeParse({ note: "  مبلغ واریزی با تعداد هنرجویان مطابقت ندارد" });
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.data.note).toBe("مبلغ واریزی با تعداد هنرجویان مطابقت ندارد.");
+      expect(result.data.note).toBe("مبلغ واریزی با تعداد هنرجویان مطابقت ندارد");
     }
   });
 

@@ -183,11 +183,11 @@ describe("decideCountyChange", () => {
 
   it("stores the note when rejecting", async () => {
     const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    await decideCountyChange(repo, admin, "ccr-1", "REJECTED", "تغییر شهرستان ممکن نیست.");
+    await decideCountyChange(repo, admin, "ccr-1", "REJECTED", "تغییر شهرستان ممکن نیست");
 
     expect(repo.decideCountyChangeFromPending).toHaveBeenCalledWith("ccr-1", {
       status: "REJECTED",
-      note: "تغییر شهرستان ممکن نیست.",
+      note: "تغییر شهرستان ممکن نیست",
       decidedById: "admin-1",
     });
   });

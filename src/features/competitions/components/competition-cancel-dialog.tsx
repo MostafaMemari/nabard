@@ -44,7 +44,7 @@ export function CompetitionCancelDialog({
       <DialogContent showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>لغو مسابقه</DialogTitle>
-          <DialogDescription>با لغو مسابقه، از فهرست مسابقات باز مربیان حذف می شود و ثبت نام جدید ممکن نخواهد بود.</DialogDescription>
+          <DialogDescription>با لغو مسابقه، از فهرست مسابقات باز مربیان حذف می شود و ثبت نام جدید ممکن نخواهد بود</DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <Field data-invalid={form.formState.errors.reason ? "" : undefined}>
@@ -52,7 +52,7 @@ export function CompetitionCancelDialog({
             <Textarea
               id="cancel-reason"
               rows={4}
-              placeholder="مثلاً برگزاری مسابقه با توجه به تعویض سالن ممکن نیست."
+              placeholder="مثلاً برگزاری مسابقه با توجه به تعویض سالن ممکن نیست"
               {...form.register("reason")}
             />
             {form.formState.errors.reason ? <FieldError errors={[form.formState.errors.reason]} /> : null}

@@ -30,12 +30,12 @@ export function CoachResetPasswordDialog({
     if (!coach) return;
     try {
       await resetCoachPassword(coach.id, values.password);
-      toast.success("رمز عبور مربی بازنشانی شد.");
+      toast.success("رمز عبور مربی بازنشانی شد");
       form.reset(emptyForm);
       await onDone();
       onClose();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "بازنشانی رمز عبور انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "بازنشانی رمز عبور انجام نشد. دوباره تلاش کنید");
     }
   }
 
@@ -53,7 +53,7 @@ export function CoachResetPasswordDialog({
         <DialogHeader>
           <DialogTitle>بازنشانی رمز عبور</DialogTitle>
           <DialogDescription>
-            رمز عبور تازه «{coach?.fullName}» را تعیین کنید و آن را به خودش اعلام کنید؛ رمز قبلی بی اعتبار می شود.
+            رمز عبور تازه «{coach?.fullName}» را تعیین کنید و آن را به خودش اعلام کنید؛ رمز قبلی بی اعتبار می شود
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">

@@ -62,7 +62,7 @@ export function TrendChart({ points }: { points: TrendPoint[] }) {
   return (
     <div ref={containerRef} className="w-full" dir="ltr">
       {width > 0 ? (
-        <svg width={width} height={HEIGHT} role="img" aria-label="نمودار روند ثبت‌نام‌ها" className="overflow-visible">
+        <svg width={width} height={HEIGHT} role="img" aria-label="نمودار روند ثبت نام ها" className="overflow-visible">
           {gridValues.map((value) => (
             <g key={value}>
               <line x1={PAD_X} x2={width - PAD_X} y1={yOf(value)} y2={yOf(value)} className="stroke-border" strokeWidth={1} />

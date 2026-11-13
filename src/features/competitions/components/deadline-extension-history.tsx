@@ -23,9 +23,9 @@ export function DeadlineExtensionHistory({ competitionId, open }: { competitionI
           <Skeleton className="h-16 w-full" />
         </div>
       ) : error ? (
-        <ErrorBanner message="دریافت تاریخچه تمدید انجام نشد." onRetry={() => mutate()} />
+        <ErrorBanner message="دریافت تاریخچه تمدید انجام نشد" onRetry={() => mutate()} />
       ) : extensions.length === 0 ? (
-        <p className="text-subtle text-muted-foreground">هنوز تمدیدی برای این مسابقه ثبت نشده است.</p>
+        <p className="text-subtle text-muted-foreground">هنوز تمدیدی برای این مسابقه ثبت نشده است</p>
       ) : (
         <ol className="flex flex-col gap-2">
           {extensions.map((extension) => (

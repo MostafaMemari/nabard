@@ -12,12 +12,12 @@ export function useRefundCompletion(onCompleted: () => void) {
     setWorking(true);
     try {
       await completeRefund(id, note);
-      toast.success("بازپرداخت ثبت شد.");
+      toast.success("بازپرداخت ثبت شد");
       onCompleted();
 
       return true;
     } catch (caught) {
-      toast.error(caught instanceof ApiError ? caught.message : "انجام نشد. دوباره تلاش کنید.");
+      toast.error(caught instanceof ApiError ? caught.message : "انجام نشد. دوباره تلاش کنید");
 
       return false;
     } finally {

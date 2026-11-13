@@ -50,15 +50,15 @@ export type ParticipantRecord = {
 const DEFAULT_PAGE_SIZE = 100;
 
 function forbidden(): AppError {
-  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
+  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید");
 }
 
 function registrationNotFound(): AppError {
-  return new AppError(404, "NOT_FOUND", "ثبت نام یافت نشد.");
+  return new AppError(404, "NOT_FOUND", "ثبت نام یافت نشد");
 }
 
 function competitionNotFound(): AppError {
-  return new AppError(404, "NOT_FOUND", "مسابقه یافت نشد.");
+  return new AppError(404, "NOT_FOUND", "مسابقه یافت نشد");
 }
 
 function provinceOf(identity: UserIdentityRecord): Province {
@@ -69,7 +69,7 @@ function provinceOf(identity: UserIdentityRecord): Province {
 
 async function requireActiveUser(repo: RegistrationRepository, user: CurrentUser): Promise<UserIdentityRecord> {
   const record = await repo.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (!record.isActive || record.role !== user.role) throw forbidden();
 
   return record;
@@ -206,20 +206,20 @@ export async function getRegistrationDetail(repo: RegistrationRepository, user: 
 
 function assertRegistrationWindow(competition: CompetitionRegistrationRow, now: Date): void {
   if (competition.status !== "PUBLISHED") {
-    throw new AppError(409, "CONFLICT", "ثبت نام در این مسابقه فعال نیست.");
+    throw new AppError(409, "CONFLICT", "ثبت نام در این مسابقه فعال نیست");
   }
 
   if (now.getTime() < competition.createdAt.getTime()) {
-    throw new AppError(409, "CONFLICT", "زمان ثبت نام این مسابقه هنوز آغاز نشده است.");
+    throw new AppError(409, "CONFLICT", "زمان ثبت نام این مسابقه هنوز آغاز نشده است");
   }
 
   if (now.getTime() > competition.registrationDeadline.getTime()) {
-    throw new AppError(409, "CONFLICT", "مهلت ثبت نام این مسابقه به پایان رسیده است.");
+    throw new AppError(409, "CONFLICT", "مهلت ثبت نام این مسابقه به پایان رسیده است");
   }
 }
 
-const DUPLICATE_REASON = "این هنرجو قبلا در این مسابقه ثبت نام شده است.";
-const REJECTED_NOT_REOPENED_REASON = "ثبت نام قبلی این هنرجو رد شده و مهلت جدیدی برای ثبت نام مجدد او باز نشده است.";
+const DUPLICATE_REASON = "این هنرجو قبلا در این مسابقه ثبت نام شده است";
+const REJECTED_NOT_REOPENED_REASON = "ثبت نام قبلی این هنرجو رد شده و مهلت جدیدی برای ثبت نام مجدد او باز نشده است";
 
 function registrationProblems(
   students: RegistrationStudentRow[],
@@ -256,7 +256,7 @@ export async function createRegistrations(
   const identity = await requireActiveUser(repo, user);
   if (identity.role !== "COACH") throw forbidden();
   if (identity.gender === null) {
-    throw new AppError(403, "FORBIDDEN", "جنسیت شما ثبت نشده است؛ با ادمین استان تماس بگیرید.");
+    throw new AppError(403, "FORBIDDEN", "جنسیت شما ثبت نشده است؛ با ادمین استان تماس بگیرید");
   }
 
   const competition = await repo.findCompetitionById(competitionId);
@@ -265,7 +265,7 @@ export async function createRegistrations(
   }
 
   if (competition.level === "COUNTY" && !competition.countyIds.includes(identity.countyId ?? "")) {
-    throw new AppError(403, "FORBIDDEN", "ثبت نام در این مسابقه فقط برای مربیان شهرستان های برگزار کننده امکان پذیر است.");
+    throw new AppError(403, "FORBIDDEN", "ثبت نام در این مسابقه فقط برای مربیان شهرستان های برگزار کننده امکان پذیر است");
   }
 
   assertRegistrationWindow(competition, new Date());
@@ -275,12 +275,12 @@ export async function createRegistrations(
   const uniqueIds = [...new Set(input.studentIds)];
   const students = await repo.findCoachStudentsByIds(user.id, uniqueIds);
   if (students.length !== uniqueIds.length) {
-    throw new AppError(403, "FORBIDDEN", "فقط می توانید برای هنرجوهای خودتان ثبت نام کنید.");
+    throw new AppError(403, "FORBIDDEN", "فقط می توانید برای هنرجوهای خودتان ثبت نام کنید");
   }
 
   const ageCategory = await repo.findAgeCategoryById(competition.ageCategoryId);
   if (!ageCategory) {
-    throw new AppError(409, "CONFLICT", "رده سنی این مسابقه معتبر نیست.");
+    throw new AppError(409, "CONFLICT", "رده سنی این مسابقه معتبر نیست");
   }
 
   const [belts, weightClasses, activeIds, rejections] = await Promise.all([
@@ -294,12 +294,12 @@ export async function createRegistrations(
 
   const problems = registrationProblems(students, activeIds, rejections, extension);
   if (problems.length > 0) {
-    throw new AppError(409, "CONFLICT", "برای برخی از هنرجوهای انتخاب شده امکان ثبت نام در این مسابقه نیست.", problems);
+    throw new AppError(409, "CONFLICT", "برای برخی از هنرجوهای انتخاب شده امکان ثبت نام در این مسابقه نیست", problems);
   }
 
   const eligibilityCompetition = toEligibilityCompetition(competition, belts, ageCategory, weightClasses);
   if (!eligibilityCompetition) {
-    throw new AppError(409, "CONFLICT", "رده سنی این مسابقه معتبر نیست.");
+    throw new AppError(409, "CONFLICT", "رده سنی این مسابقه معتبر نیست");
   }
 
   const results = students.map((student) => ({
@@ -315,7 +315,7 @@ export async function createRegistrations(
       reason: result.eligibility.eligible ? "" : result.eligibility.reason,
     }));
 
-    throw new AppError(400, "VALIDATION_ERROR", "برخی از هنرجوهای انتخاب شده واجد شرایط ثبت نام در این مسابقه نیستند.", problems);
+    throw new AppError(400, "VALIDATION_ERROR", "برخی از هنرجوهای انتخاب شده واجد شرایط ثبت نام در این مسابقه نیستند", problems);
   }
 
   const studentsToRegister = results.map((result) => {
@@ -404,9 +404,9 @@ async function transitionRegistration(
   if (result === null) throw registrationNotFound();
   if (result.kind === "updated") return toRegistrationRecord(result.row);
   if (result.reason === "REVIEWED") {
-    throw new AppError(409, "CONFLICT", "این ثبت نام قبلا بررسی شده است.");
+    throw new AppError(409, "CONFLICT", "این ثبت نام قبلا بررسی شده است");
   }
-  throw new AppError(409, "CONFLICT", "برای بررسی ثبت نام، ابتدا رسید پرداخت باید تأیید شود.");
+  throw new AppError(409, "CONFLICT", "برای بررسی ثبت نام، ابتدا رسید پرداخت باید تأیید شود");
 }
 
 export async function approveRegistration(repo: RegistrationRepository, user: CurrentUser, id: string): Promise<RegistrationRecord> {

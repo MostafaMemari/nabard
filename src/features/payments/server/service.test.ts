@@ -27,7 +27,7 @@ const paymentRow: PaymentWithScope = {
   competitionDeadline: new Date("2026-11-20T20:30:00.000Z"),
 };
 
-const rejectedPayment: PaymentWithScope = { ...paymentRow, id: "pay-8", status: "REJECTED", note: "رسید ناخوانا است." };
+const rejectedPayment: PaymentWithScope = { ...paymentRow, id: "pay-8", status: "REJECTED", note: "رسید ناخوانا است" };
 
 const PNG_BYTES = new Uint8Array([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 13]);
 
@@ -207,11 +207,11 @@ describe("rejectPayment", () => {
       findUserById: vi.fn().mockResolvedValue(adminRecord),
       transitionPaymentFromPending: vi.fn().mockResolvedValue(rejectedPayment),
     });
-    const record = await rejectPayment(repo, admin, "pay-8", "رسید ناخوانا است.");
+    const record = await rejectPayment(repo, admin, "pay-8", "رسید ناخوانا است");
 
-    expect(repo.transitionPaymentFromPending).toHaveBeenCalledWith("pay-8", { status: "REJECTED", note: "رسید ناخوانا است." });
+    expect(repo.transitionPaymentFromPending).toHaveBeenCalledWith("pay-8", { status: "REJECTED", note: "رسید ناخوانا است" });
     expect(record.status).toBe("REJECTED");
-    expect(record.note).toBe("رسید ناخوانا است.");
+    expect(record.note).toBe("رسید ناخوانا است");
   });
 
   it("blocks rejecting a confirmed payment", async () => {

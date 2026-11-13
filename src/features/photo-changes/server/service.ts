@@ -12,15 +12,15 @@ import type { DecidePhotoChangeInput, PhotoChangeRepository, PhotoChangeRow, Pho
 const DEFAULT_PAGE_SIZE = 100;
 
 function forbidden(): AppError {
-  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
+  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید");
 }
 
 function requestNotFound(): AppError {
-  return new AppError(404, "NOT_FOUND", "درخواست تغییر عکس یافت نشد.");
+  return new AppError(404, "NOT_FOUND", "درخواست تغییر عکس یافت نشد");
 }
 
 function studentNotFound(): AppError {
-  return new AppError(404, "NOT_FOUND", "هنرجو یافت نشد.");
+  return new AppError(404, "NOT_FOUND", "هنرجو یافت نشد");
 }
 
 function provinceOf(identity: UserIdentityRecord): Province {
@@ -31,14 +31,14 @@ function provinceOf(identity: UserIdentityRecord): Province {
 
 async function requireActiveUser(repo: PhotoChangeRepository, user: CurrentUser): Promise<UserIdentityRecord> {
   const record = await repo.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (!record.isActive || record.role !== user.role) throw forbidden();
 
   return record;
 }
 
 function pendingDuplicate(): AppError {
-  return new AppError(409, "CONFLICT", "یک درخواست تغییر عکس در انتظار بررسی برای این هنرجو وجود دارد.");
+  return new AppError(409, "CONFLICT", "یک درخواست تغییر عکس در انتظار بررسی برای این هنرجو وجود دارد");
 }
 
 // Coach creates a photo change request for their own student: the uploaded
@@ -128,10 +128,10 @@ export async function readPhotoChangeFile(
 
   // The request row stays as history after its photo was purged from storage
   // (rejection or a later approval replacing it).
-  if (request.fileId === null) throw new AppError(404, "NOT_FOUND", "فایل تصویر یافت نشد.");
+  if (request.fileId === null) throw new AppError(404, "NOT_FOUND", "فایل تصویر یافت نشد");
 
   const file = await storage.get(request.fileId);
-  if (!file) throw new AppError(404, "NOT_FOUND", "فایل تصویر یافت نشد.");
+  if (!file) throw new AppError(404, "NOT_FOUND", "فایل تصویر یافت نشد");
 
   return { stream: file.stream, mime: file.mime, size: file.size };
 }
@@ -151,7 +151,7 @@ async function decidePhotoChange(
   if (!current || current.coachProvince !== provinceOf(identity)) throw requestNotFound();
 
   const result = await repo.decidePhotoChangeFromPending(id, input);
-  if (!result) throw new AppError(409, "CONFLICT", "این درخواست قبلا بررسی شده است.");
+  if (!result) throw new AppError(409, "CONFLICT", "این درخواست قبلا بررسی شده است");
 
   if (input.status === "APPROVED" && result.replacedFileId) {
     await deleteStorageFileQuietly(storage, result.replacedFileId);

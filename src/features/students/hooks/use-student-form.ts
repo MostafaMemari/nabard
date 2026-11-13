@@ -28,10 +28,10 @@ export function useStudentForm() {
 
     try {
       await createStudent(input);
-      toast.success("درخواست ثبت هنرجو ثبت شد و برای بررسی به ادمین استان ارسال شد.");
+      toast.success("درخواست ثبت هنرجو ثبت شد و برای بررسی به ادمین استان ارسال شد");
       router.push("/coach/students");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید");
     }
   }
 

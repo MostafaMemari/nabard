@@ -38,7 +38,7 @@ export function StudentProfileHeader({ student }: { student: StudentDetail }) {
 
       <p className="flex items-start gap-2 rounded-lg border border-primary/20 bg-primary-subtle px-3 py-2.5 text-subtle text-primary">
         <LockIcon aria-hidden className="mt-0.5 size-4 shrink-0" />
-        اطلاعات این پروفایل پس از ثبت قابل ویرایش نیست؛ کمربند را ادمین استان ثبت می کند.
+        اطلاعات این پروفایل پس از ثبت قابل ویرایش نیست؛ کمربند را ادمین استان ثبت می کند
       </p>
     </SectionCard>
   );

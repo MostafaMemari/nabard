@@ -17,7 +17,7 @@ export type LoginThrottle = { repo: LoginThrottleRepository; keys: string[] };
 const DUMMY_HASH = "$2b$10$PNXdhH9FOvtoM3Ehi3KPoOFNJmVH1NLt70Bfc6gA5Xm8UmnQ1b6Ly";
 
 function invalidCredentials(): AppError {
-  return new AppError(401, "INVALID_CREDENTIALS", "شماره همراه یا رمز عبور اشتباه است.");
+  return new AppError(401, "INVALID_CREDENTIALS", "شماره همراه یا رمز عبور اشتباه است");
 }
 
 function toAuthUser(user: UserRecord, photoUrl: string | null): AuthUser {
@@ -68,7 +68,7 @@ export async function login(
   }
 
   if (!user.isActive) {
-    throw new AppError(403, "USER_INACTIVE", "حساب کاربری شما غیرفعال است. با مدیر استان تماس بگیرید.");
+    throw new AppError(403, "USER_INACTIVE", "حساب کاربری شما غیرفعال است. با مدیر استان تماس بگیرید");
   }
 
   if (throttle) await throttle.repo.clearLoginFailures(throttle.keys);
@@ -78,9 +78,9 @@ export async function login(
 
 export async function getProfile(users: UserRepository, user: CurrentUser, storage: Storage): Promise<AuthUser> {
   const record = await users.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (!record.isActive) {
-    throw new AppError(403, "USER_INACTIVE", "حساب کاربری شما غیرفعال است. با مدیر استان تماس بگیرید.");
+    throw new AppError(403, "USER_INACTIVE", "حساب کاربری شما غیرفعال است. با مدیر استان تماس بگیرید");
   }
   return toAuthUser(record, await coachPhotoUrl(storage, record));
 }
@@ -91,10 +91,10 @@ export async function changePassword(
   input: { currentPassword: string; newPassword: string },
 ): Promise<null> {
   const record = await users.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
 
   const matches = await compare(input.currentPassword, record.passwordHash);
-  if (!matches) throw new AppError(400, "INVALID_PASSWORD", "رمز عبور فعلی اشتباه است.");
+  if (!matches) throw new AppError(400, "INVALID_PASSWORD", "رمز عبور فعلی اشتباه است");
 
   await users.updatePassword(user.id, await hash(input.newPassword, 10));
 

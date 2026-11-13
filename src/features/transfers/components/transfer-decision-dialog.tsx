@@ -65,13 +65,13 @@ export function TransferDecisionDialog({
           <DialogTitle>{approving ? "تأیید انتقال هنرجو" : "رد درخواست انتقال"}</DialogTitle>
           <DialogDescription>
             {approving
-              ? `هنرجو «${request?.studentName ?? ""}» از «${request?.fromCoachName ?? ""}» به «${request?.toCoachName ?? ""}» منتقل می شود.`
-              : `درخواست انتقال هنرجو «${request?.studentName ?? ""}» رد می شود.`}
+              ? `هنرجو «${request?.studentName ?? ""}» از «${request?.fromCoachName ?? ""}» به «${request?.toCoachName ?? ""}» منتقل می شود`
+              : `درخواست انتقال هنرجو «${request?.studentName ?? ""}» رد می شود`}
           </DialogDescription>
         </DialogHeader>
         {approving ? (
           <p className="text-subtle rounded-lg bg-primary-subtle px-3 py-2 text-primary">
-            فقط مربی هنرجو تغییر می کند؛ ثبت نام ها، پرداخت ها و بازپرداخت های قبلی با مربی قبلی می مانند.
+            فقط مربی هنرجو تغییر می کند؛ ثبت نام ها، پرداخت ها و بازپرداخت های قبلی با مربی قبلی می مانند
           </p>
         ) : (
           <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
@@ -80,7 +80,7 @@ export function TransferDecisionDialog({
               <Textarea
                 id="transfer-note"
                 rows={3}
-                placeholder="مثلاً انتقال در این بازه زمانی امکان پذیر نیست."
+                placeholder="مثلاً انتقال در این بازه زمانی امکان پذیر نیست"
                 {...form.register("note")}
               />
               {form.formState.errors.note ? <FieldError errors={[form.formState.errors.note]} /> : null}

@@ -20,11 +20,11 @@ export function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; on
   async function submit(values: ChangePasswordInput) {
     try {
       await changePassword(values);
-      toast.success("رمز عبور تغییر کرد.");
+      toast.success("رمز عبور تغییر کرد");
       form.reset(emptyForm);
       onOpenChange(false);
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "تغییر رمز عبور انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "تغییر رمز عبور انجام نشد. دوباره تلاش کنید");
     }
   }
 
@@ -39,7 +39,7 @@ export function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; on
       <DialogContent>
         <DialogHeader>
           <DialogTitle>تغییر رمز عبور</DialogTitle>
-          <DialogDescription>برای ادامه رمز عبور فعلی و رمز تازه را وارد کنید.</DialogDescription>
+          <DialogDescription>برای ادامه رمز عبور فعلی و رمز تازه را وارد کنید</DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <ControlledTextField

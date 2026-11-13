@@ -35,10 +35,10 @@ export function EventDaySection({ competitionId }: { competitionId: string }) {
   }
 
   const onWeigh = (id: string, weightKg: number) =>
-    run(id, () => saveWeighIn(id, weightKg), "وزن ثبت شد.", "ثبت وزن انجام نشد. دوباره تلاش کنید.");
+    run(id, () => saveWeighIn(id, weightKg), "وزن ثبت شد", "ثبت وزن انجام نشد. دوباره تلاش کنید");
 
   const onCheckIn = (id: string, checkedIn: boolean) =>
-    run(id, () => saveCheckIn(id, checkedIn), checkedIn ? "حضور ثبت شد." : "حضور حذف شد.", "ثبت حضور انجام نشد. دوباره تلاش کنید.");
+    run(id, () => saveCheckIn(id, checkedIn), checkedIn ? "حضور ثبت شد" : "حضور حذف شد", "ثبت حضور انجام نشد. دوباره تلاش کنید");
 
   return (
     <section className="flex flex-col gap-4 rounded-xl border border-border bg-card p-4 shadow-card md:p-6">
@@ -60,11 +60,11 @@ export function EventDaySection({ competitionId }: { competitionId: string }) {
       </div>
 
       {error ? (
-        <ErrorBanner message="دریافت اطلاعات روز مسابقه ناموفق بود." onRetry={reload} />
+        <ErrorBanner message="دریافت اطلاعات روز مسابقه ناموفق بود" onRetry={reload} />
       ) : isLoading ? (
         <SkeletonRows rows={4} className="h-12" />
       ) : !eventDay || eventDay.rows.length === 0 ? (
-        <EmptyState icon={ScaleIcon} title="هنوز شرکت کننده تأیید شده ای برای این مسابقه وجود ندارد." tone="primary" />
+        <EmptyState icon={ScaleIcon} title="هنوز شرکت کننده تأیید شده ای برای این مسابقه وجود ندارد" tone="primary" />
       ) : (
         <>
           <EventDaySummary summary={eventDay.summary} kyorugi={kyorugi === true} />
@@ -80,7 +80,7 @@ export function EventDaySection({ competitionId }: { competitionId: string }) {
           </div>
 
           {view.filtered.length === 0 ? (
-            <p className="py-6 text-center text-sm text-muted-foreground">نتیجه ای یافت نشد.</p>
+            <p className="py-6 text-center text-sm text-muted-foreground">نتیجه ای یافت نشد</p>
           ) : (
             <>
               <div className="hidden md:block">

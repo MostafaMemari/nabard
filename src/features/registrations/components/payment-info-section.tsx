@@ -23,7 +23,7 @@ export function PaymentInfoSection({
   async function copyCardNumber() {
     await navigator.clipboard.writeText(cardNumber);
     setCopied(true);
-    toast.success("شماره کارت کپی شد.");
+    toast.success("شماره کارت کپی شد");
     setTimeout(() => setCopied(false), 2000);
   }
 

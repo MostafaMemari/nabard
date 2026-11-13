@@ -4,19 +4,19 @@ import { z } from "zod";
 import { normalizeDigits } from "@/lib/format";
 
 export const beltFormSchema = z.object({
-  label: z.string().trim().min(2, "نام کمربند را وارد کنید.").max(60, "نام کمربند حداکثر ۶۰ نویسه است."),
+  label: z.string().trim().min(2, "نام کمربند را وارد کنید").max(60, "نام کمربند حداکثر ۶۰ نویسه است"),
   level: z
     .string()
     .transform(normalizeDigits)
     .pipe(
       z
         .string()
-        .regex(/^\d+$/, "سطح کمربند را وارد کنید.")
-        .refine((value) => Number(value) >= 1 && Number(value) <= 99, "سطح کمربند بین ۱ تا ۹۹ است."),
+        .regex(/^\d+$/, "سطح کمربند را وارد کنید")
+        .refine((value) => Number(value) >= 1 && Number(value) <= 99, "سطح کمربند بین ۱ تا ۹۹ است"),
     ),
-  rankType: z.enum(["COLOR", "POOM", "DAN"], { message: "نوع کمربند را انتخاب کنید." }),
-  color: z.string().max(30, "نام رنگ حداکثر ۳۰ نویسه است."),
-  colorHex: z.string().regex(/^#[0-9a-fA-F]{6}$/, "کد رنگ معتبر نیست."),
+  rankType: z.enum(["COLOR", "POOM", "DAN"], { message: "نوع کمربند را انتخاب کنید" }),
+  color: z.string().max(30, "نام رنگ حداکثر ۳۰ نویسه است"),
+  colorHex: z.string().regex(/^#[0-9a-fA-F]{6}$/, "کد رنگ معتبر نیست"),
 });
 
 export type BeltFormValues = {
@@ -33,12 +33,12 @@ function isIsoDate(value: string): boolean {
 
 export const ageCategoryFormSchema = z
   .object({
-    label: z.string().trim().min(2, "نام رده سنی را وارد کنید.").max(60, "نام رده سنی حداکثر ۶۰ نویسه است."),
-    startDate: z.string().min(1, "تاریخ شروع را انتخاب کنید.").refine(isIsoDate, "تاریخ شروع معتبر نیست."),
-    endDate: z.string().min(1, "تاریخ پایان را انتخاب کنید.").refine(isIsoDate, "تاریخ پایان معتبر نیست."),
+    label: z.string().trim().min(2, "نام رده سنی را وارد کنید").max(60, "نام رده سنی حداکثر ۶۰ نویسه است"),
+    startDate: z.string().min(1, "تاریخ شروع را انتخاب کنید").refine(isIsoDate, "تاریخ شروع معتبر نیست"),
+    endDate: z.string().min(1, "تاریخ پایان را انتخاب کنید").refine(isIsoDate, "تاریخ پایان معتبر نیست"),
   })
   .refine((value) => new Date(value.endDate).getTime() > new Date(value.startDate).getTime(), {
-    message: "تاریخ پایان باید بعد از تاریخ شروع باشد.",
+    message: "تاریخ پایان باید بعد از تاریخ شروع باشد",
     path: ["endDate"],
   });
 

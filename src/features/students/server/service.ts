@@ -56,11 +56,11 @@ function documentsWithUrls(documents: StudentDocumentRecord[], urls: Map<string,
 }
 
 export function forbidden(): AppError {
-  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
+  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید");
 }
 
 function studentNotFound(): AppError {
-  return new AppError(404, "NOT_FOUND", "هنرجو یافت نشد.");
+  return new AppError(404, "NOT_FOUND", "هنرجو یافت نشد");
 }
 
 export function provinceOf(identity: UserIdentityRecord): Province {
@@ -70,20 +70,20 @@ export function provinceOf(identity: UserIdentityRecord): Province {
 }
 
 function duplicateNationalCode(): AppError {
-  return new AppError(409, "CONFLICT", "این کد ملی قبلاً ثبت شده است.");
+  return new AppError(409, "CONFLICT", "این کد ملی قبلاً ثبت شده است");
 }
 
 function invalidBelt(): AppError {
-  return new AppError(400, "VALIDATION_ERROR", "کمربند انتخاب شده معتبر نیست.");
+  return new AppError(400, "VALIDATION_ERROR", "کمربند انتخاب شده معتبر نیست");
 }
 
 export function coachGenderMissing(): AppError {
-  return new AppError(400, "VALIDATION_ERROR", "جنسیت شما ثبت نشده است؛ با ادمین استان تماس بگیرید.");
+  return new AppError(400, "VALIDATION_ERROR", "جنسیت شما ثبت نشده است؛ با ادمین استان تماس بگیرید");
 }
 
 export async function requireActiveUser(repo: StudentRepository, user: CurrentUser): Promise<UserIdentityRecord> {
   const record = await repo.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (!record.isActive || record.role !== user.role) throw forbidden();
 
   return record;
@@ -220,23 +220,23 @@ export async function deleteStudent(repo: StudentRepository, storage: Storage, u
 
   const registrations = await repo.countRegistrations(id);
   if (registrations > 0) {
-    throw new AppError(409, "CONFLICT", "این هنرجو در مسابقات ثبت نام شده است و قابل حذف نیست.");
+    throw new AppError(409, "CONFLICT", "این هنرجو در مسابقات ثبت نام شده است و قابل حذف نیست");
   }
 
   // Transfer rows are history (including rejected ones) and are never deleted.
   const transfers = await repo.countStudentTransfers(id);
   if (transfers > 0) {
-    throw new AppError(409, "CONFLICT", "این هنرجو سابقه درخواست انتقال دارد و قابل حذف نیست.");
+    throw new AppError(409, "CONFLICT", "این هنرجو سابقه درخواست انتقال دارد و قابل حذف نیست");
   }
 
   const photoChanges = await repo.countStudentPhotoChangeRequests(id);
   if (photoChanges > 0) {
-    throw new AppError(409, "CONFLICT", "این هنرجو سابقه درخواست تغییر عکس دارد و قابل حذف نیست.");
+    throw new AppError(409, "CONFLICT", "این هنرجو سابقه درخواست تغییر عکس دارد و قابل حذف نیست");
   }
 
   const provinceChanges = await repo.countStudentProvinceChangeRequests(id);
   if (provinceChanges > 0) {
-    throw new AppError(409, "CONFLICT", "این هنرجو سابقه درخواست تغییر استان دارد و قابل حذف نیست.");
+    throw new AppError(409, "CONFLICT", "این هنرجو سابقه درخواست تغییر استان دارد و قابل حذف نیست");
   }
 
   const fileIds = await repo.deleteStudent(id);
@@ -248,7 +248,7 @@ export async function deleteStudent(repo: StudentRepository, storage: Storage, u
 }
 
 function documentNotFound(): AppError {
-  return new AppError(404, "NOT_FOUND", "مدرک یافت نشد.");
+  return new AppError(404, "NOT_FOUND", "مدرک یافت نشد");
 }
 
 export async function readStudentDocument(
@@ -269,10 +269,10 @@ export async function readStudentDocument(
   if (!inScope) throw studentNotFound();
 
   const document = await repo.findStudentDocument(studentId, type);
-  if (!document) throw new AppError(404, "NOT_FOUND", "مدرکی از این نوع بارگذاری نشده است.");
+  if (!document) throw new AppError(404, "NOT_FOUND", "مدرکی از این نوع بارگذاری نشده است");
 
   const file = await storage.get(document.fileId);
-  if (!file) throw new AppError(404, "NOT_FOUND", "فایل مدرک یافت نشد.");
+  if (!file) throw new AppError(404, "NOT_FOUND", "فایل مدرک یافت نشد");
 
   return { stream: file.stream, mime: file.mime, size: file.size };
 }
@@ -328,7 +328,7 @@ async function reviewProfile(
   if (!student || student.coachProvince !== provinceOf(identity)) throw studentNotFound();
 
   const updated = await repo.updateProfileStatusFromPendingOrRejected(id, { status, note, reviewedById: user.id });
-  if (!updated) throw new AppError(409, "CONFLICT", "این پروفایل قبلا بررسی شده است.");
+  if (!updated) throw new AppError(409, "CONFLICT", "این پروفایل قبلا بررسی شده است");
 
   return updated;
 }

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { provinceValues } from "@/lib/provinces";
 
-const countyNameField = z.string().trim().min(2, "نام شهرستان را وارد کنید.").max(80, "نام شهرستان حداکثر ۸۰ نویسه است.");
+const countyNameField = z.string().trim().min(2, "نام شهرستان را وارد کنید").max(80, "نام شهرستان حداکثر ۸۰ نویسه است");
 
 export const countyListQuerySchema = z.object({
   province: z.enum(provinceValues).optional(),

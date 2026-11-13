@@ -12,14 +12,14 @@ import type { AgeCategoryRecord } from "./repository";
 export type BaseDataAdminRepository = typeof repository;
 
 function forbidden(): AppError {
-  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
+  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید");
 }
 
 async function requireActiveSuperAdmin(repo: BaseDataAdminRepository, user: CurrentUser): Promise<void> {
   if (user.role !== "SUPER_ADMIN") throw forbidden();
 
   const record = await repo.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (!record.isActive || record.role !== user.role) throw forbidden();
 }
 
@@ -51,15 +51,15 @@ export async function createBelt(
   await requireActiveSuperAdmin(repo, user);
 
   if (await repo.findBeltByLabel(input.label)) {
-    throw conflict("کمربند دیگری با این نام وجود دارد.");
+    throw conflict("کمربند دیگری با این نام وجود دارد");
   }
   if (await repo.findBeltByLevel(input.level)) {
-    throw conflict("کمربند دیگری با این سطح وجود دارد.");
+    throw conflict("کمربند دیگری با این سطح وجود دارد");
   }
 
   const code = input.code ?? generatedCode("belt");
   if (await repo.findBeltByCode(code)) {
-    throw conflict("کمربند دیگری با این کد وجود دارد.");
+    throw conflict("کمربند دیگری با این کد وجود دارد");
   }
 
   const belt = await repo.createBelt({
@@ -93,13 +93,13 @@ export async function updateBelt(
   await requireActiveSuperAdmin(repo, user);
 
   const belt = await repo.findBeltById(id);
-  if (!belt) throw new AppError(404, "NOT_FOUND", "کمربند یافت نشد.");
+  if (!belt) throw new AppError(404, "NOT_FOUND", "کمربند یافت نشد");
 
   if (input.label !== undefined && input.label !== belt.label && (await repo.findBeltByLabel(input.label, id))) {
-    throw conflict("کمربند دیگری با این نام وجود دارد.");
+    throw conflict("کمربند دیگری با این نام وجود دارد");
   }
   if (input.level !== undefined && input.level !== belt.level && (await repo.findBeltByLevel(input.level, id))) {
-    throw conflict("کمربند دیگری با این سطح وجود دارد.");
+    throw conflict("کمربند دیگری با این سطح وجود دارد");
   }
 
   const updated = await repo.updateBelt(id, {
@@ -127,11 +127,11 @@ export async function deleteBelt(repo: BaseDataAdminRepository, audit: AuditRepo
   await requireActiveSuperAdmin(repo, user);
 
   const belt = await repo.findBeltById(id);
-  if (!belt) throw new AppError(404, "NOT_FOUND", "کمربند یافت نشد.");
+  if (!belt) throw new AppError(404, "NOT_FOUND", "کمربند یافت نشد");
 
   const [students, competitions] = await Promise.all([repo.countStudentsByBelt(id), repo.countCompetitionsByBelt(id)]);
   if (students > 0 || competitions > 0) {
-    throw conflict("این کمربند در پروفایل هنرجوها یا مسابقه ها استفاده شده است و قابل حذف نیست؛ می توانید آن را بایگانی کنید.");
+    throw conflict("این کمربند در پروفایل هنرجوها یا مسابقه ها استفاده شده است و قابل حذف نیست؛ می توانید آن را بایگانی کنید");
   }
 
   await repo.deleteBelt(id);
@@ -167,7 +167,7 @@ function birthYearsOf(range: { start: Date; end: Date }): { birthYearStart: numb
 async function assertNoOverlap(repo: BaseDataAdminRepository, range: { start: Date; end: Date }, excludeId?: string): Promise<void> {
   const overlapping = await repo.findOverlappingActiveCategory(range, excludeId);
   if (overlapping) {
-    throw new AppError(409, "CONFLICT", `بازه تاریخ با رده سنی فعال «${overlapping.label}» همپوشانی دارد.`, { field: "endDate" });
+    throw new AppError(409, "CONFLICT", `بازه تاریخ با رده سنی فعال «${overlapping.label}» همپوشانی دارد`, { field: "endDate" });
   }
 }
 
@@ -180,7 +180,7 @@ export async function createAgeCategory(
   await requireActiveSuperAdmin(repo, user);
 
   if (await repo.findAgeCategoryByLabel(input.label)) {
-    throw conflict("رده سنی دیگری با این نام وجود دارد.");
+    throw conflict("رده سنی دیگری با این نام وجود دارد");
   }
 
   const range = toRange(input.startDate, input.endDate);
@@ -188,7 +188,7 @@ export async function createAgeCategory(
 
   const code = input.code ?? generatedCode("age_category");
   if (await repo.findAgeCategoryByCode(code)) {
-    throw conflict("رده سنی دیگری با این کد وجود دارد.");
+    throw conflict("رده سنی دیگری با این کد وجود دارد");
   }
 
   const category = await repo.createAgeCategory({
@@ -220,10 +220,10 @@ export async function updateAgeCategory(
   await requireActiveSuperAdmin(repo, user);
 
   const category = await repo.findAgeCategoryById(id);
-  if (!category) throw new AppError(404, "NOT_FOUND", "رده سنی یافت نشد.");
+  if (!category) throw new AppError(404, "NOT_FOUND", "رده سنی یافت نشد");
 
   if (input.label !== undefined && input.label !== category.label && (await repo.findAgeCategoryByLabel(input.label, id))) {
-    throw conflict("رده سنی دیگری با این نام وجود دارد.");
+    throw conflict("رده سنی دیگری با این نام وجود دارد");
   }
 
   const range = toRange(input.startDate ?? category.startDate.toISOString(), input.endDate ?? category.endDate.toISOString());
@@ -273,14 +273,14 @@ export async function deleteAgeCategory(
   await requireActiveSuperAdmin(repo, user);
 
   const category = await repo.findAgeCategoryById(id);
-  if (!category) throw new AppError(404, "NOT_FOUND", "رده سنی یافت نشد.");
+  if (!category) throw new AppError(404, "NOT_FOUND", "رده سنی یافت نشد");
 
   const [competitions, registrations] = await Promise.all([
     repo.countCompetitionsByAgeCategory(id),
     repo.countRegistrationsByAgeCategory(id),
   ]);
   if (competitions > 0 || registrations > 0) {
-    throw conflict("این رده سنی در مسابقه ها یا ثبت نام ها استفاده شده است و قابل حذف نیست؛ می توانید آن را بایگانی کنید.");
+    throw conflict("این رده سنی در مسابقه ها یا ثبت نام ها استفاده شده است و قابل حذف نیست؛ می توانید آن را بایگانی کنید");
   }
 
   await repo.deleteAgeCategory(id);
@@ -321,11 +321,11 @@ export async function saveWeightClassSet(
   await requireActiveSuperAdmin(repo, user);
 
   const category = await repo.findAgeCategoryById(input.ageCategoryId);
-  if (!category) throw new AppError(404, "NOT_FOUND", "رده سنی یافت نشد.");
+  if (!category) throw new AppError(404, "NOT_FOUND", "رده سنی یافت نشد");
 
   const issues = validateWeightClassSet(input.rows);
   if (issues.length > 0) {
-    throw new AppError(400, "VALIDATION_ERROR", "رده های وزنی معتبر نیستند.", issues);
+    throw new AppError(400, "VALIDATION_ERROR", "رده های وزنی معتبر نیستند", issues);
   }
 
   const existing = await repo.findWeightClassSet(input.ageCategoryId, input.gender);
@@ -334,11 +334,11 @@ export async function saveWeightClassSet(
   const rows = sortWeightClassSetRows(input.rows);
   const inputIds = rows.flatMap((row) => (row.id === undefined ? [] : [row.id]));
   if (new Set(inputIds).size !== inputIds.length) {
-    throw new AppError(400, "VALIDATION_ERROR", "هر ردیف فقط یک بار می تواند ارسال شود.");
+    throw new AppError(400, "VALIDATION_ERROR", "هر ردیف فقط یک بار می تواند ارسال شود");
   }
   for (const id of inputIds) {
     if (!existingById.has(id)) {
-      throw new AppError(400, "VALIDATION_ERROR", "ردیف های ارسال شده با رده های وزنی فعلی همخوانی ندارند.");
+      throw new AppError(400, "VALIDATION_ERROR", "ردیف های ارسال شده با رده های وزنی فعلی همخوانی ندارند");
     }
   }
 

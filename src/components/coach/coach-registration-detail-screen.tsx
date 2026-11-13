@@ -21,7 +21,7 @@ export function CoachRegistrationDetailScreen({ registrationId }: { registration
   }
 
   if (error || !detail) {
-    return <ErrorBanner message="ثبت نامی با این شماره پیدا نشد." onRetry={() => void retry()} />;
+    return <ErrorBanner message="ثبت نامی با این شماره پیدا نشد" onRetry={() => void retry()} />;
   }
 
   const { registration, competition, payment, bundle } = detail;

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const completeRefundSchema = z.object({
-  note: z.string().trim().max(500, "یادداشت حداکثر ۵۰۰ کاراکتر است.").optional(),
+  note: z.string().trim().max(500, "یادداشت حداکثر ۵۰۰ کاراکتر است").optional(),
 });
 
 export type CompleteRefundValues = z.infer<typeof completeRefundSchema>;

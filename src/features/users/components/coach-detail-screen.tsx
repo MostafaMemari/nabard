@@ -38,7 +38,7 @@ export function CoachDetailScreen({ coachId }: { coachId: string }) {
   }
 
   if (error || !coach) {
-    return <ErrorBanner message="مربی یافت نشد." onRetry={() => mutate()} />;
+    return <ErrorBanner message="مربی یافت نشد" onRetry={() => mutate()} />;
   }
 
   const coachStudents = students.filter((student) => student.coachId === coachId);

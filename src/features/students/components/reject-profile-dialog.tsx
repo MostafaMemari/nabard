@@ -48,12 +48,12 @@ export function RejectProfileDialog({
       <DialogContent showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>رد پروفایل هنرجو</DialogTitle>
-          <DialogDescription>پروفایل «{studentName}» رد می شود و مربی باید آن را اصلاح کند.</DialogDescription>
+          <DialogDescription>پروفایل «{studentName}» رد می شود و مربی باید آن را اصلاح کند</DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <Field data-invalid={form.formState.errors.note ? "" : undefined}>
             <FieldLabel htmlFor="profile-reject-note">دلیل رد</FieldLabel>
-            <Textarea id="profile-reject-note" rows={3} placeholder="مثلاً عکس پرسنلی ناخوانا است." {...form.register("note")} />
+            <Textarea id="profile-reject-note" rows={3} placeholder="مثلاً عکس پرسنلی ناخوانا است" {...form.register("note")} />
             {form.formState.errors.note ? <FieldError errors={[form.formState.errors.note]} /> : null}
           </Field>
           <DialogFooter>

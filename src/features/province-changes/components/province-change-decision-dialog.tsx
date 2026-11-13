@@ -66,13 +66,13 @@ export function ProvinceChangeDecisionDialog({
           <DialogTitle>{approving ? "تأیید تغییر استان هنرجو" : "رد درخواست تغییر استان"}</DialogTitle>
           <DialogDescription>
             {approving
-              ? `هنرجو «${request?.studentName ?? ""}» از مربی «${request?.fromCoachName ?? ""}» به مربی «${request?.toCoachName ?? ""}» در استان ${request ? provinceLabels[request.toProvince] : ""} منتقل می شود.`
-              : `درخواست تغییر استان هنرجو «${request?.studentName ?? ""}» رد می شود.`}
+              ? `هنرجو «${request?.studentName ?? ""}» از مربی «${request?.fromCoachName ?? ""}» به مربی «${request?.toCoachName ?? ""}» در استان ${request ? provinceLabels[request.toProvince] : ""} منتقل می شود`
+              : `درخواست تغییر استان هنرجو «${request?.studentName ?? ""}» رد می شود`}
           </DialogDescription>
         </DialogHeader>
         {approving ? (
           <p className="text-subtle rounded-lg bg-primary-subtle px-3 py-2 text-primary">
-            با تأیید، هنرجو از فهرست مربی فعلی خارج و به مربی استان شما منتقل می شود؛ سابقه ثبت نام ها باقی می ماند.
+            با تأیید، هنرجو از فهرست مربی فعلی خارج و به مربی استان شما منتقل می شود؛ سابقه ثبت نام ها باقی می ماند
           </p>
         ) : (
           <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
@@ -81,7 +81,7 @@ export function ProvinceChangeDecisionDialog({
               <Textarea
                 id="province-change-note"
                 rows={3}
-                placeholder="مثلاً انتقال به استان شما در این بازه امکان پذیر نیست."
+                placeholder="مثلاً انتقال به استان شما در این بازه امکان پذیر نیست"
                 {...form.register("note")}
               />
               {form.formState.errors.note ? <FieldError errors={[form.formState.errors.note]} /> : null}

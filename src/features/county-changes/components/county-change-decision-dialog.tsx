@@ -65,13 +65,13 @@ export function CountyChangeDecisionDialog({
           <DialogTitle>{approving ? "تأیید درخواست" : "رد درخواست"}</DialogTitle>
           <DialogDescription>
             {approving
-              ? `شهرستان مربی «${request?.coachName ?? ""}» به «${request?.toCountyName ?? ""}» تغییر می کند.`
-              : `درخواست تغییر شهرستان مربی «${request?.coachName ?? ""}» رد می شود.`}
+              ? `شهرستان مربی «${request?.coachName ?? ""}» به «${request?.toCountyName ?? ""}» تغییر می کند`
+              : `درخواست تغییر شهرستان مربی «${request?.coachName ?? ""}» رد می شود`}
           </DialogDescription>
         </DialogHeader>
         {approving ? (
           <p className="text-subtle rounded-lg bg-primary-subtle px-3 py-2 text-primary">
-            ثبت نام ها و هنرجویان مربی بدون تغییر می مانند و فقط شهرستان او به روز می شود.
+            ثبت نام ها و هنرجویان مربی بدون تغییر می مانند و فقط شهرستان او به روز می شود
           </p>
         ) : (
           <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
@@ -80,7 +80,7 @@ export function CountyChangeDecisionDialog({
               <Textarea
                 id="county-change-note"
                 rows={3}
-                placeholder="مثلاً تغییر شهرستان در این بازه زمانی امکان پذیر نیست."
+                placeholder="مثلاً تغییر شهرستان در این بازه زمانی امکان پذیر نیست"
                 {...form.register("note")}
               />
               {form.formState.errors.note ? <FieldError errors={[form.formState.errors.note]} /> : null}

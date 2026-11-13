@@ -14,7 +14,7 @@ export function AdminHomeScreen() {
 
   return (
     <>
-      <PageHeader title="خانه" description="رسیدهای در انتظار بررسی و مسابقات پیش رو." />
+      <PageHeader title="خانه" description="رسیدهای در انتظار بررسی و مسابقات پیش رو" />
 
       <AdminSummaryCards summary={summary} isLoading={isLoading} />
 
@@ -26,7 +26,7 @@ export function AdminHomeScreen() {
           onRetry={() => void mutate()}
           isLoading={isLoading}
           isEmpty={(summary?.latestPendingPayments.length ?? 0) === 0}
-          empty={<EmptyState icon={ReceiptTextIcon} title="پرداختی برای بررسی وجود ندارد." />}
+          empty={<EmptyState icon={ReceiptTextIcon} title="پرداختی برای بررسی وجود ندارد" />}
         >
           {summary ? <AdminActionList payments={summary.latestPendingPayments} /> : null}
         </HomeListSection>
@@ -41,7 +41,7 @@ export function AdminHomeScreen() {
           empty={
             <EmptyState
               icon={TrophyIcon}
-              title="هنوز مسابقه ای ثبت نشده است."
+              title="هنوز مسابقه ای ثبت نشده است"
               action={
                 <Button size="sm" render={<Link href="/admin/competitions/new" />}>
                   <PlusIcon data-icon="inline-start" />

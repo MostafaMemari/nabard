@@ -43,7 +43,7 @@ export function CompetitionFormScreen({ competitionId }: { competitionId?: strin
   if (isEdit && (competitionError || missing)) {
     return (
       <FormContainer variant="standard" className="pt-8">
-        <ErrorBanner message="مسابقه یافت نشد." onRetry={() => void retryCompetition()} />
+        <ErrorBanner message="مسابقه یافت نشد" onRetry={() => void retryCompetition()} />
       </FormContainer>
     );
   }
@@ -53,9 +53,7 @@ export function CompetitionFormScreen({ competitionId }: { competitionId?: strin
       <form onSubmit={form.handleSubmit(submit)} className="flex flex-col gap-6" noValidate>
         <PageHeader
           title={isEdit ? "ویرایش مسابقه" : "مسابقه جدید"}
-          description={
-            isEdit ? "اطلاعات مسابقه را ویرایش کنید." : "اطلاعات مسابقه را کامل کنید؛ مسابقه ابتدا به صورت پیش نویس ذخیره می شود."
-          }
+          description={isEdit ? "اطلاعات مسابقه را ویرایش کنید" : "اطلاعات مسابقه را کامل کنید؛ مسابقه ابتدا به صورت پیش نویس ذخیره می شود"}
         />
 
         <BasicInfoSection control={form.control} />

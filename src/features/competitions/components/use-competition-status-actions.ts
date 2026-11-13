@@ -19,7 +19,7 @@ export function useCompetitionStatusActions({ competition, onChanged }: { compet
       await onChanged();
       close();
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : "انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof ApiError ? error.message : "انجام نشد. دوباره تلاش کنید");
       if (rethrow) {
         throw error;
       }
@@ -51,7 +51,7 @@ export function useCompetitionStatusActions({ competition, onChanged }: { compet
     extend: (input: ExtendCompetitionInput) =>
       run(
         () => extendCompetition(competition.id, input),
-        "مهلت ثبت نام تمدید شد.",
+        "مهلت ثبت نام تمدید شد",
         () => setPendingExtend(false),
         true,
       ),

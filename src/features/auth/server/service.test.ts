@@ -148,7 +148,7 @@ describe("changePassword", () => {
 
     expect(failure).toBeInstanceOf(AppError);
     expect(failure).toMatchObject({ status: 400, code: "INVALID_PASSWORD" });
-    expect(failure).toMatchObject({ message: "رمز عبور فعلی اشتباه است." });
+    expect(failure).toMatchObject({ message: "رمز عبور فعلی اشتباه است" });
     expect(repo.updatePassword).not.toHaveBeenCalled();
   });
 

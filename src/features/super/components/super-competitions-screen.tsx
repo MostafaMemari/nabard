@@ -90,7 +90,7 @@ export function SuperCompetitionsScreen() {
 
   return (
     <>
-      <PageHeader title="مسابقات" description="فهرست مسابقات همه استان ها؛ فقط قابل مشاهده است." />
+      <PageHeader title="مسابقات" description="فهرست مسابقات همه استان ها؛ فقط قابل مشاهده است" />
       <DataTable
         columns={columns}
         rows={rows}
@@ -100,7 +100,7 @@ export function SuperCompetitionsScreen() {
         onRetry={() => mutate()}
         renderCard={(row) => <SuperCompetitionCard row={row} />}
         emptyIcon={TrophyIcon}
-        emptyTitle="مسابقه ای یافت نشد."
+        emptyTitle="مسابقه ای یافت نشد"
         toolbar={
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <FilterTabs

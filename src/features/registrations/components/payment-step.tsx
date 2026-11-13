@@ -28,7 +28,7 @@ export function PaymentStep({
 
   function submit() {
     if (!file) {
-      setError("برای ثبت پرداخت، ابتدا تصویر رسید را بارگذاری کنید.");
+      setError("برای ثبت پرداخت، ابتدا تصویر رسید را بارگذاری کنید");
       return;
     }
 
@@ -37,7 +37,7 @@ export function PaymentStep({
 
   return (
     <div className="flex flex-col gap-6">
-      <FormSection title="اطلاعات پرداخت" description="مبلغ را به شماره کارت زیر واریز کنید.">
+      <FormSection title="اطلاعات پرداخت" description="مبلغ را به شماره کارت زیر واریز کنید">
         <PaymentInfoSection
           cardNumber={payeeCardNumber}
           cardHolder={payeeCardHolder}
@@ -45,7 +45,7 @@ export function PaymentStep({
           amountRials={amountRials}
         />
       </FormSection>
-      <FormSection title="رسید پرداخت" description="تصویر رسید کارت به کارت را بارگذاری کنید.">
+      <FormSection title="رسید پرداخت" description="تصویر رسید کارت به کارت را بارگذاری کنید">
         <ReceiptUploadField file={file} onChange={setFile} />
         {error ? (
           <p role="alert" className="text-subtle text-danger">

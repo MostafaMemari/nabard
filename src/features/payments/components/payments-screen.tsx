@@ -27,7 +27,7 @@ export function PaymentsScreen() {
 
   return (
     <>
-      <PageHeader title="بررسی پرداخت ها" description="بررسی و تأیید رسیدهای پرداخت مربیان." />
+      <PageHeader title="بررسی پرداخت ها" description="بررسی و تأیید رسیدهای پرداخت مربیان" />
 
       <DataTable
         columns={columns}
@@ -39,7 +39,7 @@ export function PaymentsScreen() {
         onRowClick={(row) => router.push(`/admin/payments/${row.id}`)}
         renderCard={(row) => <PaymentCard payment={row} />}
         emptyIcon={ReceiptTextIcon}
-        emptyTitle="پرداختی برای بررسی وجود ندارد."
+        emptyTitle="پرداختی برای بررسی وجود ندارد"
         toolbar={
           <ListToolbar
             tabs={paymentsTabs}

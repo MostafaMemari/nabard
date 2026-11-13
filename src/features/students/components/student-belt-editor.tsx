@@ -19,10 +19,10 @@ export function StudentBeltEditor({ student, belts, onSaved }: { student: Studen
 
     try {
       await updateStudentBelt(student.id, beltId);
-      toast.success("کمربند هنرجو ثبت شد.");
+      toast.success("کمربند هنرجو ثبت شد");
       await onSaved();
     } catch {
-      toast.error("ثبت کمربند انجام نشد. دوباره تلاش کنید.");
+      toast.error("ثبت کمربند انجام نشد. دوباره تلاش کنید");
     } finally {
       setWorking(false);
     }
@@ -31,7 +31,7 @@ export function StudentBeltEditor({ student, belts, onSaved }: { student: Studen
   return (
     <div className="flex flex-col gap-2 rounded-xl border border-border bg-card p-5 shadow-card">
       <span className="text-sm font-semibold">ثبت کمربند</span>
-      <p className="text-subtle text-muted-foreground">کمربند هنرجو فقط توسط ادمین استان تغییر می کند.</p>
+      <p className="text-subtle text-muted-foreground">کمربند هنرجو فقط توسط ادمین استان تغییر می کند</p>
       <Select value={beltId} onValueChange={(value) => setBeltId(value ?? student.beltId)}>
         <SelectTrigger aria-label="کمربند">
           <SelectValue />

@@ -40,14 +40,14 @@ export function PaymentStudentsSection({
     >
       {!canApprove ? (
         <p className="rounded-lg border border-border bg-muted/40 px-4 py-3 text-sm text-muted-foreground">
-          تأیید ثبت نام ها پس از تأیید رسید فعال می شود؛ رد کردن هر ثبت نام همیشه امکان پذیر است.
+          تأیید ثبت نام ها پس از تأیید رسید فعال می شود؛ رد کردن هر ثبت نام همیشه امکان پذیر است
         </p>
       ) : null}
 
       {isLoading ? (
         <SkeletonRows rows={3} />
       ) : registrations.length === 0 ? (
-        <p className="text-subtle text-muted-foreground">برای این رسید ثبت نامی وجود ندارد.</p>
+        <p className="text-subtle text-muted-foreground">برای این رسید ثبت نامی وجود ندارد</p>
       ) : (
         <>
           <div className="hidden md:block">

@@ -26,11 +26,11 @@ export function CoachStatusDialog({
     setWorking(true);
     try {
       await updateCoachStatus(coach.id, targetActive);
-      toast.success(targetActive ? "مربی فعال شد." : "مربی غیرفعال شد.");
+      toast.success(targetActive ? "مربی فعال شد" : "مربی غیرفعال شد");
       await onDone();
       onClose();
     } catch {
-      toast.error("انجام نشد. دوباره تلاش کنید.");
+      toast.error("انجام نشد. دوباره تلاش کنید");
     } finally {
       setWorking(false);
     }
@@ -47,8 +47,8 @@ export function CoachStatusDialog({
       title={targetActive ? "فعال سازی مربی" : "غیرفعال کردن مربی"}
       description={
         targetActive
-          ? `با فعال سازی، «${coach?.fullName}» می تواند دوباره وارد سامانه شود.`
-          : `با غیرفعال کردن حساب، «${coach?.fullName}» دیگر نمی تواند وارد سامانه شود. اطلاعات هنرجویان او حفظ می شود.`
+          ? `با فعال سازی، «${coach?.fullName}» می تواند دوباره وارد سامانه شود`
+          : `با غیرفعال کردن حساب، «${coach?.fullName}» دیگر نمی تواند وارد سامانه شود. اطلاعات هنرجویان او حفظ می شود`
       }
       confirmLabel={targetActive ? "فعال سازی" : "غیرفعال کردن"}
       destructive={targetActive === false}

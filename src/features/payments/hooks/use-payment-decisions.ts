@@ -20,15 +20,15 @@ export function usePaymentDecisions(paymentId: string) {
     try {
       if (action === "confirm") {
         await confirmPayment(paymentId);
-        toast.success("رسید تأیید شد.");
+        toast.success("رسید تأیید شد");
       } else {
         await rejectPayment(paymentId, note ?? "");
-        toast.success("رسید رد شد.");
+        toast.success("رسید رد شد");
       }
       await mutate();
       setRejectOpen(false);
     } catch (caught) {
-      toast.error(caught instanceof ApiError ? caught.message : "انجام نشد. دوباره تلاش کنید.");
+      toast.error(caught instanceof ApiError ? caught.message : "انجام نشد. دوباره تلاش کنید");
     } finally {
       setWorking(false);
     }
@@ -39,14 +39,14 @@ export function usePaymentDecisions(paymentId: string) {
     try {
       if (action === "APPROVED") {
         await approveRegistration(registrationId);
-        toast.success("ثبت نام تأیید شد.");
+        toast.success("ثبت نام تأیید شد");
       } else {
         await rejectRegistration(registrationId, note ?? "");
-        toast.success("ثبت نام رد شد.");
+        toast.success("ثبت نام رد شد");
       }
       await mutateRegistrations();
     } catch (caught) {
-      toast.error(caught instanceof ApiError ? caught.message : "انجام نشد. دوباره تلاش کنید.");
+      toast.error(caught instanceof ApiError ? caught.message : "انجام نشد. دوباره تلاش کنید");
     } finally {
       setBusyId(null);
     }

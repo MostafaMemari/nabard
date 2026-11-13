@@ -13,7 +13,7 @@ export function useLogout() {
     try {
       await logout();
     } catch {
-      toast.error("خروج انجام نشد. دوباره تلاش کنید.");
+      toast.error("خروج انجام نشد. دوباره تلاش کنید");
       return;
     }
     await mutate(() => true, undefined, { revalidate: false });

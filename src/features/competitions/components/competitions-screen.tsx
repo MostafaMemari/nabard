@@ -16,7 +16,7 @@ export function CompetitionsScreen() {
     <>
       <PageHeader
         title="مسابقات"
-        description="مدیریت مسابقات و مهلت ثبت نام آن ها."
+        description="مدیریت مسابقات و مهلت ثبت نام آن ها"
         action={
           <Button render={<Link href="/admin/competitions/new" />}>
             <PlusIcon data-icon="inline-start" />
@@ -36,7 +36,7 @@ export function CompetitionsScreen() {
         renderCard={(row) => <CompetitionCard competition={row} belts={view.belts} registrationCount={view.registrationCount(row.id)} />}
         emptyIcon={TrophyIcon}
         emptyTitle={
-          view.search.value.trim() !== "" ? `نتیجه ای برای «${view.search.value.trim()}» پیدا نشد.` : "هنوز مسابقه ای ثبت نشده است."
+          view.search.value.trim() !== "" ? `نتیجه ای برای «${view.search.value.trim()}» پیدا نشد` : "هنوز مسابقه ای ثبت نشده است"
         }
         emptyAction={
           <Button render={<Link href="/admin/competitions/new" />} size="sm">

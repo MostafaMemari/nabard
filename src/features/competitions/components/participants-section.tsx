@@ -25,7 +25,7 @@ export function ParticipantsSection({
   const ageItems = Object.fromEntries(ageCategories.map((category) => [category.id, category.label]));
 
   return (
-    <FormSection title="شرکت کنندگان" description="جنسیت و بازه سنی و کمربندهای مجاز برای شرکت در مسابقه." icon={UsersRoundIcon}>
+    <FormSection title="شرکت کنندگان" description="جنسیت و بازه سنی و کمربندهای مجاز برای شرکت در مسابقه" icon={UsersRoundIcon}>
       <div className="grid gap-4 sm:grid-cols-2">
         <FormSelectField control={control} name="gender" label="جنسیت" items={genderLabels} />
         <FormSelectField control={control} name="ageCategoryId" label="رده سنی" items={ageItems} />

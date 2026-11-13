@@ -46,14 +46,14 @@ export function AgeCategoryFormDialog({
           startDate: values.startDate,
           endDate: values.endDate,
         });
-        toast.success("رده سنی ذخیره شد. سال های تولد از تاریخ ها محاسبه شد.");
+        toast.success("رده سنی ذخیره شد. سال های تولد از تاریخ ها محاسبه شد");
       } else {
         await createAgeCategory({
           label: values.label.trim(),
           startDate: values.startDate,
           endDate: values.endDate,
         });
-        toast.success("رده سنی اضافه شد.");
+        toast.success("رده سنی اضافه شد");
       }
       onOpenChange(false);
       onSaved();
@@ -62,7 +62,7 @@ export function AgeCategoryFormDialog({
         form.setError("endDate", { message: error.message });
         return;
       }
-      toast.error(error instanceof ApiError ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof ApiError ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید");
     }
   }
 
@@ -71,7 +71,7 @@ export function AgeCategoryFormDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{isEdit ? "ویرایش رده سنی" : "رده سنی جدید"}</DialogTitle>
-          <DialogDescription>بازه تاریخ تولد را وارد کنید؛ سال های تولد به صورت خودکار محاسبه می شوند.</DialogDescription>
+          <DialogDescription>بازه تاریخ تولد را وارد کنید؛ سال های تولد به صورت خودکار محاسبه می شوند</DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <ControlledTextField control={form.control} name="label" label="نام رده سنی" placeholder="مثلاً بزرگسال" />

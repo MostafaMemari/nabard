@@ -27,9 +27,7 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
             }}
           >
             <h1 style={{ fontSize: "1.125rem", fontWeight: 600, margin: 0 }}>خطای غیرمنتظره</h1>
-            <p style={{ fontSize: "0.875rem", color: "#64748b", margin: 0 }}>
-              مشکلی اساسی در برنامه پیش آمد. صفحه را دوباره بارگذاری کنید.
-            </p>
+            <p style={{ fontSize: "0.875rem", color: "#64748b", margin: 0 }}>مشکلی اساسی در برنامه پیش آمد. صفحه را دوباره بارگذاری کنید</p>
             <button
               type="button"
               onClick={reset}

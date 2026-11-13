@@ -31,7 +31,7 @@ export function WeightClassTable({ classes, isLoading }: { classes: WeightClass[
   }
 
   if (classes.length === 0) {
-    return <EmptyState icon={RulerIcon} title="برای این رده سنی و جنسیت هنوز رده وزنی تعریف نشده است." />;
+    return <EmptyState icon={RulerIcon} title="برای این رده سنی و جنسیت هنوز رده وزنی تعریف نشده است" />;
   }
 
   return (

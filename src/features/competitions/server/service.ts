@@ -62,11 +62,11 @@ export type CompetitionView = CompetitionRecord & {
 };
 
 function forbidden(): AppError {
-  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
+  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید");
 }
 
 function competitionNotFound(): AppError {
-  return new AppError(404, "NOT_FOUND", "مسابقه یافت نشد.");
+  return new AppError(404, "NOT_FOUND", "مسابقه یافت نشد");
 }
 
 function provinceOf(identity: UserIdentityRecord): Province {
@@ -77,7 +77,7 @@ function provinceOf(identity: UserIdentityRecord): Province {
 
 async function requireActiveUser(repo: CompetitionsRepository, user: CurrentUser): Promise<UserIdentityRecord> {
   const record = await repo.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (!record.isActive || record.role !== user.role) throw forbidden();
 
   return record;
@@ -143,14 +143,14 @@ async function resolveBeltRange(
   const levels: number[] = [];
   for (const beltId of beltIds) {
     const belt = belts.find((item) => item.id === beltId);
-    if (!belt) throw new AppError(400, "VALIDATION_ERROR", "کمربندهای انتخاب شده معتبر نیستند.");
+    if (!belt) throw new AppError(400, "VALIDATION_ERROR", "کمربندهای انتخاب شده معتبر نیستند");
     levels.push(belt.level);
   }
 
   const minLevel = Math.min(...levels);
   const maxLevel = Math.max(...levels);
   if (minLevel > maxLevel) {
-    throw new AppError(400, "VALIDATION_ERROR", "سطح کمربند ابتدا باید کمتر یا مساوی سطح کمربند انتها باشد.");
+    throw new AppError(400, "VALIDATION_ERROR", "سطح کمربند ابتدا باید کمتر یا مساوی سطح کمربند انتها باشد");
   }
 
   const minBelt = belts.find((belt) => belt.level === minLevel);
@@ -162,14 +162,14 @@ async function resolveBeltRange(
 async function validateCounties(repo: CompetitionsRepository, province: string, countyIds: string[]): Promise<string[]> {
   const uniqueIds = [...new Set(countyIds)];
   if (uniqueIds.length === 0) {
-    throw new AppError(400, "VALIDATION_ERROR", "حداقل یک شهرستان را انتخاب کنید.");
+    throw new AppError(400, "VALIDATION_ERROR", "حداقل یک شهرستان را انتخاب کنید");
   }
 
   const counties: string[] = [];
   for (const countyId of uniqueIds) {
     const county = await repo.findCountyById(countyId);
     if (!county || county.province !== province) {
-      throw new AppError(400, "VALIDATION_ERROR", "شهرستان های انتخاب شده معتبر نیستند.");
+      throw new AppError(400, "VALIDATION_ERROR", "شهرستان های انتخاب شده معتبر نیستند");
     }
 
     counties.push(county.id);
@@ -186,17 +186,17 @@ async function validateCompetitionData(
 
   const categories = await repo.findAllAgeCategories();
   if (!categories.some((category) => category.id === data.ageCategoryId)) {
-    throw new AppError(400, "VALIDATION_ERROR", "رده سنی انتخاب شده معتبر نیست.");
+    throw new AppError(400, "VALIDATION_ERROR", "رده سنی انتخاب شده معتبر نیست");
   }
 
   if (data.eventDate.getTime() <= data.registrationDeadline.getTime()) {
-    throw new AppError(400, "VALIDATION_ERROR", "تاریخ برگزاری باید بعد از مهلت ثبت نام باشد.");
+    throw new AppError(400, "VALIDATION_ERROR", "تاریخ برگزاری باید بعد از مهلت ثبت نام باشد");
   }
 
   if (data.discipline === "KYORUGI") {
     const weightClasses = await repo.findWeightClasses(data.ageCategoryId, data.gender);
     if (weightClasses.length === 0) {
-      throw new AppError(400, "VALIDATION_ERROR", "برای این رده سنی و جنسیت رده وزنی تعریف نشده است.");
+      throw new AppError(400, "VALIDATION_ERROR", "برای این رده سنی و جنسیت رده وزنی تعریف نشده است");
     }
   }
 
@@ -437,7 +437,7 @@ export async function updateCompetition(
   // the rest of the competition is locked by registrations.
   const isDescriptionOnly = input.description !== undefined && Object.keys(input).length === 1;
   if (registrations > 0 && !isDescriptionOnly) {
-    throw new AppError(409, "CONFLICT", "این مسابقه ثبت نام دارد و قابل ویرایش نیست.");
+    throw new AppError(409, "CONFLICT", "این مسابقه ثبت نام دارد و قابل ویرایش نیست");
   }
 
   const beltsForMerge = await repo.findAllBelts();
@@ -492,10 +492,10 @@ export async function publishCompetition(repo: CompetitionsRepository, user: Cur
   if (!row || row.province !== identity.province) throw competitionNotFound();
 
   if (row.status === "CANCELED") {
-    throw new AppError(409, "CONFLICT", "مسابقه لغو شده قابل انتشار مجدد نیست.");
+    throw new AppError(409, "CONFLICT", "مسابقه لغو شده قابل انتشار مجدد نیست");
   }
   if (row.status === "PUBLISHED") {
-    throw new AppError(409, "CONFLICT", "این مسابقه قبلاً منتشر شده است.");
+    throw new AppError(409, "CONFLICT", "این مسابقه قبلاً منتشر شده است");
   }
 
   const beltsForMerge = await repo.findAllBelts();
@@ -509,11 +509,11 @@ export async function publishCompetition(repo: CompetitionsRepository, user: Cur
   });
 
   if (row.registrationDeadline.getTime() <= Date.now()) {
-    throw new AppError(400, "VALIDATION_ERROR", "مهلت ثبت نام گذشته است و مسابقه قابل انتشار نیست.");
+    throw new AppError(400, "VALIDATION_ERROR", "مهلت ثبت نام گذشته است و مسابقه قابل انتشار نیست");
   }
 
   const updated = await repo.publishWithRulesSnapshot(id);
-  if (!updated) throw new AppError(409, "CONFLICT", "این مسابقه قبلاً منتشر شده است.");
+  if (!updated) throw new AppError(409, "CONFLICT", "این مسابقه قبلاً منتشر شده است");
 
   return toRecord(updated, beltsForMerge, await repo.findAllAgeCategories());
 }
@@ -531,10 +531,10 @@ export async function cancelCompetition(
   if (!row || row.province !== identity.province) throw competitionNotFound();
 
   if (row.status === "CANCELED") {
-    throw new AppError(409, "CONFLICT", "این مسابقه قبلاً لغو شده است.");
+    throw new AppError(409, "CONFLICT", "این مسابقه قبلاً لغو شده است");
   }
   if (row.status !== "PUBLISHED") {
-    throw new AppError(409, "CONFLICT", "فقط مسابقه منتشر شده قابل لغو است.");
+    throw new AppError(409, "CONFLICT", "فقط مسابقه منتشر شده قابل لغو است");
   }
 
   const [belts, categories] = await Promise.all([repo.findAllBelts(), repo.findAllAgeCategories()]);
@@ -543,10 +543,10 @@ export async function cancelCompetition(
 
   const current = await repo.findCompetitionById(id);
   if (current?.status === "CANCELED") {
-    throw new AppError(409, "CONFLICT", "این مسابقه قبلاً لغو شده است.");
+    throw new AppError(409, "CONFLICT", "این مسابقه قبلاً لغو شده است");
   }
 
-  throw new AppError(409, "CONFLICT", "فقط مسابقه منتشر شده قابل لغو است.");
+  throw new AppError(409, "CONFLICT", "فقط مسابقه منتشر شده قابل لغو است");
 }
 
 export async function extendCompetition(
@@ -562,15 +562,15 @@ export async function extendCompetition(
   if (!row || row.province !== identity.province) throw competitionNotFound();
 
   if (row.status === "CANCELED") {
-    throw new AppError(409, "CONFLICT", "مسابقه لغو شده قابل تمدید نیست.");
+    throw new AppError(409, "CONFLICT", "مسابقه لغو شده قابل تمدید نیست");
   }
 
   const newDeadline = new Date(input.newDeadline);
   if (newDeadline.getTime() <= row.registrationDeadline.getTime()) {
-    throw new AppError(400, "VALIDATION_ERROR", "مهلت جدید باید بعد از مهلت فعلی باشد.");
+    throw new AppError(400, "VALIDATION_ERROR", "مهلت جدید باید بعد از مهلت فعلی باشد");
   }
   if (newDeadline.getTime() >= row.eventDate.getTime()) {
-    throw new AppError(400, "VALIDATION_ERROR", "مهلت جدید باید قبل از تاریخ برگزاری باشد.");
+    throw new AppError(400, "VALIDATION_ERROR", "مهلت جدید باید قبل از تاریخ برگزاری باشد");
   }
 
   const updated = await repo.extendDeadline({

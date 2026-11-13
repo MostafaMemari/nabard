@@ -36,7 +36,7 @@ export function CountyChangesScreen() {
 
   return (
     <>
-      <PageHeader title="درخواست های مربیان" description="درخواست های تغییر شهرستان مربیان استان و نتیجه بررسی آنها." />
+      <PageHeader title="درخواست های مربیان" description="درخواست های تغییر شهرستان مربیان استان و نتیجه بررسی آنها" />
 
       <DataTable
         columns={columns}
@@ -54,7 +54,7 @@ export function CountyChangesScreen() {
           />
         )}
         emptyIcon={ArrowLeftRightIcon}
-        emptyTitle="درخواستی ثبت نشده است."
+        emptyTitle="درخواستی ثبت نشده است"
         toolbar={
           <ListToolbar
             tabs={countyChangeTabs}

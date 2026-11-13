@@ -10,13 +10,13 @@ const TREND_MONTHS = 12;
 const COUNTY_CHART_LIMIT = 8;
 
 function forbidden(): AppError {
-  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
+  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید");
 }
 
 function parseProvince(raw: string | null): Province | null {
   if (raw === null || raw === "") return null;
   if (!(provinceValues as readonly string[]).includes(raw)) {
-    throw new AppError(400, "INVALID_PROVINCE", "استان انتخاب شده معتبر نیست.");
+    throw new AppError(400, "INVALID_PROVINCE", "استان انتخاب شده معتبر نیست");
   }
 
   return raw as ProvinceValue;
@@ -74,7 +74,7 @@ export async function getSuperAnalytics(
   if (user.role !== "SUPER_ADMIN") throw forbidden();
 
   const record = await repo.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (!record.isActive || record.role !== user.role) throw forbidden();
 
   const province = parseProvince(rawProvince);

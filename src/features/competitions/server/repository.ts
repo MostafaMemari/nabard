@@ -293,7 +293,7 @@ export async function updateCompetition(id: string, data: CompetitionUpdateData)
   return toCompetitionRow(row);
 }
 
-export const UNREVIEWED_PAYMENT_REFUND_NOTE = "پرداخت بررسی نشده بود؛ قبل از بازپرداخت دریافت وجه را تأیید کنید.";
+export const UNREVIEWED_PAYMENT_REFUND_NOTE = "پرداخت بررسی نشده بود؛ قبل از بازپرداخت دریافت وجه را تأیید کنید";
 
 export async function cancelCompetitionWithRefunds(id: string, reason: string): Promise<CompetitionRow | null> {
   return getPrisma().$transaction(async (tx) => {

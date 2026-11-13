@@ -28,11 +28,11 @@ function toPayload(record: PaymentRecord): PaymentPayload {
 }
 
 function forbidden(): AppError {
-  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
+  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید");
 }
 
 function paymentNotFound(): AppError {
-  return new AppError(404, "NOT_FOUND", "پرداخت یافت نشد.");
+  return new AppError(404, "NOT_FOUND", "پرداخت یافت نشد");
 }
 
 function provinceOf(identity: UserIdentityRecord): Province {
@@ -43,7 +43,7 @@ function provinceOf(identity: UserIdentityRecord): Province {
 
 async function requireActiveUser(repo: PaymentsRepository, user: CurrentUser): Promise<UserIdentityRecord> {
   const record = await repo.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (!record.isActive || record.role !== user.role) throw forbidden();
 
   return record;
@@ -128,17 +128,17 @@ async function decidePayment(
     throw new AppError(
       409,
       "CONFLICT",
-      input.status === "CONFIRMED" ? "این پرداخت قبلا تأیید شده است." : "این پرداخت تأیید شده و قابل رد کردن نیست.",
+      input.status === "CONFIRMED" ? "این پرداخت قبلا تأیید شده است" : "این پرداخت تأیید شده و قابل رد کردن نیست",
     );
   }
   if (row.status === "REJECTED") {
     throw new AppError(
       409,
       "CONFLICT",
-      input.status === "CONFIRMED" ? "این پرداخت رد شده است؛ پس از بارگذاری رسید جدید قابل تأیید است." : "این پرداخت قبلا رد شده است.",
+      input.status === "CONFIRMED" ? "این پرداخت رد شده است؛ پس از بارگذاری رسید جدید قابل تأیید است" : "این پرداخت قبلا رد شده است",
     );
   }
-  throw new AppError(409, "CONFLICT", "این پرداخت قبلا بررسی شده است.");
+  throw new AppError(409, "CONFLICT", "این پرداخت قبلا بررسی شده است");
 }
 
 export async function confirmPayment(repo: PaymentsRepository, user: CurrentUser, id: string): Promise<PaymentPayload> {
@@ -164,12 +164,12 @@ export async function readReceipt(
   if (!inScope) throw paymentNotFound();
 
   if (row.receiptKey === null) {
-    throw new AppError(404, "NOT_FOUND", "رسیدی برای این پرداخت بارگذاری نشده است.");
+    throw new AppError(404, "NOT_FOUND", "رسیدی برای این پرداخت بارگذاری نشده است");
   }
 
   const file = await storage.get(row.receiptKey);
   if (!file) {
-    throw new AppError(404, "NOT_FOUND", "فایل رسید یافت نشد.");
+    throw new AppError(404, "NOT_FOUND", "فایل رسید یافت نشد");
   }
 
   return { stream: file.stream, mime: file.mime, size: file.size };
@@ -189,11 +189,11 @@ export async function uploadReceipt(
   if (!row || row.coachId !== user.id) throw paymentNotFound();
 
   if (row.status !== "REJECTED") {
-    throw new AppError(409, "CONFLICT", "فقط پرداخت رد شده قابل ارسال مجدد است.");
+    throw new AppError(409, "CONFLICT", "فقط پرداخت رد شده قابل ارسال مجدد است");
   }
 
   if (row.competitionDeadline.getTime() < Date.now()) {
-    throw new AppError(409, "CONFLICT", "مهلت ثبت نام این مسابقه به پایان رسیده است و ارسال رسید ممکن نیست.");
+    throw new AppError(409, "CONFLICT", "مهلت ثبت نام این مسابقه به پایان رسیده است و ارسال رسید ممکن نیست");
   }
 
   const receipt = await readReceiptImage(receiptFile);

@@ -26,11 +26,11 @@ export function AdminStatusDialog({
     setWorking(true);
     try {
       await updateAdmin(admin.id, { isActive: targetActive });
-      toast.success(targetActive ? "ادمین استان فعال شد." : "ادمین استان غیرفعال شد.");
+      toast.success(targetActive ? "ادمین استان فعال شد" : "ادمین استان غیرفعال شد");
       await onDone();
       onClose();
     } catch {
-      toast.error("انجام نشد. دوباره تلاش کنید.");
+      toast.error("انجام نشد. دوباره تلاش کنید");
     } finally {
       setWorking(false);
     }
@@ -47,8 +47,8 @@ export function AdminStatusDialog({
       title={targetActive ? "فعال سازی ادمین استان" : "غیرفعال کردن ادمین استان"}
       description={
         targetActive
-          ? `با فعال سازی، «${admin?.fullName}» می تواند دوباره وارد سامانه شود.`
-          : `با غیرفعال کردن حساب، «${admin?.fullName}» دیگر نمی تواند وارد سامانه شود و به مسابقات استان خود دسترسی نخواهد داشت.`
+          ? `با فعال سازی، «${admin?.fullName}» می تواند دوباره وارد سامانه شود`
+          : `با غیرفعال کردن حساب، «${admin?.fullName}» دیگر نمی تواند وارد سامانه شود و به مسابقات استان خود دسترسی نخواهد داشت`
       }
       confirmLabel={targetActive ? "فعال سازی" : "غیرفعال کردن"}
       destructive={targetActive === false}

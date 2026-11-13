@@ -12,7 +12,7 @@ export function BaseDataScreen() {
 
   return (
     <>
-      <PageHeader title="اطلاعات پایه" description="کمربندها، رده های سنی و رده های وزنی؛ تغییرها فقط روی مسابقه های جدید اعمال می شود." />
+      <PageHeader title="اطلاعات پایه" description="کمربندها، رده های سنی و رده های وزنی؛ تغییرها فقط روی مسابقه های جدید اعمال می شود" />
 
       <Tabs defaultValue="belts">
         <TabsList>

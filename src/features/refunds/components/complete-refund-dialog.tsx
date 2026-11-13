@@ -55,14 +55,14 @@ export function CompleteRefundDialog({
         <DialogHeader>
           <DialogTitle>ثبت بازپرداخت</DialogTitle>
           <DialogDescription>
-            بازپرداخت {amount} تومان به مربی هنرجوی «{refund?.studentName ?? ""}» ثبت می شود.
+            بازپرداخت {amount} تومان به مربی هنرجوی «{refund?.studentName ?? ""}» ثبت می شود
           </DialogDescription>
         </DialogHeader>
         {refund?.note ? <p className="rounded-lg bg-warning-bg px-3 py-2 text-subtle text-warning">{refund.note}</p> : null}
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <Field data-invalid={form.formState.errors.note ? "" : undefined}>
             <FieldLabel htmlFor="refund-note">یادداشت (اختیاری)</FieldLabel>
-            <Textarea id="refund-note" rows={3} placeholder="مثلاً شماره پیگیری حواله." {...form.register("note")} />
+            <Textarea id="refund-note" rows={3} placeholder="مثلاً شماره پیگیری حواله" {...form.register("note")} />
             {form.formState.errors.note ? <FieldError errors={[form.formState.errors.note]} /> : null}
           </Field>
           <DialogFooter>

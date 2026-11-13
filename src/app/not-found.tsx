@@ -8,7 +8,7 @@ export default function NotFound() {
         <span className="text-4xl font-bold text-muted-foreground">۴۰۴</span>
         <div className="flex flex-col gap-1.5">
           <h1 className="text-lg font-semibold">صفحه پیدا نشد</h1>
-          <p className="text-sm text-muted-foreground">نشانی ای که باز کرده اید وجود ندارد یا جابه جا شده است.</p>
+          <p className="text-sm text-muted-foreground">نشانی ای که باز کرده اید وجود ندارد یا جابه جا شده است</p>
         </div>
         <Button type="button" render={<Link href="/" />}>
           بازگشت به خانه

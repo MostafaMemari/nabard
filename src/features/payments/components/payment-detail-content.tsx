@@ -29,7 +29,7 @@ export function PaymentDetailContent({ decisions }: { decisions: Decisions }) {
         backHref="/admin/payments"
         backLabel="بررسی پرداخت ها"
         title="رسید پرداخت مربی"
-        description="بررسی رسید و تأیید یا رد ثبت نام هنرجویان."
+        description="بررسی رسید و تأیید یا رد ثبت نام هنرجویان"
         action={<StatusBadge status={paymentBadgeStatus(payment.status)} />}
       />
 

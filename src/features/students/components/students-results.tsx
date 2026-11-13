@@ -44,7 +44,7 @@ export function StudentsResults({
   if (rows.length === 0) {
     return (
       <StateCard>
-        <EmptyState icon={UsersIcon} title={query !== "" ? `نتیجه ای برای «${query}» پیدا نشد.` : "هنوز هنرجویی اضافه نکرده اید."} />
+        <EmptyState icon={UsersIcon} title={query !== "" ? `نتیجه ای برای «${query}» پیدا نشد` : "هنوز هنرجویی اضافه نکرده اید"} />
       </StateCard>
     );
   }

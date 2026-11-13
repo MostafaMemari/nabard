@@ -60,7 +60,7 @@ export function DeadlineExtensionDialog({
         <DialogHeader>
           <DialogTitle>تمدید مهلت ثبت نام</DialogTitle>
           <DialogDescription>
-            مهلت جدید باید بعد از مهلت فعلی و قبل از تاریخ برگزاری باشد. پس از وجود ثبت نام، تمدید تنها راه تغییر مهلت است.
+            مهلت جدید باید بعد از مهلت فعلی و قبل از تاریخ برگزاری باشد. پس از وجود ثبت نام، تمدید تنها راه تغییر مهلت است
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
@@ -70,7 +70,7 @@ export function DeadlineExtensionDialog({
             <Textarea
               id="extension-reason"
               rows={3}
-              placeholder="مثلاً ثبت مدارک برخی هنرجوها با تأخیر انجام شده است."
+              placeholder="مثلاً ثبت مدارک برخی هنرجوها با تأخیر انجام شده است"
               {...form.register("reason")}
             />
             {form.formState.errors.reason ? <FieldError errors={[form.formState.errors.reason]} /> : null}

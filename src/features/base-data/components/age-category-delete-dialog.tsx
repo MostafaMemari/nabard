@@ -20,11 +20,11 @@ export function AgeCategoryDeleteDialog({
     }
     try {
       await deleteAgeCategory(category.id);
-      toast.success("رده سنی حذف شد.");
+      toast.success("رده سنی حذف شد");
       onDone();
       onClose();
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : "حذف انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof ApiError ? error.message : "حذف انجام نشد. دوباره تلاش کنید");
       onClose();
     }
   }
@@ -38,7 +38,7 @@ export function AgeCategoryDeleteDialog({
         }
       }}
       title="حذف رده سنی"
-      description={`رده سنی «${category?.label}» با همه رده های وزنی آن حذف می شود. اگر مسابقه یا ثبت نامی به آن متصل باشد، حذف انجام نمی شود و می توانید آن را بایگانی کنید.`}
+      description={`رده سنی «${category?.label}» با همه رده های وزنی آن حذف می شود. اگر مسابقه یا ثبت نامی به آن متصل باشد، حذف انجام نمی شود و می توانید آن را بایگانی کنید`}
       confirmLabel="حذف"
       destructive
       onConfirm={() => void confirm()}

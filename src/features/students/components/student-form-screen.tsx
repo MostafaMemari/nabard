@@ -23,7 +23,7 @@ export function StudentFormScreen() {
       <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-6">
         <PageHeader
           title="هنرجوی جدید"
-          description="اطلاعات هنرجو را وارد کنید. درخواست ثبت برای بررسی به ادمین استان ارسال می شود و پس از تأیید، اطلاعات قفل می شود."
+          description="اطلاعات هنرجو را وارد کنید. درخواست ثبت برای بررسی به ادمین استان ارسال می شود و پس از تأیید، اطلاعات قفل می شود"
         />
 
         <FormSection title="اطلاعات هنرجو" icon={UsersIcon}>
@@ -62,12 +62,12 @@ export function StudentFormScreen() {
 
         <p className="flex items-start gap-2 rounded-xl border border-border bg-muted/40 px-3 py-2.5 text-subtle text-muted-foreground">
           <MedalIcon aria-hidden className="mt-0.5 size-4 shrink-0" />
-          درخواست ثبت هنرجو با کمربند و تاریخ حکم انتخابی برای ادمین استان ارسال می شود.
+          درخواست ثبت هنرجو با کمربند و تاریخ حکم انتخابی برای ادمین استان ارسال می شود
         </p>
 
         <p className="flex items-start gap-2 rounded-xl border border-border bg-muted/40 px-3 py-2.5 text-subtle text-muted-foreground">
           <ImageIcon aria-hidden className="mt-0.5 size-4 shrink-0" />
-          عکس پرسنلی را پس از ثبت، در صفحه هنرجو به عنوان درخواست تغییر عکس بارگذاری کنید.
+          عکس پرسنلی را پس از ثبت، در صفحه هنرجو به عنوان درخواست تغییر عکس بارگذاری کنید
         </p>
 
         <FormActions cancelHref="/coach/students" submitLabel="ثبت درخواست" submitting={form.formState.isSubmitting} />

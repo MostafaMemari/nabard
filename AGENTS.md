@@ -149,6 +149,9 @@ The interface must look like a real, hand-designed product, not generated output
 - Every list has loading (skeleton shaped like the content), empty (one sentence and one action) and error (with retry) states. Every mutation reports success or failure.
 - Forms: labels above inputs, inline errors under the field, one primary button per view, destructive actions behind a confirm dialog.
 - Use realistic Persian content and data. Never lorem ipsum or English placeholder names.
+- Persian copy must read like a person typed it, not like generated text:
+  - Do not end short UI strings with a period: empty states, toasts, field errors, dialog titles and descriptions, page headers, placeholders, button labels. Write "هنوز ادمینی اضافه نشده است", not "هنوز ادمینی اضافه نشده است.". Keep an internal period only when one string holds two or more sentences and they must stay separated.
+  - Do not use ZWNJ (نیم‌فاصله, U+200C) in UI copy. Write "می شود", "ثبت نام", "شهرستان ها" with plain spaces, the way people actually type. The only exception is proper place names (county names like "خمینی‌شهر" in `default-counties.ts`) where ZWNJ is required because the strings are compared against database data.
 - After finishing UI work, review the result against the checklist in `docs/DESIGN.md`. If you can run the app and take screenshots, check 1440px and 390px widths.
 
 ## Hosting (Vercel, serverless)

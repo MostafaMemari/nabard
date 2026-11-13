@@ -75,7 +75,7 @@ export function ReviewSideSummary({
         </div>
       ) : (
         <p className="text-subtle text-muted-foreground">
-          {student.approvedAt ? `در تاریخ ${formatJalaliDate(new Date(student.approvedAt))} تأیید شده است.` : "تأیید شده است."}
+          {student.approvedAt ? `در تاریخ ${formatJalaliDate(new Date(student.approvedAt))} تأیید شده است` : "تأیید شده است"}
         </p>
       )}
     </div>

@@ -46,13 +46,13 @@ describe("analyticsXlsxResponse", () => {
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(buffer as unknown as ExcelJS.Buffer);
 
-    expect(workbook.worksheets.map((sheet) => sheet.name)).toEqual(["نمای کلی", "روند ثبت‌نام", "شهرستان‌ها"]);
+    expect(workbook.worksheets.map((sheet) => sheet.name)).toEqual(["نمای کلی", "روند ثبت نام", "شهرستان ها"]);
 
     const overview = workbook.worksheets[0];
     expect(overview.getRow(1).getCell(1).value).toBe("گزارش آماری سامانه");
     const overviewLabels = overview.getColumn(1).values.filter((value) => typeof value === "string");
-    expect(overviewLabels).toContain("نرخ تأیید پروفایل‌ها");
-    const rateRow = overview.getColumn(1).values.indexOf("نرخ تأیید پروفایل‌ها");
+    expect(overviewLabels).toContain("نرخ تأیید پروفایل ها");
+    const rateRow = overview.getColumn(1).values.indexOf("نرخ تأیید پروفایل ها");
     expect(overview.getRow(rateRow).getCell(2).value).toBe("۸۸٪");
 
     const counties = workbook.worksheets[2];

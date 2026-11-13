@@ -54,7 +54,7 @@ export function CoachStudentsTable({
   }
 
   if (students.length === 0) {
-    return <p className="text-subtle text-muted-foreground">این مربی هنوز هنرجویی اضافه نکرده است.</p>;
+    return <p className="text-subtle text-muted-foreground">این مربی هنوز هنرجویی اضافه نکرده است</p>;
   }
 
   return (

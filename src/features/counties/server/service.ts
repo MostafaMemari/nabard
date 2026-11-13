@@ -8,16 +8,16 @@ import type { County } from "../types";
 import type { CountiesRepository, UserIdentityRecord } from "./repository";
 
 function forbidden(): AppError {
-  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
+  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید");
 }
 
 function countyNotFound(): AppError {
-  return new AppError(404, "NOT_FOUND", "شهرستان یافت نشد.");
+  return new AppError(404, "NOT_FOUND", "شهرستان یافت نشد");
 }
 
 async function requireActiveUser(repo: CountiesRepository, user: CurrentUser): Promise<UserIdentityRecord> {
   const record = await repo.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (!record.isActive || record.role !== user.role) throw forbidden();
 
   return record;
@@ -55,7 +55,7 @@ export async function createCounty(
 
   const existing = await repo.findCountiesByProvince(record.province);
   if (existing.some((county) => normalizeCountyName(county.name) === normalizeCountyName(input.name))) {
-    throw new AppError(409, "CONFLICT", "این شهرستان در این استان قبلا ثبت شده است.");
+    throw new AppError(409, "CONFLICT", "این شهرستان در این استان قبلا ثبت شده است");
   }
 
   const county = await repo.createCounty({ province: record.province, name: input.name });
@@ -84,7 +84,7 @@ export async function updateCounty(
 
   const existing = await repo.findCountiesByProvince(record.province);
   if (existing.some((item) => item.id !== id && normalizeCountyName(item.name) === normalizeCountyName(input.name))) {
-    throw new AppError(409, "CONFLICT", "این شهرستان در این استان قبلا ثبت شده است.");
+    throw new AppError(409, "CONFLICT", "این شهرستان در این استان قبلا ثبت شده است");
   }
 
   const updated = await repo.updateCounty(id, input);
@@ -117,7 +117,7 @@ export async function deleteCounty(
   ]);
 
   if (coaches > 0 || competitions > 0 || changeRequests > 0) {
-    throw new AppError(409, "CONFLICT", "این شهرستان به مربی یا مسابقه ای متصل است و قابل حذف نیست.");
+    throw new AppError(409, "CONFLICT", "این شهرستان به مربی یا مسابقه ای متصل است و قابل حذف نیست");
   }
 
   await repo.deleteCounty(id);

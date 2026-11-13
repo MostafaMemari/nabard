@@ -12,11 +12,11 @@ export function BeltDeleteDialog({ belt, onDone, onClose }: { belt: BeltAdmin | 
     }
     try {
       await deleteBelt(belt.id);
-      toast.success("کمربند حذف شد.");
+      toast.success("کمربند حذف شد");
       onDone();
       onClose();
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : "حذف انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof ApiError ? error.message : "حذف انجام نشد. دوباره تلاش کنید");
       onClose();
     }
   }
@@ -30,7 +30,7 @@ export function BeltDeleteDialog({ belt, onDone, onClose }: { belt: BeltAdmin | 
         }
       }}
       title="حذف کمربند"
-      description={`کمربند «${belt?.label}» حذف می شود. اگر هنرجو یا مسابقه ای به آن متصل باشد، حذف انجام نمی شود و می توانید آن را بایگانی کنید.`}
+      description={`کمربند «${belt?.label}» حذف می شود. اگر هنرجو یا مسابقه ای به آن متصل باشد، حذف انجام نمی شود و می توانید آن را بایگانی کنید`}
       confirmLabel="حذف"
       destructive
       onConfirm={() => void confirm()}

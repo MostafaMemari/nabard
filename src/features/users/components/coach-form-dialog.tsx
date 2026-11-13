@@ -47,12 +47,12 @@ export function CoachFormDialog({
         countyId: values.countyId,
         gender: values.gender,
       });
-      toast.success("مربی اضافه شد.");
+      toast.success("مربی اضافه شد");
       form.reset(emptyForm);
       onOpenChange(false);
       onSaved();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید");
     }
   }
 
@@ -61,7 +61,7 @@ export function CoachFormDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>مربی جدید</DialogTitle>
-          <DialogDescription>اطلاعات مربی را وارد کنید؛ حساب به صورت فعال ساخته می شود.</DialogDescription>
+          <DialogDescription>اطلاعات مربی را وارد کنید؛ حساب به صورت فعال ساخته می شود</DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <CoachTextField control={form.control} name="fullName" label="نام و نام خانوادگی" placeholder="مثلاً رضا محمدی" />

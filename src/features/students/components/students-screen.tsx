@@ -60,7 +60,7 @@ export function StudentsScreen() {
     <>
       <PageHeader
         title="هنرجویان"
-        description="مدیریت هنرجویان باشگاه شما."
+        description="مدیریت هنرجویان باشگاه شما"
         action={
           <div className="flex flex-wrap items-center gap-2">
             <Button variant="outline" onClick={() => setTransferOpen(true)}>

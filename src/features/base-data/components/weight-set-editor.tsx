@@ -73,11 +73,11 @@ export function WeightSetEditor({
     try {
       const result = await saveWeightClassSet({ ageCategoryId, gender, rows: editorRows.map(toSetRow) });
       toast.success(
-        `رده های وزنی ذخیره شد: ${toPersianDigits(result.created)} ردیف جدید، ${toPersianDigits(result.updated)} ویرایش، ${toPersianDigits(result.archived)} بایگانی، ${toPersianDigits(result.deleted)} حذف.`,
+        `رده های وزنی ذخیره شد: ${toPersianDigits(result.created)} ردیف جدید، ${toPersianDigits(result.updated)} ویرایش، ${toPersianDigits(result.archived)} بایگانی، ${toPersianDigits(result.deleted)} حذف`,
       );
       onSaved();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید");
     } finally {
       setSaving(false);
     }
@@ -89,7 +89,7 @@ export function WeightSetEditor({
 
       <p className="text-subtle text-muted-foreground">
         «شروع باز» یعنی وزنی که دقیقا برابر حداقل است در این رده قرار نمی گیرد و «پایان باز» یعنی وزنی که دقیقا برابر حداکثر است در این رده
-        قرار نمی گیرد.
+        قرار نمی گیرد
       </p>
 
       <div className="flex flex-col gap-3">
@@ -106,7 +106,7 @@ export function WeightSetEditor({
 
         <div className="flex items-center justify-between gap-3">
           <p className="text-subtle text-muted-foreground">
-            تغییرها فقط روی مسابقه های جدید اعمال می شود؛ مسابقه های منتشر شده و ثبت نام های قبلی تغییری نمی کنند.
+            تغییرها فقط روی مسابقه های جدید اعمال می شود؛ مسابقه های منتشر شده و ثبت نام های قبلی تغییری نمی کنند
           </p>
           <Button onClick={() => void save()} disabled={saving || issues.length > 0}>
             ذخیره

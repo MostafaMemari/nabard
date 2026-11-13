@@ -64,7 +64,7 @@ export function WeightClassesTab({ ageCategories }: { ageCategories: AgeCategory
       <header className="border-b border-border px-4 py-3">
         <h2 className="text-sm font-semibold">رده های وزنی</h2>
         <p className="text-subtle mt-0.5 text-muted-foreground">
-          رده های وزنی هر رده سنی و جنسیت را به صورت یک مجموعه مرتب ویرایش کنید؛ مرز رده ها نباید وزنی را بدون رده یا با دو رده باقی بگذارد.
+          رده های وزنی هر رده سنی و جنسیت را به صورت یک مجموعه مرتب ویرایش کنید؛ مرز رده ها نباید وزنی را بدون رده یا با دو رده باقی بگذارد
         </p>
       </header>
       <div className="flex flex-col gap-5 p-4">
@@ -74,13 +74,13 @@ export function WeightClassesTab({ ageCategories }: { ageCategories: AgeCategory
         </div>
 
         {!selected ? (
-          <EmptyState icon={MousePointerClickIcon} title="یک رده سنی و جنسیت انتخاب کنید تا رده های وزنی آن نمایش داده شود." />
+          <EmptyState icon={MousePointerClickIcon} title="یک رده سنی و جنسیت انتخاب کنید تا رده های وزنی آن نمایش داده شود" />
         ) : set.isLoading ? (
           <StateCard className="p-4">
             <SkeletonRows rows={4} className="h-11" />
           </StateCard>
         ) : set.error ? (
-          <ErrorBanner message="دریافت رده های وزنی انجام نشد." onRetry={() => void set.mutate()} />
+          <ErrorBanner message="دریافت رده های وزنی انجام نشد" onRetry={() => void set.mutate()} />
         ) : (
           <WeightSetEditor
             key={`${ageCategoryId}:${gender}`}

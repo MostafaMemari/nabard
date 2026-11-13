@@ -56,7 +56,7 @@ export function SuperCoachesScreen() {
 
   return (
     <>
-      <PageHeader title="مربیان" description="فهرست مربیان همه استان ها؛ فقط قابل مشاهده است." />
+      <PageHeader title="مربیان" description="فهرست مربیان همه استان ها؛ فقط قابل مشاهده است" />
       <DataTable
         columns={columns}
         rows={coaches}
@@ -66,7 +66,7 @@ export function SuperCoachesScreen() {
         onRetry={() => mutate()}
         renderCard={(row) => <CoachCard coach={row} />}
         emptyIcon={UsersIcon}
-        emptyTitle="مربی ای یافت نشد."
+        emptyTitle="مربی ای یافت نشد"
         toolbar={
           <div className="flex items-center justify-end gap-3">
             <ProvinceFilter />

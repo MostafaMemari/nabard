@@ -36,13 +36,13 @@ export function CoachPhotoChangesSection({
   onRetry: () => void;
 }) {
   return (
-    <SectionCard title="درخواست های تغییر عکس" description="عکس جدید هنرجو با تأیید ادمین استان جایگزین عکس پروفایل می شود.">
+    <SectionCard title="درخواست های تغییر عکس" description="عکس جدید هنرجو با تأیید ادمین استان جایگزین عکس پروفایل می شود">
       {isLoading ? (
         <SkeletonRows rows={2} />
       ) : error ? (
-        <ErrorBanner message="دریافت درخواست های تغییر عکس انجام نشد." onRetry={onRetry} />
+        <ErrorBanner message="دریافت درخواست های تغییر عکس انجام نشد" onRetry={onRetry} />
       ) : requests.length === 0 ? (
-        <EmptyState icon={ImageUpIcon} title="درخواست تغییر عکسی ثبت نشده است." />
+        <EmptyState icon={ImageUpIcon} title="درخواست تغییر عکسی ثبت نشده است" />
       ) : (
         <div>
           {requests.map((request) => (

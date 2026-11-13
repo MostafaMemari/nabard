@@ -79,10 +79,10 @@ export function useCompetitionForm(competitionId?: string) {
 
     try {
       const saved = isEdit && competitionId ? await updateCompetition(competitionId, input) : await createCompetition(input);
-      toast.success(isEdit ? "تغییرات مسابقه ذخیره شد." : "مسابقه ساخته شد.");
+      toast.success(isEdit ? "تغییرات مسابقه ذخیره شد" : "مسابقه ساخته شد");
       router.push(`/admin/competitions/${saved.id}`);
     } catch {
-      toast.error("ذخیره انجام نشد. دوباره تلاش کنید.");
+      toast.error("ذخیره انجام نشد. دوباره تلاش کنید");
     }
   }
 

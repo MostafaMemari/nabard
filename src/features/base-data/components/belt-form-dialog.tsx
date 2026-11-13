@@ -52,7 +52,7 @@ export function BeltFormDialog({
           color: values.color.trim() === "" ? null : values.color.trim(),
           colorHex: values.colorHex,
         });
-        toast.success("کمربند ذخیره شد.");
+        toast.success("کمربند ذخیره شد");
       } else {
         await createBelt({
           label: values.label.trim(),
@@ -61,12 +61,12 @@ export function BeltFormDialog({
           color: values.color.trim() === "" ? null : values.color.trim(),
           colorHex: values.colorHex,
         });
-        toast.success("کمربند اضافه شد.");
+        toast.success("کمربند اضافه شد");
       }
       onOpenChange(false);
       onSaved();
     } catch (error) {
-      toast.error(error instanceof ApiError ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof ApiError ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید");
     }
   }
 
@@ -75,7 +75,7 @@ export function BeltFormDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{isEdit ? "ویرایش کمربند" : "کمربند جدید"}</DialogTitle>
-          <DialogDescription>نام و سطح کمربند را وارد کنید؛ سطح ها باید یکتا باشند.</DialogDescription>
+          <DialogDescription>نام و سطح کمربند را وارد کنید؛ سطح ها باید یکتا باشند</DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <ControlledTextField control={form.control} name="label" label="نام کمربند" placeholder="مثلاً سبز با یک نوار" />

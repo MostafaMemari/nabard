@@ -74,13 +74,13 @@ export function ProvinceChangeRequestDialog({
         <DialogHeader>
           <DialogTitle>درخواست تغییر استان «{studentName}»</DialogTitle>
           <DialogDescription>
-            استان مقصد و مربی جدید را انتخاب کنید؛ درخواست برای ادمین استان مقصد ارسال می شود و با تأیید او هنرجو منتقل می شود.
+            استان مقصد و مربی جدید را انتخاب کنید؛ درخواست برای ادمین استان مقصد ارسال می شود و با تأیید او هنرجو منتقل می شود
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           {hasPending ? (
             <p className="text-subtle rounded-lg bg-warning-bg px-3 py-2.5 text-warning">
-              برای این هنرجو درخواست انتقال یا تغییر استان در انتظار بررسی وجود دارد؛ تا نتیجه آن، درخواست جدید ثبت نمی شود.
+              برای این هنرجو درخواست انتقال یا تغییر استان در انتظار بررسی وجود دارد؛ تا نتیجه آن، درخواست جدید ثبت نمی شود
             </p>
           ) : null}
           <ControlledSelectField
@@ -107,11 +107,11 @@ export function ProvinceChangeRequestDialog({
           ) : null}
           {toProvince && !targets.isLoading && (targets.data ?? []).length === 0 ? (
             <p className="text-subtle rounded-lg bg-warning-bg px-3 py-2 text-warning">
-              مربی فعالی در این استان ثبت نشده است؛ استان دیگری را انتخاب کنید.
+              مربی فعالی در این استان ثبت نشده است؛ استان دیگری را انتخاب کنید
             </p>
           ) : null}
           <p className="text-subtle text-muted-foreground">
-            جنسیت مربی مقصد باید با جنسیت هنرجو یکسان باشد؛ در غیر این صورت درخواست ثبت نمی شود.
+            جنسیت مربی مقصد باید با جنسیت هنرجو یکسان باشد؛ در غیر این صورت درخواست ثبت نمی شود
           </p>
           <div className="flex items-center justify-end gap-3">
             <Button type="button" variant="ghost" onClick={close}>

@@ -28,7 +28,7 @@ export function CoachesScreen() {
     <>
       <PageHeader
         title="مربیان"
-        description="مربیان استان و هنرجویان هر مربی."
+        description="مربیان استان و هنرجویان هر مربی"
         action={
           <Button onClick={() => setCreateOpen(true)}>
             <PlusIcon data-icon="inline-start" />
@@ -54,7 +54,7 @@ export function CoachesScreen() {
         )}
         emptyIcon={UserRoundIcon}
         emptyTitle={
-          filters.search.value.trim() !== "" ? `نتیجه ای برای «${filters.search.value.trim()}» پیدا نشد.` : "هنوز مربی ای اضافه نشده است."
+          filters.search.value.trim() !== "" ? `نتیجه ای برای «${filters.search.value.trim()}» پیدا نشد` : "هنوز مربی ای اضافه نشده است"
         }
         toolbar={
           <ListToolbar

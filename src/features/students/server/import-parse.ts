@@ -130,7 +130,7 @@ function findHeader(sheet: ExcelJS.Worksheet): { row: ExcelJS.Row; columns: Map<
       return { row, columns };
     }
   }
-  throw new AppError(400, "INVALID_EXCEL", "ستون‌های قالب پیدا نشدند؛ فایل قالب را دست‌نخورده پر کنید و دوباره تلاش کنید.");
+  throw new AppError(400, "INVALID_EXCEL", "ستون های قالب پیدا نشدند؛ فایل قالب را دست نخورده پر کنید و دوباره تلاش کنید");
 }
 
 export async function parseStudentsWorkbook(buffer: ArrayBuffer): Promise<ParsedWorkbook> {
@@ -138,10 +138,10 @@ export async function parseStudentsWorkbook(buffer: ArrayBuffer): Promise<Parsed
   try {
     await workbook.xlsx.load(Buffer.from(buffer) as unknown as ExcelJS.Buffer);
   } catch {
-    throw new AppError(400, "INVALID_EXCEL", "فایل اکسل معتبر نیست.");
+    throw new AppError(400, "INVALID_EXCEL", "فایل اکسل معتبر نیست");
   }
   const sheet = workbook.worksheets[0];
-  if (!sheet) throw new AppError(400, "INVALID_EXCEL", "فایل اکسل هیچ برگه‌ای ندارد.");
+  if (!sheet) throw new AppError(400, "INVALID_EXCEL", "فایل اکسل هیچ برگه ای ندارد");
 
   const { row: headerRow, columns } = findHeader(sheet);
   const rows: ParsedStudentRow[] = [];
@@ -149,7 +149,7 @@ export async function parseStudentsWorkbook(buffer: ArrayBuffer): Promise<Parsed
 
   for (let rowNumber = headerRow.number + 1; rowNumber <= sheet.rowCount; rowNumber++) {
     if (rows.length >= STUDENT_IMPORT_MAX_ROWS) {
-      errors.push(rowError(rowNumber, `تعداد ردیف‌ها بیشتر از ${STUDENT_IMPORT_MAX_ROWS} مجاز نیست.`));
+      errors.push(rowError(rowNumber, `تعداد ردیف ها بیشتر از ${STUDENT_IMPORT_MAX_ROWS} مجاز نیست`));
       break;
     }
 
@@ -192,28 +192,28 @@ export async function parseStudentsWorkbook(buffer: ArrayBuffer): Promise<Parsed
     let valid = true;
 
     if (fullName.length < 3) {
-      errors.push(rowError(rowNumber, "نام و نام خانوادگی را کامل وارد کنید."));
+      errors.push(rowError(rowNumber, "نام و نام خانوادگی را کامل وارد کنید"));
       valid = false;
     }
     if (!/^\d{10}$/.test(nationalCode)) {
-      errors.push(rowError(rowNumber, "کد ملی باید ۱۰ رقم باشد."));
+      errors.push(rowError(rowNumber, "کد ملی باید ۱۰ رقم باشد"));
       valid = false;
     }
     if (!/^09\d{9}$/.test(mobile)) {
-      errors.push(rowError(rowNumber, "تلفن همراه باید ۱۱ رقم و با ۰۹ شروع شود."));
+      errors.push(rowError(rowNumber, "تلفن همراه باید ۱۱ رقم و با ۰۹ شروع شود"));
       valid = false;
     }
     if (birthDate.iso === null) {
       errors.push(
         rowError(
           rowNumber,
-          birthDate.text === "" ? "تاریخ تولد را وارد کنید." : "تاریخ تولد معتبر نیست؛ تاریخ را شمسی مثل ۱۳۸۰/۰۵/۱۲ وارد کنید.",
+          birthDate.text === "" ? "تاریخ تولد را وارد کنید" : "تاریخ تولد معتبر نیست؛ تاریخ را شمسی مثل ۱۳۸۰/۰۵/۱۲ وارد کنید",
         ),
       );
       valid = false;
     }
     if (beltLabel === "") {
-      errors.push(rowError(rowNumber, "کمربند را وارد کنید."));
+      errors.push(rowError(rowNumber, "کمربند را وارد کنید"));
       valid = false;
     }
     for (const [label, cell] of [
@@ -222,7 +222,7 @@ export async function parseStudentsWorkbook(buffer: ArrayBuffer): Promise<Parsed
       ["تاریخ شارژ بانک تکواندو", tkdBankChargeDate],
     ] as const) {
       if (cell.text !== "" && cell.iso === null) {
-        errors.push(rowError(rowNumber, `${label} معتبر نیست؛ تاریخ را شمسی مثل ۱۳۸۰/۰۵/۱۲ وارد کنید.`));
+        errors.push(rowError(rowNumber, `${label} معتبر نیست؛ تاریخ را شمسی مثل ۱۳۸۰/۰۵/۱۲ وارد کنید`));
         valid = false;
       }
     }

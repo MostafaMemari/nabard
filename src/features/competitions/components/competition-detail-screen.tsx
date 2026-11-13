@@ -32,11 +32,11 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
     setDescriptionSaving(true);
     try {
       await updateCompetition(competitionId, { description: description.trim() ? description.trim() : null });
-      toast.success("توضیحات مسابقه ذخیره شد.");
+      toast.success("توضیحات مسابقه ذخیره شد");
       setDescriptionOpen(false);
       await mutate();
     } catch {
-      toast.error("ذخیره توضیحات انجام نشد. دوباره تلاش کنید.");
+      toast.error("ذخیره توضیحات انجام نشد. دوباره تلاش کنید");
     } finally {
       setDescriptionSaving(false);
     }
@@ -56,7 +56,7 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
   }
 
   if (error || !competition) {
-    return <ErrorBanner message="مسابقه یافت نشد." onRetry={() => mutate()} />;
+    return <ErrorBanner message="مسابقه یافت نشد" onRetry={() => mutate()} />;
   }
 
   const hasRegistrations = registrations.some((registration) => registration.competitionId === competitionId);
@@ -87,7 +87,7 @@ export function CompetitionDetailScreen({ competitionId }: { competitionId: stri
             <CountdownChip deadline={competition.registrationDeadline} />
           </div>
         </div>
-        {hasRegistrations ? <p className="text-subtle text-muted-foreground">به دلیل وجود ثبت نام، ویرایش این مسابقه ممکن نیست.</p> : null}
+        {hasRegistrations ? <p className="text-subtle text-muted-foreground">به دلیل وجود ثبت نام، ویرایش این مسابقه ممکن نیست</p> : null}
       </div>
 
       <CompetitionInfoSections

@@ -98,7 +98,7 @@ export function CompetitionsDemo() {
             ) : null}
           </>
         }
-        emptyTitle={query ? `نتیجه ای برای «${query}» پیدا نشد.` : "هنوز مسابقه ای ثبت نشده است."}
+        emptyTitle={query ? `نتیجه ای برای «${query}» پیدا نشد` : "هنوز مسابقه ای ثبت نشده است"}
         emptyAction={
           <Button type="button" size="sm">
             مسابقه جدید

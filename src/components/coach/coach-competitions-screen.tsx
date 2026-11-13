@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useMe } from "@/features/auth";
 import { CoachCompetitionList, useCompetitions } from "@/features/competitions";
 
-const NO_GENDER_MESSAGE = "جنسیت شما ثبت نشده است؛ با ادمین استان تماس بگیرید.";
+const NO_GENDER_MESSAGE = "جنسیت شما ثبت نشده است؛ با ادمین استان تماس بگیرید";
 
 export function CoachCompetitionsScreen() {
   const { user } = useMe();
@@ -20,7 +20,7 @@ export function CoachCompetitionsScreen() {
 
   return (
     <>
-      <PageHeader title="مسابقات" description="مسابقاتی که ثبت نام آن ها باز است." />
+      <PageHeader title="مسابقات" description="مسابقاتی که ثبت نام آن ها باز است" />
       {user?.gender === null ? (
         <div className="rounded-xl border border-warning/30 bg-warning-bg px-4 py-3 text-sm text-warning">{NO_GENDER_MESSAGE}</div>
       ) : error ? (
@@ -33,7 +33,7 @@ export function CoachCompetitionsScreen() {
         </div>
       ) : openCompetitions.length === 0 ? (
         <StateCard>
-          <EmptyState icon={TrophyIcon} title="مسابقه بازی برای ثبت نام وجود ندارد." />
+          <EmptyState icon={TrophyIcon} title="مسابقه بازی برای ثبت نام وجود ندارد" />
         </StateCard>
       ) : (
         <CoachCompetitionList competitions={openCompetitions} />

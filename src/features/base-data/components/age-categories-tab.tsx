@@ -81,7 +81,7 @@ export function AgeCategoriesTab() {
       await updateAgeCategory(category.id, { isActive: !category.isActive });
       await mutate();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "تغییر وضعیت انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "تغییر وضعیت انجام نشد. دوباره تلاش کنید");
     }
   }
 
@@ -90,7 +90,7 @@ export function AgeCategoriesTab() {
       <header className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
         <div>
           <h2 className="text-sm font-semibold">رده های سنی</h2>
-          <p className="text-subtle mt-0.5 text-muted-foreground">بازه های رده های فعال نباید همپوشانی داشته باشند.</p>
+          <p className="text-subtle mt-0.5 text-muted-foreground">بازه های رده های فعال نباید همپوشانی داشته باشند</p>
         </div>
         <Button
           size="sm"
@@ -110,11 +110,11 @@ export function AgeCategoriesTab() {
         </div>
       ) : error ? (
         <div className="px-4 py-2">
-          <ErrorBanner message="دریافت رده های سنی انجام نشد." onRetry={() => void mutate()} />
+          <ErrorBanner message="دریافت رده های سنی انجام نشد" onRetry={() => void mutate()} />
         </div>
       ) : ageCategories.length === 0 ? (
         <div className="px-4 pb-4">
-          <EmptyState title="هنوز رده سنی تعریف نشده است." />
+          <EmptyState title="هنوز رده سنی تعریف نشده است" />
         </div>
       ) : (
         <>

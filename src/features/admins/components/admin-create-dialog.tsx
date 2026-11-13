@@ -36,12 +36,12 @@ export function AdminCreateDialog({
         initialPassword: values.initialPassword,
         province: values.province as AdminUser["province"],
       });
-      toast.success("ادمین استان اضافه شد.");
+      toast.success("ادمین استان اضافه شد");
       form.reset(emptyForm);
       onOpenChange(false);
       onSaved();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید");
     }
   }
 
@@ -50,7 +50,7 @@ export function AdminCreateDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>ادمین استان جدید</DialogTitle>
-          <DialogDescription>اطلاعات ادمین استان را وارد کنید؛ حساب به صورت فعال ساخته می شود.</DialogDescription>
+          <DialogDescription>اطلاعات ادمین استان را وارد کنید؛ حساب به صورت فعال ساخته می شود</DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <ControlledTextField control={form.control} name="fullName" label="نام و نام خانوادگی" placeholder="مثلاً سارا احمدی" />

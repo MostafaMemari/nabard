@@ -6,7 +6,7 @@ import type { CurrentUser } from "@/lib/session";
 import type { RegistrationRepository } from "./repository";
 import { listParticipants, type ParticipantRecord } from "./service";
 
-const SHEET_NAME = "شرکت‌کنندگان";
+const SHEET_NAME = "شرکت کنندگان";
 const COLUMNS = [
   { header: "ردیف", width: 8, align: "center" as const },
   { header: "نام و نام خانوادگی", width: 26 },
@@ -57,7 +57,7 @@ export async function participantsXlsxResponse(repo: RegistrationRepository, use
 export async function participantsPdfResponse(repo: RegistrationRepository, user: CurrentUser, competitionId: string): Promise<Response> {
   const { competition, rows } = await participantReport(repo, user, competitionId);
   const buffer = await renderReportPdf({
-    title: "فهرست شرکت‌کنندگان تأییدشده",
+    title: "فهرست شرکت کنندگان تأییدشده",
     subtitle: competition?.title,
     footerNote: "سامانهٔ مسابقات تکواندو",
     sections: [
@@ -65,9 +65,9 @@ export async function participantsPdfResponse(repo: RegistrationRepository, user
         meta: competition
           ? [
               ["تاریخ برگزاری", formatJalaliDate(competition.eventDate)],
-              ["تعداد شرکت‌کننده", toPersianDigits(rows.length)],
+              ["تعداد شرکت کننده", toPersianDigits(rows.length)],
             ]
-          : [["تعداد شرکت‌کننده", toPersianDigits(rows.length)]],
+          : [["تعداد شرکت کننده", toPersianDigits(rows.length)]],
         table: { columns: COLUMNS, rows },
       },
     ],

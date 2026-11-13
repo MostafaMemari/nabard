@@ -12,11 +12,11 @@ export function useProfileReview(onReviewed: () => Promise<unknown>) {
 
     try {
       await approveStudentProfile(id);
-      toast.success("پروفایل هنرجو تأیید شد.");
+      toast.success("پروفایل هنرجو تأیید شد");
       await onReviewed();
       return true;
     } catch {
-      toast.error("تأیید پروفایل انجام نشد. دوباره تلاش کنید.");
+      toast.error("تأیید پروفایل انجام نشد. دوباره تلاش کنید");
       return false;
     } finally {
       setWorking(false);
@@ -28,11 +28,11 @@ export function useProfileReview(onReviewed: () => Promise<unknown>) {
 
     try {
       await rejectStudentProfile(id, note);
-      toast.success("پروفایل هنرجو رد شد.");
+      toast.success("پروفایل هنرجو رد شد");
       await onReviewed();
       return true;
     } catch {
-      toast.error("رد پروفایل انجام نشد. دوباره تلاش کنید.");
+      toast.error("رد پروفایل انجام نشد. دوباره تلاش کنید");
       return false;
     } finally {
       setWorking(false);

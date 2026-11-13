@@ -49,14 +49,14 @@ export function CoachTransfersSection({
   return (
     <SectionCard
       title="درخواست های انتقال هنرجو"
-      description="درخواست هایی که ثبت کرده اید یا هنرجویانی که درخواست انتقال آنها از باشگاه شما ثبت شده است."
+      description="درخواست هایی که ثبت کرده اید یا هنرجویانی که درخواست انتقال آنها از باشگاه شما ثبت شده است"
     >
       {isLoading ? (
         <SkeletonRows rows={2} />
       ) : error ? (
-        <ErrorBanner message="دریافت درخواست های انتقال انجام نشد." onRetry={onRetry} />
+        <ErrorBanner message="دریافت درخواست های انتقال انجام نشد" onRetry={onRetry} />
       ) : requests.length === 0 ? (
-        <EmptyState icon={ArrowLeftRightIcon} title="درخواست انتقالی ثبت نشده است." />
+        <EmptyState icon={ArrowLeftRightIcon} title="درخواست انتقالی ثبت نشده است" />
       ) : (
         <div>
           {requests.map((request) => (

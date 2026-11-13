@@ -32,13 +32,13 @@ type BodyOf<TSchema> = TSchema extends ZodType ? z.infer<TSchema> : undefined;
 export async function readFormData(request: Request, options?: { maxBytes: number }): Promise<FormData> {
   const contentLength = Number(request.headers.get("content-length") ?? "0");
   if (options && Number.isFinite(contentLength) && contentLength > options.maxBytes) {
-    throw new AppError(413, "PAYLOAD_TOO_LARGE", "حجم درخواست بیش از حد مجاز است.");
+    throw new AppError(413, "PAYLOAD_TOO_LARGE", "حجم درخواست بیش از حد مجاز است");
   }
 
   try {
     return await request.formData();
   } catch {
-    throw new AppError(400, "INVALID_FORM", "بدنه درخواست معتبر نیست.");
+    throw new AppError(400, "INVALID_FORM", "بدنه درخواست معتبر نیست");
   }
 }
 
@@ -62,7 +62,7 @@ async function readBody<TSchema extends ZodType>(request: Request, schema: TSche
   try {
     raw = await request.json();
   } catch {
-    throw new AppError(400, "INVALID_JSON", "بدنه درخواست JSON معتبر نیست.");
+    throw new AppError(400, "INVALID_JSON", "بدنه درخواست JSON معتبر نیست");
   }
   return schema.parse(raw);
 }
@@ -85,10 +85,10 @@ export function route<TSchema extends ZodType | undefined = undefined, TResult =
     } catch (error) {
       if (error instanceof AppError) return fail(error);
       if (error instanceof ZodError) {
-        return fail(new AppError(400, "VALIDATION_ERROR", "ورودی نامعتبر است.", error.issues));
+        return fail(new AppError(400, "VALIDATION_ERROR", "ورودی نامعتبر است", error.issues));
       }
       console.error(error);
-      return fail(new AppError(500, "INTERNAL_ERROR", "خطای غیرمنتظره رخ داد."));
+      return fail(new AppError(500, "INTERNAL_ERROR", "خطای غیرمنتظره رخ داد"));
     }
   };
 }

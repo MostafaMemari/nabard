@@ -24,7 +24,7 @@ export function CoachCompetitionDetailScreen({ competitionId }: { competitionId:
   }
 
   if (error || !competition) {
-    return <ErrorBanner message="مسابقه یافت نشد." onRetry={() => mutate()} />;
+    return <ErrorBanner message="مسابقه یافت نشد" onRetry={() => mutate()} />;
   }
 
   const open = competition.status === "PUBLISHED" && new Date(competition.registrationDeadline).getTime() > Date.now();

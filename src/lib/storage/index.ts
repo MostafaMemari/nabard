@@ -24,7 +24,7 @@ export function createStorage(): Storage {
 
   const requireR2 = (): Storage => {
     const resolved = resolveR2();
-    if (!resolved) throw new AppError(500, "STORAGE_UNAVAILABLE", "سرویس فایل در دسترس نیست.");
+    if (!resolved) throw new AppError(500, "STORAGE_UNAVAILABLE", "سرویس فایل در دسترس نیست");
 
     return resolved;
   };

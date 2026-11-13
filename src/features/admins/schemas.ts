@@ -6,28 +6,28 @@ function digitsField(message: string, pattern: RegExp) {
   return z.string().transform(normalizeDigits).pipe(z.string().regex(pattern, message));
 }
 
-const fullNameField = z.string().trim().min(3, "نام و نام خانوادگی را کامل وارد کنید.");
-const mobileField = digitsField("شماره همراه باید ۱۱ رقم باشد و با ۰۹ شروع شود.", /^09\d{9}$/);
-const passwordField = z.string().min(8, "رمز عبور باید حداقل ۸ کاراکتر باشد.");
+const fullNameField = z.string().trim().min(3, "نام و نام خانوادگی را کامل وارد کنید");
+const mobileField = digitsField("شماره همراه باید ۱۱ رقم باشد و با ۰۹ شروع شود", /^09\d{9}$/);
+const passwordField = z.string().min(8, "رمز عبور باید حداقل ۸ کاراکتر باشد");
 
 export const createAdminSchema = z.object({
   fullName: fullNameField,
   mobile: mobileField,
   initialPassword: passwordField,
-  province: z.enum(provinceValues, { message: "استان را انتخاب کنید." }),
+  province: z.enum(provinceValues, { message: "استان را انتخاب کنید" }),
 });
 
 export const createAdminFormSchema = z.object({
   fullName: fullNameField,
   mobile: mobileField,
   initialPassword: passwordField,
-  province: z.string().min(1, "استان را انتخاب کنید."),
+  province: z.string().min(1, "استان را انتخاب کنید"),
 });
 
 export const editAdminFormSchema = z.object({
   fullName: fullNameField,
   mobile: mobileField,
-  province: z.string().min(1, "استان را انتخاب کنید."),
+  province: z.string().min(1, "استان را انتخاب کنید"),
 });
 
 export const updateAdminSchema = z
@@ -37,7 +37,7 @@ export const updateAdminSchema = z
     province: z.enum(provinceValues).optional(),
     isActive: z.boolean().optional(),
   })
-  .refine((value) => Object.keys(value).length > 0, { message: "اطلاعاتی برای تغییر ارسال نشده است." });
+  .refine((value) => Object.keys(value).length > 0, { message: "اطلاعاتی برای تغییر ارسال نشده است" });
 
 export const resetAdminPasswordSchema = z.object({
   password: passwordField,

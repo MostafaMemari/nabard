@@ -17,7 +17,7 @@ export function SuperCountiesScreen() {
 
   return (
     <>
-      <PageHeader title="شهرستان ها" description="شهرستان های همه استان ها؛ فقط قابل مشاهده است." />
+      <PageHeader title="شهرستان ها" description="شهرستان های همه استان ها؛ فقط قابل مشاهده است" />
 
       {isLoading ? (
         <div className="flex flex-col gap-4">
@@ -28,10 +28,10 @@ export function SuperCountiesScreen() {
           ))}
         </div>
       ) : error ? (
-        <ErrorBanner message="دریافت شهرستان ها انجام نشد." onRetry={() => mutate()} />
+        <ErrorBanner message="دریافت شهرستان ها انجام نشد" onRetry={() => mutate()} />
       ) : groups.length === 0 ? (
         <StateCard>
-          <EmptyState icon={MapPinnedIcon} title="شهرستانی یافت نشد." />
+          <EmptyState icon={MapPinnedIcon} title="شهرستانی یافت نشد" />
         </StateCard>
       ) : (
         <div className="flex flex-col gap-4">

@@ -49,7 +49,7 @@ export function AdminsScreen() {
     <>
       <PageHeader
         title="ادمین های استان"
-        description="ساخت و مدیریت حساب ادمین های استان ها."
+        description="ساخت و مدیریت حساب ادمین های استان ها"
         action={
           <Button onClick={() => setCreateOpen(true)}>
             <UserRoundPlusIcon data-icon="inline-start" />
@@ -74,7 +74,7 @@ export function AdminsScreen() {
           />
         )}
         emptyIcon={ShieldCheckIcon}
-        emptyTitle={search.value.trim() !== "" ? `نتیجه ای برای «${search.value.trim()}» پیدا نشد.` : "هنوز ادمینی اضافه نشده است."}
+        emptyTitle={search.value.trim() !== "" ? `نتیجه ای برای «${search.value.trim()}» پیدا نشد` : "هنوز ادمینی اضافه نشده است"}
         toolbar={
           <ListToolbar
             tabs={statusTabs}

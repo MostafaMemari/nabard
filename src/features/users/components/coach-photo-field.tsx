@@ -26,7 +26,7 @@ export function CoachPhotoField({
     if (!file) return;
 
     if (!ACCEPTED_RECEIPT_TYPES.has(file.type)) {
-      setError("فقط تصاویر JPEG، PNG یا WebP پذیرفته می شوند.");
+      setError("فقط تصاویر JPEG، PNG یا WebP پذیرفته می شوند");
       return;
     }
 
@@ -60,7 +60,7 @@ export function CoachPhotoField({
         {error ? (
           <p className="text-subtle text-danger">{error}</p>
         ) : (
-          <p className="text-subtle text-muted-foreground">JPEG، PNG یا WebP تا ۲ مگابایت.</p>
+          <p className="text-subtle text-muted-foreground">JPEG، PNG یا WebP تا ۲ مگابایت</p>
         )}
       </div>
       <input

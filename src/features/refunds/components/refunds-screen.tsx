@@ -28,7 +28,7 @@ export function RefundsScreen() {
 
   return (
     <>
-      <PageHeader title="بازپرداخت ها" description="بازپرداخت های رد ثبت نام و لغو مسابقه به مربیان." />
+      <PageHeader title="بازپرداخت ها" description="بازپرداخت های رد ثبت نام و لغو مسابقه به مربیان" />
 
       <DataTable
         columns={columns}
@@ -39,7 +39,7 @@ export function RefundsScreen() {
         onRetry={() => mutate()}
         renderCard={(row) => <RefundCard refund={row} onComplete={setTarget} />}
         emptyIcon={Undo2Icon}
-        emptyTitle="بازپرداختی ثبت نشده است."
+        emptyTitle="بازپرداختی ثبت نشده است"
         toolbar={
           <ListToolbar
             tabs={refundsTabs}

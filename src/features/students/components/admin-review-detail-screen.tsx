@@ -31,7 +31,7 @@ export function AdminReviewDetailScreen({ studentId }: { studentId: string }) {
     return (
       <div className="flex flex-col gap-4">
         <DetailPageHeader backHref="/admin/profiles" backLabel="بررسی پروفایل ها" title="پروفایل هنرجو" />
-        <ErrorBanner message="این هنرجو پیدا نشد یا به استان شما تعلق ندارد." onRetry={() => mutate()} />
+        <ErrorBanner message="این هنرجو پیدا نشد یا به استان شما تعلق ندارد" onRetry={() => mutate()} />
       </div>
     );
   }
@@ -44,7 +44,7 @@ export function AdminReviewDetailScreen({ studentId }: { studentId: string }) {
         backHref="/admin/profiles"
         backLabel="بررسی پروفایل ها"
         title={student.fullName}
-        description="مدارک هنرجو را بررسی و پروفایل را تأیید یا رد کنید."
+        description="مدارک هنرجو را بررسی و پروفایل را تأیید یا رد کنید"
       />
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">

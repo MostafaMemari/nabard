@@ -6,18 +6,18 @@ function digitsField(message: string, pattern: RegExp) {
   return z.string().transform(normalizeDigits).pipe(z.string().regex(pattern, message));
 }
 
-const fullNameField = z.string().trim().min(3, "نام و نام خانوادگی را کامل وارد کنید.");
-const mobileField = digitsField("شماره همراه باید ۱۱ رقم باشد و با ۰۹ شروع شود.", /^09\d{9}$/);
-const nationalCodeField = digitsField("کد ملی باید ۱۰ رقم باشد.", /^\d{10}$/);
-const passwordField = z.string().min(8, "رمز عبور باید حداقل ۸ کاراکتر باشد.");
+const fullNameField = z.string().trim().min(3, "نام و نام خانوادگی را کامل وارد کنید");
+const mobileField = digitsField("شماره همراه باید ۱۱ رقم باشد و با ۰۹ شروع شود", /^09\d{9}$/);
+const nationalCodeField = digitsField("کد ملی باید ۱۰ رقم باشد", /^\d{10}$/);
+const passwordField = z.string().min(8, "رمز عبور باید حداقل ۸ کاراکتر باشد");
 
 export const createCoachSchema = z.object({
   fullName: fullNameField,
   mobile: mobileField,
   nationalCode: nationalCodeField,
   initialPassword: passwordField,
-  countyId: z.string().min(1, "شهرستان مربی را انتخاب کنید."),
-  gender: z.enum(["MALE", "FEMALE"], { message: "جنسیت مربی را انتخاب کنید." }),
+  countyId: z.string().min(1, "شهرستان مربی را انتخاب کنید"),
+  gender: z.enum(["MALE", "FEMALE"], { message: "جنسیت مربی را انتخاب کنید" }),
 });
 
 export const updateCoachSchema = z
@@ -26,10 +26,10 @@ export const updateCoachSchema = z
     mobile: mobileField.optional(),
     nationalCode: nationalCodeField.optional(),
     isActive: z.boolean().optional(),
-    countyId: z.string().min(1, "شهرستان مربی را انتخاب کنید.").optional(),
-    gender: z.enum(["MALE", "FEMALE"], { message: "جنسیت مربی را انتخاب کنید." }).optional(),
+    countyId: z.string().min(1, "شهرستان مربی را انتخاب کنید").optional(),
+    gender: z.enum(["MALE", "FEMALE"], { message: "جنسیت مربی را انتخاب کنید" }).optional(),
   })
-  .refine((value) => Object.keys(value).length > 0, { message: "اطلاعاتی برای تغییر ارسال نشده است." });
+  .refine((value) => Object.keys(value).length > 0, { message: "اطلاعاتی برای تغییر ارسال نشده است" });
 
 export const resetCoachPasswordSchema = z.object({
   password: passwordField,

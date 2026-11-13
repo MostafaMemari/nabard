@@ -13,7 +13,7 @@ export function CoachRegistrationsScreen() {
 
   return (
     <>
-      <PageHeader title="ثبت نام های من" description="پیگیری وضعیت ثبت نام و پرداخت هنرجویان." />
+      <PageHeader title="ثبت نام های من" description="پیگیری وضعیت ثبت نام و پرداخت هنرجویان" />
       {error ? (
         <ErrorBanner onRetry={() => void mutate()} />
       ) : isLoading ? (
@@ -22,7 +22,7 @@ export function CoachRegistrationsScreen() {
         </StateCard>
       ) : rows.length === 0 ? (
         <StateCard>
-          <EmptyState icon={ClipboardListIcon} title="هنوز ثبت نامی انجام نشده است." />
+          <EmptyState icon={ClipboardListIcon} title="هنوز ثبت نامی انجام نشده است" />
         </StateCard>
       ) : (
         <DataTable

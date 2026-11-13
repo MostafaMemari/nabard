@@ -46,11 +46,11 @@ export function CoachEditDialog({
 
     try {
       await updateCoach(coach.id, values);
-      toast.success("اطلاعات مربی ذخیره شد.");
+      toast.success("اطلاعات مربی ذخیره شد");
       onOpenChange(false);
       onSaved();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید");
     }
   }
 
@@ -59,7 +59,7 @@ export function CoachEditDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>ویرایش مربی</DialogTitle>
-          <DialogDescription>جنسیت مربی وقتی تغییر می کند که هنرجوی هم جنسیت دیگری نداشته باشد.</DialogDescription>
+          <DialogDescription>جنسیت مربی وقتی تغییر می کند که هنرجوی هم جنسیت دیگری نداشته باشد</DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <ControlledTextField control={form.control} name="fullName" label="نام و نام خانوادگی" placeholder="مثلاً رضا محمدی" />

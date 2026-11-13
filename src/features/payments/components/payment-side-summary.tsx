@@ -58,7 +58,7 @@ export function PaymentSideSummary({
         />
         {decided ? (
           <p className="text-subtle text-muted-foreground">
-            {payment.status === "CONFIRMED" ? "این رسید تأیید شده است." : "این رسید رد شده است."}
+            {payment.status === "CONFIRMED" ? "این رسید تأیید شده است" : "این رسید رد شده است"}
           </p>
         ) : (
           <div className="flex flex-col gap-3">

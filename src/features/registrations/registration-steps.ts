@@ -24,11 +24,11 @@ export function buildRegistrationSteps(registration: Registration, paymentStatus
       title: "بررسی رسید",
       hint:
         paymentStatus === null
-          ? "هنوز رسیدی بارگذاری نشده است."
+          ? "هنوز رسیدی بارگذاری نشده است"
           : paymentStatus === "PENDING"
             ? "در انتظار بررسی مدیریت استان"
             : paymentStatus === "REJECTED"
-              ? "رسید رد شد؛ رسید جدید بارگذاری کنید."
+              ? "رسید رد شد؛ رسید جدید بارگذاری کنید"
               : "رسید تأیید شد",
       state: receiptState,
     },

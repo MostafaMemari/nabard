@@ -16,11 +16,11 @@ export function CountyDeleteDialog({ county, onDone, onClose }: { county: County
     setWorking(true);
     try {
       await deleteCounty(county.id);
-      toast.success("شهرستان حذف شد.");
+      toast.success("شهرستان حذف شد");
       onDone();
       onClose();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "حذف انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "حذف انجام نشد. دوباره تلاش کنید");
     } finally {
       setWorking(false);
     }
@@ -35,7 +35,7 @@ export function CountyDeleteDialog({ county, onDone, onClose }: { county: County
         }
       }}
       title="حذف شهرستان"
-      description={`شهرستان «${county?.name}» حذف می شود. اگر مربی یا مسابقه ای به آن متصل باشد، حذف انجام نمی شود.`}
+      description={`شهرستان «${county?.name}» حذف می شود. اگر مربی یا مسابقه ای به آن متصل باشد، حذف انجام نمی شود`}
       confirmLabel="حذف"
       destructive
       loading={working}

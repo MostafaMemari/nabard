@@ -34,7 +34,7 @@ export function TransfersScreen() {
 
   return (
     <>
-      <PageHeader title="درخواست های انتقال" description="درخواست های انتقال هنرجو بین مربیان استان و نتیجه بررسی آنها." />
+      <PageHeader title="درخواست های انتقال" description="درخواست های انتقال هنرجو بین مربیان استان و نتیجه بررسی آنها" />
 
       <DataTable
         columns={columns}
@@ -45,7 +45,7 @@ export function TransfersScreen() {
         onRetry={() => mutate()}
         renderCard={(row) => <TransferCard request={row} onDecide={(request, decision) => setTarget({ request, decision })} />}
         emptyIcon={ArrowLeftRightIcon}
-        emptyTitle="درخواستی ثبت نشده است."
+        emptyTitle="درخواستی ثبت نشده است"
         toolbar={
           <ListToolbar
             tabs={transferTabs}

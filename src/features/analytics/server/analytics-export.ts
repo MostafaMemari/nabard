@@ -12,7 +12,7 @@ import { getSuperAnalytics } from "./service";
 const PROFILE_STATUS_LABELS = { approved: "تأیید شده", pending: "در انتظار بررسی", rejected: "رد شده" } as const;
 
 export function provinceTitle(province: Province | null): string {
-  return province === null ? "همهٔ استان‌ها" : provinceLabels[province];
+  return province === null ? "همهٔ استان ها" : provinceLabels[province];
 }
 
 export function approvalRatePercent(counts: { approved: number; pending: number; rejected: number }): number {
@@ -26,14 +26,14 @@ function overviewRows(analytics: SuperAnalytics): Array<[string, string]> {
   const { kpis, profiles } = analytics;
 
   return [
-    ["ثبت‌نام‌ها", toPersianDigits(formatNumber(kpis.registrations))],
+    ["ثبت نام ها", toPersianDigits(formatNumber(kpis.registrations))],
     ["هنرجویان", toPersianDigits(formatNumber(kpis.students))],
     ["مربیان", toPersianDigits(formatNumber(kpis.coaches))],
     ["مسابقات", toPersianDigits(formatNumber(kpis.competitions))],
     ["پروفایل تأییدشده", toPersianDigits(formatNumber(profiles.approved))],
     ["پروفایل در انتظار بررسی", toPersianDigits(formatNumber(profiles.pending))],
     ["پروفایل ردشده", toPersianDigits(formatNumber(profiles.rejected))],
-    ["نرخ تأیید پروفایل‌ها", `${toPersianDigits(approvalRatePercent(profiles))}٪`],
+    ["نرخ تأیید پروفایل ها", `${toPersianDigits(approvalRatePercent(profiles))}٪`],
   ];
 }
 
@@ -55,12 +55,12 @@ export function analyticsOverviewSheet(analytics: SuperAnalytics): ExcelSheetInp
 
 export function analyticsTrendSheet(analytics: SuperAnalytics): ExcelSheetInput {
   return {
-    name: "روند ثبت‌نام",
-    title: "روند ثبت‌نام‌ها در ۱۲ ماه گذشته",
+    name: "روند ثبت نام",
+    title: "روند ثبت نام ها در ۱۲ ماه گذشته",
     columns: [
       { header: "ماه", width: 14 },
       { header: "سال", width: 10, align: "center" },
-      { header: "تعداد ثبت‌نام", width: 16, align: "center" },
+      { header: "تعداد ثبت نام", width: 16, align: "center" },
     ],
     rows: analytics.trend.map((point) => [point.label, point.year, point.count]),
   };
@@ -68,12 +68,12 @@ export function analyticsTrendSheet(analytics: SuperAnalytics): ExcelSheetInput 
 
 export function analyticsCountiesSheet(analytics: SuperAnalytics): ExcelSheetInput {
   return {
-    name: "شهرستان‌ها",
-    title: "مقایسه شهرستان‌ها بر اساس ثبت‌نام",
+    name: "شهرستان ها",
+    title: "مقایسه شهرستان ها بر اساس ثبت نام",
     columns: [
       { header: "شهرستان", width: 22 },
       { header: "استان", width: 18 },
-      { header: "ثبت‌نام", width: 12, align: "center" },
+      { header: "ثبت نام", width: 12, align: "center" },
       { header: "هنرجو", width: 12, align: "center" },
     ],
     rows: analytics.counties.map((county) => [county.name, provinceLabels[county.province], county.registrations, county.students]),
@@ -110,37 +110,37 @@ export async function analyticsPdfResponse(repo: AnalyticsRepository, user: Curr
         meta: [["تاریخ گزارش", formatJalaliDate(new Date())], ...overviewRows(analytics)],
       },
       {
-        heading: "روند ثبت‌نام‌ها در ۱۲ ماه گذشته",
+        heading: "روند ثبت نام ها در ۱۲ ماه گذشته",
         meta: [["مجموع", toPersianDigits(formatNumber(trendTotal))]],
         table: {
           columns: [
             { header: "ماه", width: 1 },
             { header: "سال", width: 1, align: "center" },
-            { header: "تعداد ثبت‌نام", width: 1, align: "center" },
+            { header: "تعداد ثبت نام", width: 1, align: "center" },
           ],
           rows: analytics.trend.map((point) => [point.label, point.year, point.count]),
         },
       },
       {
-        heading: "مقایسه شهرستان‌ها",
+        heading: "مقایسه شهرستان ها",
         paragraphs:
           analytics.hiddenCounties > 0
-            ? [`و ${toPersianDigits(analytics.hiddenCounties)} شهرستان دیگر در نمودار نمایش داده نشده است.`]
+            ? [`و ${toPersianDigits(analytics.hiddenCounties)} شهرستان دیگر در نمودار نمایش داده نشده است`]
             : undefined,
         table: {
           columns: [
             { header: "شهرستان", width: 2 },
             { header: "استان", width: 2 },
-            { header: "ثبت‌نام", width: 1, align: "center" },
+            { header: "ثبت نام", width: 1, align: "center" },
             { header: "هنرجو", width: 1, align: "center" },
           ],
           rows: analytics.counties.map((county) => [county.name, provinceLabels[county.province], county.registrations, county.students]),
         },
       },
       {
-        heading: "نرخ تأیید پروفایل‌ها",
+        heading: "نرخ تأیید پروفایل ها",
         meta: [
-          ["مجموع پروفایل‌ها", toPersianDigits(formatNumber(profileTotal))],
+          ["مجموع پروفایل ها", toPersianDigits(formatNumber(profileTotal))],
           ["نرخ تأیید", `${toPersianDigits(approvalRatePercent(profiles))}٪`],
         ],
         table: {

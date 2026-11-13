@@ -36,7 +36,7 @@ export function PhotoChangesScreen() {
     <>
       <PageHeader
         title="درخواست های تغییر عکس"
-        description="عکس جدید هنرجویان استان را بررسی کنید؛ عکس پروفایل فقط با تأیید شما جایگزین می شود."
+        description="عکس جدید هنرجویان استان را بررسی کنید؛ عکس پروفایل فقط با تأیید شما جایگزین می شود"
       />
 
       <DataTable
@@ -48,7 +48,7 @@ export function PhotoChangesScreen() {
         onRetry={() => mutate()}
         renderCard={(row) => <PhotoChangeCard request={row} onDecide={(request, decision) => setTarget({ request, decision })} />}
         emptyIcon={ImageUpIcon}
-        emptyTitle="درخواست تغییر عکسی ثبت نشده است."
+        emptyTitle="درخواست تغییر عکسی ثبت نشده است"
         toolbar={
           <ListToolbar
             tabs={photoChangeTabs}

@@ -88,7 +88,7 @@ describe("parseStudentsWorkbook", () => {
     const parsed = await parseOf([HEADER, ["علی رضایی", "0012345678", "09121234567", "1380/05/12", "آبی", "۱۴۰۰/۱۴/۰۱"]]);
 
     expect(parsed.rows).toHaveLength(0);
-    expect(parsed.errors).toEqual([{ row: 2, message: "تاریخ حکم کمربند معتبر نیست؛ تاریخ را شمسی مثل ۱۳۸۰/۰۵/۱۲ وارد کنید." }]);
+    expect(parsed.errors).toEqual([{ row: 2, message: "تاریخ حکم کمربند معتبر نیست؛ تاریخ را شمسی مثل ۱۳۸۰/۰۵/۱۲ وارد کنید" }]);
   });
 
   it("throws when the template headers are missing", async () => {

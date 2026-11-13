@@ -83,18 +83,18 @@ describe("completeRefund", () => {
     const completed: RefundWithScope = {
       ...refundRow,
       status: "COMPLETED",
-      note: "حواله شد.",
+      note: "حواله شد",
       processedAt: new Date("2026-10-21T10:00:00.000Z"),
     };
     const repo = repoWith({
       findUserById: vi.fn().mockResolvedValue(adminRecord),
       completeRefundFromPending: vi.fn().mockResolvedValue(completed),
     });
-    const record = await completeRefund(repo, admin, "refund-1", { note: "حواله شد." });
+    const record = await completeRefund(repo, admin, "refund-1", { note: "حواله شد" });
 
-    expect(repo.completeRefundFromPending).toHaveBeenCalledWith("refund-1", { processedById: "admin-1", note: "حواله شد." });
+    expect(repo.completeRefundFromPending).toHaveBeenCalledWith("refund-1", { processedById: "admin-1", note: "حواله شد" });
     expect(record.status).toBe("COMPLETED");
-    expect(record.note).toBe("حواله شد.");
+    expect(record.note).toBe("حواله شد");
   });
 
   it("blocks a second completion with a Persian conflict", async () => {

@@ -564,7 +564,7 @@ describe("createRegistrations", () => {
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
     expect((failure as AppError).details).toEqual([
-      { studentId: "student-1", fullName: "علی محمدی", reason: "این هنرجو قبلا در این مسابقه ثبت نام شده است." },
+      { studentId: "student-1", fullName: "علی محمدی", reason: "این هنرجو قبلا در این مسابقه ثبت نام شده است" },
     ]);
     expect(repo.createRegistrationBundle).not.toHaveBeenCalled();
   });
@@ -589,7 +589,7 @@ describe("createRegistrations", () => {
       {
         studentId: "student-1",
         fullName: "علی محمدی",
-        reason: "ثبت نام قبلی این هنرجو رد شده و مهلت جدیدی برای ثبت نام مجدد او باز نشده است.",
+        reason: "ثبت نام قبلی این هنرجو رد شده و مهلت جدیدی برای ثبت نام مجدد او باز نشده است",
       },
     ]);
     expect(repo.findLatestDeadlineExtension).toHaveBeenCalledWith("comp-1");
@@ -695,7 +695,7 @@ describe("createRegistrations", () => {
 
     expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
     expect((failure as AppError).details).toEqual([
-      { studentId: "student-1", fullName: "علی محمدی", reason: "این هنرجو قبلا در این مسابقه ثبت نام شده است." },
+      { studentId: "student-1", fullName: "علی محمدی", reason: "این هنرجو قبلا در این مسابقه ثبت نام شده است" },
     ]);
   });
 
@@ -919,18 +919,18 @@ describe("rejectRegistration", () => {
       findRegistrationById: vi.fn().mockResolvedValue({ ...registrationRow, paymentStatus: "CONFIRMED" }),
       transitionRegistrationFromPending: vi.fn().mockResolvedValue({
         kind: "updated",
-        row: { ...registrationRow, status: "REJECTED", note: "رده وزنی با مسابقه همخوانی ندارد.", paymentStatus: "CONFIRMED" },
+        row: { ...registrationRow, status: "REJECTED", note: "رده وزنی با مسابقه همخوانی ندارد", paymentStatus: "CONFIRMED" },
       }),
     });
-    const record = await rejectRegistration(repo, admin, "reg-1", "رده وزنی با مسابقه همخوانی ندارد.");
+    const record = await rejectRegistration(repo, admin, "reg-1", "رده وزنی با مسابقه همخوانی ندارد");
 
     expect(repo.transitionRegistrationFromPending).toHaveBeenCalledWith("reg-1", {
       status: "REJECTED",
-      note: "رده وزنی با مسابقه همخوانی ندارد.",
+      note: "رده وزنی با مسابقه همخوانی ندارد",
       createRefund: true,
     });
     expect(record.status).toBe("REJECTED");
-    expect(record.note).toBe("رده وزنی با مسابقه همخوانی ندارد.");
+    expect(record.note).toBe("رده وزنی با مسابقه همخوانی ندارد");
   });
 
   it("blocks rejecting before the payment receipt is confirmed", async () => {

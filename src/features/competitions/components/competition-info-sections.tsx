@@ -29,7 +29,7 @@ export function CompetitionInfoSections({
       {showDescriptionSection ? (
         <SectionCard
           title="توضیحات"
-          description={competition.description ? undefined : "هنوز توضیحی نوشته نشده است."}
+          description={competition.description ? undefined : "هنوز توضیحی نوشته نشده است"}
           icon={FileTextIcon}
           className="lg:col-span-2"
           action={
@@ -45,7 +45,7 @@ export function CompetitionInfoSections({
             <p className="text-sm leading-7 whitespace-pre-line">{competition.description}</p>
           ) : (
             <p className="text-sm text-muted-foreground">
-              می توانید نکته هایی برای مربی ها بنویسید؛ مثلاً آدرس سالن، برنامه روز مسابقه یا مدارک لازم. این بخش در هر زمان قابل ویرایش است.
+              می توانید نکته هایی برای مربی ها بنویسید؛ مثلاً آدرس سالن، برنامه روز مسابقه یا مدارک لازم. این بخش در هر زمان قابل ویرایش است
             </p>
           )}
         </SectionCard>

@@ -41,11 +41,11 @@ export function AdminEditDialog({
         mobile: values.mobile,
         province: values.province as AdminUser["province"],
       });
-      toast.success("تغییرات ادمین استان ذخیره شد.");
+      toast.success("تغییرات ادمین استان ذخیره شد");
       onOpenChange(false);
       onSaved();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید");
     }
   }
 
@@ -54,7 +54,7 @@ export function AdminEditDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>ویرایش ادمین استان</DialogTitle>
-          <DialogDescription>اطلاعات «{admin?.fullName}» را ویرایش کنید.</DialogDescription>
+          <DialogDescription>اطلاعات «{admin?.fullName}» را ویرایش کنید</DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <ControlledTextField control={form.control} name="fullName" label="نام و نام خانوادگی" />

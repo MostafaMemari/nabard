@@ -10,15 +10,15 @@ function rowIssues(index: number, row: WeightClassSetRow): WeightClassSetIssue[]
   const issues: WeightClassSetIssue[] = [];
 
   if (row.label.trim().length === 0) {
-    issues.push({ index, field: "label", message: "برچسب رده وزنی را وارد کنید." });
+    issues.push({ index, field: "label", message: "برچسب رده وزنی را وارد کنید" });
   }
 
   if (!Number.isFinite(row.minWeightKg) || row.minWeightKg < 0) {
-    issues.push({ index, field: "minWeightKg", message: "حداقل وزن را به کیلوگرم وارد کنید." });
+    issues.push({ index, field: "minWeightKg", message: "حداقل وزن را به کیلوگرم وارد کنید" });
   }
 
   if (row.maxWeightKg !== null && (!Number.isFinite(row.maxWeightKg) || row.maxWeightKg <= row.minWeightKg)) {
-    issues.push({ index, field: "maxWeightKg", message: "حداکثر وزن باید بیشتر از حداقل وزن باشد." });
+    issues.push({ index, field: "maxWeightKg", message: "حداکثر وزن باید بیشتر از حداقل وزن باشد" });
   }
 
   return issues;
@@ -26,7 +26,7 @@ function rowIssues(index: number, row: WeightClassSetRow): WeightClassSetIssue[]
 
 export function validateWeightClassSet(rows: WeightClassSetRow[]): WeightClassSetIssue[] {
   if (rows.length === 0) {
-    return [{ index: null, field: "rows", message: "حداقل یک رده وزنی لازم است." }];
+    return [{ index: null, field: "rows", message: "حداقل یک رده وزنی لازم است" }];
   }
 
   const issues: WeightClassSetIssue[] = [];
@@ -41,7 +41,7 @@ export function validateWeightClassSet(rows: WeightClassSetRow[]): WeightClassSe
     if (previous === undefined) {
       labelOwners.set(label, index);
     } else {
-      issues.push({ index, field: "label", message: `برچسب رده وزنی با ردیف ${previous + 1} تکراری است.` });
+      issues.push({ index, field: "label", message: `برچسب رده وزنی با ردیف ${previous + 1} تکراری است` });
     }
   });
 
@@ -53,11 +53,11 @@ export function validateWeightClassSet(rows: WeightClassSetRow[]): WeightClassSe
     if (Number.isFinite(row.minWeightKg) && row.minWeightKg < 0) return;
 
     if (position === 0 && !numbersEqual(row.minWeightKg, 0)) {
-      issues.push({ index, field: "minWeightKg", message: "حداقل وزن اولین رده باید صفر باشد." });
+      issues.push({ index, field: "minWeightKg", message: "حداقل وزن اولین رده باید صفر باشد" });
     }
 
     if (row.maxWeightKg === null && position !== sorted.length - 1) {
-      issues.push({ index, field: "maxWeightKg", message: "فقط آخرین رده می تواند بدون حداکثر وزن باشد." });
+      issues.push({ index, field: "maxWeightKg", message: "فقط آخرین رده می تواند بدون حداکثر وزن باشد" });
     }
 
     if (position > 0) {
@@ -67,7 +67,7 @@ export function validateWeightClassSet(rows: WeightClassSetRow[]): WeightClassSe
         Number.isFinite(row.minWeightKg) &&
         !numbersEqual(row.minWeightKg, previous.row.maxWeightKg)
       ) {
-        issues.push({ index, field: "minWeightKg", message: "حداقل این رده باید برابر حداکثر رده قبلی باشد." });
+        issues.push({ index, field: "minWeightKg", message: "حداقل این رده باید برابر حداکثر رده قبلی باشد" });
       }
     }
   });
@@ -82,7 +82,7 @@ export function validateWeightClassSet(rows: WeightClassSetRow[]): WeightClassSe
       issues.push({
         index,
         field: "excludeMax",
-        message: "وزن دقیقا روی مرز مشترک باید فقط در یکی از دو رده قرار گیرد؛ یکی از دو گزینه «شامل مرز» را تغییر دهید.",
+        message: "وزن دقیقا روی مرز مشترک باید فقط در یکی از دو رده قرار گیرد؛ یکی از دو گزینه «شامل مرز» را تغییر دهید",
       });
     }
   });

@@ -537,7 +537,7 @@ describe("createCompetition", () => {
     );
 
     expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
-    expect((failure as AppError).message).toBe("تاریخ برگزاری باید بعد از مهلت ثبت نام باشد.");
+    expect((failure as AppError).message).toBe("تاریخ برگزاری باید بعد از مهلت ثبت نام باشد");
   });
 
   it("rejects a kyorugi competition without weight classes with 400", async () => {
@@ -743,18 +743,18 @@ describe("publishCompetition", () => {
 
 describe("cancelCompetition", () => {
   it("cancels a published competition and creates refunds in the same transaction", async () => {
-    const canceledRow = rowWith({ id: "comp-1", status: "CANCELED", cancelReason: "سالن مسابقه در دسترس نیست." });
+    const canceledRow = rowWith({ id: "comp-1", status: "CANCELED", cancelReason: "سالن مسابقه در دسترس نیست" });
     const repo = repoWith({
       findUserById: vi.fn().mockResolvedValue(adminRecord),
       findCompetitionById: vi.fn().mockResolvedValue(publishedOpenRow),
       cancelCompetitionWithRefunds: vi.fn().mockResolvedValue(canceledRow),
     });
-    const result = await cancelCompetition(repo, admin, "comp-1", "سالن مسابقه در دسترس نیست.");
+    const result = await cancelCompetition(repo, admin, "comp-1", "سالن مسابقه در دسترس نیست");
 
-    expect(repo.cancelCompetitionWithRefunds).toHaveBeenCalledWith("comp-1", "سالن مسابقه در دسترس نیست.");
+    expect(repo.cancelCompetitionWithRefunds).toHaveBeenCalledWith("comp-1", "سالن مسابقه در دسترس نیست");
     expect(repo.updateCompetition).not.toHaveBeenCalled();
     expect(result.status).toBe("CANCELED");
-    expect(result.cancelReason).toBe("سالن مسابقه در دسترس نیست.");
+    expect(result.cancelReason).toBe("سالن مسابقه در دسترس نیست");
   });
 
   it("rejects canceling a draft with 409", async () => {

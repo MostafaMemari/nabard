@@ -26,7 +26,7 @@ export function AdminReviewScreen() {
 
   return (
     <>
-      <PageHeader title="بررسی پروفایل ها" description="بررسی مدارک و تأیید پروفایل هنرجویان." />
+      <PageHeader title="بررسی پروفایل ها" description="بررسی مدارک و تأیید پروفایل هنرجویان" />
 
       <DataTable
         columns={columns}
@@ -38,7 +38,7 @@ export function AdminReviewScreen() {
         onRowClick={(row) => router.push(`/admin/profiles/${row.id}`)}
         renderCard={(row) => <AdminReviewCard student={row} href={`/admin/profiles/${row.id}`} />}
         emptyIcon={UserCheckIcon}
-        emptyTitle="پروفایلی برای بررسی وجود ندارد."
+        emptyTitle="پروفایلی برای بررسی وجود ندارد"
         toolbar={
           <ListToolbar
             tabs={profileReviewTabs}

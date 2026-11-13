@@ -36,7 +36,7 @@ export function ProvinceChangesScreen() {
 
   return (
     <>
-      <PageHeader title="تغییر استان هنرجو" description="درخواست انتقال هنرجوها به استان شما؛ با تأیید، هنرجو به مربی مقصد منتقل می شود." />
+      <PageHeader title="تغییر استان هنرجو" description="درخواست انتقال هنرجوها به استان شما؛ با تأیید، هنرجو به مربی مقصد منتقل می شود" />
 
       <DataTable
         columns={columns}
@@ -47,7 +47,7 @@ export function ProvinceChangesScreen() {
         onRetry={() => mutate()}
         renderCard={(row) => <ProvinceChangeCard request={row} onDecide={(request, decision) => setTarget({ request, decision })} />}
         emptyIcon={MapPinnedIcon}
-        emptyTitle="درخواست تغییر استان ثبت نشده است."
+        emptyTitle="درخواست تغییر استان ثبت نشده است"
         toolbar={
           <ListToolbar
             tabs={provinceChangeTabs}

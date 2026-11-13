@@ -30,7 +30,7 @@ export function LoginForm() {
       const home = user.role === "ADMIN" ? "/admin" : user.role === "SUPER_ADMIN" ? "/super" : "/coach";
       router.replace(home);
     } catch (caught) {
-      setError(caught instanceof ApiError ? caught.message : "ورود ناموفق بود. دوباره تلاش کنید.");
+      setError(caught instanceof ApiError ? caught.message : "ورود ناموفق بود. دوباره تلاش کنید");
     }
   }
 

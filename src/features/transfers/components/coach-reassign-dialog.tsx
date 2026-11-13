@@ -41,11 +41,11 @@ export function CoachReassignDialog({
     setWorking(true);
     try {
       const { moved } = await reassignCoachStudents(coachId, values.toCoachId);
-      toast.success(`${moved} هنرجو به مربی منتقل شد.`);
+      toast.success(`${moved} هنرجو به مربی منتقل شد`);
       onDone();
       close();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "انتقال انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "انتقال انجام نشد. دوباره تلاش کنید");
     } finally {
       setWorking(false);
     }
@@ -63,10 +63,10 @@ export function CoachReassignDialog({
       <DialogContent showCloseButton={false} className="max-w-md">
         <DialogHeader>
           <DialogTitle>انتقال هنرجویان</DialogTitle>
-          <DialogDescription>همه هنرجویان «{coachName}» به مربی دیگری از همین استان منتقل می شوند.</DialogDescription>
+          <DialogDescription>همه هنرجویان «{coachName}» به مربی دیگری از همین استان منتقل می شوند</DialogDescription>
         </DialogHeader>
         <p className="text-subtle rounded-lg bg-warning-bg px-3 py-2 text-warning">
-          {studentCount} هنرجو منتقل می شود. ثبت نام ها و پرداخت ها با مربی فعلی می مانند و پروفایل هنرجویان تغییر نمی کند.
+          {studentCount} هنرجو منتقل می شود. ثبت نام ها و پرداخت ها با مربی فعلی می مانند و پروفایل هنرجویان تغییر نمی کند
         </p>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <ControlledSelectField control={form.control} name="toCoachId" label="مربی مقصد" items={items} />

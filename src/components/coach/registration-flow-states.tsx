@@ -5,7 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function RegistrationFlowStates({ error, retry }: { error: unknown; retry: () => void }) {
   if (error) {
-    return <ErrorBanner message="این مسابقه یافت نشد یا باز نیست." onRetry={retry} />;
+    return <ErrorBanner message="این مسابقه یافت نشد یا باز نیست" onRetry={retry} />;
   }
 
   return (

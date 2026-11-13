@@ -24,11 +24,11 @@ export function StudentDeleteDialog({
     setWorking(true);
     try {
       await deleteStudent(student.id);
-      toast.success("هنرجو حذف شد.");
+      toast.success("هنرجو حذف شد");
       await onDone();
       onClose();
     } catch {
-      toast.error("حذف انجام نشد. دوباره تلاش کنید.");
+      toast.error("حذف انجام نشد. دوباره تلاش کنید");
     } finally {
       setWorking(false);
     }
@@ -43,7 +43,7 @@ export function StudentDeleteDialog({
         }
       }}
       title="حذف هنرجو"
-      description={`«${student?.fullName}» از فهرست هنرجویان شما حذف می شود و در ثبت نام های بعدی قابل انتخاب نیست. این کار قابل بازگشت نیست.`}
+      description={`«${student?.fullName}» از فهرست هنرجویان شما حذف می شود و در ثبت نام های بعدی قابل انتخاب نیست. این کار قابل بازگشت نیست`}
       confirmLabel="حذف"
       destructive
       loading={working}

@@ -28,7 +28,7 @@ export function StudentRegistrationHistory({ studentId }: { studentId: string })
         <SkeletonRows rows={2} className="h-14" />
       ) : registrations.length === 0 ? (
         <StateCard>
-          <EmptyState icon={TrophyIcon} title="این هنرجو تا کنون در مسابقه ای ثبت نام نشده است." />
+          <EmptyState icon={TrophyIcon} title="این هنرجو تا کنون در مسابقه ای ثبت نام نشده است" />
         </StateCard>
       ) : (
         <div className="flex flex-col gap-2">

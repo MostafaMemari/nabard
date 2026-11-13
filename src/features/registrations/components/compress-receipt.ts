@@ -12,7 +12,7 @@ function toFile(blob: Blob): File {
 
 function toJpegBlob(canvas: HTMLCanvasElement, quality: number): Promise<Blob> {
   return new Promise((resolve, reject) => {
-    canvas.toBlob((blob) => (blob === null ? reject(new Error("فشرده سازی تصویر ممکن نشد.")) : resolve(blob)), "image/jpeg", quality);
+    canvas.toBlob((blob) => (blob === null ? reject(new Error("فشرده سازی تصویر ممکن نشد")) : resolve(blob)), "image/jpeg", quality);
   });
 }
 
@@ -23,7 +23,7 @@ export async function compressReceiptImage(file: File): Promise<File> {
 
   const bitmap = await createImageBitmap(file).catch(() => null);
   if (bitmap === null) {
-    throw new Error("تصویر قابل خواندن نیست؛ تصویر دیگری انتخاب کنید.");
+    throw new Error("تصویر قابل خواندن نیست؛ تصویر دیگری انتخاب کنید");
   }
 
   const scale = Math.min(1, MAX_EDGE / Math.max(bitmap.width, bitmap.height));
@@ -34,7 +34,7 @@ export async function compressReceiptImage(file: File): Promise<File> {
   const context = canvas.getContext("2d");
   if (context === null) {
     bitmap.close();
-    throw new Error("فشرده سازی تصویر ممکن نشد.");
+    throw new Error("فشرده سازی تصویر ممکن نشد");
   }
 
   context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);

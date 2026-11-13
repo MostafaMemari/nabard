@@ -73,7 +73,7 @@ export function DevUiContent() {
 
         <FormSection title="حالت خالی" description="یک جمله و یک اقدام">
           <EmptyState
-            title="هنوز مسابقه ای ثبت نشده است."
+            title="هنوز مسابقه ای ثبت نشده است"
             action={
               <Button type="button" size="sm">
                 مسابقه جدید
@@ -115,7 +115,7 @@ export function DevUiContent() {
         open={confirmOpen}
         onOpenChange={setConfirmOpen}
         title="حذف مسابقه"
-        description="با حذف این مسابقه، ثبت نام های مرتبط هم حذف می شوند. این کار برگشت پذیر نیست."
+        description="با حذف این مسابقه، ثبت نام های مرتبط هم حذف می شوند. این کار برگشت پذیر نیست"
         confirmLabel="حذف"
         destructive
         onConfirm={() => setConfirmOpen(false)}

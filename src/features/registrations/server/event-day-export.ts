@@ -32,12 +32,12 @@ function summaryMeta(eventDay: EventDay): Array<[string, string]> {
   const { competition, summary } = eventDay;
   const meta: Array<[string, string]> = [
     ["تاریخ برگزاری", formatJalaliDate(new Date(competition.eventDate))],
-    ["تعداد شرکت‌کننده", toPersianDigits(summary.approved)],
+    ["تعداد شرکت کننده", toPersianDigits(summary.approved)],
     ["حاضر", toPersianDigits(summary.checkedIn)],
   ];
   if (competition.discipline === "KYORUGI") {
     meta.push(
-      ["توزین‌شده", toPersianDigits(summary.weighed)],
+      ["توزین شده", toPersianDigits(summary.weighed)],
       ["همخوان", toPersianDigits(summary.match)],
       ["جابجا شده", toPersianDigits(summary.moved)],
       ["خارج از وزن", toPersianDigits(summary.outOfWeight)],

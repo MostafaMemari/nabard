@@ -51,7 +51,7 @@ export function CoachPhotoChangeDialog({
     if (!selected) return;
 
     if (!ACCEPTED_PROFILE_TYPES.has(selected.type)) {
-      setError("فقط تصاویر JPEG، PNG یا WebP پذیرفته می شوند.");
+      setError("فقط تصاویر JPEG، PNG یا WebP پذیرفته می شوند");
       return;
     }
 
@@ -63,7 +63,7 @@ export function CoachPhotoChangeDialog({
         setFile(compressed);
         setPreview(URL.createObjectURL(compressed));
       } catch (compressError) {
-        setError(compressError instanceof Error ? compressError.message : "تصویر قابل پردازش نیست.");
+        setError(compressError instanceof Error ? compressError.message : "تصویر قابل پردازش نیست");
       }
     })();
   }
@@ -77,7 +77,7 @@ export function CoachPhotoChangeDialog({
 
   async function submit() {
     if (!file) {
-      setError("تصویر جدید را انتخاب کنید.");
+      setError("تصویر جدید را انتخاب کنید");
       return;
     }
 
@@ -102,13 +102,13 @@ export function CoachPhotoChangeDialog({
         <DialogHeader>
           <DialogTitle>درخواست تغییر عکس «{studentName}»</DialogTitle>
           <DialogDescription>
-            عکس جدید را انتخاب کنید تا برای بررسی به ادمین استان ارسال شود؛ عکس پروفایل فقط پس از تأیید ادمین جایگزین می شود.
+            عکس جدید را انتخاب کنید تا برای بررسی به ادمین استان ارسال شود؛ عکس پروفایل فقط پس از تأیید ادمین جایگزین می شود
           </DialogDescription>
         </DialogHeader>
 
         {hasPending ? (
           <p className="text-subtle rounded-lg bg-warning-bg px-3 py-2.5 text-warning">
-            یک درخواست تغییر عکس برای این هنرجو در انتظار بررسی است؛ تا نتیجه آن، درخواست جدید ثبت نمی شود.
+            یک درخواست تغییر عکس برای این هنرجو در انتظار بررسی است؛ تا نتیجه آن، درخواست جدید ثبت نمی شود
           </p>
         ) : (
           <>

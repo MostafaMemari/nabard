@@ -9,7 +9,7 @@ import type { CountyChangeRequestWithScope, CountyChangesRepository, CountyRecor
 const DEFAULT_PAGE_SIZE = 100;
 
 function forbidden(): AppError {
-  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
+  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید");
 }
 
 function provinceOf(identity: UserIdentityRecord): Province {
@@ -19,12 +19,12 @@ function provinceOf(identity: UserIdentityRecord): Province {
 }
 
 function requestNotFound(): AppError {
-  return new AppError(404, "NOT_FOUND", "درخواست یافت نشد.");
+  return new AppError(404, "NOT_FOUND", "درخواست یافت نشد");
 }
 
 async function requireActiveUser(repo: CountyChangesRepository, user: CurrentUser): Promise<UserIdentityRecord> {
   const record = await repo.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (!record.isActive || record.role !== user.role) throw forbidden();
 
   return record;
@@ -81,20 +81,20 @@ export async function createCountyChange(
   const identity = await requireActiveUser(repo, user);
   if (identity.role !== "COACH") throw forbidden();
   if (!identity.countyId) {
-    throw new AppError(409, "CONFLICT", "ابتدا شهرستان مربی باید توسط مدیر استان تعیین شود.");
+    throw new AppError(409, "CONFLICT", "ابتدا شهرستان مربی باید توسط مدیر استان تعیین شود");
   }
 
   const pending = await repo.findPendingRequestByCoachId(user.id);
   if (pending) {
-    throw new AppError(409, "CONFLICT", "یک درخواست تغییر شهرستان در انتظار بررسی دارید.");
+    throw new AppError(409, "CONFLICT", "یک درخواست تغییر شهرستان در انتظار بررسی دارید");
   }
 
   const toCounty: CountyRecord | null = await repo.findCountyById(input.toCountyId);
   if (!toCounty || toCounty.province !== provinceOf(identity)) {
-    throw new AppError(400, "VALIDATION_ERROR", "شهرستان انتخاب شده معتبر نیست.");
+    throw new AppError(400, "VALIDATION_ERROR", "شهرستان انتخاب شده معتبر نیست");
   }
   if (toCounty.id === identity.countyId) {
-    throw new AppError(400, "VALIDATION_ERROR", "شهرستان انتخاب شده با شهرستان فعلی یکسان است.");
+    throw new AppError(400, "VALIDATION_ERROR", "شهرستان انتخاب شده با شهرستان فعلی یکسان است");
   }
 
   const row = await repo.createCountyChange({
@@ -144,7 +144,7 @@ export async function decideCountyChange(
     note: status === "APPROVED" ? null : note,
     decidedById: user.id,
   });
-  if (!updated) throw new AppError(409, "CONFLICT", "این درخواست قبلا بررسی شده است.");
+  if (!updated) throw new AppError(409, "CONFLICT", "این درخواست قبلا بررسی شده است");
 
   return stripScope(updated);
 }

@@ -10,24 +10,21 @@ function isPastIsoDate(value: string): boolean {
   return isIsoDate(value) && new Date(value).getTime() < Date.now();
 }
 
-const fullNameField = z.string().trim().min(3, "نام و نام خانوادگی را کامل وارد کنید.");
+const fullNameField = z.string().trim().min(3, "نام و نام خانوادگی را کامل وارد کنید");
 const nationalCodeField = z
   .string()
   .transform(normalizeDigits)
-  .pipe(z.string().regex(/^\d{10}$/, "کد ملی باید ۱۰ رقم باشد."));
-const birthDateField = z
-  .string()
-  .min(1, "تاریخ تولد را انتخاب کنید.")
-  .refine(isPastIsoDate, "تاریخ تولد باید یک تاریخ گذشته و معتبر باشد.");
+  .pipe(z.string().regex(/^\d{10}$/, "کد ملی باید ۱۰ رقم باشد"));
+const birthDateField = z.string().min(1, "تاریخ تولد را انتخاب کنید").refine(isPastIsoDate, "تاریخ تولد باید یک تاریخ گذشته و معتبر باشد");
 const optionalDateField = z
   .string()
   .transform((value) => value.trim())
-  .pipe(z.string().refine((value) => value === "" || isIsoDate(value), "تاریخ انتخاب شده معتبر نیست."));
-const beltIdField = z.string().min(1, "کمربند را انتخاب کنید.");
+  .pipe(z.string().refine((value) => value === "" || isIsoDate(value), "تاریخ انتخاب شده معتبر نیست"));
+const beltIdField = z.string().min(1, "کمربند را انتخاب کنید");
 const mobileField = z
   .string()
   .transform(normalizeDigits)
-  .pipe(z.string().regex(/^09\d{9}$/, "شماره همراه باید ۱۱ رقم و با ۰۹ شروع شود."));
+  .pipe(z.string().regex(/^09\d{9}$/, "شماره همراه باید ۱۱ رقم و با ۰۹ شروع شود"));
 
 export const studentSchema = z.object({
   fullName: fullNameField,
@@ -63,7 +60,7 @@ export const pendingReviewQuerySchema = z.object({
 });
 
 export const rejectProfileSchema = z.object({
-  note: z.string().trim().min(3, "دلیل رد پروفایل را بنویسید.").max(500, "یادداشت حداکثر ۵۰۰ نویسه است."),
+  note: z.string().trim().min(3, "دلیل رد پروفایل را بنویسید").max(500, "یادداشت حداکثر ۵۰۰ نویسه است"),
 });
 
 export const studentDocumentTypeSchema = z.enum(["PHOTO", "NATIONAL_ID_OR_BIRTH_CERTIFICATE", "INSURANCE"]);

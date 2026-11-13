@@ -29,7 +29,7 @@ export function StudentSelectionList({
   if (rows.length === 0) {
     return (
       <div className="rounded-xl border border-border bg-card shadow-card">
-        <EmptyState icon={UsersIcon} title="هنوز هنرجویی اضافه نکرده اید." />
+        <EmptyState icon={UsersIcon} title="هنوز هنرجویی اضافه نکرده اید" />
       </div>
     );
   }
@@ -38,7 +38,7 @@ export function StudentSelectionList({
     <div className="flex flex-col gap-5">
       {requiresWeight ? (
         <p className="rounded-xl border border-border bg-muted/40 px-4 py-3 text-subtle text-muted-foreground">
-          برای ثبت نام کیوروگی، وزن هر هنرجو را وارد کنید تا رده وزنی او مشخص شود.
+          برای ثبت نام کیوروگی، وزن هر هنرجو را وارد کنید تا رده وزنی او مشخص شود
         </p>
       ) : null}
       {selectable.length > 0 ? (

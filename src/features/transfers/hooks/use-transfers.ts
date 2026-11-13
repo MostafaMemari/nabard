@@ -22,7 +22,7 @@ export function useTransferLookup() {
     try {
       return { ok: true as const, data: await lookupTransferStudent(nationalCode) };
     } catch (error) {
-      return { ok: false as const, error: error instanceof Error ? error.message : "جستجو انجام نشد. دوباره تلاش کنید." };
+      return { ok: false as const, error: error instanceof Error ? error.message : "جستجو انجام نشد. دوباره تلاش کنید" };
     }
   }
 
@@ -33,12 +33,12 @@ export function useTransferRequestCreate(onRequested: () => void) {
   async function request(nationalCode: string): Promise<boolean> {
     try {
       await createTransferRequest(nationalCode);
-      toast.success("درخواست انتقال هنرجو ثبت شد.");
+      toast.success("درخواست انتقال هنرجو ثبت شد");
       onRequested();
 
       return true;
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "ثبت درخواست انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "ثبت درخواست انجام نشد. دوباره تلاش کنید");
 
       return false;
     }
@@ -52,12 +52,12 @@ export function useCoachChangeRequest(onRequested: () => void) {
   async function request(studentId: string, toCoachId: string): Promise<boolean> {
     try {
       await createCoachChangeRequest(studentId, toCoachId);
-      toast.success("درخواست تغییر مربی ثبت شد و برای ادمین استان ارسال شد.");
+      toast.success("درخواست تغییر مربی ثبت شد و برای ادمین استان ارسال شد");
       onRequested();
 
       return true;
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "ثبت درخواست انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "ثبت درخواست انجام نشد. دوباره تلاش کنید");
 
       return false;
     }
@@ -71,16 +71,16 @@ export function useTransferDecision(onDecided: () => void) {
     try {
       if (decision === "approve") {
         await approveTransferRequest(id);
-        toast.success("درخواست تأیید شد و هنرجو به مربی جدید منتقل شد.");
+        toast.success("درخواست تأیید شد و هنرجو به مربی جدید منتقل شد");
       } else {
         await rejectTransferRequest(id, note ?? "");
-        toast.success("درخواست رد شد.");
+        toast.success("درخواست رد شد");
       }
       onDecided();
 
       return true;
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "ثبت نتیجه انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "ثبت نتیجه انجام نشد. دوباره تلاش کنید");
 
       return false;
     }

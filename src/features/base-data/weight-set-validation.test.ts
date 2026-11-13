@@ -19,7 +19,7 @@ describe("validateWeightClassSet", () => {
   it("requires at least one class", () => {
     const issues = validateWeightClassSet([]);
 
-    expect(issues).toEqual([{ index: null, field: "rows", message: "حداقل یک رده وزنی لازم است." }]);
+    expect(issues).toEqual([{ index: null, field: "rows", message: "حداقل یک رده وزنی لازم است" }]);
   });
 
   it("requires the first min to be zero", () => {

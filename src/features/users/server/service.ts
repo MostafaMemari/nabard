@@ -23,11 +23,11 @@ import type {
 const DEFAULT_PAGE_SIZE = 100;
 
 function forbidden(): AppError {
-  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
+  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید");
 }
 
 function coachNotFound(): AppError {
-  return new AppError(404, "NOT_FOUND", "مربی یافت نشد.");
+  return new AppError(404, "NOT_FOUND", "مربی یافت نشد");
 }
 
 function provinceOf(identity: UserIdentityRecord): Province {
@@ -40,7 +40,7 @@ async function requireActiveUser(repo: CoachRepository, user: CurrentUser): Prom
   if (user.role === "COACH") throw forbidden();
 
   const record = await repo.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (!record.isActive || record.role !== user.role) throw forbidden();
 
   return record;
@@ -50,7 +50,7 @@ async function requireActiveAdmin(repo: CoachRepository, user: CurrentUser): Pro
   if (user.role !== "ADMIN") throw forbidden();
 
   const admin = await repo.findUserById(user.id);
-  if (!admin) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!admin) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (!admin.isActive || admin.role !== "ADMIN") throw forbidden();
 
   return admin;
@@ -67,7 +67,7 @@ async function coachInView(repo: CoachRepository, identity: UserIdentityRecord, 
 async function countyInProvince(repo: CoachRepository, province: UserIdentityRecord["province"], countyId: string): Promise<CountyRecord> {
   const county = await repo.findCountyById(countyId);
   if (!county || county.province !== province) {
-    throw new AppError(400, "VALIDATION_ERROR", "شهرستان انتخاب شده معتبر نیست.");
+    throw new AppError(400, "VALIDATION_ERROR", "شهرستان انتخاب شده معتبر نیست");
   }
 
   return county;
@@ -105,7 +105,7 @@ export async function listCoachTargets(repo: CoachRepository, user: CurrentUser,
   if (query.province !== undefined) {
     province = query.province;
   } else if (identity.role === "SUPER_ADMIN") {
-    throw new AppError(400, "VALIDATION_ERROR", "استان را انتخاب کنید.");
+    throw new AppError(400, "VALIDATION_ERROR", "استان را انتخاب کنید");
   } else {
     province = provinceOf(identity);
   }
@@ -123,10 +123,10 @@ export async function createCoach(repo: CoachRepository, user: CurrentUser, inpu
   const province = provinceOf(admin);
 
   const mobileOwner = await repo.findMobileOwner(input.mobile);
-  if (mobileOwner) throw new AppError(409, "CONFLICT", "این شماره همراه قبلاً ثبت شده است.");
+  if (mobileOwner) throw new AppError(409, "CONFLICT", "این شماره همراه قبلاً ثبت شده است");
 
   const codeOwner = await repo.findNationalCodeOwner(input.nationalCode);
-  if (codeOwner) throw new AppError(409, "CONFLICT", "این کد ملی قبلاً ثبت شده است.");
+  if (codeOwner) throw new AppError(409, "CONFLICT", "این کد ملی قبلاً ثبت شده است");
 
   await countyInProvince(repo, province, input.countyId);
 
@@ -151,12 +151,12 @@ export async function updateCoach(repo: CoachRepository, user: CurrentUser, id: 
 
   if (input.mobile !== undefined) {
     const owner = await repo.findMobileOwner(input.mobile);
-    if (owner && owner.id !== id) throw new AppError(409, "CONFLICT", "این شماره همراه قبلاً ثبت شده است.");
+    if (owner && owner.id !== id) throw new AppError(409, "CONFLICT", "این شماره همراه قبلاً ثبت شده است");
   }
 
   if (input.nationalCode !== undefined) {
     const owner = await repo.findNationalCodeOwner(input.nationalCode);
-    if (owner && owner.id !== id) throw new AppError(409, "CONFLICT", "این کد ملی قبلاً ثبت شده است.");
+    if (owner && owner.id !== id) throw new AppError(409, "CONFLICT", "این کد ملی قبلاً ثبت شده است");
   }
 
   const data: CoachUpdateData = {};
@@ -175,7 +175,7 @@ export async function updateCoach(repo: CoachRepository, user: CurrentUser, id: 
       throw new AppError(
         409,
         "CONFLICT",
-        `تغییر جنسیت مربی ممکن نیست؛ این مربی ${toPersianDigits(otherCount)} هنرجوی ${genderLabels[otherGender]} دارد. ابتدا آن ها را به مربی هم جنسیت منتقل کنید.`,
+        `تغییر جنسیت مربی ممکن نیست؛ این مربی ${toPersianDigits(otherCount)} هنرجوی ${genderLabels[otherGender]} دارد. ابتدا آن ها را به مربی هم جنسیت منتقل کنید`,
       );
     }
     data.gender = input.gender;
@@ -194,14 +194,14 @@ export async function resetCoachPassword(repo: CoachRepository, user: CurrentUse
 
 async function requireActiveCoach(repo: CoachRepository, user: CurrentUser): Promise<UserIdentityRecord> {
   const record = await repo.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (!record.isActive || record.role !== "COACH" || user.role !== "COACH") throw forbidden();
 
   return record;
 }
 
 function photoNotFound(): AppError {
-  return new AppError(404, "NOT_FOUND", "عکسی بارگذاری نشده است.");
+  return new AppError(404, "NOT_FOUND", "عکسی بارگذاری نشده است");
 }
 
 export async function uploadCoachPhoto(repo: CoachRepository, storage: Storage, user: CurrentUser, file: File): Promise<null> {
@@ -242,7 +242,7 @@ export async function readCoachPhoto(
   coachId: string,
 ): Promise<{ stream: ReadableStream<Uint8Array>; mime: string; size: number }> {
   const identity = await repo.findUserById(user.id);
-  if (!identity || !identity.isActive) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!identity || !identity.isActive) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
 
   const coach = await repo.findUserById(coachId);
   const inScope =

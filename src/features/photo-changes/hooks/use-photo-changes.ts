@@ -17,12 +17,12 @@ export function useStudentPhotoChangeRequest(onRequested: () => void) {
   async function request(studentId: string, file: File): Promise<boolean> {
     try {
       await requestStudentPhotoChange(studentId, file);
-      toast.success("درخواست تغییر عکس ثبت شد و در انتظار بررسی ادمین استان است.");
+      toast.success("درخواست تغییر عکس ثبت شد و در انتظار بررسی ادمین استان است");
       onRequested();
 
       return true;
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "ثبت درخواست انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "ثبت درخواست انجام نشد. دوباره تلاش کنید");
 
       return false;
     }
@@ -36,16 +36,16 @@ export function usePhotoChangeDecision(onDecided: () => void) {
     try {
       if (decision === "approve") {
         await approvePhotoChangeRequest(id);
-        toast.success("عکس جدید تأیید شد و جایگزین عکس پروفایل هنرجو شد.");
+        toast.success("عکس جدید تأیید شد و جایگزین عکس پروفایل هنرجو شد");
       } else {
         await rejectPhotoChangeRequest(id, note ?? "");
-        toast.success("درخواست تغییر عکس رد شد.");
+        toast.success("درخواست تغییر عکس رد شد");
       }
       onDecided();
 
       return true;
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "ثبت نتیجه انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "ثبت نتیجه انجام نشد. دوباره تلاش کنید");
 
       return false;
     }

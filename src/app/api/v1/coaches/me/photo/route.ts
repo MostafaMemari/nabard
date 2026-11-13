@@ -26,7 +26,7 @@ export const PUT = route({ roles: ["COACH"] }, async ({ request, user }) => {
   const file = form.get("file");
 
   if (!(file instanceof File)) {
-    throw new AppError(400, "VALIDATION_ERROR", "عکس پروفایل را بارگذاری کنید.");
+    throw new AppError(400, "VALIDATION_ERROR", "عکس پروفایل را بارگذاری کنید");
   }
 
   return uploadCoachPhoto(repository, storage, user, file);

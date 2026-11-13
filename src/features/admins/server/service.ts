@@ -9,18 +9,18 @@ import type { AdminRecord, AdminsRepository, AdminUpdateData, NewAdminData } fro
 const DEFAULT_PAGE_SIZE = 100;
 
 function forbidden(): AppError {
-  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
+  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید");
 }
 
 function adminNotFound(): AppError {
-  return new AppError(404, "NOT_FOUND", "مدیر استان یافت نشد.");
+  return new AppError(404, "NOT_FOUND", "مدیر استان یافت نشد");
 }
 
 async function requireActiveSuperAdmin(repo: AdminsRepository, user: CurrentUser): Promise<void> {
   if (user.role !== "SUPER_ADMIN") throw forbidden();
 
   const record = await repo.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (!record.isActive || record.role !== user.role) throw forbidden();
 }
 
@@ -57,7 +57,7 @@ export async function createAdmin(
   await requireActiveSuperAdmin(repo, user);
 
   const mobileOwner = await repo.findMobileOwner(input.mobile);
-  if (mobileOwner) throw new AppError(409, "CONFLICT", "این شماره همراه قبلاً ثبت شده است.");
+  if (mobileOwner) throw new AppError(409, "CONFLICT", "این شماره همراه قبلاً ثبت شده است");
 
   const passwordHash = await hash(input.initialPassword, 10);
   const data: NewAdminData = {
@@ -93,7 +93,7 @@ export async function updateAdmin(
 
   if (input.mobile !== undefined) {
     const owner = await repo.findMobileOwner(input.mobile);
-    if (owner && owner.id !== id) throw new AppError(409, "CONFLICT", "این شماره همراه قبلاً ثبت شده است.");
+    if (owner && owner.id !== id) throw new AppError(409, "CONFLICT", "این شماره همراه قبلاً ثبت شده است");
   }
 
   const data: AdminUpdateData = {};

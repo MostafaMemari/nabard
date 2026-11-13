@@ -40,16 +40,16 @@ async function readImage(file: File, emptyMessage: string, tooLargeMessage: stri
   const mime = sniffImageMime(bytes);
 
   if (mime === null) {
-    throw new AppError(400, "INVALID_FILE_TYPE", "فقط تصاویر JPEG، PNG یا WebP پذیرفته می شوند.");
+    throw new AppError(400, "INVALID_FILE_TYPE", "فقط تصاویر JPEG، PNG یا WebP پذیرفته می شوند");
   }
 
   return { data: bytes, mime };
 }
 
 export async function readReceiptImage(file: File): Promise<StoredImage> {
-  return readImage(file, "فایل رسید خالی است.", "حجم تصویر رسید باید کمتر از ۲ مگابایت باشد.");
+  return readImage(file, "فایل رسید خالی است", "حجم تصویر رسید باید کمتر از ۲ مگابایت باشد");
 }
 
 export async function readProfileImage(file: File): Promise<StoredImage> {
-  return readImage(file, "فایل تصویر خالی است.", "حجم تصویر باید کمتر از ۲ مگابایت باشد.");
+  return readImage(file, "فایل تصویر خالی است", "حجم تصویر باید کمتر از ۲ مگابایت باشد");
 }

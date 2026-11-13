@@ -24,6 +24,6 @@ export const GET = route({ auth: false }, async () => {
     await withTimeout(getPrisma().$queryRaw`SELECT 1`, HEALTH_TIMEOUT_MS);
     return { status: "ok", database: "up" };
   } catch {
-    throw new AppError(503, "SERVICE_UNAVAILABLE", "سامانه موقتا در دسترس نیست. کمی بعد دوباره تلاش کنید.");
+    throw new AppError(503, "SERVICE_UNAVAILABLE", "سامانه موقتا در دسترس نیست. کمی بعد دوباره تلاش کنید");
   }
 });

@@ -6,8 +6,8 @@ import { getWeightClassSet, saveWeightClassSet } from "@/features/base-data/serv
 import { AppError, route } from "@/lib/api";
 
 const weightClassSetQuerySchema = z.object({
-  ageCategoryId: z.string().min(1, "رده سنی را انتخاب کنید."),
-  gender: z.enum(["MALE", "FEMALE"], { message: "جنسیت را انتخاب کنید." }),
+  ageCategoryId: z.string().min(1, "رده سنی را انتخاب کنید"),
+  gender: z.enum(["MALE", "FEMALE"], { message: "جنسیت را انتخاب کنید" }),
 });
 
 export const GET = route({ roles: ["SUPER_ADMIN"] }, async ({ user, request }) => {
@@ -22,7 +22,7 @@ export const GET = route({ roles: ["SUPER_ADMIN"] }, async ({ user, request }) =
 
 export const PUT = route({ roles: ["SUPER_ADMIN"], body: weightClassSetSchema }, async ({ user, body }) => {
   if (body.rows.length > 100) {
-    throw new AppError(400, "VALIDATION_ERROR", "تعداد رده های وزنی بیش از حد مجاز است.");
+    throw new AppError(400, "VALIDATION_ERROR", "تعداد رده های وزنی بیش از حد مجاز است");
   }
 
   return saveWeightClassSet(repository, auditRepository, user, body);

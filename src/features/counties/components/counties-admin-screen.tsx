@@ -21,7 +21,7 @@ export function CountiesAdminScreen() {
     <>
       <PageHeader
         title="شهرستان ها"
-        description="شهرستان های استان شما؛ مربیان و مسابقات شهرستانی از این فهرست استفاده می کنند."
+        description="شهرستان های استان شما؛ مربیان و مسابقات شهرستانی از این فهرست استفاده می کنند"
         action={
           <Button onClick={() => setCreateOpen(true)}>
             <PlusIcon data-icon="inline-start" />
@@ -35,13 +35,13 @@ export function CountiesAdminScreen() {
           <SkeletonRows rows={6} />
         </StateCard>
       ) : error ? (
-        <ErrorBanner message="دریافت شهرستان ها انجام نشد." onRetry={() => mutate()} />
+        <ErrorBanner message="دریافت شهرستان ها انجام نشد" onRetry={() => mutate()} />
       ) : counties.length === 0 ? (
         <StateCard>
           <EmptyState
             icon={MapPinnedIcon}
-            title="هنوز شهرستانی ثبت نشده است."
-            description="شهرستان های پیش فرض همه استان ها با مهاجرت پایگاه داده ثبت شده اند؛ با مدیر استان تماس بگیرید."
+            title="هنوز شهرستانی ثبت نشده است"
+            description="شهرستان های پیش فرض همه استان ها با مهاجرت پایگاه داده ثبت شده اند؛ با مدیر استان تماس بگیرید"
           />
         </StateCard>
       ) : (

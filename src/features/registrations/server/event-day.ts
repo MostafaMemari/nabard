@@ -56,16 +56,16 @@ export type EventDay = {
 };
 
 function forbidden(): AppError {
-  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
+  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید");
 }
 
 function registrationNotFound(): AppError {
-  return new AppError(404, "NOT_FOUND", "ثبت نام یافت نشد.");
+  return new AppError(404, "NOT_FOUND", "ثبت نام یافت نشد");
 }
 
 async function requireActiveAdmin(repo: RegistrationRepository, user: CurrentUser): Promise<UserIdentityRecord> {
   const record = await repo.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (!record.isActive || record.role !== user.role) throw forbidden();
 
   return record;
@@ -110,7 +110,7 @@ export async function getEventDay(repo: RegistrationRepository, user: CurrentUse
 
   const competition = await repo.findCompetitionById(competitionId);
   if (!competition || (identity.role === "ADMIN" && competition.province !== identity.province)) {
-    throw new AppError(404, "NOT_FOUND", "مسابقه یافت نشد.");
+    throw new AppError(404, "NOT_FOUND", "مسابقه یافت نشد");
   }
 
   const rows = await repo.findEventDayRows(competitionId);
@@ -154,7 +154,7 @@ async function requirePublishedApprovedRegistration(
   if (!row || row.coachProvince !== identity.province) throw registrationNotFound();
 
   if (row.competition.status !== "PUBLISHED") {
-    throw new AppError(409, "CONFLICT", "این مسابقه فعال نیست.");
+    throw new AppError(409, "CONFLICT", "این مسابقه فعال نیست");
   }
 
   if (row.status !== "APPROVED") {
@@ -195,19 +195,19 @@ export async function weighInRegistration(
   const identity = await requireActiveAdmin(repo, user);
   if (identity.role !== "ADMIN") throw forbidden();
 
-  const row = await requirePublishedApprovedRegistration(repo, identity, id, "فقط ثبت نام های تأیید شده قابل توزین هستند.");
+  const row = await requirePublishedApprovedRegistration(repo, identity, id, "فقط ثبت نام های تأیید شده قابل توزین هستند");
   if (row.competition.discipline !== "KYORUGI") {
-    throw new AppError(409, "CONFLICT", "مسابقات پومسه وزن کشی ندارند.");
+    throw new AppError(409, "CONFLICT", "مسابقات پومسه وزن کشی ندارند");
   }
 
   const rules = row.competition.rules;
   if (!rules) {
-    throw new AppError(409, "CONFLICT", "قواعد وزنی این مسابقه در دسترس نیست.");
+    throw new AppError(409, "CONFLICT", "قواعد وزنی این مسابقه در دسترس نیست");
   }
 
   const resolution = resolveWeightClass(weightKg, snapshotWeightClasses(rules));
   if (resolution.kind === "ambiguous") {
-    throw new AppError(409, "CONFLICT", "وزن ثبت شده با بیش از یک رده وزنی همخوانی دارد.");
+    throw new AppError(409, "CONFLICT", "وزن ثبت شده با بیش از یک رده وزنی همخوانی دارد");
   }
 
   const { verdict, movedTo } = weighVerdict(resolution, row.weightClassId);
@@ -221,7 +221,7 @@ export async function weighInRegistration(
     movedTo,
   });
   if (!applied) {
-    throw new AppError(409, "CONFLICT", "این ثبت نام دیگر قابل توزین نیست.");
+    throw new AppError(409, "CONFLICT", "این ثبت نام دیگر قابل توزین نیست");
   }
 
   await audit.createAuditLog({
@@ -251,11 +251,11 @@ export async function setRegistrationCheckIn(
   const identity = await requireActiveAdmin(repo, user);
   if (identity.role !== "ADMIN") throw forbidden();
 
-  await requirePublishedApprovedRegistration(repo, identity, id, "فقط ثبت نام های تأیید شده قابل ثبت حضور هستند.");
+  await requirePublishedApprovedRegistration(repo, identity, id, "فقط ثبت نام های تأیید شده قابل ثبت حضور هستند");
 
   const applied = await repo.updateRegistrationCheckIn(id, checkedIn, user.id);
   if (!applied) {
-    throw new AppError(409, "CONFLICT", "این ثبت نام دیگر قابل ثبت حضور نیست.");
+    throw new AppError(409, "CONFLICT", "این ثبت نام دیگر قابل ثبت حضور نیست");
   }
 
   return { id, checkInAt: checkedIn ? new Date().toISOString() : null };

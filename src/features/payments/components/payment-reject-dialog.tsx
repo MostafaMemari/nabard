@@ -43,12 +43,12 @@ export function PaymentRejectDialog({
       <DialogContent showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>رد رسید</DialogTitle>
-          <DialogDescription>دلیل رد برای مربی نمایش داده می شود تا بتواند رسید جدیدی بارگذاری کند.</DialogDescription>
+          <DialogDescription>دلیل رد برای مربی نمایش داده می شود تا بتواند رسید جدیدی بارگذاری کند</DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <Field data-invalid={form.formState.errors.note ? "" : undefined}>
             <FieldLabel htmlFor="reject-note">دلیل رد</FieldLabel>
-            <Textarea id="reject-note" rows={4} placeholder="مثلاً مبلغ واریزی با تعداد هنرجویان مطابقت ندارد." {...form.register("note")} />
+            <Textarea id="reject-note" rows={4} placeholder="مثلاً مبلغ واریزی با تعداد هنرجویان مطابقت ندارد" {...form.register("note")} />
             {form.formState.errors.note ? <FieldError errors={[form.formState.errors.note]} /> : null}
           </Field>
           <DialogFooter>

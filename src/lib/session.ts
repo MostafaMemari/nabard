@@ -60,9 +60,9 @@ export async function getCurrentUser(request: Request): Promise<CurrentUser | nu
 
 export async function requireUser(request: Request, ...roles: SessionRole[]): Promise<CurrentUser> {
   const user = await getCurrentUser(request);
-  if (!user) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!user) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (roles.length > 0 && !roles.includes(user.role)) {
-    throw new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
+    throw new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید");
   }
   return user;
 }

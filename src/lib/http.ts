@@ -35,7 +35,7 @@ export async function api<T>(path: string, init: Omit<RequestInit, "body"> & { b
   const result = (await response.json().catch(() => null)) as Envelope<T> | null;
   if (!response.ok || !result?.ok) {
     const error = result && !result.ok ? result.error : null;
-    throw new ApiError(response.status, error?.message ?? "ارتباط با سرور برقرار نشد.", error?.code);
+    throw new ApiError(response.status, error?.message ?? "ارتباط با سرور برقرار نشد", error?.code);
   }
 
   return result.data;

@@ -15,10 +15,10 @@ export function useCoachPhoto() {
     try {
       const compressed = await compressProfileImage(file);
       await uploadCoachPhoto(compressed);
-      toast.success("عکس پروفایل ذخیره شد.");
+      toast.success("عکس پروفایل ذخیره شد");
       await mutate("me");
     } catch {
-      toast.error("بارگذاری عکس انجام نشد. دوباره تلاش کنید.");
+      toast.error("بارگذاری عکس انجام نشد. دوباره تلاش کنید");
     } finally {
       setWorking(false);
     }
@@ -29,10 +29,10 @@ export function useCoachPhoto() {
 
     try {
       await deleteCoachPhoto();
-      toast.success("عکس پروفایل حذف شد.");
+      toast.success("عکس پروفایل حذف شد");
       await mutate("me");
     } catch {
-      toast.error("حذف عکس انجام نشد.");
+      toast.error("حذف عکس انجام نشد");
     } finally {
       setWorking(false);
     }

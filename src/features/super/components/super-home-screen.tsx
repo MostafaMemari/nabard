@@ -71,7 +71,7 @@ export function SuperHomeScreen() {
 
   return (
     <>
-      <PageHeader title="خانه" description="خلاصه آمار همه استان ها." />
+      <PageHeader title="خانه" description="خلاصه آمار همه استان ها" />
       <DataTable
         columns={columns}
         rows={summary ?? []}
@@ -83,7 +83,7 @@ export function SuperHomeScreen() {
         skeletonRows={8}
         renderCard={(row) => <SummaryCardRow row={row} />}
         emptyIcon={MapIcon}
-        emptyTitle="آماری برای نمایش وجود ندارد."
+        emptyTitle="آماری برای نمایش وجود ندارد"
       />
     </>
   );

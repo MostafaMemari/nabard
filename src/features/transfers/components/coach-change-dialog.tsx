@@ -66,12 +66,12 @@ export function CoachChangeDialog({
         <DialogHeader>
           <DialogTitle>درخواست تغییر مربی «{studentName}»</DialogTitle>
           <DialogDescription>
-            مربی جدید را از مربیان استان خود انتخاب کنید؛ با تأیید ادمین استان، هنرجو به مربی جدید منتقل می شود.
+            مربی جدید را از مربیان استان خود انتخاب کنید؛ با تأیید ادمین استان، هنرجو به مربی جدید منتقل می شود
           </DialogDescription>
         </DialogHeader>
         {hasPending ? (
           <p className="text-subtle rounded-lg bg-warning-bg px-3 py-2.5 text-warning">
-            یک درخواست انتقال یا تغییر استان برای این هنرجو در انتظار بررسی است؛ تا نتیجه آن، درخواست جدید ثبت نمی شود.
+            یک درخواست انتقال یا تغییر استان برای این هنرجو در انتظار بررسی است؛ تا نتیجه آن، درخواست جدید ثبت نمی شود
           </p>
         ) : (
           <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
@@ -83,10 +83,10 @@ export function CoachChangeDialog({
               items={items}
             />
             {targets.data !== undefined && targets.data.length === 0 ? (
-              <p className="text-subtle rounded-lg bg-warning-bg px-3 py-2 text-warning">مربی فعال دیگری در استان شما ثبت نشده است.</p>
+              <p className="text-subtle rounded-lg bg-warning-bg px-3 py-2 text-warning">مربی فعال دیگری در استان شما ثبت نشده است</p>
             ) : null}
             <p className="text-subtle text-muted-foreground">
-              ثبت نام ها و پرداخت های قبلی هنرجو با مربی فعلی می ماند و فقط مربی هنرجو تغییر می کند.
+              ثبت نام ها و پرداخت های قبلی هنرجو با مربی فعلی می ماند و فقط مربی هنرجو تغییر می کند
             </p>
             <div className="flex items-center justify-end gap-3">
               <Button type="button" variant="ghost" onClick={close}>

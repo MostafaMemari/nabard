@@ -20,7 +20,7 @@ export function PaymentReceiptCard({ payment }: { payment: Payment }) {
       {receiptUrl === null ? (
         <div className="flex h-48 flex-col items-center justify-center gap-3 rounded-lg border border-dashed border-border bg-muted/40 text-sm text-muted-foreground">
           <IconTile icon={ReceiptTextIcon} tone="pending" />
-          رسیدی برای این پرداخت بارگذاری نشده است.
+          رسیدی برای این پرداخت بارگذاری نشده است
         </div>
       ) : (
         <>

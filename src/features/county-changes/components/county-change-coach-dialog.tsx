@@ -25,7 +25,7 @@ export function CountyChangeCoachDialog({ coachId, onClose }: { coachId: string 
       <DialogContent showCloseButton className="max-w-md">
         <DialogHeader>
           <DialogTitle>اطلاعات مربی</DialogTitle>
-          <DialogDescription>مشخصات حساب مربی و شهرستان فعلی او.</DialogDescription>
+          <DialogDescription>مشخصات حساب مربی و شهرستان فعلی او</DialogDescription>
         </DialogHeader>
         {isLoading ? (
           <div className="flex flex-col gap-3">
@@ -33,7 +33,7 @@ export function CountyChangeCoachDialog({ coachId, onClose }: { coachId: string 
             <Skeleton className="h-40 w-full" />
           </div>
         ) : error || !coach ? (
-          <p className="text-subtle text-muted-foreground">اطلاعات مربی بارگذاری نشد.</p>
+          <p className="text-subtle text-muted-foreground">اطلاعات مربی بارگذاری نشد</p>
         ) : (
           <div className="flex flex-col gap-4">
             <DescriptionList

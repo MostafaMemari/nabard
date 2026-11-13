@@ -17,7 +17,7 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
         </span>
         <div className="flex flex-col gap-1.5">
           <h1 className="text-lg font-semibold">خطایی غیرمنتظره رخ داد</h1>
-          <p className="text-sm text-muted-foreground">مشکلی در نمایش این بخش پیش آمد. دوباره تلاش کنید.</p>
+          <p className="text-sm text-muted-foreground">مشکلی در نمایش این بخش پیش آمد. دوباره تلاش کنید</p>
         </div>
         <Button type="button" onClick={reset}>
           تلاش دوباره

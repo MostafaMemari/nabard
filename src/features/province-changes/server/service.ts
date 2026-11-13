@@ -10,15 +10,15 @@ import { ProvinceChangeGenderMismatchError, ProvinceChangeOwnerChangedError } fr
 const DEFAULT_PAGE_SIZE = 100;
 
 function forbidden(): AppError {
-  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
+  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید");
 }
 
 function requestNotFound(): AppError {
-  return new AppError(404, "NOT_FOUND", "درخواست تغییر استان یافت نشد.");
+  return new AppError(404, "NOT_FOUND", "درخواست تغییر استان یافت نشد");
 }
 
 function studentNotFound(): AppError {
-  return new AppError(404, "NOT_FOUND", "هنرجو یافت نشد.");
+  return new AppError(404, "NOT_FOUND", "هنرجو یافت نشد");
 }
 
 function provinceOf(identity: UserIdentityRecord): Province {
@@ -29,7 +29,7 @@ function provinceOf(identity: UserIdentityRecord): Province {
 
 async function requireActiveUser(repo: ProvinceChangeRepository, user: CurrentUser): Promise<UserIdentityRecord> {
   const record = await repo.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (!record.isActive || record.role !== user.role) throw forbidden();
 
   return record;
@@ -51,25 +51,25 @@ export async function createProvinceChangeRequest(
   if (!student || student.coachId !== user.id) throw studentNotFound();
   if (student.coachProvince === null) throw forbidden();
   if (input.toProvince === student.coachProvince) {
-    throw new AppError(400, "VALIDATION_ERROR", "استان مقصد باید با استان فعلی هنرجو متفاوت باشد.");
+    throw new AppError(400, "VALIDATION_ERROR", "استان مقصد باید با استان فعلی هنرجو متفاوت باشد");
   }
 
   const target = await repo.findCoachTargetById(input.toCoachId);
   if (!target || target.province !== input.toProvince) {
-    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد باید در استان مقصد باشد.");
+    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد باید در استان مقصد باشد");
   }
   if (!target.isActive) {
-    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد فعال نیست.");
+    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد فعال نیست");
   }
   if (target.id === student.coachId) {
-    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد نباید همان مربی فعلی باشد.");
+    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد نباید همان مربی فعلی باشد");
   }
   if (target.gender === null || target.gender !== student.gender) {
-    throw new AppError(400, "VALIDATION_ERROR", "جنسیت مربی مقصد باید با جنسیت هنرجو یکسان باشد.");
+    throw new AppError(400, "VALIDATION_ERROR", "جنسیت مربی مقصد باید با جنسیت هنرجو یکسان باشد");
   }
 
   if (await repo.hasPendingMoveRequest(studentId)) {
-    throw new AppError(409, "CONFLICT", "یک درخواست انتقال یا تغییر استان در انتظار بررسی برای این هنرجو وجود دارد.");
+    throw new AppError(409, "CONFLICT", "یک درخواست انتقال یا تغییر استان در انتظار بررسی برای این هنرجو وجود دارد");
   }
 
   const row = await repo.createProvinceChange({
@@ -142,15 +142,15 @@ export async function decideProvinceChangeRequest(
     });
   } catch (error) {
     if (error instanceof ProvinceChangeOwnerChangedError) {
-      throw new AppError(409, "CONFLICT", "مالکیت این هنرجو تغییر کرده است و درخواست قابل تأیید نیست.");
+      throw new AppError(409, "CONFLICT", "مالکیت این هنرجو تغییر کرده است و درخواست قابل تأیید نیست");
     }
     if (error instanceof ProvinceChangeGenderMismatchError) {
-      throw new AppError(409, "CONFLICT", "جنسیت هنرجو با جنسیت مربی مقصد یکسان نیست و درخواست قابل تأیید نیست.");
+      throw new AppError(409, "CONFLICT", "جنسیت هنرجو با جنسیت مربی مقصد یکسان نیست و درخواست قابل تأیید نیست");
     }
 
     throw error;
   }
-  if (!updated) throw new AppError(409, "CONFLICT", "این درخواست قبلا بررسی شده است.");
+  if (!updated) throw new AppError(409, "CONFLICT", "این درخواست قبلا بررسی شده است");
 
   await audit.createAuditLog({
     actorId: user.id,

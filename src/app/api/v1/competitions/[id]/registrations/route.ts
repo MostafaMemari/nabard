@@ -19,7 +19,7 @@ function parseWeights(value: FormDataEntryValue | null): Record<string, number> 
 
     return parsed as Record<string, number>;
   } catch {
-    throw new AppError(400, "VALIDATION_ERROR", "وزن های ارسال شده معتبر نیست.");
+    throw new AppError(400, "VALIDATION_ERROR", "وزن های ارسال شده معتبر نیست");
   }
 }
 
@@ -29,7 +29,7 @@ export const POST = route({ roles: ["COACH"] }, async ({ request, user, params }
   const receipt = form.get("receipt");
 
   if (!(receipt instanceof File)) {
-    throw new AppError(400, "VALIDATION_ERROR", "تصویر رسید را بارگذاری کنید.");
+    throw new AppError(400, "VALIDATION_ERROR", "تصویر رسید را بارگذاری کنید");
   }
 
   const { studentIds, weights } = createRegistrationsSchema.parse({

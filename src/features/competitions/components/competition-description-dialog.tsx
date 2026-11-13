@@ -9,7 +9,7 @@ import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 
 const descriptionSchema = z.object({
-  description: z.string().trim().max(2000, "توضیحات حداکثر ۲۰۰۰ نویسه است."),
+  description: z.string().trim().max(2000, "توضیحات حداکثر ۲۰۰۰ نویسه است"),
 });
 
 type DescriptionFormValues = z.output<typeof descriptionSchema>;
@@ -50,9 +50,7 @@ export function CompetitionDescriptionDialog({
       <DialogContent showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>توضیحات مسابقه</DialogTitle>
-          <DialogDescription>
-            این توضیحات برای مربی ها نمایش داده می شود؛ مثلاً آدرس سالن، برنامه روز مسابقه یا مدارک لازم.
-          </DialogDescription>
+          <DialogDescription>این توضیحات برای مربی ها نمایش داده می شود؛ مثلاً آدرس سالن، برنامه روز مسابقه یا مدارک لازم</DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <Field data-invalid={form.formState.errors.description ? "" : undefined}>
@@ -60,7 +58,7 @@ export function CompetitionDescriptionDialog({
             <Textarea
               id="competition-description"
               rows={5}
-              placeholder="مثلاً سالن اختصاصی مجموعه های ورزشی انقلاب، ساعت ۸ صبح حضور داشته باشید."
+              placeholder="مثلاً سالن اختصاصی مجموعه های ورزشی انقلاب، ساعت ۸ صبح حضور داشته باشید"
               {...form.register("description")}
             />
             {form.formState.errors.description ? <FieldError errors={[form.formState.errors.description]} /> : null}

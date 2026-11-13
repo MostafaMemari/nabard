@@ -29,7 +29,7 @@ export function useStudentImport({
 
   async function submit() {
     if (!file) {
-      setError("فایل اکسل را بارگذاری کنید.");
+      setError("فایل اکسل را بارگذاری کنید");
       return;
     }
 
@@ -42,11 +42,11 @@ export function useStudentImport({
         setRowErrors(result.errors);
         return;
       }
-      toast.success(`${toPersianDigits(result.imported)} هنرجو ثبت شد و برای بررسی به ادمین استان ارسال شد.`);
+      toast.success(`${toPersianDigits(result.imported)} هنرجو ثبت شد و برای بررسی به ادمین استان ارسال شد`);
       close();
       onImported();
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "بارگذاری انجام نشد. دوباره تلاش کنید.");
+      setError(submitError instanceof Error ? submitError.message : "بارگذاری انجام نشد. دوباره تلاش کنید");
     } finally {
       setWorking(false);
     }

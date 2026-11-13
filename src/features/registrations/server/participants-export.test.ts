@@ -156,7 +156,7 @@ describe("participantsXlsxResponse", () => {
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(buffer as unknown as ExcelJS.Buffer);
     const sheet = workbook.worksheets[0];
-    expect(sheet.name).toBe("شرکت‌کنندگان");
+    expect(sheet.name).toBe("شرکت کنندگان");
     expect(sheet.getRow(1).getCell(1).value).toBe("مسابقه قهرمانی استان");
 
     const headerRowIndex = 5;

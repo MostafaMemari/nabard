@@ -82,7 +82,7 @@ describe("createCompetitionSchema", () => {
 
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues[0]?.message).toBe("هزینه هر هنرجو باید عددی مثبت باشد.");
+      expect(result.error.issues[0]?.message).toBe("هزینه هر هنرجو باید عددی مثبت باشد");
     }
   });
 
@@ -91,7 +91,7 @@ describe("createCompetitionSchema", () => {
 
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues[0]?.message).toBe("شماره کارت باید ۱۶ رقم باشد.");
+      expect(result.error.issues[0]?.message).toBe("شماره کارت باید ۱۶ رقم باشد");
     }
   });
 
@@ -100,7 +100,7 @@ describe("createCompetitionSchema", () => {
 
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues[0]?.message).toBe("رشته را انتخاب کنید.");
+      expect(result.error.issues[0]?.message).toBe("رشته را انتخاب کنید");
     }
   });
 
@@ -109,7 +109,7 @@ describe("createCompetitionSchema", () => {
 
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues[0]?.message).toBe("حداقل یک کمربند را انتخاب کنید.");
+      expect(result.error.issues[0]?.message).toBe("حداقل یک کمربند را انتخاب کنید");
     }
   });
 
@@ -153,7 +153,7 @@ describe("updateCompetitionSchema", () => {
 
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues[0]?.message).toBe("اطلاعاتی برای تغییر ارسال نشده است.");
+      expect(result.error.issues[0]?.message).toBe("اطلاعاتی برای تغییر ارسال نشده است");
     }
   });
 });
@@ -204,11 +204,11 @@ describe("competition description", () => {
 
 describe("cancelCompetitionSchema", () => {
   it("accepts a meaningful reason", () => {
-    const result = cancelCompetitionSchema.safeParse({ reason: "  برگزاری مسابقه ممکن نیست.  " });
+    const result = cancelCompetitionSchema.safeParse({ reason: "  برگزاری مسابقه ممکن نیست" });
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.data.reason).toBe("برگزاری مسابقه ممکن نیست.");
+      expect(result.data.reason).toBe("برگزاری مسابقه ممکن نیست");
     }
   });
 

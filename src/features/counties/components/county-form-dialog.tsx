@@ -36,16 +36,16 @@ export function CountyFormDialog({
     try {
       if (isEdit && county) {
         await updateCounty(county.id, { name: values.name.trim() });
-        toast.success("نام شهرستان ذخیره شد.");
+        toast.success("نام شهرستان ذخیره شد");
       } else {
         await createCounty({ name: values.name.trim() });
-        toast.success("شهرستان اضافه شد.");
+        toast.success("شهرستان اضافه شد");
       }
       form.reset({ name: "" });
       onOpenChange(false);
       onSaved();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید");
     }
   }
 
@@ -54,7 +54,7 @@ export function CountyFormDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{isEdit ? "ویرایش شهرستان" : "شهرستان جدید"}</DialogTitle>
-          <DialogDescription>{isEdit ? "نام شهرستان را ویرایش کنید." : "نام شهرستان استان خود را وارد کنید."}</DialogDescription>
+          <DialogDescription>{isEdit ? "نام شهرستان را ویرایش کنید" : "نام شهرستان استان خود را وارد کنید"}</DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <ControlledTextField control={form.control} name="name" label="نام شهرستان" placeholder="مثلاً ورامین" />

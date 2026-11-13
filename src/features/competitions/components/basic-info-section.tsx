@@ -15,7 +15,7 @@ export function BasicInfoSection({ control }: { control: Control<CompetitionForm
   const { counties } = useCounties();
 
   return (
-    <FormSection title="اطلاعات پایه" description="نام، سطح و رشته ورزشی مسابقه." icon={TrophyIcon}>
+    <FormSection title="اطلاعات پایه" description="نام، سطح و رشته ورزشی مسابقه" icon={TrophyIcon}>
       <FormTextField control={control} name="title" label="عنوان مسابقه" placeholder="مثلاً مسابقات قهرمانی استان تهران" />
       <FormTextAreaField
         control={control}

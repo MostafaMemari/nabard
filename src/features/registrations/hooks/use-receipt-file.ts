@@ -31,7 +31,7 @@ export function useReceiptFile({ file, onChange }: { file: File | null; onChange
     }
 
     if (!ACCEPTED_RECEIPT_TYPES.has(selected.type)) {
-      setError("فقط تصاویر JPEG، PNG یا WebP پذیرفته می شوند.");
+      setError("فقط تصاویر JPEG، PNG یا WebP پذیرفته می شوند");
       return;
     }
 
@@ -41,13 +41,13 @@ export function useReceiptFile({ file, onChange }: { file: File | null; onChange
     try {
       const compressed = await compressReceiptImage(selected);
       if (compressed.size > MAX_UPLOADED_BYTES) {
-        setError("حجم تصویر پس از فشرده سازی زیاد است؛ تصویر کوچک تری انتخاب کنید.");
+        setError("حجم تصویر پس از فشرده سازی زیاد است؛ تصویر کوچک تری انتخاب کنید");
         return;
       }
 
       onChange(compressed);
     } catch (compressError) {
-      setError(compressError instanceof Error ? compressError.message : "فشرده سازی تصویر ممکن نشد.");
+      setError(compressError instanceof Error ? compressError.message : "فشرده سازی تصویر ممکن نشد");
     } finally {
       setCompressing(false);
     }

@@ -24,7 +24,7 @@ function toBlob(canvas: HTMLCanvasElement, mime: string, quality: number): Promi
 export async function compressProfileImage(file: File): Promise<File> {
   const bitmap = await createImageBitmap(file).catch(() => null);
   if (bitmap === null) {
-    throw new Error("تصویر قابل خواندن نیست؛ تصویر دیگری انتخاب کنید.");
+    throw new Error("تصویر قابل خواندن نیست؛ تصویر دیگری انتخاب کنید");
   }
 
   const needsResize = bitmap.width > MAX_EDGE || bitmap.height > MAX_EDGE;
@@ -41,7 +41,7 @@ export async function compressProfileImage(file: File): Promise<File> {
   const context = canvas.getContext("2d");
   if (context === null) {
     bitmap.close();
-    throw new Error("فشرده سازی تصویر ممکن نشد.");
+    throw new Error("فشرده سازی تصویر ممکن نشد");
   }
 
   context.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
@@ -63,7 +63,7 @@ export async function compressProfileImage(file: File): Promise<File> {
   }
 
   if (blob === null) {
-    throw new Error("فشرده سازی تصویر ممکن نشد.");
+    throw new Error("فشرده سازی تصویر ممکن نشد");
   }
 
   return new File([blob], `photo.${extensionOf(blob.type)}`, { type: blob.type });

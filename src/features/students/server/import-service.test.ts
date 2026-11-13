@@ -118,7 +118,7 @@ describe("importStudents validation", () => {
     const result = await importStudents(repo, coachUser, "coach-1", await importFile([HEADER, ROW]));
 
     expect(result.imported).toBe(0);
-    expect(result.errors).toEqual([{ row: 2, message: "این کد ملی قبلاً ثبت شده است." }]);
+    expect(result.errors).toEqual([{ row: 2, message: "این کد ملی قبلاً ثبت شده است" }]);
     expect(repo.createStudents).not.toHaveBeenCalled();
   });
 
@@ -127,7 +127,7 @@ describe("importStudents validation", () => {
     const result = await importStudents(repo, coachUser, "coach-1", await importFile([HEADER, ROW, ROW]));
 
     expect(result.imported).toBe(0);
-    expect(result.errors).toEqual([{ row: 3, message: "کد ملی در فایل تکراری است." }]);
+    expect(result.errors).toEqual([{ row: 3, message: "کد ملی در فایل تکراری است" }]);
   });
 
   it("rejects unknown belt labels without creating students", async () => {

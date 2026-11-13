@@ -39,13 +39,13 @@ export function CoachProvinceChangesSection({
   onRetry: () => void;
 }) {
   return (
-    <SectionCard title="درخواست های تغییر استان" description="انتقال هنرجو به مربی استان دیگر با تأیید ادمین استان مقصد انجام می شود.">
+    <SectionCard title="درخواست های تغییر استان" description="انتقال هنرجو به مربی استان دیگر با تأیید ادمین استان مقصد انجام می شود">
       {isLoading ? (
         <SkeletonRows rows={2} />
       ) : error ? (
-        <ErrorBanner message="دریافت درخواست های تغییر استان انجام نشد." onRetry={onRetry} />
+        <ErrorBanner message="دریافت درخواست های تغییر استان انجام نشد" onRetry={onRetry} />
       ) : requests.length === 0 ? (
-        <EmptyState icon={MapPinnedIcon} title="درخواست تغییر استان ثبت نشده است." />
+        <EmptyState icon={MapPinnedIcon} title="درخواست تغییر استان ثبت نشده است" />
       ) : (
         <div>
           {requests.map((request) => (

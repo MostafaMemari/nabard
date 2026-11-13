@@ -7,7 +7,7 @@ export const photoChangeListQuerySchema = z.object({
 });
 
 export const rejectPhotoChangeSchema = z.object({
-  note: z.string().trim().min(3, "دلیل رد درخواست را وارد کنید.").max(500, "دلیل رد حداکثر ۵۰۰ نویسه است."),
+  note: z.string().trim().min(3, "دلیل رد درخواست را وارد کنید").max(500, "دلیل رد حداکثر ۵۰۰ نویسه است"),
 });
 
 export type PhotoChangeListQuery = z.output<typeof photoChangeListQuerySchema>;

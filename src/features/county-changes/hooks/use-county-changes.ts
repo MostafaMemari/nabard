@@ -14,12 +14,12 @@ export function useCountyChangeRequest(onRequested: () => void) {
   async function requestChange(toCountyId: string): Promise<boolean> {
     try {
       await createCountyChange(toCountyId);
-      toast.success("درخواست تغییر شهرستان ثبت شد.");
+      toast.success("درخواست تغییر شهرستان ثبت شد");
       onRequested();
 
       return true;
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "ثبت درخواست انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "ثبت درخواست انجام نشد. دوباره تلاش کنید");
 
       return false;
     }
@@ -39,16 +39,16 @@ export function useCountyChangeDecision(onDecided: () => void) {
     try {
       if (decision === "approve") {
         await approveCountyChange(id);
-        toast.success("درخواست تأیید شد و شهرستان مربی به روز شد.");
+        toast.success("درخواست تأیید شد و شهرستان مربی به روز شد");
       } else {
         await rejectCountyChange(id, note ?? "");
-        toast.success("درخواست رد شد.");
+        toast.success("درخواست رد شد");
       }
       onDecided();
 
       return true;
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "ثبت نتیجه انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "ثبت نتیجه انجام نشد. دوباره تلاش کنید");
 
       return false;
     }

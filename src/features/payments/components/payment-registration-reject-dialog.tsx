@@ -51,7 +51,7 @@ export function PaymentRegistrationRejectDialog({
       <DialogContent showCloseButton={false}>
         <DialogHeader>
           <DialogTitle>رد ثبت نام</DialogTitle>
-          <DialogDescription>ثبت نام «{name}» رد می شود و دلیل آن برای مربی نمایش داده می شود.</DialogDescription>
+          <DialogDescription>ثبت نام «{name}» رد می شود و دلیل آن برای مربی نمایش داده می شود</DialogDescription>
         </DialogHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <Field data-invalid={form.formState.errors.note ? "" : undefined}>
@@ -59,7 +59,7 @@ export function PaymentRegistrationRejectDialog({
             <Textarea
               id="registration-reject-note"
               rows={4}
-              placeholder="مثلاً رده وزنی هنرجو با مسابقه همخوانی ندارد."
+              placeholder="مثلاً رده وزنی هنرجو با مسابقه همخوانی ندارد"
               {...form.register("note")}
             />
             {form.formState.errors.note ? <FieldError errors={[form.formState.errors.note]} /> : null}

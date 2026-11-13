@@ -21,12 +21,12 @@ export function useProvinceChangeCreate(onRequested: () => void) {
         toProvince: String(values.toProvince),
         toCoachId: String(values.toCoachId),
       });
-      toast.success("درخواست تغییر استان ثبت شد و برای ادمین استان مقصد ارسال شد.");
+      toast.success("درخواست تغییر استان ثبت شد و برای ادمین استان مقصد ارسال شد");
       onRequested();
 
       return true;
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "ثبت درخواست انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "ثبت درخواست انجام نشد. دوباره تلاش کنید");
 
       return false;
     }
@@ -40,16 +40,16 @@ export function useProvinceChangeDecision(onDecided: () => void) {
     try {
       if (decision === "approve") {
         await approveProvinceChangeRequest(id);
-        toast.success("درخواست تأیید شد و هنرجو به مربی استان مقصد منتقل شد.");
+        toast.success("درخواست تأیید شد و هنرجو به مربی استان مقصد منتقل شد");
       } else {
         await rejectProvinceChangeRequest(id, note ?? "");
-        toast.success("درخواست تغییر استان رد شد.");
+        toast.success("درخواست تغییر استان رد شد");
       }
       onDecided();
 
       return true;
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "ثبت نتیجه انجام نشد. دوباره تلاش کنید.");
+      toast.error(error instanceof Error ? error.message : "ثبت نتیجه انجام نشد. دوباره تلاش کنید");
 
       return false;
     }

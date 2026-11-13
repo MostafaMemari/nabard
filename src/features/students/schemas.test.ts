@@ -48,7 +48,7 @@ describe("createStudentSchema", () => {
 
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues[0]?.message).toBe("کد ملی باید ۱۰ رقم باشد.");
+      expect(result.error.issues[0]?.message).toBe("کد ملی باید ۱۰ رقم باشد");
     }
   });
 
@@ -57,7 +57,7 @@ describe("createStudentSchema", () => {
 
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues[0]?.message).toBe("تاریخ تولد باید یک تاریخ گذشته و معتبر باشد.");
+      expect(result.error.issues[0]?.message).toBe("تاریخ تولد باید یک تاریخ گذشته و معتبر باشد");
     }
   });
 

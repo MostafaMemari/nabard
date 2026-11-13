@@ -8,16 +8,16 @@ import type { RefundFilters, RefundRecord, RefundsRepository, RefundWithScope, U
 const DEFAULT_PAGE_SIZE = 100;
 
 function forbidden(): AppError {
-  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
+  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید");
 }
 
 function refundNotFound(): AppError {
-  return new AppError(404, "NOT_FOUND", "بازپرداخت یافت نشد.");
+  return new AppError(404, "NOT_FOUND", "بازپرداخت یافت نشد");
 }
 
 async function requireActiveUser(repo: RefundsRepository, user: CurrentUser): Promise<UserIdentityRecord> {
   const record = await repo.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (!record.isActive || record.role !== user.role) throw forbidden();
 
   return record;
@@ -69,5 +69,5 @@ export async function completeRefund(
   const updated = await repo.completeRefundFromPending(id, { processedById: user.id, note: input.note });
   if (updated) return stripScope(updated);
 
-  throw new AppError(409, "CONFLICT", "این بازپرداخت قبلا ثبت شده است.");
+  throw new AppError(409, "CONFLICT", "این بازپرداخت قبلا ثبت شده است");
 }

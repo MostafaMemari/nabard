@@ -26,7 +26,7 @@ export function StudentProfileScreen({ studentId }: { studentId: string }) {
     return (
       <div className="flex flex-col gap-4">
         <DetailPageHeader backHref="/coach/students" backLabel="هنرجویان" title="پروفایل هنرجو" />
-        <ErrorBanner message="این هنرجو پیدا نشد یا به فهرست شما تعلق ندارد." onRetry={() => mutate()} />
+        <ErrorBanner message="این هنرجو پیدا نشد یا به فهرست شما تعلق ندارد" onRetry={() => mutate()} />
       </div>
     );
   }

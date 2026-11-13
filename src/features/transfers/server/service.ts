@@ -12,11 +12,11 @@ import { StudentOwnerChangedError, TransferGenderMismatchError } from "./reposit
 const DEFAULT_PAGE_SIZE = 100;
 
 function forbidden(): AppError {
-  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید.");
+  return new AppError(403, "FORBIDDEN", "شما به این بخش دسترسی ندارید");
 }
 
 function transferNotFound(): AppError {
-  return new AppError(404, "NOT_FOUND", "درخواست انتقال یافت نشد.");
+  return new AppError(404, "NOT_FOUND", "درخواست انتقال یافت نشد");
 }
 
 function provinceOf(identity: UserIdentityRecord): Province {
@@ -27,7 +27,7 @@ function provinceOf(identity: UserIdentityRecord): Province {
 
 async function requireActiveUser(repo: TransfersRepository, user: CurrentUser): Promise<UserIdentityRecord> {
   const record = await repo.findUserById(user.id);
-  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید.");
+  if (!record) throw new AppError(401, "UNAUTHORIZED", "برای ادامه وارد حساب کاربری شوید");
   if (!record.isActive || record.role !== user.role) throw forbidden();
 
   return record;
@@ -110,19 +110,19 @@ function toCoachRecord(
 
 function validateStudentForTransfer(identity: UserIdentityRecord, student: StudentLookupRow): void {
   if (student.coachId === identity.id) {
-    throw new AppError(409, "CONFLICT", "این هنرجو هم اکنون در باشگاه شما ثبت است.");
+    throw new AppError(409, "CONFLICT", "این هنرجو هم اکنون در باشگاه شما ثبت است");
   }
 
   if (student.coachProvince !== identity.province) {
-    throw new AppError(403, "FORBIDDEN", "انتقال هنرجو بین استان ها فعلا امکان پذیر نیست.");
+    throw new AppError(403, "FORBIDDEN", "انتقال هنرجو بین استان ها فعلا امکان پذیر نیست");
   }
 
   if (identity.gender === null) {
-    throw new AppError(403, "FORBIDDEN", "جنسیت شما ثبت نشده است؛ با ادمین استان تماس بگیرید.");
+    throw new AppError(403, "FORBIDDEN", "جنسیت شما ثبت نشده است؛ با ادمین استان تماس بگیرید");
   }
 
   if (student.gender !== identity.gender) {
-    throw new AppError(400, "VALIDATION_ERROR", "جنسیت هنرجو باید با جنسیت شما یکسان باشد.");
+    throw new AppError(400, "VALIDATION_ERROR", "جنسیت هنرجو باید با جنسیت شما یکسان باشد");
   }
 }
 
@@ -135,7 +135,7 @@ export async function lookupTransferStudent(
   if (identity.role !== "COACH") throw forbidden();
 
   const student = await repo.findStudentByNationalCode(nationalCode);
-  if (!student) throw new AppError(404, "NOT_FOUND", "هنرجویی با این کد ملی یافت نشد.");
+  if (!student) throw new AppError(404, "NOT_FOUND", "هنرجویی با این کد ملی یافت نشد");
 
   validateStudentForTransfer(identity, student);
 
@@ -153,13 +153,13 @@ export async function createTransferRequest(
   if (identity.role !== "COACH") throw forbidden();
 
   const student = await repo.findStudentByNationalCode(input.nationalCode);
-  if (!student) throw new AppError(404, "NOT_FOUND", "هنرجویی با این کد ملی یافت نشد.");
+  if (!student) throw new AppError(404, "NOT_FOUND", "هنرجویی با این کد ملی یافت نشد");
 
   validateStudentForTransfer(identity, student);
 
   const pending = await repo.findPendingTransferByStudentId(student.id);
   if (pending || (await repo.hasPendingProvinceChange(student.id))) {
-    throw new AppError(409, "CONFLICT", "یک درخواست انتقال یا تغییر استان در انتظار بررسی برای این هنرجو وجود دارد.");
+    throw new AppError(409, "CONFLICT", "یک درخواست انتقال یا تغییر استان در انتظار بررسی برای این هنرجو وجود دارد");
   }
 
   const row = await repo.createTransfer({ studentId: student.id, fromCoachId: student.coachId, toCoachId: identity.id });
@@ -187,31 +187,31 @@ export async function createCoachChangeRequest(
   const identity = await requireActiveUser(repo, user);
   if (identity.role !== "COACH") throw forbidden();
   if (identity.gender === null) {
-    throw new AppError(403, "FORBIDDEN", "جنسیت شما ثبت نشده است؛ با ادمین استان تماس بگیرید.");
+    throw new AppError(403, "FORBIDDEN", "جنسیت شما ثبت نشده است؛ با ادمین استان تماس بگیرید");
   }
 
   const student = await repo.findStudentById(studentId);
   if (!student || student.coachId !== user.id) {
-    throw new AppError(404, "NOT_FOUND", "هنرجو یافت نشد.");
+    throw new AppError(404, "NOT_FOUND", "هنرجو یافت نشد");
   }
 
   const target = await repo.findCoachTargetById(input.toCoachId);
   if (!target || target.province !== student.coachProvince) {
-    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد باید در استان شما باشد.");
+    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد باید در استان شما باشد");
   }
   if (!target.isActive) {
-    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد فعال نیست.");
+    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد فعال نیست");
   }
   if (target.id === student.coachId) {
-    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد نباید همان مربی فعلی باشد.");
+    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد نباید همان مربی فعلی باشد");
   }
   if (target.gender === null || target.gender !== student.gender) {
-    throw new AppError(400, "VALIDATION_ERROR", "جنسیت مربی مقصد باید با جنسیت هنرجو یکسان باشد.");
+    throw new AppError(400, "VALIDATION_ERROR", "جنسیت مربی مقصد باید با جنسیت هنرجو یکسان باشد");
   }
 
   const pending = await repo.findPendingTransferByStudentId(student.id);
   if (pending || (await repo.hasPendingProvinceChange(student.id))) {
-    throw new AppError(409, "CONFLICT", "یک درخواست انتقال یا تغییر استان در انتظار بررسی برای این هنرجو وجود دارد.");
+    throw new AppError(409, "CONFLICT", "یک درخواست انتقال یا تغییر استان در انتظار بررسی برای این هنرجو وجود دارد");
   }
 
   const row = await repo.createTransfer({ studentId: student.id, fromCoachId: user.id, toCoachId: input.toCoachId });
@@ -278,15 +278,15 @@ export async function decideTransferRequest(
     });
   } catch (error) {
     if (error instanceof StudentOwnerChangedError) {
-      throw new AppError(409, "CONFLICT", "مالکیت این هنرجو تغییر کرده است و درخواست قابل تأیید نیست.");
+      throw new AppError(409, "CONFLICT", "مالکیت این هنرجو تغییر کرده است و درخواست قابل تأیید نیست");
     }
     if (error instanceof TransferGenderMismatchError) {
-      throw new AppError(409, "CONFLICT", "جنسیت هنرجو با جنسیت مربی مقصد یکسان نیست و درخواست قابل تأیید نیست.");
+      throw new AppError(409, "CONFLICT", "جنسیت هنرجو با جنسیت مربی مقصد یکسان نیست و درخواست قابل تأیید نیست");
     }
 
     throw error;
   }
-  if (!updated) throw new AppError(409, "CONFLICT", "این درخواست قبلا بررسی شده است.");
+  if (!updated) throw new AppError(409, "CONFLICT", "این درخواست قبلا بررسی شده است");
 
   await audit.createAuditLog({
     actorId: user.id,
@@ -310,28 +310,28 @@ export async function reassignCoachStudents(
   if (identity.role !== "ADMIN") throw forbidden();
 
   const source = await repo.findCoachTargetById(coachId);
-  if (!source || source.province !== provinceOf(identity)) throw new AppError(404, "NOT_FOUND", "مربی یافت نشد.");
+  if (!source || source.province !== provinceOf(identity)) throw new AppError(404, "NOT_FOUND", "مربی یافت نشد");
 
   const target = await repo.findCoachTargetById(input.toCoachId);
   if (!target || target.province !== provinceOf(identity)) {
-    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد باید در استان شما باشد.");
+    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد باید در استان شما باشد");
   }
   if (!target.isActive) {
-    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد فعال نیست.");
+    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد فعال نیست");
   }
   if (target.id === source.id) {
-    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد نباید همان مربی فعلی باشد.");
+    throw new AppError(400, "VALIDATION_ERROR", "مربی مقصد نباید همان مربی فعلی باشد");
   }
 
   const mismatchedCount = await repo.countCoachStudentsNotOfGender(source.id, target.gender);
   if (target.gender === null && mismatchedCount > 0) {
-    throw new AppError(400, "VALIDATION_ERROR", "جنسیت مربی مقصد ثبت نشده است؛ ابتدا جنسیت او را مشخص کنید.");
+    throw new AppError(400, "VALIDATION_ERROR", "جنسیت مربی مقصد ثبت نشده است؛ ابتدا جنسیت او را مشخص کنید");
   }
   if (mismatchedCount > 0) {
     throw new AppError(
       409,
       "CONFLICT",
-      `مربی مقصد باید هم جنسیت همه هنرجوها باشد؛ ${toPersianDigits(mismatchedCount)} هنرجو با جنسیت دیگری در بین آن ها هست. ابتدا آن ها را منتقل کنید.`,
+      `مربی مقصد باید هم جنسیت همه هنرجوها باشد؛ ${toPersianDigits(mismatchedCount)} هنرجو با جنسیت دیگری در بین آن ها هست. ابتدا آن ها را منتقل کنید`,
     );
   }
 

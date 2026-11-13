@@ -29,7 +29,7 @@ export function TransferRequestDialog({
       <DialogContent showCloseButton={false} className="max-w-md">
         <DialogHeader>
           <DialogTitle>انتقال هنرجو به من</DialogTitle>
-          <DialogDescription>کد ملی هنرجو را وارد کنید؛ پس از جستجو، نتیجه به صورت مخفی نشان داده می شود.</DialogDescription>
+          <DialogDescription>کد ملی هنرجو را وارد کنید؛ پس از جستجو، نتیجه به صورت مخفی نشان داده می شود</DialogDescription>
         </DialogHeader>
         <form
           onSubmit={(event) => {
@@ -52,7 +52,7 @@ export function TransferRequestDialog({
             </div>
           ) : null}
           <p className="text-subtle text-muted-foreground">
-            با تأیید مدیر استان فقط مربی هنرجو تغییر می کند و ثبت نام ها و پرداخت های قبلی دست نخورده می مانند.
+            با تأیید مدیر استان فقط مربی هنرجو تغییر می کند و ثبت نام ها و پرداخت های قبلی دست نخورده می مانند
           </p>
           <div className="flex items-center justify-end gap-3">
             <Button type="button" variant="ghost" onClick={close}>

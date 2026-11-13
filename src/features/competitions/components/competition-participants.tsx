@@ -36,11 +36,11 @@ export function CompetitionParticipants({ competitionId }: { competitionId: stri
       </div>
 
       {error ? (
-        <ErrorBanner message="دریافت فهرست شرکت کنندگان ناموفق بود." onRetry={() => mutate()} />
+        <ErrorBanner message="دریافت فهرست شرکت کنندگان ناموفق بود" onRetry={() => mutate()} />
       ) : isLoading ? (
         <SkeletonRows rows={3} className="h-12" />
       ) : participants.length === 0 ? (
-        <EmptyState icon={UsersRoundIcon} title="هنوز شرکت کننده تأیید شده ای برای این مسابقه وجود ندارد." tone="primary" />
+        <EmptyState icon={UsersRoundIcon} title="هنوز شرکت کننده تأیید شده ای برای این مسابقه وجود ندارد" tone="primary" />
       ) : (
         <ParticipantsGroups participants={participants} />
       )}

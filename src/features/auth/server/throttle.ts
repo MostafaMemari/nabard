@@ -13,7 +13,7 @@ export type LoginThrottleRepository = {
 };
 
 function tooManyAttempts(): AppError {
-  return new AppError(429, "TOO_MANY_ATTEMPTS", "به دلیل تلاش های ناموفق مکرر، ورود موقتا مسدود شده است. ۱۵ دقیقه دیگر دوباره تلاش کنید.");
+  return new AppError(429, "TOO_MANY_ATTEMPTS", "به دلیل تلاش های ناموفق مکرر، ورود موقتا مسدود شده است. ۱۵ دقیقه دیگر دوباره تلاش کنید");
 }
 
 export function lockoutCount(counts: Record<string, number>): number {

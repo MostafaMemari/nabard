@@ -16,7 +16,7 @@ import type { CountyChangeRequest } from "../types";
 
 function LatestRequest({ request }: { request: CountyChangeRequest | null }) {
   if (!request) {
-    return <p className="text-subtle text-muted-foreground">درخواستی ثبت نکرده اید.</p>;
+    return <p className="text-subtle text-muted-foreground">درخواستی ثبت نکرده اید</p>;
   }
 
   return (
@@ -69,7 +69,7 @@ export function CoachProfileDialog({ open, onOpenChange }: { open: boolean; onOp
       <DialogContent showCloseButton={false} className="max-w-md">
         <DialogHeader>
           <DialogTitle>پروفایل مربی</DialogTitle>
-          <DialogDescription>شهرستان فعلی شما و وضعیت درخواست تغییر شهرستان.</DialogDescription>
+          <DialogDescription>شهرستان فعلی شما و وضعیت درخواست تغییر شهرستان</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-3 text-sm">
           {user ? <CoachPhotoField userId={user.id} fullName={user.fullName} hasPhoto={user.hasPhoto} photoUrl={user.photoUrl} /> : null}
@@ -87,7 +87,7 @@ export function CoachProfileDialog({ open, onOpenChange }: { open: boolean; onOp
           <p className="text-sm font-semibold">درخواست تغییر شهرستان</p>
           <LatestRequest request={request} />
           {request?.status === "PENDING" ? (
-            <p className="text-subtle text-muted-foreground">تا بررسی این درخواست نمی توانید درخواست جدیدی ثبت کنید.</p>
+            <p className="text-subtle text-muted-foreground">تا بررسی این درخواست نمی توانید درخواست جدیدی ثبت کنید</p>
           ) : (
             <ChangeRequestForm counties={targetCounties} onRequested={() => void mutate()} />
           )}

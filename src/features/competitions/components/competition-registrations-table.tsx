@@ -35,7 +35,7 @@ export function CompetitionRegistrationsTable({
   const columns = useRegistrationColumns();
 
   if (error) {
-    return <ErrorBanner message="دریافت ثبت نام ها ناموفق بود." onRetry={() => mutate()} />;
+    return <ErrorBanner message="دریافت ثبت نام ها ناموفق بود" onRetry={() => mutate()} />;
   }
 
   if (isLoading) {
@@ -43,7 +43,7 @@ export function CompetitionRegistrationsTable({
   }
 
   if (rows.length === 0) {
-    return <EmptyState icon={ClipboardListIcon} title="هنوز ثبت نامی برای این مسابقه انجام نشده است." />;
+    return <EmptyState icon={ClipboardListIcon} title="هنوز ثبت نامی برای این مسابقه انجام نشده است" />;
   }
 
   return (
