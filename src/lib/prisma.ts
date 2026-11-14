@@ -12,7 +12,9 @@ function createAdapter(): PrismaNeon | PrismaPg {
   const host = new URL(connectionString).hostname;
 
   return host === "localhost" || host === "127.0.0.1" || host === "::1"
-    ? new PrismaPg({ connectionString })
+    ? // The local wire server serves one backend at a time; a pooled client
+      // would tear down its extra connections mid-query.
+      new PrismaPg({ connectionString, max: 1 })
     : new PrismaNeon({ connectionString });
 }
 
