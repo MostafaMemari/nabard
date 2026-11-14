@@ -3,7 +3,7 @@
 import { MoreHorizontalIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { BeltDot, EmptyState, ErrorBanner, MobileCard, MobileCardChips, SkeletonRows } from "@/components/shared";
+import { BeltDot, EmptyState, ErrorBanner, SkeletonRows } from "@/components/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -29,8 +29,8 @@ function RowMenu({ belt, onEdit, onDelete }: { belt: BeltAdmin; onEdit: () => vo
   );
 }
 
-// Mobile variant of the belts table above.
-function BeltCard({
+// Mobile variant of the belts table above: one divided card instead of a card per row.
+function BeltRow({
   belt,
   onToggle,
   onEdit,
@@ -42,20 +42,18 @@ function BeltCard({
   onDelete: () => void;
 }) {
   return (
-    <MobileCard className="gap-0 p-0">
-      <div className="flex items-center gap-3 p-4 pb-3">
-        <BeltDot code={belt.code} />
-        <span className="min-w-0 flex-1 truncate text-sm font-medium">{belt.label}</span>
-        <Switch checked={belt.isActive} onCheckedChange={onToggle} aria-label={`فعال بودن ${belt.label}`} />
-      </div>
-      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border px-4 py-2.5">
-        <MobileCardChips>
-          <span className="text-subtle text-muted-foreground tabular-nums">سطح {toPersianDigits(belt.level)}</span>
+    <div className="flex items-center gap-3 px-4 py-3">
+      <BeltDot code={belt.code} />
+      <div className="min-w-0 flex-1 leading-tight">
+        <div className="flex items-center gap-2">
+          <span className="truncate text-sm font-medium">{belt.label}</span>
           {!belt.isActive ? <Badge variant="secondary">بایگانی</Badge> : null}
-        </MobileCardChips>
-        <RowMenu belt={belt} onEdit={onEdit} onDelete={onDelete} />
+        </div>
+        <p className="text-subtle mt-0.5 text-muted-foreground tabular-nums">سطح {toPersianDigits(belt.level)}</p>
       </div>
-    </MobileCard>
+      <Switch checked={belt.isActive} onCheckedChange={onToggle} aria-label={`فعال بودن ${belt.label}`} />
+      <RowMenu belt={belt} onEdit={onEdit} onDelete={onDelete} />
+    </div>
   );
 }
 
@@ -80,14 +78,12 @@ export function BeltsTab() {
   }
 
   return (
-    <section className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
-      <header className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
-        <div>
-          <h2 className="text-sm font-semibold">کمربندها</h2>
-          <p className="text-subtle mt-0.5 text-muted-foreground">تغییر کمربندها روی مسابقه های منتشر شده اثر ندارد</p>
-        </div>
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+        <p className="text-subtle min-w-0 flex-1 text-muted-foreground">تغییر کمربندها روی مسابقه های منتشر شده اثر ندارد</p>
         <Button
           size="sm"
+          className="shrink-0"
           onClick={() => {
             setEditing(null);
             setDialogOpen(true);
@@ -96,23 +92,21 @@ export function BeltsTab() {
           <PlusIcon data-icon="inline-start" />
           کمربند جدید
         </Button>
-      </header>
+      </div>
 
       {isLoading ? (
-        <div className="px-4 py-2">
+        <div className="overflow-hidden rounded-xl border border-border bg-card px-4 py-2 shadow-card">
           <SkeletonRows rows={6} />
         </div>
       ) : error ? (
-        <div className="px-4 py-2">
-          <ErrorBanner message="دریافت کمربندها انجام نشد" onRetry={() => void mutate()} />
-        </div>
+        <ErrorBanner message="دریافت کمربندها انجام نشد" onRetry={() => void mutate()} />
       ) : belts.length === 0 ? (
-        <div className="px-4 pb-4">
+        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
           <EmptyState title="هنوز کمربندی تعریف نشده است" />
         </div>
       ) : (
         <>
-          <div className="hidden md:block">
+          <div className="hidden overflow-hidden rounded-xl border border-border bg-card shadow-card md:block">
             <Table>
               <TableHeader className="bg-muted/50">
                 <TableRow className="hover:bg-transparent">
@@ -146,9 +140,9 @@ export function BeltsTab() {
               </TableBody>
             </Table>
           </div>
-          <div className="flex flex-col gap-3 md:hidden">
+          <div className="flex flex-col divide-y divide-border overflow-hidden rounded-xl border border-border bg-card shadow-card md:hidden">
             {belts.map((belt) => (
-              <BeltCard
+              <BeltRow
                 key={belt.id}
                 belt={belt}
                 onToggle={() => void toggle(belt)}
@@ -162,6 +156,6 @@ export function BeltsTab() {
 
       <BeltFormDialog open={dialogOpen} onOpenChange={setDialogOpen} onSaved={() => void mutate()} belt={editing} />
       <BeltDeleteDialog belt={deleting} onDone={() => void mutate()} onClose={() => setDeleting(null)} />
-    </section>
+    </div>
   );
 }

@@ -3,7 +3,7 @@
 import { MoreHorizontalIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { EmptyState, ErrorBanner, MobileCard, SkeletonRows } from "@/components/shared";
+import { EmptyState, ErrorBanner, SkeletonRows } from "@/components/shared";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -29,8 +29,8 @@ function RowMenu({ category, onEdit, onDelete }: { category: AgeCategoryAdmin; o
   );
 }
 
-// Mobile variant of the age categories table above.
-function AgeCategoryCard({
+// Mobile variant of the age categories table above: one divided card instead of a card per row.
+function AgeCategoryRow({
   category,
   onToggle,
   onEdit,
@@ -42,26 +42,20 @@ function AgeCategoryCard({
   onDelete: () => void;
 }) {
   return (
-    <MobileCard className="gap-0 p-0">
-      <div className="flex items-center gap-3 p-4 pb-3">
-        <span className="min-w-0 flex-1 truncate text-sm font-medium">{category.label}</span>
-        <Switch checked={category.isActive} onCheckedChange={onToggle} aria-label={`فعال بودن ${category.label}`} />
-      </div>
-      <div className="flex items-center justify-between gap-2 border-t border-border px-4 py-2.5">
-        <div className="flex flex-col gap-1 text-subtle text-xs text-muted-foreground tabular-nums">
-          <span>
-            متولدین {toPersianDigits(category.birthYearStart ?? 0)} تا {toPersianDigits(category.birthYearEnd ?? 0)}
-          </span>
-          <span>
-            {formatJalaliDate(new Date(category.startDate))} تا {formatJalaliDate(new Date(category.endDate))}
-          </span>
-        </div>
+    <div className="flex items-center gap-3 px-4 py-3">
+      <div className="min-w-0 flex-1 leading-tight">
         <div className="flex items-center gap-2">
+          <span className="truncate text-sm font-medium">{category.label}</span>
           {!category.isActive ? <Badge variant="secondary">بایگانی</Badge> : null}
-          <RowMenu category={category} onEdit={onEdit} onDelete={onDelete} />
         </div>
+        <p className="text-subtle mt-0.5 text-muted-foreground tabular-nums">
+          متولدین {toPersianDigits(category.birthYearStart ?? 0)} تا {toPersianDigits(category.birthYearEnd ?? 0)} ·{" "}
+          {formatJalaliDate(new Date(category.startDate))} تا {formatJalaliDate(new Date(category.endDate))}
+        </p>
       </div>
-    </MobileCard>
+      <Switch checked={category.isActive} onCheckedChange={onToggle} aria-label={`فعال بودن ${category.label}`} />
+      <RowMenu category={category} onEdit={onEdit} onDelete={onDelete} />
+    </div>
   );
 }
 
@@ -86,14 +80,12 @@ export function AgeCategoriesTab() {
   }
 
   return (
-    <section className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
-      <header className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
-        <div>
-          <h2 className="text-sm font-semibold">رده های سنی</h2>
-          <p className="text-subtle mt-0.5 text-muted-foreground">بازه های رده های فعال نباید همپوشانی داشته باشند</p>
-        </div>
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
+        <p className="text-subtle min-w-0 flex-1 text-muted-foreground">بازه های رده های فعال نباید همپوشانی داشته باشند</p>
         <Button
           size="sm"
+          className="shrink-0"
           onClick={() => {
             setEditing(null);
             setDialogOpen(true);
@@ -102,23 +94,21 @@ export function AgeCategoriesTab() {
           <PlusIcon data-icon="inline-start" />
           رده سنی جدید
         </Button>
-      </header>
+      </div>
 
       {isLoading ? (
-        <div className="px-4 py-2">
+        <div className="overflow-hidden rounded-xl border border-border bg-card px-4 py-2 shadow-card">
           <SkeletonRows rows={5} />
         </div>
       ) : error ? (
-        <div className="px-4 py-2">
-          <ErrorBanner message="دریافت رده های سنی انجام نشد" onRetry={() => void mutate()} />
-        </div>
+        <ErrorBanner message="دریافت رده های سنی انجام نشد" onRetry={() => void mutate()} />
       ) : ageCategories.length === 0 ? (
-        <div className="px-4 pb-4">
+        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
           <EmptyState title="هنوز رده سنی تعریف نشده است" />
         </div>
       ) : (
         <>
-          <div className="hidden md:block">
+          <div className="hidden overflow-hidden rounded-xl border border-border bg-card shadow-card md:block">
             <Table>
               <TableHeader className="bg-muted/50">
                 <TableRow className="hover:bg-transparent">
@@ -161,9 +151,9 @@ export function AgeCategoriesTab() {
               </TableBody>
             </Table>
           </div>
-          <div className="flex flex-col gap-3 md:hidden">
+          <div className="flex flex-col divide-y divide-border overflow-hidden rounded-xl border border-border bg-card shadow-card md:hidden">
             {ageCategories.map((category) => (
-              <AgeCategoryCard
+              <AgeCategoryRow
                 key={category.id}
                 category={category}
                 onToggle={() => void toggle(category)}
@@ -177,6 +167,6 @@ export function AgeCategoriesTab() {
 
       <AgeCategoryFormDialog open={dialogOpen} onOpenChange={setDialogOpen} onSaved={() => void mutate()} category={editing} />
       <AgeCategoryDeleteDialog category={deleting} onDone={() => void mutate()} onClose={() => setDeleting(null)} />
-    </section>
+    </div>
   );
 }

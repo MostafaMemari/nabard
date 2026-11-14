@@ -14,8 +14,8 @@ export function BaseDataScreen() {
     <>
       <PageHeader title="اطلاعات پایه" description="کمربندها، رده های سنی و رده های وزنی؛ تغییرها فقط روی مسابقه های جدید اعمال می شود" />
 
-      <Tabs defaultValue="belts">
-        <TabsList>
+      <Tabs defaultValue="belts" className="gap-3">
+        <TabsList className="w-full max-w-md sm:w-fit">
           <TabsTrigger value="belts">کمربندها</TabsTrigger>
           <TabsTrigger value="age-categories">رده های سنی</TabsTrigger>
           <TabsTrigger value="weight-classes">رده های وزنی</TabsTrigger>

@@ -52,7 +52,7 @@ function WeightSetCards({
   onRemove: (key: string) => void;
 }) {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 md:hidden">
       {editorRows.map((row, index) => (
         <MobileCard key={row.key}>
           <MobileCardTop
@@ -131,7 +131,7 @@ export function WeightSetTable({
 }) {
   return (
     <>
-      <div className="hidden md:block">
+      <div className="hidden overflow-hidden rounded-xl border border-border bg-card shadow-card md:block">
         <Table>
           <TableHeader>
             <TableRow>

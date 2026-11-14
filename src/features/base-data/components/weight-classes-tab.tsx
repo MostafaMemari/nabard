@@ -2,7 +2,7 @@
 
 import { MousePointerClickIcon } from "lucide-react";
 import { useState } from "react";
-import { EmptyState, ErrorBanner, SkeletonRows, StateCard } from "@/components/shared";
+import { EmptyState, ErrorBanner, SkeletonRows } from "@/components/shared";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import type { AgeCategoryAdmin } from "../api-admin";
@@ -60,37 +60,34 @@ export function WeightClassesTab({ ageCategories }: { ageCategories: AgeCategory
   );
 
   return (
-    <section className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
-      <header className="border-b border-border px-4 py-3">
-        <h2 className="text-sm font-semibold">رده های وزنی</h2>
-        <p className="text-subtle mt-0.5 text-muted-foreground">
-          رده های وزنی هر رده سنی و جنسیت را به صورت یک مجموعه مرتب ویرایش کنید؛ مرز رده ها نباید وزنی را بدون رده یا با دو رده باقی بگذارد
-        </p>
-      </header>
-      <div className="flex flex-col gap-5 p-4">
-        <div className="grid gap-4 sm:max-w-2xl sm:grid-cols-2">
-          <Selector label="رده سنی" value={ageCategoryId} items={categoryItems} onChange={setAgeCategoryId} />
-          <Selector label="جنسیت" value={gender} items={genderLabels} onChange={setGender} />
-        </div>
-
-        {!selected ? (
-          <EmptyState icon={MousePointerClickIcon} title="یک رده سنی و جنسیت انتخاب کنید تا رده های وزنی آن نمایش داده شود" />
-        ) : set.isLoading ? (
-          <StateCard className="p-4">
-            <SkeletonRows rows={4} className="h-11" />
-          </StateCard>
-        ) : set.error ? (
-          <ErrorBanner message="دریافت رده های وزنی انجام نشد" onRetry={() => void set.mutate()} />
-        ) : (
-          <WeightSetEditor
-            key={`${ageCategoryId}:${gender}`}
-            ageCategoryId={ageCategoryId}
-            gender={gender as Gender}
-            initialRows={set.rows.map(rowOfAdmin)}
-            onSaved={() => void set.mutate()}
-          />
-        )}
+    <div className="flex flex-col gap-5">
+      <p className="text-subtle max-w-2xl text-muted-foreground">
+        رده های وزنی هر رده سنی و جنسیت را به صورت یک مجموعه مرتب ویرایش کنید؛ مرز رده ها نباید وزنی را بدون رده یا با دو رده باقی بگذارد
+      </p>
+      <div className="grid gap-4 sm:max-w-2xl sm:grid-cols-2">
+        <Selector label="رده سنی" value={ageCategoryId} items={categoryItems} onChange={setAgeCategoryId} />
+        <Selector label="جنسیت" value={gender} items={genderLabels} onChange={setGender} />
       </div>
-    </section>
+
+      {!selected ? (
+        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-card">
+          <EmptyState icon={MousePointerClickIcon} title="یک رده سنی و جنسیت انتخاب کنید تا رده های وزنی آن نمایش داده شود" />
+        </div>
+      ) : set.isLoading ? (
+        <div className="overflow-hidden rounded-xl border border-border bg-card px-4 py-4 shadow-card">
+          <SkeletonRows rows={4} className="h-11" />
+        </div>
+      ) : set.error ? (
+        <ErrorBanner message="دریافت رده های وزنی انجام نشد" onRetry={() => void set.mutate()} />
+      ) : (
+        <WeightSetEditor
+          key={`${ageCategoryId}:${gender}`}
+          ageCategoryId={ageCategoryId}
+          gender={gender as Gender}
+          initialRows={set.rows.map(rowOfAdmin)}
+          onSaved={() => void set.mutate()}
+        />
+      )}
+    </div>
   );
 }

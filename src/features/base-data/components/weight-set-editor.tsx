@@ -104,11 +104,11 @@ export function WeightSetEditor({
           </p>
         ))}
 
-        <div className="flex items-center justify-between gap-3">
-          <p className="text-subtle text-muted-foreground">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-subtle min-w-0 text-muted-foreground">
             تغییرها فقط روی مسابقه های جدید اعمال می شود؛ مسابقه های منتشر شده و ثبت نام های قبلی تغییری نمی کنند
           </p>
-          <Button onClick={() => void save()} disabled={saving || issues.length > 0}>
+          <Button className="shrink-0" onClick={() => void save()} disabled={saving || issues.length > 0}>
             ذخیره
           </Button>
         </div>
