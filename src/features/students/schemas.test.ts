@@ -9,10 +9,22 @@ const validStudent = {
   beltId: "belt-blue",
   beltCertificateDate: "",
   insuranceDate: "",
-  tkdBankChargeDate: "",
+  tkdBankChargeYear: "",
 };
 
 describe("createStudentSchema", () => {
+  it("accepts an empty or in-range federation charge year", () => {
+    expect(createStudentSchema.safeParse({ ...validStudent, tkdBankChargeYear: "" }).success).toBe(true);
+    expect(createStudentSchema.safeParse({ ...validStudent, tkdBankChargeYear: "1380" }).success).toBe(true);
+    expect(createStudentSchema.safeParse({ ...validStudent, tkdBankChargeYear: "1406" }).success).toBe(true);
+    expect(createStudentSchema.safeParse({ ...validStudent, tkdBankChargeYear: "۱۴۰۰" }).success).toBe(true);
+  });
+
+  it("rejects a federation charge year outside 1380..1406", () => {
+    expect(createStudentSchema.safeParse({ ...validStudent, tkdBankChargeYear: "1379" }).success).toBe(false);
+    expect(createStudentSchema.safeParse({ ...validStudent, tkdBankChargeYear: "1407" }).success).toBe(false);
+    expect(createStudentSchema.safeParse({ ...validStudent, tkdBankChargeYear: "1400/05" }).success).toBe(false);
+  });
   it("accepts a valid student", () => {
     const result = createStudentSchema.safeParse(validStudent);
 
@@ -67,17 +79,17 @@ describe("createStudentSchema", () => {
     expect(createStudentSchema.safeParse({ ...validStudent, birthDate: "" }).success).toBe(false);
   });
 
-  it("accepts optional insurance and bank charge dates and keeps empty ones empty", () => {
+  it("accepts an optional insurance date and keeps empty ones empty", () => {
     const result = createStudentSchema.safeParse({
       ...validStudent,
       insuranceDate: "2026-08-01T00:00:00.000Z",
-      tkdBankChargeDate: "  ",
+      tkdBankChargeYear: "  ",
     });
 
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.data.insuranceDate).toBe("2026-08-01T00:00:00.000Z");
-      expect(result.data.tkdBankChargeDate).toBe("");
+      expect(result.data.tkdBankChargeYear).toBe("");
     }
   });
 

@@ -11,7 +11,16 @@ import {
   PageHeader,
 } from "@/components/shared";
 import { useBelts } from "@/features/base-data";
+import { toPersianDigits } from "@/lib/format";
 import { useStudentForm } from "../hooks/use-student-form";
+import { TKD_BANK_CHARGE_YEAR_MAX, TKD_BANK_CHARGE_YEAR_MIN } from "../schemas";
+
+const tkdBankChargeYearItems = Object.fromEntries(
+  Array.from({ length: TKD_BANK_CHARGE_YEAR_MAX - TKD_BANK_CHARGE_YEAR_MIN + 1 }, (_, index) => [
+    String(TKD_BANK_CHARGE_YEAR_MIN + index),
+    toPersianDigits(TKD_BANK_CHARGE_YEAR_MIN + index),
+  ]),
+);
 
 export function StudentFormScreen() {
   const { form, submit } = useStudentForm();
@@ -57,7 +66,13 @@ export function StudentFormScreen() {
           <ControlledSelectField control={form.control} name="beltId" label="کمربند" placeholder="انتخاب کمربند" items={beltItems} />
           <ControlledDateField control={form.control} name="beltCertificateDate" label="تاریخ حکم کمربند (اختیاری)" />
           <ControlledDateField control={form.control} name="insuranceDate" label="تاریخ بیمه ورزشی (اختیاری)" />
-          <ControlledDateField control={form.control} name="tkdBankChargeDate" label="تاریخ شارژ بانک اطلاعات تکواندو (اختیاری)" />
+          <ControlledSelectField
+            control={form.control}
+            name="tkdBankChargeYear"
+            label="سال شارژ بانک اطلاعات تکواندو (اختیاری)"
+            placeholder="انتخاب سال"
+            items={tkdBankChargeYearItems}
+          />
         </FormSection>
 
         <p className="flex items-start gap-2 rounded-xl border border-border bg-muted/40 px-3 py-2.5 text-subtle text-muted-foreground">

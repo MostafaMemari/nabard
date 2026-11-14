@@ -23,7 +23,7 @@ export type Student = {
   birthDate: string;
   mobile: string | null;
   insuranceDate: string | null;
-  tkdBankChargeDate: string | null;
+  tkdBankChargeYear: number | null;
   beltCertificateDate: string | null;
   beltId: string;
   coachId: string;
@@ -49,7 +49,7 @@ export type StudentInput = {
   beltId: string;
   beltCertificateDate?: string;
   insuranceDate?: string;
-  tkdBankChargeDate?: string;
+  tkdBankChargeYear?: string;
 };
 
 export type StudentImportRowError = { row: number; message: string };

@@ -3,7 +3,7 @@
 import { BeltChip, DescriptionList, StatusBadge } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import type { Belt } from "@/features/base-data";
-import { formatJalaliDate } from "@/lib/format";
+import { formatJalaliDate, toPersianDigits } from "@/lib/format";
 import type { StudentDetail } from "../types";
 import { profileStatusKey } from "../types";
 
@@ -56,8 +56,8 @@ export function ReviewSideSummary({
             value: student.insuranceDate !== null ? formatJalaliDate(new Date(student.insuranceDate)) : "ثبت نشده",
           },
           {
-            term: "تاریخ شارژ بانک اطلاعات تکواندو",
-            value: student.tkdBankChargeDate !== null ? formatJalaliDate(new Date(student.tkdBankChargeDate)) : "ثبت نشده",
+            term: "سال شارژ بانک اطلاعات تکواندو",
+            value: student.tkdBankChargeYear !== null ? toPersianDigits(student.tkdBankChargeYear) : "ثبت نشده",
           },
           { term: "کمربند", value: belt ? <BeltChip belt={belt} /> : "نامشخص" },
           { term: "تاریخ ثبت", value: formatJalaliDate(new Date(student.createdAt)) },

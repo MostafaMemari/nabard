@@ -228,8 +228,9 @@ model Student {
   nationalCode String   @unique @map("national_code") @db.VarChar(10)
   birthDate    DateTime @map("birth_date") @db.Date
 
-  insuranceDate     DateTime? @map("insurance_date") @db.Date
-  tkdBankChargeDate DateTime? @map("tkd_bank_charge_date") @db.Date
+  insuranceDate DateTime? @map("insurance_date") @db.Date
+  // Federation database charge year as the Jalali year itself (1380..1406), not a gregorian date.
+  tkdBankChargeYear Int? @map("tkd_bank_charge_year")
 
   // Contact and rank metadata captured by the coach at registration; both are
   // optional so pre-existing rows stay valid.

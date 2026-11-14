@@ -8,10 +8,10 @@ const COLUMNS = [
   { header: "کمربند", width: 12 },
   { header: "تاریخ حکم کمربند", width: 18, numFmt: "@" },
   { header: "تاریخ بیمه ورزشی", width: 18, numFmt: "@" },
-  { header: "تاریخ شارژ بانک تکواندو", width: 24, numFmt: "@" },
+  { header: "سال شارژ بانک تکواندو", width: 14, numFmt: "@" },
 ];
 
-const EXAMPLE_ROW = ["علی رضایی", "0012345678", "09121234567", "1380/05/12", "آبی", "1398/02/10", "", ""];
+const EXAMPLE_ROW = ["علی رضایی", "0012345678", "09121234567", "1380/05/12", "آبی", "1398/02/10", "", "1400"];
 
 export async function buildImportTemplate(): Promise<Buffer> {
   return renderWorkbookXlsx([{ name: "هنرجویان", columns: COLUMNS, rows: [EXAMPLE_ROW] }]);

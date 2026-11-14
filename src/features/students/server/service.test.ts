@@ -39,7 +39,7 @@ const ownStudent: StudentWithCoach = {
   birthDate: new Date("2013-05-10T00:00:00.000Z"),
   mobile: "09123456789",
   insuranceDate: null,
-  tkdBankChargeDate: null,
+  tkdBankChargeYear: null,
   beltCertificateDate: null,
   beltId: "belt-blue",
   coachId: "coach-1",
@@ -100,7 +100,7 @@ const createInput = {
   beltId: "belt-blue",
   beltCertificateDate: "",
   insuranceDate: "",
-  tkdBankChargeDate: "",
+  tkdBankChargeYear: "",
 };
 
 describe("photo urls", () => {
@@ -282,7 +282,7 @@ describe("createStudent", () => {
       coachId: "coach-1",
       beltCertificateDate: null,
       insuranceDate: null,
-      tkdBankChargeDate: null,
+      tkdBankChargeYear: null,
     });
     expect(data.birthDate).toEqual(new Date("2013-05-10T00:00:00.000Z"));
   });
@@ -308,12 +308,12 @@ describe("createStudent", () => {
     await createStudent(repo, coach, {
       ...createInput,
       insuranceDate: "2026-07-01T00:00:00.000Z",
-      tkdBankChargeDate: "2026-06-15T00:00:00.000Z",
+      tkdBankChargeYear: "1400",
     });
 
     const data = vi.mocked(repo.createStudent).mock.calls[0][0];
     expect(data.insuranceDate).toEqual(new Date("2026-07-01T00:00:00.000Z"));
-    expect(data.tkdBankChargeDate).toEqual(new Date("2026-06-15T00:00:00.000Z"));
+    expect(data.tkdBankChargeYear).toBe(1400);
   });
 
   it("rejects a coach whose own gender is missing with 400", async () => {

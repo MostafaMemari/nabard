@@ -101,7 +101,7 @@ export async function importStudents(
     mobile: row.mobile,
     beltCertificateDate: row.beltCertificateDate ? new Date(`${row.beltCertificateDate}T00:00:00`) : null,
     insuranceDate: row.insuranceDate ? new Date(`${row.insuranceDate}T00:00:00`) : null,
-    tkdBankChargeDate: row.tkdBankChargeDate ? new Date(`${row.tkdBankChargeDate}T00:00:00`) : null,
+    tkdBankChargeYear: row.tkdBankChargeYear,
     beltId: beltIds.get(beltKey(row.beltLabel)) ?? "",
     coachId,
   }));

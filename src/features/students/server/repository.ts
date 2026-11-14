@@ -32,7 +32,7 @@ export type StudentRecord = {
   birthDate: Date;
   mobile: string | null;
   insuranceDate: Date | null;
-  tkdBankChargeDate: Date | null;
+  tkdBankChargeYear: number | null;
   beltCertificateDate: Date | null;
   beltId: string;
   coachId: string;
@@ -82,7 +82,7 @@ export type NewStudentData = {
   mobile: string;
   beltCertificateDate: Date | null;
   insuranceDate: Date | null;
-  tkdBankChargeDate: Date | null;
+  tkdBankChargeYear: number | null;
   beltId: string;
   coachId: string;
 };
@@ -135,7 +135,7 @@ const studentSelection = {
   birthDate: true,
   mobile: true,
   insuranceDate: true,
-  tkdBankChargeDate: true,
+  tkdBankChargeYear: true,
   beltCertificateDate: true,
   beltId: true,
   coachId: true,
@@ -168,7 +168,7 @@ function toStudentRecord(row: {
   birthDate: Date;
   mobile: string | null;
   insuranceDate: Date | null;
-  tkdBankChargeDate: Date | null;
+  tkdBankChargeYear: number | null;
   beltCertificateDate: Date | null;
   beltId: string;
   coachId: string;
@@ -186,7 +186,7 @@ function toStudentRecord(row: {
     birthDate: row.birthDate,
     mobile: row.mobile,
     insuranceDate: row.insuranceDate,
-    tkdBankChargeDate: row.tkdBankChargeDate,
+    tkdBankChargeYear: row.tkdBankChargeYear,
     beltCertificateDate: row.beltCertificateDate,
     beltId: row.beltId,
     coachId: row.coachId,
@@ -266,7 +266,7 @@ export async function createStudents(rows: NewStudentData[]): Promise<number> {
       birthDate: row.birthDate,
       mobile: row.mobile,
       insuranceDate: row.insuranceDate,
-      tkdBankChargeDate: row.tkdBankChargeDate,
+      tkdBankChargeYear: row.tkdBankChargeYear,
       beltCertificateDate: row.beltCertificateDate,
       beltId: row.beltId,
       coachId: row.coachId,
@@ -302,7 +302,7 @@ export async function createStudent(data: NewStudentData): Promise<StudentRecord
       birthDate: data.birthDate,
       mobile: data.mobile,
       insuranceDate: data.insuranceDate,
-      tkdBankChargeDate: data.tkdBankChargeDate,
+      tkdBankChargeYear: data.tkdBankChargeYear,
       beltCertificateDate: data.beltCertificateDate,
       beltId: data.beltId,
       coachId: data.coachId,

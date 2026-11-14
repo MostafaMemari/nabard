@@ -1,6 +1,7 @@
 import { getDaysInMonth, newDate } from "date-fns-jalali";
 import ExcelJS from "exceljs";
 import { AppError } from "@/lib/api";
+import { TKD_BANK_CHARGE_YEAR_MAX, TKD_BANK_CHARGE_YEAR_MIN } from "../schemas";
 
 export const STUDENT_IMPORT_MAX_ROWS = 100;
 
@@ -15,7 +16,7 @@ export type ParsedStudentRow = {
   beltLabel: string;
   beltCertificateDate: string | null;
   insuranceDate: string | null;
-  tkdBankChargeDate: string | null;
+  tkdBankChargeYear: number | null;
 };
 
 export type ParsedWorkbook = { rows: ParsedStudentRow[]; errors: StudentImportRowError[] };
@@ -28,7 +29,7 @@ const HEADERS = {
   beltLabel: "کمربند",
   beltCertificateDate: "تاریخ حکم کمربند",
   insuranceDate: "تاریخ بیمه ورزشی",
-  tkdBankChargeDate: "تاریخ شارژ بانک تکواندو",
+  tkdBankChargeYear: "سال شارژ بانک تکواندو",
 } as const;
 
 type HeaderKey = keyof typeof HEADERS;
@@ -170,7 +171,11 @@ export async function parseStudentsWorkbook(buffer: ArrayBuffer): Promise<Parsed
     const beltLabel = text("beltLabel");
     const beltCertificateDate = date("beltCertificateDate");
     const insuranceDate = date("insuranceDate");
-    const tkdBankChargeDate = date("tkdBankChargeDate");
+    const tkdBankChargeYearText = normalizeAsciiDigits(text("tkdBankChargeYear"));
+    const tkdBankChargeYear = /^\d{4}$/.test(tkdBankChargeYearText) ? Number(tkdBankChargeYearText) : null;
+    const tkdBankChargeYearInvalid =
+      tkdBankChargeYearText !== "" &&
+      (tkdBankChargeYear === null || tkdBankChargeYear < TKD_BANK_CHARGE_YEAR_MIN || tkdBankChargeYear > TKD_BANK_CHARGE_YEAR_MAX);
 
     if (
       fullName === "" &&
@@ -183,8 +188,7 @@ export async function parseStudentsWorkbook(buffer: ArrayBuffer): Promise<Parsed
       beltCertificateDate.iso === null &&
       insuranceDate.text === "" &&
       insuranceDate.iso === null &&
-      tkdBankChargeDate.text === "" &&
-      tkdBankChargeDate.iso === null
+      tkdBankChargeYearText === ""
     ) {
       continue;
     }
@@ -219,12 +223,15 @@ export async function parseStudentsWorkbook(buffer: ArrayBuffer): Promise<Parsed
     for (const [label, cell] of [
       ["تاریخ حکم کمربند", beltCertificateDate],
       ["تاریخ بیمه ورزشی", insuranceDate],
-      ["تاریخ شارژ بانک تکواندو", tkdBankChargeDate],
     ] as const) {
       if (cell.text !== "" && cell.iso === null) {
         errors.push(rowError(rowNumber, `${label} معتبر نیست؛ تاریخ را شمسی مثل ۱۳۸۰/۰۵/۱۲ وارد کنید`));
         valid = false;
       }
+    }
+    if (tkdBankChargeYearInvalid) {
+      errors.push(rowError(rowNumber, "سال شارژ بانک تکواندو معتبر نیست؛ سال را مثل ۱۴۰۰ وارد کنید"));
+      valid = false;
     }
 
     if (valid && birthDate.iso !== null) {
@@ -237,7 +244,7 @@ export async function parseStudentsWorkbook(buffer: ArrayBuffer): Promise<Parsed
         beltLabel,
         beltCertificateDate: beltCertificateDate.iso,
         insuranceDate: insuranceDate.iso,
-        tkdBankChargeDate: tkdBankChargeDate.iso,
+        tkdBankChargeYear,
       });
     }
   }

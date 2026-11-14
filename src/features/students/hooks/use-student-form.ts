@@ -23,7 +23,7 @@ export function useStudentForm() {
       beltId: values.beltId,
       beltCertificateDate: values.beltCertificateDate,
       insuranceDate: values.insuranceDate,
-      tkdBankChargeDate: values.tkdBankChargeDate,
+      tkdBankChargeYear: values.tkdBankChargeYear,
     };
 
     try {

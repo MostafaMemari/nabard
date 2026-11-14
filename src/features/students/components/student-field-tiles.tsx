@@ -3,11 +3,15 @@
 import { FileBadgeIcon, LandmarkIcon, type LucideIcon, MedalIcon, PhoneIcon, ShieldCheckIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { BeltDot, IconTile } from "@/components/shared";
-import { formatJalaliDate } from "@/lib/format";
+import { formatJalaliDate, toPersianDigits } from "@/lib/format";
 import type { StudentDetail } from "../types";
 
 function dateValue(value: string | null): ReactNode {
   return value === null ? <span className="font-normal text-muted-foreground">ثبت نشده</span> : formatJalaliDate(new Date(value));
+}
+
+function yearValue(value: number | null): ReactNode {
+  return value === null ? <span className="font-normal text-muted-foreground">ثبت نشده</span> : toPersianDigits(value);
 }
 
 function FieldTile({ icon, label, value }: { icon: LucideIcon; label: string; value: ReactNode }) {
@@ -50,7 +54,7 @@ export function StudentFieldTiles({
       />
       <FieldTile icon={FileBadgeIcon} label="تاریخ حکم کمربند" value={dateValue(student.beltCertificateDate)} />
       <FieldTile icon={ShieldCheckIcon} label="تاریخ بیمه ورزشی" value={dateValue(student.insuranceDate)} />
-      <FieldTile icon={LandmarkIcon} label="تاریخ شارژ بانک اطلاعات تکواندو" value={dateValue(student.tkdBankChargeDate)} />
+      <FieldTile icon={LandmarkIcon} label="سال شارژ بانک اطلاعات تکواندو" value={yearValue(student.tkdBankChargeYear)} />
     </div>
   );
 }

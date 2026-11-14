@@ -24,7 +24,7 @@ function student(partial: Partial<Student>): Student {
     insuranceDate: null,
     mobile: null,
     beltCertificateDate: null,
-    tkdBankChargeDate: null,
+    tkdBankChargeYear: null,
     beltId: "b1",
     coachId: "coach1",
     profileStatus: "PENDING",

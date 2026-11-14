@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { normalizeDigits } from "@/lib/format";
+import { normalizeDigits, toPersianDigits } from "@/lib/format";
 import { provinceValues } from "@/lib/provinces";
 
 function isIsoDate(value: string): boolean {
@@ -20,6 +20,21 @@ const optionalDateField = z
   .string()
   .transform((value) => value.trim())
   .pipe(z.string().refine((value) => value === "" || isIsoDate(value), "تاریخ انتخاب شده معتبر نیست"));
+// The federation database charge is stored as the Jalali year itself.
+export const TKD_BANK_CHARGE_YEAR_MIN = 1380;
+export const TKD_BANK_CHARGE_YEAR_MAX = 1406;
+const tkdBankChargeYearField = z
+  .string()
+  .transform(normalizeDigits)
+  .pipe(
+    z
+      .string()
+      .refine(
+        (value) =>
+          value === "" || (value.length === 4 && Number(value) >= TKD_BANK_CHARGE_YEAR_MIN && Number(value) <= TKD_BANK_CHARGE_YEAR_MAX),
+        `سال شارژ بانک اطلاعات باید بین ${toPersianDigits(TKD_BANK_CHARGE_YEAR_MIN)} و ${toPersianDigits(TKD_BANK_CHARGE_YEAR_MAX)} باشد`,
+      ),
+  );
 const beltIdField = z.string().min(1, "کمربند را انتخاب کنید");
 const mobileField = z
   .string()
@@ -34,7 +49,7 @@ export const studentSchema = z.object({
   beltId: beltIdField,
   beltCertificateDate: optionalDateField,
   insuranceDate: optionalDateField,
-  tkdBankChargeDate: optionalDateField,
+  tkdBankChargeYear: tkdBankChargeYearField,
 });
 
 export const createStudentSchema = studentSchema;
@@ -80,5 +95,5 @@ export const emptyStudentForm: StudentFormValues = {
   beltId: "",
   beltCertificateDate: "",
   insuranceDate: "",
-  tkdBankChargeDate: "",
+  tkdBankChargeYear: "",
 };
