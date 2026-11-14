@@ -12,7 +12,7 @@ ALTER TABLE "students" ADD COLUMN "belt_certificate_date" DATE;
 CREATE TABLE "student_photo_change_requests" (
     "id" TEXT NOT NULL,
     "student_id" TEXT NOT NULL,
-    "new_file_id" TEXT NOT NULL,
+    "new_file_id" TEXT,
     "status" "StudentPhotoChangeStatus" NOT NULL DEFAULT 'pending',
     "note" VARCHAR(500),
     "decided_by_id" TEXT,
@@ -25,7 +25,7 @@ CREATE TABLE "student_photo_change_requests" (
 
 ALTER TABLE "student_photo_change_requests" ADD CONSTRAINT "student_photo_change_requests_student_id_fkey" FOREIGN KEY ("student_id") REFERENCES "students"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
-ALTER TABLE "student_photo_change_requests" ADD CONSTRAINT "student_photo_change_requests_new_file_id_fkey" FOREIGN KEY ("new_file_id") REFERENCES "stored_files"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "student_photo_change_requests" ADD CONSTRAINT "student_photo_change_requests_new_file_id_fkey" FOREIGN KEY ("new_file_id") REFERENCES "stored_files"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 ALTER TABLE "student_photo_change_requests" ADD CONSTRAINT "student_photo_change_requests_decided_by_id_fkey" FOREIGN KEY ("decided_by_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
