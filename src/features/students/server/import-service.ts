@@ -2,7 +2,7 @@ import type { Gender } from "@/features/base-data";
 import { AppError, readFormData } from "@/lib/api";
 import type { CurrentUser } from "@/lib/session";
 import { beltKey, type ParsedStudentRow, parseStudentsWorkbook, type StudentImportRowError } from "./import-parse";
-import type { NewStudentData, StudentRepository } from "./repository";
+import type { NewRegistrationRequestData, StudentRepository } from "./repository";
 import { coachGenderMissing, forbidden, requireActiveUser } from "./service";
 
 export type StudentImportResult = {
@@ -67,7 +67,9 @@ export async function importStudents(
 
   const belts = await repo.findActiveBelts();
   const beltIds = new Map(belts.map((belt) => [beltKey(belt.label), belt.id]));
-  const existingCodes = await repo.findExistingNationalCodes([...new Set(parsed.rows.map((row) => row.nationalCode))]);
+  const codes = [...new Set(parsed.rows.map((row) => row.nationalCode))];
+  const existingCodes = await repo.findExistingNationalCodes(codes);
+  const requestedCodes = await repo.findRequestNationalCodes(codes);
 
   const errors: StudentImportRowError[] = [...parsed.errors];
   const seenCodes = new Set<string>();
@@ -77,7 +79,8 @@ export async function importStudents(
     const rowErrors: string[] = [];
     if (row.fullName.length < 3) rowErrors.push("نام و نام خانوادگی را کامل وارد کنید");
     if (seenCodes.has(row.nationalCode)) rowErrors.push("کد ملی در فایل تکراری است");
-    else if (existingCodes.has(row.nationalCode)) rowErrors.push("این کد ملی قبلاً ثبت شده است");
+    else if (existingCodes.has(row.nationalCode)) rowErrors.push("هنرجوی تأیید شده ای با این کد ملی وجود دارد");
+    else if (requestedCodes.has(row.nationalCode)) rowErrors.push("برای این کد ملی قبلاً درخواست ثبت هنرجو ثبت شده است");
     if (!isPastIsoDate(row.birthDate)) rowErrors.push("تاریخ تولد باید در گذشته باشد");
     if (!beltIds.has(beltKey(row.beltLabel))) rowErrors.push(`کمربند «${row.beltLabel}» معتبر نیست؛ آن را دقیقاً مثل قالب وارد کنید`);
     seenCodes.add(row.nationalCode);
@@ -93,7 +96,7 @@ export async function importStudents(
 
   if (errors.length > 0) return { imported: 0, errors };
 
-  const data: NewStudentData[] = valid.map((row) => ({
+  const data: NewRegistrationRequestData[] = valid.map((row) => ({
     fullName: row.fullName,
     gender: coachGender,
     nationalCode: row.nationalCode,
@@ -106,6 +109,6 @@ export async function importStudents(
     coachId,
   }));
 
-  const imported = await repo.createStudents(data);
+  const imported = await repo.createRegistrationRequests(data);
   return { imported, errors: [] };
 }

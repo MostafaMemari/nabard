@@ -17,16 +17,16 @@ export function AdminReviewScreen() {
 
   const counts = {
     all: students.length,
-    pending: students.filter((student) => student.profileStatus === "PENDING").length,
-    rejected: students.filter((student) => student.profileStatus === "REJECTED").length,
+    pending: students.filter((student) => student.status === "PENDING").length,
+    rejected: students.filter((student) => student.status === "REJECTED").length,
   };
 
   const activeTab = profileReviewTabs.find((tab) => tab.id === statusFilter);
-  const rows = activeTab?.status ? students.filter((student) => student.profileStatus === activeTab.status) : students;
+  const rows = activeTab?.status ? students.filter((student) => student.status === activeTab.status) : students;
 
   return (
     <>
-      <PageHeader title="بررسی پروفایل ها" description="بررسی مدارک و تأیید پروفایل هنرجویان" />
+      <PageHeader title="بررسی پروفایل ها" description="درخواست های ثبت هنرجو را بررسی و تأیید یا رد کنید" />
 
       <DataTable
         columns={columns}
@@ -38,7 +38,7 @@ export function AdminReviewScreen() {
         onRowClick={(row) => router.push(`/admin/profiles/${row.id}`)}
         renderCard={(row) => <AdminReviewCard student={row} href={`/admin/profiles/${row.id}`} />}
         emptyIcon={UserCheckIcon}
-        emptyTitle="پروفایلی برای بررسی وجود ندارد"
+        emptyTitle="درخواستی برای بررسی وجود ندارد"
         toolbar={
           <ListToolbar
             tabs={profileReviewTabs}

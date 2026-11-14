@@ -2,8 +2,11 @@
 
 import { useState } from "react";
 import { toast } from "sonner";
-import { approveStudentProfile, rejectStudentProfile } from "../api";
+import { approveRegistrationRequest, rejectRegistrationRequest } from "../api";
 
+// Province admin decision on a student registration request. Approving turns
+// the request into a real student row; rejecting hands it back to the coach
+// with a note.
 export function useProfileReview(onReviewed: () => Promise<unknown>) {
   const [working, setWorking] = useState(false);
 
@@ -11,12 +14,12 @@ export function useProfileReview(onReviewed: () => Promise<unknown>) {
     setWorking(true);
 
     try {
-      await approveStudentProfile(id);
-      toast.success("پروفایل هنرجو تأیید شد");
+      await approveRegistrationRequest(id);
+      toast.success("درخواست ثبت هنرجو تأیید شد و هنرجو اضافه شد");
       await onReviewed();
       return true;
-    } catch {
-      toast.error("تأیید پروفایل انجام نشد. دوباره تلاش کنید");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "تأیید درخواست انجام نشد. دوباره تلاش کنید");
       return false;
     } finally {
       setWorking(false);
@@ -27,12 +30,12 @@ export function useProfileReview(onReviewed: () => Promise<unknown>) {
     setWorking(true);
 
     try {
-      await rejectStudentProfile(id, note);
-      toast.success("پروفایل هنرجو رد شد");
+      await rejectRegistrationRequest(id, note);
+      toast.success("درخواست ثبت هنرجو رد شد");
       await onReviewed();
       return true;
-    } catch {
-      toast.error("رد پروفایل انجام نشد. دوباره تلاش کنید");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "رد درخواست انجام نشد. دوباره تلاش کنید");
       return false;
     } finally {
       setWorking(false);

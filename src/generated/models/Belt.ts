@@ -253,6 +253,7 @@ export type BeltWhereInput = {
   colorHex?: Prisma.StringNullableFilter<"Belt"> | string | null
   isActive?: Prisma.BoolFilter<"Belt"> | boolean
   students?: Prisma.StudentListRelationFilter
+  registrationRequests?: Prisma.StudentRegistrationRequestListRelationFilter
   minFor?: Prisma.CompetitionListRelationFilter
   maxFor?: Prisma.CompetitionListRelationFilter
 }
@@ -268,6 +269,7 @@ export type BeltOrderByWithRelationInput = {
   colorHex?: Prisma.SortOrderInput | Prisma.SortOrder
   isActive?: Prisma.SortOrder
   students?: Prisma.StudentOrderByRelationAggregateInput
+  registrationRequests?: Prisma.StudentRegistrationRequestOrderByRelationAggregateInput
   minFor?: Prisma.CompetitionOrderByRelationAggregateInput
   maxFor?: Prisma.CompetitionOrderByRelationAggregateInput
 }
@@ -286,6 +288,7 @@ export type BeltWhereUniqueInput = Prisma.AtLeast<{
   colorHex?: Prisma.StringNullableFilter<"Belt"> | string | null
   isActive?: Prisma.BoolFilter<"Belt"> | boolean
   students?: Prisma.StudentListRelationFilter
+  registrationRequests?: Prisma.StudentRegistrationRequestListRelationFilter
   minFor?: Prisma.CompetitionListRelationFilter
   maxFor?: Prisma.CompetitionListRelationFilter
 }, "id" | "code" | "label">
@@ -333,6 +336,7 @@ export type BeltCreateInput = {
   colorHex?: string | null
   isActive?: boolean
   students?: Prisma.StudentCreateNestedManyWithoutBeltInput
+  registrationRequests?: Prisma.StudentRegistrationRequestCreateNestedManyWithoutBeltInput
   minFor?: Prisma.CompetitionCreateNestedManyWithoutMinBeltInput
   maxFor?: Prisma.CompetitionCreateNestedManyWithoutMaxBeltInput
 }
@@ -348,6 +352,7 @@ export type BeltUncheckedCreateInput = {
   colorHex?: string | null
   isActive?: boolean
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutBeltInput
+  registrationRequests?: Prisma.StudentRegistrationRequestUncheckedCreateNestedManyWithoutBeltInput
   minFor?: Prisma.CompetitionUncheckedCreateNestedManyWithoutMinBeltInput
   maxFor?: Prisma.CompetitionUncheckedCreateNestedManyWithoutMaxBeltInput
 }
@@ -363,6 +368,7 @@ export type BeltUpdateInput = {
   colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   students?: Prisma.StudentUpdateManyWithoutBeltNestedInput
+  registrationRequests?: Prisma.StudentRegistrationRequestUpdateManyWithoutBeltNestedInput
   minFor?: Prisma.CompetitionUpdateManyWithoutMinBeltNestedInput
   maxFor?: Prisma.CompetitionUpdateManyWithoutMaxBeltNestedInput
 }
@@ -378,6 +384,7 @@ export type BeltUncheckedUpdateInput = {
   colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   students?: Prisma.StudentUncheckedUpdateManyWithoutBeltNestedInput
+  registrationRequests?: Prisma.StudentRegistrationRequestUncheckedUpdateManyWithoutBeltNestedInput
   minFor?: Prisma.CompetitionUncheckedUpdateManyWithoutMinBeltNestedInput
   maxFor?: Prisma.CompetitionUncheckedUpdateManyWithoutMaxBeltNestedInput
 }
@@ -483,16 +490,22 @@ export type BeltUpdateOneRequiredWithoutStudentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BeltUpdateToOneWithWhereWithoutStudentsInput, Prisma.BeltUpdateWithoutStudentsInput>, Prisma.BeltUncheckedUpdateWithoutStudentsInput>
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
+export type BeltCreateNestedOneWithoutRegistrationRequestsInput = {
+  create?: Prisma.XOR<Prisma.BeltCreateWithoutRegistrationRequestsInput, Prisma.BeltUncheckedCreateWithoutRegistrationRequestsInput>
+  connectOrCreate?: Prisma.BeltCreateOrConnectWithoutRegistrationRequestsInput
+  connect?: Prisma.BeltWhereUniqueInput
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
+export type BeltUpdateOneRequiredWithoutRegistrationRequestsNestedInput = {
+  create?: Prisma.XOR<Prisma.BeltCreateWithoutRegistrationRequestsInput, Prisma.BeltUncheckedCreateWithoutRegistrationRequestsInput>
+  connectOrCreate?: Prisma.BeltCreateOrConnectWithoutRegistrationRequestsInput
+  upsert?: Prisma.BeltUpsertWithoutRegistrationRequestsInput
+  connect?: Prisma.BeltWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BeltUpdateToOneWithWhereWithoutRegistrationRequestsInput, Prisma.BeltUpdateWithoutRegistrationRequestsInput>, Prisma.BeltUncheckedUpdateWithoutRegistrationRequestsInput>
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
   increment?: number
   decrement?: number
   multiply?: number
@@ -541,6 +554,7 @@ export type BeltCreateWithoutStudentsInput = {
   color?: string | null
   colorHex?: string | null
   isActive?: boolean
+  registrationRequests?: Prisma.StudentRegistrationRequestCreateNestedManyWithoutBeltInput
   minFor?: Prisma.CompetitionCreateNestedManyWithoutMinBeltInput
   maxFor?: Prisma.CompetitionCreateNestedManyWithoutMaxBeltInput
 }
@@ -555,6 +569,7 @@ export type BeltUncheckedCreateWithoutStudentsInput = {
   color?: string | null
   colorHex?: string | null
   isActive?: boolean
+  registrationRequests?: Prisma.StudentRegistrationRequestUncheckedCreateNestedManyWithoutBeltInput
   minFor?: Prisma.CompetitionUncheckedCreateNestedManyWithoutMinBeltInput
   maxFor?: Prisma.CompetitionUncheckedCreateNestedManyWithoutMaxBeltInput
 }
@@ -585,6 +600,7 @@ export type BeltUpdateWithoutStudentsInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationRequests?: Prisma.StudentRegistrationRequestUpdateManyWithoutBeltNestedInput
   minFor?: Prisma.CompetitionUpdateManyWithoutMinBeltNestedInput
   maxFor?: Prisma.CompetitionUpdateManyWithoutMaxBeltNestedInput
 }
@@ -599,6 +615,83 @@ export type BeltUncheckedUpdateWithoutStudentsInput = {
   color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  registrationRequests?: Prisma.StudentRegistrationRequestUncheckedUpdateManyWithoutBeltNestedInput
+  minFor?: Prisma.CompetitionUncheckedUpdateManyWithoutMinBeltNestedInput
+  maxFor?: Prisma.CompetitionUncheckedUpdateManyWithoutMaxBeltNestedInput
+}
+
+export type BeltCreateWithoutRegistrationRequestsInput = {
+  id?: string
+  code: string
+  label: string
+  level: number
+  order?: number | null
+  rankType?: $Enums.RankType
+  color?: string | null
+  colorHex?: string | null
+  isActive?: boolean
+  students?: Prisma.StudentCreateNestedManyWithoutBeltInput
+  minFor?: Prisma.CompetitionCreateNestedManyWithoutMinBeltInput
+  maxFor?: Prisma.CompetitionCreateNestedManyWithoutMaxBeltInput
+}
+
+export type BeltUncheckedCreateWithoutRegistrationRequestsInput = {
+  id?: string
+  code: string
+  label: string
+  level: number
+  order?: number | null
+  rankType?: $Enums.RankType
+  color?: string | null
+  colorHex?: string | null
+  isActive?: boolean
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutBeltInput
+  minFor?: Prisma.CompetitionUncheckedCreateNestedManyWithoutMinBeltInput
+  maxFor?: Prisma.CompetitionUncheckedCreateNestedManyWithoutMaxBeltInput
+}
+
+export type BeltCreateOrConnectWithoutRegistrationRequestsInput = {
+  where: Prisma.BeltWhereUniqueInput
+  create: Prisma.XOR<Prisma.BeltCreateWithoutRegistrationRequestsInput, Prisma.BeltUncheckedCreateWithoutRegistrationRequestsInput>
+}
+
+export type BeltUpsertWithoutRegistrationRequestsInput = {
+  update: Prisma.XOR<Prisma.BeltUpdateWithoutRegistrationRequestsInput, Prisma.BeltUncheckedUpdateWithoutRegistrationRequestsInput>
+  create: Prisma.XOR<Prisma.BeltCreateWithoutRegistrationRequestsInput, Prisma.BeltUncheckedCreateWithoutRegistrationRequestsInput>
+  where?: Prisma.BeltWhereInput
+}
+
+export type BeltUpdateToOneWithWhereWithoutRegistrationRequestsInput = {
+  where?: Prisma.BeltWhereInput
+  data: Prisma.XOR<Prisma.BeltUpdateWithoutRegistrationRequestsInput, Prisma.BeltUncheckedUpdateWithoutRegistrationRequestsInput>
+}
+
+export type BeltUpdateWithoutRegistrationRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rankType?: Prisma.EnumRankTypeFieldUpdateOperationsInput | $Enums.RankType
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  students?: Prisma.StudentUpdateManyWithoutBeltNestedInput
+  minFor?: Prisma.CompetitionUpdateManyWithoutMinBeltNestedInput
+  maxFor?: Prisma.CompetitionUpdateManyWithoutMaxBeltNestedInput
+}
+
+export type BeltUncheckedUpdateWithoutRegistrationRequestsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  code?: Prisma.StringFieldUpdateOperationsInput | string
+  label?: Prisma.StringFieldUpdateOperationsInput | string
+  level?: Prisma.IntFieldUpdateOperationsInput | number
+  order?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  rankType?: Prisma.EnumRankTypeFieldUpdateOperationsInput | $Enums.RankType
+  color?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  students?: Prisma.StudentUncheckedUpdateManyWithoutBeltNestedInput
   minFor?: Prisma.CompetitionUncheckedUpdateManyWithoutMinBeltNestedInput
   maxFor?: Prisma.CompetitionUncheckedUpdateManyWithoutMaxBeltNestedInput
 }
@@ -614,6 +707,7 @@ export type BeltCreateWithoutMinForInput = {
   colorHex?: string | null
   isActive?: boolean
   students?: Prisma.StudentCreateNestedManyWithoutBeltInput
+  registrationRequests?: Prisma.StudentRegistrationRequestCreateNestedManyWithoutBeltInput
   maxFor?: Prisma.CompetitionCreateNestedManyWithoutMaxBeltInput
 }
 
@@ -628,6 +722,7 @@ export type BeltUncheckedCreateWithoutMinForInput = {
   colorHex?: string | null
   isActive?: boolean
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutBeltInput
+  registrationRequests?: Prisma.StudentRegistrationRequestUncheckedCreateNestedManyWithoutBeltInput
   maxFor?: Prisma.CompetitionUncheckedCreateNestedManyWithoutMaxBeltInput
 }
 
@@ -647,6 +742,7 @@ export type BeltCreateWithoutMaxForInput = {
   colorHex?: string | null
   isActive?: boolean
   students?: Prisma.StudentCreateNestedManyWithoutBeltInput
+  registrationRequests?: Prisma.StudentRegistrationRequestCreateNestedManyWithoutBeltInput
   minFor?: Prisma.CompetitionCreateNestedManyWithoutMinBeltInput
 }
 
@@ -661,6 +757,7 @@ export type BeltUncheckedCreateWithoutMaxForInput = {
   colorHex?: string | null
   isActive?: boolean
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutBeltInput
+  registrationRequests?: Prisma.StudentRegistrationRequestUncheckedCreateNestedManyWithoutBeltInput
   minFor?: Prisma.CompetitionUncheckedCreateNestedManyWithoutMinBeltInput
 }
 
@@ -691,6 +788,7 @@ export type BeltUpdateWithoutMinForInput = {
   colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   students?: Prisma.StudentUpdateManyWithoutBeltNestedInput
+  registrationRequests?: Prisma.StudentRegistrationRequestUpdateManyWithoutBeltNestedInput
   maxFor?: Prisma.CompetitionUpdateManyWithoutMaxBeltNestedInput
 }
 
@@ -705,6 +803,7 @@ export type BeltUncheckedUpdateWithoutMinForInput = {
   colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   students?: Prisma.StudentUncheckedUpdateManyWithoutBeltNestedInput
+  registrationRequests?: Prisma.StudentRegistrationRequestUncheckedUpdateManyWithoutBeltNestedInput
   maxFor?: Prisma.CompetitionUncheckedUpdateManyWithoutMaxBeltNestedInput
 }
 
@@ -730,6 +829,7 @@ export type BeltUpdateWithoutMaxForInput = {
   colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   students?: Prisma.StudentUpdateManyWithoutBeltNestedInput
+  registrationRequests?: Prisma.StudentRegistrationRequestUpdateManyWithoutBeltNestedInput
   minFor?: Prisma.CompetitionUpdateManyWithoutMinBeltNestedInput
 }
 
@@ -744,6 +844,7 @@ export type BeltUncheckedUpdateWithoutMaxForInput = {
   colorHex?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   students?: Prisma.StudentUncheckedUpdateManyWithoutBeltNestedInput
+  registrationRequests?: Prisma.StudentRegistrationRequestUncheckedUpdateManyWithoutBeltNestedInput
   minFor?: Prisma.CompetitionUncheckedUpdateManyWithoutMinBeltNestedInput
 }
 
@@ -754,12 +855,14 @@ export type BeltUncheckedUpdateWithoutMaxForInput = {
 
 export type BeltCountOutputType = {
   students: number
+  registrationRequests: number
   minFor: number
   maxFor: number
 }
 
 export type BeltCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   students?: boolean | BeltCountOutputTypeCountStudentsArgs
+  registrationRequests?: boolean | BeltCountOutputTypeCountRegistrationRequestsArgs
   minFor?: boolean | BeltCountOutputTypeCountMinForArgs
   maxFor?: boolean | BeltCountOutputTypeCountMaxForArgs
 }
@@ -779,6 +882,13 @@ export type BeltCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
  */
 export type BeltCountOutputTypeCountStudentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.StudentWhereInput
+}
+
+/**
+ * BeltCountOutputType without action
+ */
+export type BeltCountOutputTypeCountRegistrationRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StudentRegistrationRequestWhereInput
 }
 
 /**
@@ -807,6 +917,7 @@ export type BeltSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   colorHex?: boolean
   isActive?: boolean
   students?: boolean | Prisma.Belt$studentsArgs<ExtArgs>
+  registrationRequests?: boolean | Prisma.Belt$registrationRequestsArgs<ExtArgs>
   minFor?: boolean | Prisma.Belt$minForArgs<ExtArgs>
   maxFor?: boolean | Prisma.Belt$maxForArgs<ExtArgs>
   _count?: boolean | Prisma.BeltCountOutputTypeDefaultArgs<ExtArgs>
@@ -851,6 +962,7 @@ export type BeltSelectScalar = {
 export type BeltOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "code" | "label" | "level" | "order" | "rankType" | "color" | "colorHex" | "isActive", ExtArgs["result"]["belt"]>
 export type BeltInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   students?: boolean | Prisma.Belt$studentsArgs<ExtArgs>
+  registrationRequests?: boolean | Prisma.Belt$registrationRequestsArgs<ExtArgs>
   minFor?: boolean | Prisma.Belt$minForArgs<ExtArgs>
   maxFor?: boolean | Prisma.Belt$maxForArgs<ExtArgs>
   _count?: boolean | Prisma.BeltCountOutputTypeDefaultArgs<ExtArgs>
@@ -862,6 +974,7 @@ export type $BeltPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "Belt"
   objects: {
     students: Prisma.$StudentPayload<ExtArgs>[]
+    registrationRequests: Prisma.$StudentRegistrationRequestPayload<ExtArgs>[]
     minFor: Prisma.$CompetitionPayload<ExtArgs>[]
     maxFor: Prisma.$CompetitionPayload<ExtArgs>[]
   }
@@ -1270,6 +1383,7 @@ readonly fields: BeltFieldRefs;
 export interface Prisma__BeltClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   students<T extends Prisma.Belt$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Belt$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  registrationRequests<T extends Prisma.Belt$registrationRequestsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Belt$registrationRequestsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentRegistrationRequestPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   minFor<T extends Prisma.Belt$minForArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Belt$minForArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompetitionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   maxFor<T extends Prisma.Belt$maxForArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Belt$maxForArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CompetitionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
@@ -1724,6 +1838,30 @@ export type Belt$studentsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.StudentScalarFieldEnum | Prisma.StudentScalarFieldEnum[]
+}
+
+/**
+ * Belt.registrationRequests
+ */
+export type Belt$registrationRequestsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudentRegistrationRequest
+   */
+  select?: Prisma.StudentRegistrationRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudentRegistrationRequest
+   */
+  omit?: Prisma.StudentRegistrationRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentRegistrationRequestInclude<ExtArgs> | null
+  where?: Prisma.StudentRegistrationRequestWhereInput
+  orderBy?: Prisma.StudentRegistrationRequestOrderByWithRelationInput | Prisma.StudentRegistrationRequestOrderByWithRelationInput[]
+  cursor?: Prisma.StudentRegistrationRequestWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StudentRegistrationRequestScalarFieldEnum | Prisma.StudentRegistrationRequestScalarFieldEnum[]
 }
 
 /**

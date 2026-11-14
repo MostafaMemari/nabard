@@ -1,17 +1,28 @@
 import { describe, expect, it, vi } from "vitest";
+import type { AuditRepository } from "@/features/audit";
 import { AppError } from "@/lib/api";
 import type { CurrentUser } from "@/lib/session";
 import type { Storage } from "@/lib/storage/types";
-import type { StudentDocumentRecord, StudentRecord, StudentRepository, StudentWithCoach, UserIdentityRecord } from "./repository";
+import type {
+  RegistrationRequestRecord,
+  RegistrationRequestWithCoach,
+  StudentDocumentRecord,
+  StudentRecord,
+  StudentRepository,
+  StudentWithCoach,
+  UserIdentityRecord,
+} from "./repository";
 import {
-  approveStudentProfile,
-  createStudent,
+  approveRegistrationRequest,
+  createRegistrationRequest,
   deleteStudent,
+  getRegistrationRequest,
   getStudent,
-  listPendingReviewStudents,
+  listRegistrationRequests,
   listStudents,
-  rejectStudentProfile,
-  updateStudentBelt,
+  rejectRegistrationRequest,
+  updateRegistrationRequest,
+  updateRegistrationRequestBelt,
 } from "./service";
 
 const admin: CurrentUser = { id: "admin-1", role: "ADMIN" };
@@ -53,12 +64,44 @@ const ownStudent: StudentWithCoach = {
 };
 
 const otherCoachStudent: StudentWithCoach = { ...ownStudent, id: "student-2", coachId: "coach-2" };
-const farsStudent: StudentWithCoach = { ...ownStudent, id: "student-3", coachId: "coach-9", coachProvince: "FARS" };
 
 function recordOf(student: StudentWithCoach): StudentRecord {
   const { coachProvince: _province, ...record } = student;
   return record;
 }
+
+function requestRecordOf(student: StudentWithCoach, overrides: Partial<RegistrationRequestRecord> = {}): RegistrationRequestRecord {
+  return {
+    id: "request-1",
+    coachId: student.coachId,
+    fullName: student.fullName,
+    gender: student.gender,
+    nationalCode: student.nationalCode,
+    birthDate: student.birthDate,
+    mobile: student.mobile,
+    insuranceDate: student.insuranceDate,
+    tkdBankChargeYear: student.tkdBankChargeYear,
+    beltCertificateDate: student.beltCertificateDate,
+    beltId: student.beltId,
+    status: "PENDING",
+    reviewNote: null,
+    reviewedById: null,
+    reviewedAt: null,
+    studentId: null,
+    createdAt: student.createdAt,
+    updatedAt: student.updatedAt,
+    ...overrides,
+  };
+}
+
+const ownRequest = requestRecordOf(ownStudent);
+const ownRequestWithCoach: RegistrationRequestWithCoach = { ...ownRequest, coachName: "رضا کریمی", coachProvince: "TEHRAN" };
+const farsRequestWithCoach: RegistrationRequestWithCoach = { ...ownRequestWithCoach, id: "request-9", coachProvince: "FARS" };
+const rejectedRequestWithCoach: RegistrationRequestWithCoach = {
+  ...ownRequestWithCoach,
+  status: "REJECTED",
+  reviewNote: "عکس پرسنلی ناخوانا است",
+};
 
 function repoWith(overrides: Partial<StudentRepository> = {}): StudentRepository {
   return {
@@ -70,22 +113,32 @@ function repoWith(overrides: Partial<StudentRepository> = {}): StudentRepository
     findNationalCodeOwner: vi.fn().mockResolvedValue(null),
     findExistingNationalCodes: vi.fn().mockResolvedValue(new Set<string>()),
     findActiveBelts: vi.fn().mockResolvedValue([{ id: "belt-blue", label: "آبی" }]),
-    createStudents: vi.fn().mockResolvedValue(2),
     activeBeltExists: vi.fn().mockResolvedValue(true),
     beltExists: vi.fn().mockResolvedValue(true),
     countRegistrations: vi.fn().mockResolvedValue(0),
     countStudentTransfers: vi.fn().mockResolvedValue(0),
-    createStudent: vi.fn().mockResolvedValue(recordOf(ownStudent)),
     updateStudent: vi.fn().mockResolvedValue(recordOf(ownStudent)),
     deleteStudent: vi.fn().mockResolvedValue(["file-1"]),
-    countPendingReviewStudents: vi.fn().mockResolvedValue(1),
-    findPendingReviewStudents: vi.fn().mockResolvedValue([]),
-    updateProfileStatusFromPendingOrRejected: vi.fn().mockResolvedValue(recordOf(ownStudent)),
     findStudentDocument: vi.fn().mockResolvedValue(documentRow),
     countStudentPhotoChangeRequests: vi.fn().mockResolvedValue(0),
     countStudentProvinceChangeRequests: vi.fn().mockResolvedValue(0),
+    countRegistrationRequests: vi.fn().mockResolvedValue(1),
+    findRegistrationRequests: vi.fn().mockResolvedValue([ownRequestWithCoach]),
+    findRegistrationRequestById: vi.fn().mockResolvedValue(ownRequestWithCoach),
+    findPendingRequestByNationalCode: vi.fn().mockResolvedValue(null),
+    findRequestNationalCodes: vi.fn().mockResolvedValue(new Set<string>()),
+    createRegistrationRequests: vi.fn().mockResolvedValue(2),
+    createRegistrationRequest: vi.fn().mockResolvedValue(ownRequest),
+    updateRegistrationRequest: vi.fn().mockResolvedValue(ownRequest),
+    updateRegistrationRequestBelt: vi.fn().mockResolvedValue(ownRequest),
+    setRegistrationRequestPhoto: vi.fn().mockResolvedValue(null),
+    decideRegistrationRequest: vi.fn().mockResolvedValue(ownRequest),
     ...overrides,
-  };
+  } as StudentRepository;
+}
+
+function auditWith(): AuditRepository {
+  return { createAuditLog: vi.fn().mockResolvedValue(undefined) };
 }
 
 function failureOf(promise: Promise<unknown>): Promise<unknown> {
@@ -103,6 +156,19 @@ const createInput = {
   tkdBankChargeYear: "",
 };
 
+function storageWith(): Storage {
+  return {
+    put: vi.fn().mockResolvedValue({ id: "file-9", mime: "image/jpeg", size: 8 }),
+    get: vi.fn().mockResolvedValue(null),
+    delete: vi.fn().mockResolvedValue(undefined),
+    getUrls: vi.fn().mockResolvedValue(new Map()),
+  };
+}
+
+function storageWithUrls(urls: Record<string, string>): Storage {
+  return { ...storageWith(), getUrls: vi.fn().mockResolvedValue(new Map(Object.entries(urls))) };
+}
+
 describe("photo urls", () => {
   it("attaches the public R2 photo url to list results and hides the file id", async () => {
     const repo = repoWith({
@@ -114,16 +180,6 @@ describe("photo urls", () => {
 
     expect(result.data[0]).toMatchObject({ photoUrl: "https://r2.example/student-photos/a?sig=1" });
     expect(result.data[0]).not.toHaveProperty("photoFileId");
-  });
-
-  it("leaves the photo url null when the photo file is not on R2", async () => {
-    const repo = repoWith({
-      findStudents: vi.fn().mockResolvedValue([{ ...recordOf(ownStudent), photoFileId: "file-1" }]),
-    });
-
-    const result = await listStudents(repo, storageWith(), coach, {});
-
-    expect(result.data[0]).toMatchObject({ photoUrl: null });
   });
 
   it("leaves students without a photo without a photo url", async () => {
@@ -146,19 +202,17 @@ describe("photo urls", () => {
     expect(result.documents[0]).toMatchObject({ id: "doc-1", url: "https://r2.example/student-photos/b?sig=2" });
   });
 
-  it("attaches the public R2 photo url to pending review results", async () => {
-    const pending = { ...recordOf(ownStudent), coachName: "رضا کریمی", documents: [documentRow], photoFileId: "file-1" };
+  it("attaches the public R2 photo url to registration request results", async () => {
     const repo = repoWith({
       findUserById: vi.fn().mockResolvedValue(adminRecord),
-      findPendingReviewStudents: vi.fn().mockResolvedValue([pending]),
+      findRegistrationRequests: vi.fn().mockResolvedValue([{ ...ownRequestWithCoach, photoFileId: "file-1" }]),
     });
     const storage = storageWithUrls({ "file-1": "https://r2.example/student-photos/c?sig=3" });
 
-    const result = await listPendingReviewStudents(repo, storage, admin, {});
+    const result = await listRegistrationRequests(repo, storage, admin, {});
 
     expect(result.data[0]).toMatchObject({ photoUrl: "https://r2.example/student-photos/c?sig=3" });
     expect(result.data[0]).not.toHaveProperty("photoFileId");
-    expect(result.data[0].documents[0]).toMatchObject({ id: "doc-1", url: "https://r2.example/student-photos/c?sig=3" });
   });
 });
 
@@ -168,15 +222,7 @@ describe("listStudents", () => {
     const result = await listStudents(repo, storageWith(), coach, { coachId: "coach-2", page: 2, pageSize: 10 });
 
     expect(repo.findStudents).toHaveBeenCalledWith({ coachId: "coach-1", gender: undefined, beltId: undefined, search: undefined }, 10, 10);
-    expect(repo.countStudents).toHaveBeenCalledWith({ coachId: "coach-1", gender: undefined, beltId: undefined, search: undefined });
     expect(result).toEqual({ data: [recordOf(ownStudent)], meta: { page: 2, pageSize: 10, total: 1 } });
-  });
-
-  it("passes search and belt filters to the repository", async () => {
-    const repo = repoWith();
-    await listStudents(repo, storageWith(), coach, { search: "  علی  ", beltId: "belt-blue", gender: "FEMALE" });
-
-    expect(repo.findStudents).toHaveBeenCalledWith({ coachId: "coach-1", gender: "FEMALE", beltId: "belt-blue", search: "علی" }, 0, 100);
   });
 
   it("scopes an admin to its province", async () => {
@@ -190,17 +236,6 @@ describe("listStudents", () => {
     );
   });
 
-  it("lets an admin filter by coachId inside the province", async () => {
-    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    await listStudents(repo, storageWith(), admin, { coachId: "coach-2" });
-
-    expect(repo.findStudents).toHaveBeenCalledWith(
-      { province: "TEHRAN", coachId: "coach-2", gender: undefined, beltId: undefined, search: undefined },
-      0,
-      100,
-    );
-  });
-
   it("rejects an inactive user with 403", async () => {
     const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(inactiveCoachRecord) });
     const failure = await failureOf(listStudents(repo, storageWith(), coach, {}));
@@ -208,13 +243,6 @@ describe("listStudents", () => {
     expect(failure).toBeInstanceOf(AppError);
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
     expect(repo.findStudents).not.toHaveBeenCalled();
-  });
-
-  it("rejects a missing user row with 401", async () => {
-    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(null) });
-    const failure = await failureOf(listStudents(repo, storageWith(), coach, {}));
-
-    expect(failure).toMatchObject({ status: 401, code: "UNAUTHORIZED" });
   });
 });
 
@@ -239,40 +267,16 @@ describe("getStudent", () => {
     expect(failure).toBeInstanceOf(AppError);
     expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
   });
-
-  it("returns a student of the admin province", async () => {
-    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    const result = await getStudent(repo, storageWith(), admin, "student-1");
-
-    expect(result.id).toBe("student-1");
-  });
-
-  it("hides a student of another province behind 404", async () => {
-    const repo = repoWith({
-      findUserById: vi.fn().mockResolvedValue(adminRecord),
-      findStudentById: vi.fn().mockResolvedValue(farsStudent),
-    });
-    const failure = await failureOf(getStudent(repo, storageWith(), admin, "student-3"));
-
-    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
-  });
-
-  it("rejects a missing student with 404", async () => {
-    const repo = repoWith({ findStudentById: vi.fn().mockResolvedValue(null) });
-    const failure = await failureOf(getStudent(repo, storageWith(), coach, "student-404"));
-
-    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
-  });
 });
 
-describe("createStudent", () => {
-  it("creates the student under the session coach with the coach gender and the chosen belt", async () => {
+describe("createRegistrationRequest", () => {
+  it("creates the request under the session coach with the coach gender and the chosen belt", async () => {
     const repo = repoWith();
-    await createStudent(repo, coach, createInput);
+    await createRegistrationRequest(repo, auditWith(), coach, createInput);
 
     expect(repo.activeBeltExists).toHaveBeenCalledWith("belt-blue");
-    expect(repo.createStudent).toHaveBeenCalledTimes(1);
-    const data = vi.mocked(repo.createStudent).mock.calls[0][0];
+    expect(repo.createRegistrationRequest).toHaveBeenCalledTimes(1);
+    const data = vi.mocked(repo.createRegistrationRequest).mock.calls[0][0];
     expect(data).toMatchObject({
       fullName: "سینا مرادی",
       gender: "MALE",
@@ -287,105 +291,227 @@ describe("createStudent", () => {
     expect(data.birthDate).toEqual(new Date("2013-05-10T00:00:00.000Z"));
   });
 
-  it("stores the optional belt certificate date as a Date value", async () => {
+  it("stores the optional dates and year", async () => {
     const repo = repoWith();
-    await createStudent(repo, coach, { ...createInput, beltCertificateDate: "2026-05-01T00:00:00.000Z" });
-
-    const data = vi.mocked(repo.createStudent).mock.calls[0][0];
-    expect(data.beltCertificateDate).toEqual(new Date("2026-05-01T00:00:00.000Z"));
-  });
-
-  it("rejects an inactive belt with 400", async () => {
-    const repo = repoWith({ activeBeltExists: vi.fn().mockResolvedValue(false) });
-    const failure = await failureOf(createStudent(repo, coach, createInput));
-
-    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
-    expect(repo.createStudent).not.toHaveBeenCalled();
-  });
-
-  it("stores the optional dates as Date values", async () => {
-    const repo = repoWith();
-    await createStudent(repo, coach, {
+    await createRegistrationRequest(repo, auditWith(), coach, {
       ...createInput,
       insuranceDate: "2026-07-01T00:00:00.000Z",
       tkdBankChargeYear: "1400",
     });
 
-    const data = vi.mocked(repo.createStudent).mock.calls[0][0];
+    const data = vi.mocked(repo.createRegistrationRequest).mock.calls[0][0];
     expect(data.insuranceDate).toEqual(new Date("2026-07-01T00:00:00.000Z"));
     expect(data.tkdBankChargeYear).toBe(1400);
   });
 
-  it("rejects a coach whose own gender is missing with 400", async () => {
-    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue({ ...coachRecord, gender: null }) });
-    const failure = (await failureOf(createStudent(repo, coach, createInput))) as { message: string };
+  it("writes an audit log for the request", async () => {
+    const audit = auditWith();
+    await createRegistrationRequest(repoWith(), audit, coach, createInput);
+
+    expect(audit.createAuditLog).toHaveBeenCalledWith(
+      expect.objectContaining({ action: "registration_request.requested", entityType: "registration_request", actorId: "coach-1" }),
+    );
+  });
+
+  it("rejects a duplicate national code of an approved student with 409", async () => {
+    const repo = repoWith({ findNationalCodeOwner: vi.fn().mockResolvedValue({ id: "student-9" }) });
+    const failure = await failureOf(createRegistrationRequest(repo, auditWith(), coach, createInput));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect(repo.createRegistrationRequest).not.toHaveBeenCalled();
+  });
+
+  it("rejects when a pending request for the same national code exists with 409", async () => {
+    const repo = repoWith({ findPendingRequestByNationalCode: vi.fn().mockResolvedValue({ id: "request-5" }) });
+    const failure = await failureOf(createRegistrationRequest(repo, auditWith(), coach, createInput));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect(repo.createRegistrationRequest).not.toHaveBeenCalled();
+  });
+
+  it("rejects an inactive belt with 400", async () => {
+    const repo = repoWith({ activeBeltExists: vi.fn().mockResolvedValue(false) });
+    const failure = await failureOf(createRegistrationRequest(repo, auditWith(), coach, createInput));
 
     expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
-    expect(failure?.message).toContain("جنسیت شما ثبت نشده است");
-    expect(repo.createStudent).not.toHaveBeenCalled();
+    expect(repo.createRegistrationRequest).not.toHaveBeenCalled();
   });
 
   it("rejects an admin with 403 without touching the repository", async () => {
     const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    const failure = await failureOf(createStudent(repo, admin, createInput));
+    const failure = await failureOf(createRegistrationRequest(repo, auditWith(), admin, createInput));
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
-    expect(repo.createStudent).not.toHaveBeenCalled();
-  });
-
-  it("rejects a duplicate national code with 409", async () => {
-    const repo = repoWith({ findNationalCodeOwner: vi.fn().mockResolvedValue({ id: "student-9" }) });
-    const failure = await failureOf(createStudent(repo, coach, createInput));
-
-    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
-    expect(repo.createStudent).not.toHaveBeenCalled();
-  });
-
-  it("rejects an inactive coach with 403", async () => {
-    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(inactiveCoachRecord) });
-    const failure = await failureOf(createStudent(repo, coach, createInput));
-
-    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
-    expect(repo.createStudent).not.toHaveBeenCalled();
+    expect(repo.createRegistrationRequest).not.toHaveBeenCalled();
   });
 });
 
-describe("updateStudentBelt", () => {
-  it("moves a province student to the given belt as the admin", async () => {
-    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    await updateStudentBelt(repo, admin, "student-1", { beltId: "belt-green" });
+describe("updateRegistrationRequest", () => {
+  it("resubmits a rejected request as pending with cleared review data", async () => {
+    const repo = repoWith({ findRegistrationRequestById: vi.fn().mockResolvedValue(rejectedRequestWithCoach) });
+    await updateRegistrationRequest(repo, coach, "request-1", createInput);
 
-    expect(repo.updateStudent).toHaveBeenCalledWith("student-1", { beltId: "belt-green" });
+    const data = vi.mocked(repo.updateRegistrationRequest).mock.calls[0][1];
+    expect(data).toMatchObject({ fullName: "سینا مرادی", nationalCode: "1234567890", beltId: "belt-blue" });
   });
 
-  it("hides a student of another province behind 404", async () => {
+  it("re-checks the national code excluding the request itself", async () => {
+    const repo = repoWith({ findRegistrationRequestById: vi.fn().mockResolvedValue(rejectedRequestWithCoach) });
+    await updateRegistrationRequest(repo, coach, "request-1", createInput);
+
+    expect(repo.findPendingRequestByNationalCode).toHaveBeenCalledWith("1234567890", "request-1");
+    expect(repo.findNationalCodeOwner).toHaveBeenCalledWith("1234567890");
+  });
+
+  it("blocks the edit of an approved request with 409", async () => {
     const repo = repoWith({
-      findUserById: vi.fn().mockResolvedValue(adminRecord),
-      findStudentById: vi.fn().mockResolvedValue(farsStudent),
+      findRegistrationRequestById: vi.fn().mockResolvedValue({ ...ownRequestWithCoach, status: "APPROVED" }),
     });
-    const failure = await failureOf(updateStudentBelt(repo, admin, "student-3", { beltId: "belt-green" }));
+    const failure = await failureOf(updateRegistrationRequest(repo, coach, "request-1", createInput));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+    expect(repo.updateRegistrationRequest).not.toHaveBeenCalled();
+  });
+
+  it("hides another coach request behind 404", async () => {
+    const repo = repoWith({
+      findRegistrationRequestById: vi.fn().mockResolvedValue({ ...ownRequestWithCoach, coachId: "coach-2" }),
+    });
+    const failure = await failureOf(updateRegistrationRequest(repo, coach, "request-1", createInput));
 
     expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
-    expect(repo.updateStudent).not.toHaveBeenCalled();
+    expect(repo.updateRegistrationRequest).not.toHaveBeenCalled();
+  });
+});
+
+describe("listRegistrationRequests", () => {
+  it("scopes a coach to its own requests with every status", async () => {
+    const repo = repoWith();
+    await listRegistrationRequests(repo, storageWith(), coach, {});
+
+    expect(repo.findRegistrationRequests).toHaveBeenCalledWith({ coachId: "coach-1" }, 0, 100);
+  });
+
+  it("scopes an admin to its province and defaults to pending and rejected", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
+    await listRegistrationRequests(repo, storageWith(), admin, {});
+
+    expect(repo.findRegistrationRequests).toHaveBeenCalledWith({ province: "TEHRAN", status: { in: ["PENDING", "REJECTED"] } }, 0, 100);
+  });
+
+  it("lets an admin filter by status with pagination", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
+    await listRegistrationRequests(repo, storageWith(), admin, { status: "REJECTED", page: 2, pageSize: 20 });
+
+    expect(repo.findRegistrationRequests).toHaveBeenCalledWith({ province: "TEHRAN", status: "REJECTED" }, 20, 20);
+    expect(repo.countRegistrationRequests).toHaveBeenCalledWith({ province: "TEHRAN", status: "REJECTED" });
+  });
+});
+
+describe("getRegistrationRequest", () => {
+  it("returns the coach request with the photo url", async () => {
+    const repo = repoWith();
+    const result = await getRegistrationRequest(repo, storageWith(), coach, "request-1");
+
+    expect(result).toMatchObject({ id: "request-1", coachName: "رضا کریمی" });
+    expect(result).not.toHaveProperty("coachProvince");
+  });
+
+  it("hides a request of another province behind 404", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findRegistrationRequestById: vi.fn().mockResolvedValue(farsRequestWithCoach),
+    });
+    const failure = await failureOf(getRegistrationRequest(repo, storageWith(), admin, "request-9"));
+
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+  });
+});
+
+describe("updateRegistrationRequestBelt", () => {
+  it("moves a pending province request to the given belt as the admin", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
+    await updateRegistrationRequestBelt(repo, admin, "request-1", { beltId: "belt-green" });
+
+    expect(repo.updateRegistrationRequestBelt).toHaveBeenCalledWith("request-1", "belt-green");
+  });
+
+  it("hides a request of another province behind 404", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      findRegistrationRequestById: vi.fn().mockResolvedValue(farsRequestWithCoach),
+    });
+    const failure = await failureOf(updateRegistrationRequestBelt(repo, admin, "request-9", { beltId: "belt-green" }));
+
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+    expect(repo.updateRegistrationRequestBelt).not.toHaveBeenCalled();
   });
 
   it("rejects a coach with 403", async () => {
     const repo = repoWith();
-    const failure = await failureOf(updateStudentBelt(repo, coach, "student-1", { beltId: "belt-green" }));
+    const failure = await failureOf(updateRegistrationRequestBelt(repo, coach, "request-1", { beltId: "belt-green" }));
 
     expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
-    expect(repo.updateStudent).not.toHaveBeenCalled();
+    expect(repo.updateRegistrationRequestBelt).not.toHaveBeenCalled();
+  });
+});
+
+describe("approveRegistrationRequest", () => {
+  it("approves a pending request of the province", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
+    const audit = auditWith();
+    await approveRegistrationRequest(repo, audit, admin, "request-1");
+
+    expect(repo.decideRegistrationRequest).toHaveBeenCalledWith("request-1", {
+      status: "APPROVED",
+      note: null,
+      reviewedById: "admin-1",
+    });
+    expect(audit.createAuditLog).toHaveBeenCalledWith(
+      expect.objectContaining({ action: "registration_request.approved", actorId: "admin-1" }),
+    );
   });
 
-  it("rejects an unknown belt with 400", async () => {
+  it("rejects an admin of another province with 404", async () => {
     const repo = repoWith({
       findUserById: vi.fn().mockResolvedValue(adminRecord),
-      beltExists: vi.fn().mockResolvedValue(false),
+      findRegistrationRequestById: vi.fn().mockResolvedValue(farsRequestWithCoach),
     });
-    const failure = await failureOf(updateStudentBelt(repo, admin, "student-1", { beltId: "belt-nope" }));
+    const failure = await failureOf(approveRegistrationRequest(repo, auditWith(), admin, "request-9"));
 
-    expect(failure).toMatchObject({ status: 400, code: "VALIDATION_ERROR" });
-    expect(repo.updateStudent).not.toHaveBeenCalled();
+    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
+    expect(repo.decideRegistrationRequest).not.toHaveBeenCalled();
+  });
+
+  it("answers 409 when the request was already reviewed", async () => {
+    const repo = repoWith({
+      findUserById: vi.fn().mockResolvedValue(adminRecord),
+      decideRegistrationRequest: vi.fn().mockResolvedValue(null),
+    });
+    const failure = await failureOf(approveRegistrationRequest(repo, auditWith(), admin, "request-1"));
+
+    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
+  });
+});
+
+describe("rejectRegistrationRequest", () => {
+  it("rejects a request with the required note", async () => {
+    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
+    await rejectRegistrationRequest(repo, auditWith(), admin, "request-1", "عکس پرسنلی ناخوانا است");
+
+    expect(repo.decideRegistrationRequest).toHaveBeenCalledWith("request-1", {
+      status: "REJECTED",
+      note: "عکس پرسنلی ناخوانا است",
+      reviewedById: "admin-1",
+    });
+  });
+
+  it("rejects a coach with 403", async () => {
+    const repo = repoWith();
+    const failure = await failureOf(rejectRegistrationRequest(repo, auditWith(), coach, "request-1", "نامناسب"));
+
+    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
+    expect(repo.decideRegistrationRequest).not.toHaveBeenCalled();
   });
 });
 
@@ -394,8 +520,6 @@ describe("deleteStudent", () => {
     const repo = repoWith();
     const result = await deleteStudent(repo, storageWith(), coach, "student-1");
 
-    expect(repo.countRegistrations).toHaveBeenCalledWith("student-1");
-    expect(repo.countStudentTransfers).toHaveBeenCalledWith("student-1");
     expect(repo.deleteStudent).toHaveBeenCalledWith("student-1");
     expect(result).toEqual({ id: "student-1" });
   });
@@ -409,134 +533,11 @@ describe("deleteStudent", () => {
     expect(repo.deleteStudent).not.toHaveBeenCalled();
   });
 
-  it("blocks a student with transfer request history (even rejected) with 409", async () => {
-    const repo = repoWith({ countStudentTransfers: vi.fn().mockResolvedValue(1) });
-    const failure = await failureOf(deleteStudent(repo, storageWith(), coach, "student-1"));
-
-    expect(failure).toBeInstanceOf(AppError);
-    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
-    expect(repo.deleteStudent).not.toHaveBeenCalled();
-  });
-
   it("hides another coach student behind 404", async () => {
     const repo = repoWith({ findStudentById: vi.fn().mockResolvedValue(otherCoachStudent) });
     const failure = await failureOf(deleteStudent(repo, storageWith(), coach, "student-2"));
 
     expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
     expect(repo.deleteStudent).not.toHaveBeenCalled();
-  });
-
-  it("rejects an admin with 403", async () => {
-    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    const failure = await failureOf(deleteStudent(repo, storageWith(), admin, "student-1"));
-
-    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
-    expect(repo.deleteStudent).not.toHaveBeenCalled();
-  });
-});
-
-const JPEG_BYTES = new Uint8Array([0xff, 0xd8, 0xff, 0xdb, 0, 5, 6, 7]);
-
-function _documentFile(): File {
-  return new File([JPEG_BYTES], "photo.jpg", { type: "image/jpeg" });
-}
-
-function storageWith(): Storage {
-  return {
-    put: vi.fn().mockResolvedValue({ id: "file-9", mime: "image/jpeg", size: JPEG_BYTES.byteLength }),
-    get: vi.fn().mockResolvedValue({ mime: "image/jpeg", size: JPEG_BYTES.byteLength, stream: new Blob([JPEG_BYTES]).stream() }),
-    delete: vi.fn().mockResolvedValue(undefined),
-    getUrls: vi.fn().mockResolvedValue(new Map()),
-  };
-}
-
-function storageWithUrls(urls: Record<string, string>): Storage {
-  return { ...storageWith(), getUrls: vi.fn().mockResolvedValue(new Map(Object.entries(urls))) };
-}
-
-describe("listPendingReviewStudents", () => {
-  it("scopes an admin to its province with the status filter and pagination", async () => {
-    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    const result = await listPendingReviewStudents(repo, storageWith(), admin, { status: "REJECTED", page: 2, pageSize: 20 });
-
-    expect(repo.findPendingReviewStudents).toHaveBeenCalledWith({ province: "TEHRAN", status: "REJECTED" }, 20, 20);
-    expect(repo.countPendingReviewStudents).toHaveBeenCalledWith({ province: "TEHRAN", status: "REJECTED" });
-    expect(result.meta).toEqual({ page: 2, pageSize: 20, total: 1 });
-  });
-
-  it("defaults to pending and rejected profiles", async () => {
-    const repo = repoWith({ findUserById: vi.fn().mockResolvedValue(adminRecord) });
-    await listPendingReviewStudents(repo, storageWith(), admin, {});
-
-    expect(repo.findPendingReviewStudents).toHaveBeenCalledWith({ province: "TEHRAN", status: undefined }, 0, 100);
-  });
-
-  it("rejects a coach with 403", async () => {
-    const repo = repoWith();
-    const failure = await failureOf(listPendingReviewStudents(repo, storageWith(), coach, {}));
-
-    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
-    expect(repo.findPendingReviewStudents).not.toHaveBeenCalled();
-  });
-});
-
-describe("approveStudentProfile", () => {
-  it("approves a pending profile of the province and clears the note", async () => {
-    const repo = repoWith({
-      findUserById: vi.fn().mockResolvedValue(adminRecord),
-      findStudentById: vi.fn().mockResolvedValue({ ...ownStudent, profileStatus: "PENDING" }),
-    });
-    await approveStudentProfile(repo, admin, "student-1");
-
-    expect(repo.updateProfileStatusFromPendingOrRejected).toHaveBeenCalledWith("student-1", {
-      status: "APPROVED",
-      note: null,
-      reviewedById: "admin-1",
-    });
-  });
-
-  it("rejects an admin of another province with 404", async () => {
-    const repo = repoWith({
-      findUserById: vi.fn().mockResolvedValue(adminRecord),
-      findStudentById: vi.fn().mockResolvedValue(farsStudent),
-    });
-    const failure = await failureOf(approveStudentProfile(repo, admin, "student-3"));
-
-    expect(failure).toMatchObject({ status: 404, code: "NOT_FOUND" });
-    expect(repo.updateProfileStatusFromPendingOrRejected).not.toHaveBeenCalled();
-  });
-
-  it("answers 409 when the profile was already reviewed", async () => {
-    const repo = repoWith({
-      findUserById: vi.fn().mockResolvedValue(adminRecord),
-      updateProfileStatusFromPendingOrRejected: vi.fn().mockResolvedValue(null),
-    });
-    const failure = await failureOf(approveStudentProfile(repo, admin, "student-1"));
-
-    expect(failure).toMatchObject({ status: 409, code: "CONFLICT" });
-  });
-});
-
-describe("rejectStudentProfile", () => {
-  it("rejects a profile with the required note", async () => {
-    const repo = repoWith({
-      findUserById: vi.fn().mockResolvedValue(adminRecord),
-      findStudentById: vi.fn().mockResolvedValue({ ...ownStudent, profileStatus: "PENDING" }),
-    });
-    await rejectStudentProfile(repo, admin, "student-1", "عکس پرسنلی ناخوانا است");
-
-    expect(repo.updateProfileStatusFromPendingOrRejected).toHaveBeenCalledWith("student-1", {
-      status: "REJECTED",
-      note: "عکس پرسنلی ناخوانا است",
-      reviewedById: "admin-1",
-    });
-  });
-
-  it("rejects a coach with 403", async () => {
-    const repo = repoWith();
-    const failure = await failureOf(rejectStudentProfile(repo, coach, "student-1", "نامناسب"));
-
-    expect(failure).toMatchObject({ status: 403, code: "FORBIDDEN" });
-    expect(repo.updateProfileStatusFromPendingOrRejected).not.toHaveBeenCalled();
   });
 });

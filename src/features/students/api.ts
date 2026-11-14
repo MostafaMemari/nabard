@@ -1,7 +1,15 @@
 import type { Gender } from "@/features/base-data";
 import { api } from "@/lib/http";
 import type { ListQuery, ListResult } from "@/lib/pagination";
-import type { PendingReviewStudent, Student, StudentDetail, StudentImportResult, StudentInput } from "./types";
+import type {
+  RegistrationRequest,
+  RegistrationRequestDetail,
+  RegistrationStatus,
+  Student,
+  StudentDetail,
+  StudentImportResult,
+  StudentInput,
+} from "./types";
 
 export type StudentListParams = ListQuery & {
   coachId?: string;
@@ -27,10 +35,6 @@ export function getStudent(id: string): Promise<StudentDetail> {
   return api<StudentDetail>(`/api/v1/students/${id}`);
 }
 
-export function createStudent(input: StudentInput): Promise<Student> {
-  return api<Student>("/api/v1/students", { method: "POST", body: input });
-}
-
 export function importStudents(file: File, coachId?: string): Promise<StudentImportResult> {
   const form = new FormData();
   form.append("file", file);
@@ -38,30 +42,48 @@ export function importStudents(file: File, coachId?: string): Promise<StudentImp
   return api<StudentImportResult>(path, { method: "POST", body: form });
 }
 
-export function updateStudentBelt(id: string, beltId: string): Promise<Student> {
-  return api<Student>(`/api/v1/students/${id}`, { method: "PATCH", body: { beltId } });
-}
-
 export function deleteStudent(id: string): Promise<{ id: string }> {
   return api<{ id: string }>(`/api/v1/students/${id}`, { method: "DELETE" });
 }
 
-export type PendingReviewParams = ListQuery & { status?: "PENDING" | "REJECTED" };
+export type RegistrationRequestListParams = ListQuery & { status?: RegistrationStatus };
 
-export async function listPendingReview(params: PendingReviewParams = {}): Promise<ListResult<PendingReviewStudent>> {
+export async function listRegistrationRequests(params: RegistrationRequestListParams = {}): Promise<ListResult<RegistrationRequestDetail>> {
   const query = new URLSearchParams();
   if (params.status) query.set("status", params.status);
   if (params.page !== undefined) query.set("page", String(params.page));
   if (params.pageSize !== undefined) query.set("pageSize", String(params.pageSize));
 
   const queryString = query.toString();
-  return api<ListResult<PendingReviewStudent>>(`/api/v1/students/pending-review${queryString === "" ? "" : `?${queryString}`}`);
+  return api<ListResult<RegistrationRequestDetail>>(`/api/v1/registration-requests${queryString === "" ? "" : `?${queryString}`}`);
 }
 
-export function approveStudentProfile(id: string): Promise<Student> {
-  return api<Student>(`/api/v1/students/${id}/approve`, { method: "POST" });
+export function getRegistrationRequest(id: string): Promise<RegistrationRequestDetail> {
+  return api<RegistrationRequestDetail>(`/api/v1/registration-requests/${id}`);
 }
 
-export function rejectStudentProfile(id: string, note: string): Promise<Student> {
-  return api<Student>(`/api/v1/students/${id}/reject`, { method: "POST", body: { note } });
+export function createRegistrationRequest(input: StudentInput): Promise<RegistrationRequest> {
+  return api<RegistrationRequest>("/api/v1/registration-requests", { method: "POST", body: input });
+}
+
+export function updateRegistrationRequest(id: string, input: StudentInput): Promise<RegistrationRequest> {
+  return api<RegistrationRequest>(`/api/v1/registration-requests/${id}`, { method: "PATCH", body: input });
+}
+
+export function setRegistrationRequestPhoto(id: string, file: File): Promise<RegistrationRequest> {
+  const form = new FormData();
+  form.append("file", file);
+  return api<RegistrationRequest>(`/api/v1/registration-requests/${id}/photo`, { method: "POST", body: form });
+}
+
+export function updateRegistrationRequestBelt(id: string, beltId: string): Promise<RegistrationRequest> {
+  return api<RegistrationRequest>(`/api/v1/registration-requests/${id}/belt`, { method: "PATCH", body: { beltId } });
+}
+
+export function approveRegistrationRequest(id: string): Promise<RegistrationRequest> {
+  return api<RegistrationRequest>(`/api/v1/registration-requests/${id}/approve`, { method: "POST" });
+}
+
+export function rejectRegistrationRequest(id: string, note: string): Promise<RegistrationRequest> {
+  return api<RegistrationRequest>(`/api/v1/registration-requests/${id}/reject`, { method: "POST", body: { note } });
 }

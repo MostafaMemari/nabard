@@ -6,7 +6,7 @@ export default async function AdminProfilePage({ params }: { params: Promise<{ i
 
   return (
     <AdminShell active="profiles">
-      <AdminReviewDetailScreen studentId={id} />
+      <AdminReviewDetailScreen requestId={id} />
     </AdminShell>
   );
 }

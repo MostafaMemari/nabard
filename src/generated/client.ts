@@ -57,6 +57,11 @@ export type User = Prisma.UserModel
  */
 export type Student = Prisma.StudentModel
 /**
+ * Model StudentRegistrationRequest
+ * 
+ */
+export type StudentRegistrationRequest = Prisma.StudentRegistrationRequestModel
+/**
  * Model Belt
  * 
  */

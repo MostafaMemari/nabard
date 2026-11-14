@@ -11,16 +11,8 @@ import {
   PageHeader,
 } from "@/components/shared";
 import { useBelts } from "@/features/base-data";
-import { toPersianDigits } from "@/lib/format";
 import { useStudentForm } from "../hooks/use-student-form";
-import { TKD_BANK_CHARGE_YEAR_MAX, TKD_BANK_CHARGE_YEAR_MIN } from "../schemas";
-
-const tkdBankChargeYearItems = Object.fromEntries(
-  Array.from({ length: TKD_BANK_CHARGE_YEAR_MAX - TKD_BANK_CHARGE_YEAR_MIN + 1 }, (_, index) => [
-    String(TKD_BANK_CHARGE_YEAR_MIN + index),
-    toPersianDigits(TKD_BANK_CHARGE_YEAR_MIN + index),
-  ]),
-);
+import { tkdBankChargeYearItems } from "../year-items";
 
 export function StudentFormScreen() {
   const { form, submit } = useStudentForm();
@@ -32,7 +24,7 @@ export function StudentFormScreen() {
       <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-6">
         <PageHeader
           title="هنرجوی جدید"
-          description="اطلاعات هنرجو را وارد کنید. درخواست ثبت برای بررسی به ادمین استان ارسال می شود و پس از تأیید، اطلاعات قفل می شود"
+          description="اطلاعات هنرجو را وارد کنید. درخواست ثبت برای بررسی به ادمین استان ارسال می شود و پس از تأیید، هنرجو اضافه می شود"
         />
 
         <FormSection title="اطلاعات هنرجو" icon={UsersIcon}>
@@ -82,7 +74,7 @@ export function StudentFormScreen() {
 
         <p className="flex items-start gap-2 rounded-xl border border-border bg-muted/40 px-3 py-2.5 text-subtle text-muted-foreground">
           <ImageIcon aria-hidden className="mt-0.5 size-4 shrink-0" />
-          عکس پرسنلی را پس از ثبت، در صفحه هنرجو به عنوان درخواست تغییر عکس بارگذاری کنید
+          پس از ثبت درخواست، عکس پرسنلی را از صفحه درخواست ها بارگذاری کنید؛ بدون عکس، درخواست قابل تأیید نیست
         </p>
 
         <FormActions cancelHref="/coach/students" submitLabel="ثبت درخواست" submitting={form.formState.isSubmitting} />

@@ -1,5 +1,6 @@
 import type { Gender } from "@/features/base-data";
 import type { Province } from "@/generated/client";
+import { AppError } from "@/lib/api";
 import { getPrisma } from "@/lib/prisma";
 
 export type UserRole = "ADMIN" | "COACH" | "SUPER_ADMIN";
@@ -60,8 +61,6 @@ export type StudentDocumentRecord = {
   url?: string | null;
 };
 
-export type PendingReviewStudent = StudentRecord & { coachName: string; documents: StudentDocumentRecord[] };
-
 export type StudentDetail = StudentRecord & { coachName: string; documents: StudentDocumentRecord[] };
 
 export type StudentWithCoach = StudentRecord & { coachProvince: Province | null; coachName: string };
@@ -74,7 +73,51 @@ export type StudentFilters = {
   search?: string;
 };
 
-export type NewStudentData = {
+export type StudentUpdateData = {
+  beltId: string;
+};
+
+export type RegistrationRequestFilters = {
+  coachId?: string;
+  province?: Province;
+  status?: RegistrationStatus | { in: RegistrationStatus[] };
+};
+
+// ───────────── Registration requests ─────────────
+
+export type RegistrationStatus = "PENDING" | "APPROVED" | "REJECTED";
+
+export type RegistrationRequestRecord = {
+  id: string;
+  coachId: string;
+  fullName: string;
+  gender: Gender;
+  nationalCode: string;
+  birthDate: Date;
+  mobile: string | null;
+  insuranceDate: Date | null;
+  tkdBankChargeYear: number | null;
+  beltCertificateDate: Date | null;
+  beltId: string;
+  status: RegistrationStatus;
+  reviewNote: string | null;
+  reviewedById: string | null;
+  reviewedAt: Date | null;
+  studentId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  // Internal: stored file id of the request photo. The service turns it into
+  // a display url and strips the raw id from responses.
+  photoFileId?: string | null;
+  photoUrl?: string | null;
+};
+
+export type RegistrationRequestWithCoach = RegistrationRequestRecord & {
+  coachName: string;
+  coachProvince: Province | null;
+};
+
+export type NewRegistrationRequestData = {
   fullName: string;
   gender: Gender;
   nationalCode: string;
@@ -87,16 +130,9 @@ export type NewStudentData = {
   coachId: string;
 };
 
-export type StudentUpdateData = {
-  beltId: string;
-};
+export type RegistrationRequestEditData = Omit<NewRegistrationRequestData, "coachId" | "gender">;
 
-export type PendingReviewFilters = {
-  province: Province;
-  status?: ProfileStatus;
-};
-
-export type ProfileReviewInput = {
+export type RegistrationDecisionInput = {
   status: "APPROVED" | "REJECTED";
   note: string | null;
   reviewedById: string;
@@ -111,20 +147,26 @@ export type StudentRepository = {
   findNationalCodeOwner(nationalCode: string): Promise<{ id: string } | null>;
   findExistingNationalCodes(codes: string[]): Promise<Set<string>>;
   findActiveBelts(): Promise<Array<{ id: string; label: string }>>;
-  createStudents(rows: NewStudentData[]): Promise<number>;
   activeBeltExists(beltId: string): Promise<boolean>;
   beltExists(beltId: string): Promise<boolean>;
   countRegistrations(studentId: string): Promise<number>;
   countStudentTransfers(studentId: string): Promise<number>;
-  createStudent(data: NewStudentData): Promise<StudentRecord>;
+  createRegistrationRequests(rows: NewRegistrationRequestData[]): Promise<number>;
   updateStudent(id: string, data: StudentUpdateData): Promise<StudentRecord>;
   deleteStudent(id: string): Promise<string[]>;
-  countPendingReviewStudents(filters: PendingReviewFilters): Promise<number>;
-  findPendingReviewStudents(filters: PendingReviewFilters, skip: number, take: number): Promise<PendingReviewStudent[]>;
-  updateProfileStatusFromPendingOrRejected(id: string, input: ProfileReviewInput): Promise<StudentRecord | null>;
   findStudentDocument(studentId: string, type: StudentDocumentType): Promise<StudentDocumentRecord | null>;
   countStudentPhotoChangeRequests(studentId: string): Promise<number>;
   countStudentProvinceChangeRequests(studentId: string): Promise<number>;
+  countRegistrationRequests(filters: RegistrationRequestFilters): Promise<number>;
+  findRegistrationRequests(filters: RegistrationRequestFilters, skip: number, take: number): Promise<RegistrationRequestWithCoach[]>;
+  findRegistrationRequestById(id: string): Promise<RegistrationRequestWithCoach | null>;
+  findPendingRequestByNationalCode(nationalCode: string, excludeId?: string): Promise<{ id: string } | null>;
+  findRequestNationalCodes(codes: string[]): Promise<Set<string>>;
+  createRegistrationRequest(data: NewRegistrationRequestData): Promise<RegistrationRequestRecord>;
+  updateRegistrationRequest(id: string, data: RegistrationRequestEditData): Promise<RegistrationRequestRecord | null>;
+  updateRegistrationRequestBelt(id: string, beltId: string): Promise<RegistrationRequestRecord | null>;
+  setRegistrationRequestPhoto(id: string, fileId: string): Promise<string | null>;
+  decideRegistrationRequest(id: string, input: RegistrationDecisionInput): Promise<RegistrationRequestRecord | null>;
 };
 
 const studentSelection = {
@@ -148,6 +190,9 @@ const studentSelection = {
 
 function studentWhere(filters: StudentFilters) {
   return {
+    // Only approved students are real students; pending and rejected
+    // registrations live in the registration requests table.
+    profileStatus: "APPROVED" as const,
     ...(filters.coachId === undefined ? {} : { coachId: filters.coachId }),
     ...(filters.province === undefined ? {} : { coach: { province: filters.province } }),
     ...(filters.gender === undefined ? {} : { gender: filters.gender }),
@@ -257,8 +302,8 @@ export async function findActiveBelts(): Promise<Array<{ id: string; label: stri
   return getPrisma().belt.findMany({ where: { isActive: true }, select: { id: true, label: true }, orderBy: { level: "asc" } });
 }
 
-export async function createStudents(rows: NewStudentData[]): Promise<number> {
-  const result = await getPrisma().student.createMany({
+export async function createRegistrationRequests(rows: NewRegistrationRequestData[]): Promise<number> {
+  const result = await getPrisma().studentRegistrationRequest.createMany({
     data: rows.map((row) => ({
       fullName: row.fullName,
       gender: row.gender,
@@ -291,26 +336,6 @@ export async function countRegistrations(studentId: string): Promise<number> {
 
 export async function countStudentTransfers(studentId: string): Promise<number> {
   return getPrisma().studentTransfer.count({ where: { studentId } });
-}
-
-export async function createStudent(data: NewStudentData): Promise<StudentRecord> {
-  const row = await getPrisma().student.create({
-    data: {
-      fullName: data.fullName,
-      gender: data.gender,
-      nationalCode: data.nationalCode,
-      birthDate: data.birthDate,
-      mobile: data.mobile,
-      insuranceDate: data.insuranceDate,
-      tkdBankChargeYear: data.tkdBankChargeYear,
-      beltCertificateDate: data.beltCertificateDate,
-      beltId: data.beltId,
-      coachId: data.coachId,
-    },
-    select: studentSelection,
-  });
-
-  return toStudentRecord(row);
 }
 
 export async function updateStudent(id: string, data: StudentUpdateData): Promise<StudentRecord> {
@@ -346,48 +371,225 @@ function toDocumentRecord(row: DocumentRow): StudentDocumentRecord {
   return { id: row.id, studentId: row.studentId, type: row.type, fileId: row.fileId, createdAt: row.createdAt };
 }
 
-export async function countPendingReviewStudents(filters: PendingReviewFilters): Promise<number> {
-  return getPrisma().student.count({
-    where: { coach: { province: filters.province }, profileStatus: filters.status ?? { in: ["PENDING", "REJECTED"] } },
-  });
+// ───────────── Registration requests ─────────────
+
+const registrationRequestSelection = {
+  id: true,
+  coachId: true,
+  fullName: true,
+  gender: true,
+  nationalCode: true,
+  birthDate: true,
+  mobile: true,
+  insuranceDate: true,
+  tkdBankChargeYear: true,
+  beltCertificateDate: true,
+  beltId: true,
+  status: true,
+  reviewNote: true,
+  reviewedById: true,
+  reviewedAt: true,
+  studentId: true,
+  createdAt: true,
+  updatedAt: true,
+  photoFileId: true,
+} as const;
+
+type RegistrationRequestRow = {
+  id: string;
+  coachId: string;
+  fullName: string;
+  gender: Gender;
+  nationalCode: string;
+  birthDate: Date;
+  mobile: string | null;
+  insuranceDate: Date | null;
+  tkdBankChargeYear: number | null;
+  beltCertificateDate: Date | null;
+  beltId: string;
+  status: RegistrationStatus;
+  reviewNote: string | null;
+  reviewedById: string | null;
+  reviewedAt: Date | null;
+  studentId: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  photoFileId: string | null;
+};
+
+function toRegistrationRequestRecord(row: RegistrationRequestRow): RegistrationRequestRecord {
+  return { ...row };
 }
 
-export async function findPendingReviewStudents(
-  filters: PendingReviewFilters,
+function registrationRequestWhere(filters: RegistrationRequestFilters) {
+  return {
+    ...(filters.coachId === undefined ? {} : { coachId: filters.coachId }),
+    ...(filters.province === undefined ? {} : { coach: { province: filters.province } }),
+    ...(filters.status === undefined ? {} : { status: filters.status }),
+  };
+}
+
+export async function countRegistrationRequests(filters: RegistrationRequestFilters): Promise<number> {
+  return getPrisma().studentRegistrationRequest.count({ where: registrationRequestWhere(filters) });
+}
+
+export async function findRegistrationRequests(
+  filters: RegistrationRequestFilters,
   skip: number,
   take: number,
-): Promise<PendingReviewStudent[]> {
-  const rows = await getPrisma().student.findMany({
-    where: { coach: { province: filters.province }, profileStatus: filters.status ?? { in: ["PENDING", "REJECTED"] } },
-    select: {
-      ...studentSelection,
-      coach: { select: { fullName: true } },
-      documents: { select: documentSelection, orderBy: { createdAt: "asc" } },
-    },
+): Promise<RegistrationRequestWithCoach[]> {
+  const rows = await getPrisma().studentRegistrationRequest.findMany({
+    where: registrationRequestWhere(filters),
+    select: { ...registrationRequestSelection, coach: { select: { fullName: true, province: true } } },
     orderBy: { updatedAt: "desc" },
     skip,
     take,
   });
 
   return rows.map((row) => ({
-    ...toStudentRecord(row),
+    ...toRegistrationRequestRecord(row),
     coachName: row.coach.fullName,
-    documents: row.documents.map(toDocumentRecord),
-    photoFileId: row.documents.find((document) => document.type === "PHOTO")?.fileId ?? null,
+    coachProvince: row.coach.province,
   }));
 }
 
-export async function updateProfileStatusFromPendingOrRejected(id: string, input: ProfileReviewInput): Promise<StudentRecord | null> {
+export async function findRegistrationRequestById(id: string): Promise<RegistrationRequestWithCoach | null> {
+  const row = await getPrisma().studentRegistrationRequest.findUnique({
+    where: { id },
+    select: { ...registrationRequestSelection, coach: { select: { fullName: true, province: true } } },
+  });
+
+  return row === null ? null : { ...toRegistrationRequestRecord(row), coachName: row.coach.fullName, coachProvince: row.coach.province };
+}
+
+export async function findPendingRequestByNationalCode(nationalCode: string, excludeId?: string): Promise<{ id: string } | null> {
+  return getPrisma().studentRegistrationRequest.findFirst({
+    where: { nationalCode, status: "PENDING", ...(excludeId === undefined ? {} : { id: { not: excludeId } }) },
+    select: { id: true },
+  });
+}
+
+export async function findRequestNationalCodes(codes: string[]): Promise<Set<string>> {
+  if (codes.length === 0) return new Set();
+  const rows = await getPrisma().studentRegistrationRequest.findMany({
+    where: { nationalCode: { in: codes }, status: { in: ["PENDING", "REJECTED"] } },
+    select: { nationalCode: true },
+  });
+  return new Set(rows.map((row) => row.nationalCode));
+}
+
+export async function createRegistrationRequest(data: NewRegistrationRequestData): Promise<RegistrationRequestRecord> {
+  const row = await getPrisma().studentRegistrationRequest.create({
+    data: {
+      fullName: data.fullName,
+      gender: data.gender,
+      nationalCode: data.nationalCode,
+      birthDate: data.birthDate,
+      mobile: data.mobile,
+      insuranceDate: data.insuranceDate,
+      tkdBankChargeYear: data.tkdBankChargeYear,
+      beltCertificateDate: data.beltCertificateDate,
+      beltId: data.beltId,
+      coachId: data.coachId,
+    },
+    select: registrationRequestSelection,
+  });
+
+  return toRegistrationRequestRecord(row);
+}
+
+// Coach edits a not-yet-approved request; every edit resubmits it for review.
+export async function updateRegistrationRequest(id: string, data: RegistrationRequestEditData): Promise<RegistrationRequestRecord | null> {
+  const applied = await getPrisma().studentRegistrationRequest.updateMany({
+    where: { id, status: { in: ["PENDING", "REJECTED"] } },
+    data: {
+      fullName: data.fullName,
+      nationalCode: data.nationalCode,
+      birthDate: data.birthDate,
+      mobile: data.mobile,
+      insuranceDate: data.insuranceDate,
+      tkdBankChargeYear: data.tkdBankChargeYear,
+      beltCertificateDate: data.beltCertificateDate,
+      beltId: data.beltId,
+      // Back under review with a clean slate.
+      status: "PENDING",
+      reviewNote: null,
+      reviewedById: null,
+      reviewedAt: null,
+    },
+  });
+  if (applied.count === 0) return null;
+
+  const row = await getPrisma().studentRegistrationRequest.findUnique({ where: { id }, select: registrationRequestSelection });
+  return row ? toRegistrationRequestRecord(row) : null;
+}
+
+// The province admin can correct the requested belt while the request is pending.
+export async function updateRegistrationRequestBelt(id: string, beltId: string): Promise<RegistrationRequestRecord | null> {
+  const applied = await getPrisma().studentRegistrationRequest.updateMany({ where: { id, status: "PENDING" }, data: { beltId } });
+  if (applied.count === 0) return null;
+
+  const row = await getPrisma().studentRegistrationRequest.findUnique({ where: { id }, select: registrationRequestSelection });
+  return row ? toRegistrationRequestRecord(row) : null;
+}
+
+// Replaces the request photo; returns the previous file id for cleanup.
+export async function setRegistrationRequestPhoto(id: string, fileId: string): Promise<string | null> {
+  const row = await getPrisma().studentRegistrationRequest.findUnique({ where: { id }, select: { photoFileId: true, status: true } });
+  if (!row || row.status === "APPROVED") return null;
+
+  await getPrisma().studentRegistrationRequest.update({ where: { id }, data: { photoFileId: fileId } });
+  return row.photoFileId;
+}
+
+// Approving a request creates the real student row in the same transaction —
+// the registration data becomes a student only at this moment. A concurrent
+// approval of another coach's request for the same person fails with 409.
+export async function decideRegistrationRequest(id: string, input: RegistrationDecisionInput): Promise<RegistrationRequestRecord | null> {
   return getPrisma().$transaction(async (tx) => {
-    const data =
-      input.status === "APPROVED"
-        ? { profileStatus: "APPROVED" as const, profileNote: null, approvedById: input.reviewedById, approvedAt: new Date() }
-        : { profileStatus: "REJECTED" as const, profileNote: input.note, approvedById: input.reviewedById, approvedAt: null };
+    const request = await tx.studentRegistrationRequest.findUnique({ where: { id }, select: registrationRequestSelection });
+    if (!request || request.status !== "PENDING") return null;
 
-    const applied = await tx.student.updateMany({ where: { id, profileStatus: { in: ["PENDING", "REJECTED"] } }, data });
-    if (applied.count === 0) return null;
+    if (input.status === "REJECTED") {
+      const rejected = await tx.studentRegistrationRequest.update({
+        where: { id },
+        data: { status: "REJECTED", reviewNote: input.note, reviewedById: input.reviewedById, reviewedAt: new Date() },
+        select: registrationRequestSelection,
+      });
+      return toRegistrationRequestRecord(rejected);
+    }
 
-    return tx.student.findUnique({ where: { id }, select: studentSelection }).then((row) => (row ? toStudentRecord(row) : null));
+    const owner = await tx.student.findUnique({ where: { nationalCode: request.nationalCode }, select: { id: true } });
+    if (owner) throw new AppError(409, "CONFLICT", "هنرجوی تأیید شده ای با این کد ملی وجود دارد و درخواست قابل تأیید نیست");
+
+    const student = await tx.student.create({
+      data: {
+        fullName: request.fullName,
+        gender: request.gender,
+        nationalCode: request.nationalCode,
+        birthDate: request.birthDate,
+        mobile: request.mobile,
+        insuranceDate: request.insuranceDate,
+        tkdBankChargeYear: request.tkdBankChargeYear,
+        beltCertificateDate: request.beltCertificateDate,
+        beltId: request.beltId,
+        coachId: request.coachId,
+        profileStatus: "APPROVED",
+        approvedById: input.reviewedById,
+        approvedAt: new Date(),
+      },
+      select: { id: true },
+    });
+    if (request.photoFileId) {
+      await tx.studentDocument.create({ data: { studentId: student.id, type: "PHOTO", fileId: request.photoFileId } });
+    }
+
+    const approved = await tx.studentRegistrationRequest.update({
+      where: { id },
+      data: { status: "APPROVED", reviewNote: null, reviewedById: input.reviewedById, reviewedAt: new Date(), studentId: student.id },
+      select: registrationRequestSelection,
+    });
+    return toRegistrationRequestRecord(approved);
   });
 }
 

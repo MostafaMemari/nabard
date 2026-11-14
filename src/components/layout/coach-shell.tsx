@@ -1,6 +1,6 @@
 "use client";
 
-import { ClipboardListIcon, HouseIcon, TrophyIcon, UsersIcon } from "lucide-react";
+import { ClipboardListIcon, HouseIcon, InboxIcon, TrophyIcon, UsersIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import { roleLabels, useMe } from "@/features/auth";
 import { AppSidebar, type SidebarNavGroup, type SidebarNavItem, type SidebarUser } from "./app-sidebar";
@@ -10,6 +10,7 @@ import { MobileBottomNav } from "./mobile-bottom-nav";
 const home: SidebarNavItem = { id: "home", label: "خانه", href: "/coach", icon: HouseIcon };
 const competitions: SidebarNavItem = { id: "competitions", label: "مسابقات", href: "/coach/competitions", icon: TrophyIcon };
 const students: SidebarNavItem = { id: "students", label: "هنرجویان", href: "/coach/students", icon: UsersIcon };
+const requests: SidebarNavItem = { id: "requests", label: "درخواست ها", href: "/coach/requests", icon: InboxIcon };
 const registrations: SidebarNavItem = {
   id: "registrations",
   label: "ثبت نام های من",
@@ -18,7 +19,7 @@ const registrations: SidebarNavItem = {
   icon: ClipboardListIcon,
 };
 
-export const coachNavItems: SidebarNavItem[] = [home, competitions, students, registrations];
+export const coachNavItems: SidebarNavItem[] = [home, competitions, students, requests, registrations];
 
 const navGroups: SidebarNavGroup[] = [{ items: coachNavItems }];
 

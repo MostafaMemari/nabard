@@ -11,6 +11,7 @@
 export type * from './models/County'
 export type * from './models/User'
 export type * from './models/Student'
+export type * from './models/StudentRegistrationRequest'
 export type * from './models/Belt'
 export type * from './models/AgeCategory'
 export type * from './models/WeightClass'

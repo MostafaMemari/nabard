@@ -4,17 +4,17 @@ import { BeltChip, DescriptionList, StatusBadge } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import type { Belt } from "@/features/base-data";
 import { formatJalaliDate, toPersianDigits } from "@/lib/format";
-import type { StudentDetail } from "../types";
-import { profileStatusKey } from "../types";
+import type { RegistrationRequestDetail } from "../types";
+import { registrationStatusKey } from "../types";
 
 export function ReviewSideSummary({
-  student,
+  request,
   belt,
   working,
   onApprove,
   onReject,
 }: {
-  student: StudentDetail;
+  request: RegistrationRequestDetail;
   belt: Belt | null;
   working: boolean;
   onApprove: () => void;
@@ -23,59 +23,63 @@ export function ReviewSideSummary({
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-card">
       <div className="flex items-center justify-between gap-2">
-        <span className="text-base font-semibold">پروفایل هنرجو</span>
-        <StatusBadge status={profileStatusKey(student.profileStatus)} />
+        <span className="text-base font-semibold">درخواست ثبت هنرجو</span>
+        <StatusBadge status={registrationStatusKey(request.status)} />
       </div>
 
-      {student.profileStatus === "REJECTED" && student.profileNote ? (
-        <p className="rounded-lg bg-warning-bg px-3 py-2 text-subtle text-warning">{student.profileNote}</p>
+      {request.status === "REJECTED" && request.reviewNote ? (
+        <p className="rounded-lg bg-warning-bg px-3 py-2 text-subtle text-warning">{request.reviewNote}</p>
       ) : null}
 
       <DescriptionList
         items={[
-          { term: "مربی", value: student.coachName },
-          { term: "کد ملی", value: <span className="tabular-nums">{student.nationalCode}</span> },
+          { term: "مربی", value: request.coachName },
+          { term: "کد ملی", value: <span className="tabular-nums">{request.nationalCode}</span> },
           {
             term: "تلفن همراه",
             value:
-              student.mobile !== null ? (
+              request.mobile !== null ? (
                 <span dir="ltr" className="tabular-nums">
-                  {student.mobile}
+                  {request.mobile}
                 </span>
               ) : (
                 "ثبت نشده"
               ),
           },
-          { term: "تاریخ تولد", value: formatJalaliDate(new Date(student.birthDate)) },
+          { term: "تاریخ تولد", value: formatJalaliDate(new Date(request.birthDate)) },
           {
             term: "تاریخ حکم کمربند",
-            value: student.beltCertificateDate !== null ? formatJalaliDate(new Date(student.beltCertificateDate)) : "ثبت نشده",
+            value: request.beltCertificateDate !== null ? formatJalaliDate(new Date(request.beltCertificateDate)) : "ثبت نشده",
           },
           {
             term: "تاریخ بیمه ورزشی",
-            value: student.insuranceDate !== null ? formatJalaliDate(new Date(student.insuranceDate)) : "ثبت نشده",
+            value: request.insuranceDate !== null ? formatJalaliDate(new Date(request.insuranceDate)) : "ثبت نشده",
           },
           {
             term: "سال شارژ بانک اطلاعات تکواندو",
-            value: student.tkdBankChargeYear !== null ? toPersianDigits(student.tkdBankChargeYear) : "ثبت نشده",
+            value: request.tkdBankChargeYear !== null ? toPersianDigits(request.tkdBankChargeYear) : "ثبت نشده",
           },
           { term: "کمربند", value: belt ? <BeltChip belt={belt} /> : "نامشخص" },
-          { term: "تاریخ ثبت", value: formatJalaliDate(new Date(student.createdAt)) },
+          { term: "تاریخ ثبت", value: formatJalaliDate(new Date(request.createdAt)) },
         ]}
       />
 
-      {student.profileStatus !== "APPROVED" ? (
+      {request.status === "PENDING" ? (
         <div className="flex flex-col gap-2">
           <Button onClick={onApprove} disabled={working}>
-            تأیید پروفایل
+            تأیید و افزودن هنرجو
           </Button>
           <Button variant="outline" className="text-danger" onClick={onReject} disabled={working}>
-            رد پروفایل
+            رد درخواست
           </Button>
         </div>
+      ) : request.status === "REJECTED" ? (
+        <p className="text-subtle text-muted-foreground">
+          این درخواست رد شده است؛ پس از اینکه مربی اطلاعات را اصلاح و دوباره ارسال کرد، برای بررسی می آید
+        </p>
       ) : (
         <p className="text-subtle text-muted-foreground">
-          {student.approvedAt ? `در تاریخ ${formatJalaliDate(new Date(student.approvedAt))} تأیید شده است` : "تأیید شده است"}
+          {request.reviewedAt ? `در تاریخ ${formatJalaliDate(new Date(request.reviewedAt))} تأیید شد و هنرجو اضافه شد` : "تأیید شده است"}
         </p>
       )}
     </div>

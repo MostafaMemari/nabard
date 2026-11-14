@@ -235,6 +235,7 @@ export type StoredFileWhereInput = {
   coachPhoto?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   studentDocuments?: Prisma.StudentDocumentListRelationFilter
   photoChangeRequest?: Prisma.XOR<Prisma.StudentPhotoChangeRequestNullableScalarRelationFilter, Prisma.StudentPhotoChangeRequestWhereInput> | null
+  registrationRequestPhoto?: Prisma.XOR<Prisma.StudentRegistrationRequestNullableScalarRelationFilter, Prisma.StudentRegistrationRequestWhereInput> | null
 }
 
 export type StoredFileOrderByWithRelationInput = {
@@ -248,6 +249,7 @@ export type StoredFileOrderByWithRelationInput = {
   coachPhoto?: Prisma.UserOrderByWithRelationInput
   studentDocuments?: Prisma.StudentDocumentOrderByRelationAggregateInput
   photoChangeRequest?: Prisma.StudentPhotoChangeRequestOrderByWithRelationInput
+  registrationRequestPhoto?: Prisma.StudentRegistrationRequestOrderByWithRelationInput
 }
 
 export type StoredFileWhereUniqueInput = Prisma.AtLeast<{
@@ -264,6 +266,7 @@ export type StoredFileWhereUniqueInput = Prisma.AtLeast<{
   coachPhoto?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   studentDocuments?: Prisma.StudentDocumentListRelationFilter
   photoChangeRequest?: Prisma.XOR<Prisma.StudentPhotoChangeRequestNullableScalarRelationFilter, Prisma.StudentPhotoChangeRequestWhereInput> | null
+  registrationRequestPhoto?: Prisma.XOR<Prisma.StudentRegistrationRequestNullableScalarRelationFilter, Prisma.StudentRegistrationRequestWhereInput> | null
 }, "id" | "objectKey">
 
 export type StoredFileOrderByWithAggregationInput = {
@@ -305,6 +308,7 @@ export type StoredFileCreateInput = {
   coachPhoto?: Prisma.UserCreateNestedOneWithoutPhotoFileInput
   studentDocuments?: Prisma.StudentDocumentCreateNestedManyWithoutFileInput
   photoChangeRequest?: Prisma.StudentPhotoChangeRequestCreateNestedOneWithoutNewFileInput
+  registrationRequestPhoto?: Prisma.StudentRegistrationRequestCreateNestedOneWithoutPhotoFileInput
 }
 
 export type StoredFileUncheckedCreateInput = {
@@ -318,6 +322,7 @@ export type StoredFileUncheckedCreateInput = {
   coachPhoto?: Prisma.UserUncheckedCreateNestedOneWithoutPhotoFileInput
   studentDocuments?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutFileInput
   photoChangeRequest?: Prisma.StudentPhotoChangeRequestUncheckedCreateNestedOneWithoutNewFileInput
+  registrationRequestPhoto?: Prisma.StudentRegistrationRequestUncheckedCreateNestedOneWithoutPhotoFileInput
 }
 
 export type StoredFileUpdateInput = {
@@ -331,6 +336,7 @@ export type StoredFileUpdateInput = {
   coachPhoto?: Prisma.UserUpdateOneWithoutPhotoFileNestedInput
   studentDocuments?: Prisma.StudentDocumentUpdateManyWithoutFileNestedInput
   photoChangeRequest?: Prisma.StudentPhotoChangeRequestUpdateOneWithoutNewFileNestedInput
+  registrationRequestPhoto?: Prisma.StudentRegistrationRequestUpdateOneWithoutPhotoFileNestedInput
 }
 
 export type StoredFileUncheckedUpdateInput = {
@@ -344,6 +350,7 @@ export type StoredFileUncheckedUpdateInput = {
   coachPhoto?: Prisma.UserUncheckedUpdateOneWithoutPhotoFileNestedInput
   studentDocuments?: Prisma.StudentDocumentUncheckedUpdateManyWithoutFileNestedInput
   photoChangeRequest?: Prisma.StudentPhotoChangeRequestUncheckedUpdateOneWithoutNewFileNestedInput
+  registrationRequestPhoto?: Prisma.StudentRegistrationRequestUncheckedUpdateOneWithoutPhotoFileNestedInput
 }
 
 export type StoredFileCreateManyInput = {
@@ -440,6 +447,22 @@ export type StoredFileUpdateOneWithoutCoachPhotoNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StoredFileUpdateToOneWithWhereWithoutCoachPhotoInput, Prisma.StoredFileUpdateWithoutCoachPhotoInput>, Prisma.StoredFileUncheckedUpdateWithoutCoachPhotoInput>
 }
 
+export type StoredFileCreateNestedOneWithoutRegistrationRequestPhotoInput = {
+  create?: Prisma.XOR<Prisma.StoredFileCreateWithoutRegistrationRequestPhotoInput, Prisma.StoredFileUncheckedCreateWithoutRegistrationRequestPhotoInput>
+  connectOrCreate?: Prisma.StoredFileCreateOrConnectWithoutRegistrationRequestPhotoInput
+  connect?: Prisma.StoredFileWhereUniqueInput
+}
+
+export type StoredFileUpdateOneWithoutRegistrationRequestPhotoNestedInput = {
+  create?: Prisma.XOR<Prisma.StoredFileCreateWithoutRegistrationRequestPhotoInput, Prisma.StoredFileUncheckedCreateWithoutRegistrationRequestPhotoInput>
+  connectOrCreate?: Prisma.StoredFileCreateOrConnectWithoutRegistrationRequestPhotoInput
+  upsert?: Prisma.StoredFileUpsertWithoutRegistrationRequestPhotoInput
+  disconnect?: Prisma.StoredFileWhereInput | boolean
+  delete?: Prisma.StoredFileWhereInput | boolean
+  connect?: Prisma.StoredFileWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.StoredFileUpdateToOneWithWhereWithoutRegistrationRequestPhotoInput, Prisma.StoredFileUpdateWithoutRegistrationRequestPhotoInput>, Prisma.StoredFileUncheckedUpdateWithoutRegistrationRequestPhotoInput>
+}
+
 export type StoredFileCreateNestedOneWithoutPhotoChangeRequestInput = {
   create?: Prisma.XOR<Prisma.StoredFileCreateWithoutPhotoChangeRequestInput, Prisma.StoredFileUncheckedCreateWithoutPhotoChangeRequestInput>
   connectOrCreate?: Prisma.StoredFileCreateOrConnectWithoutPhotoChangeRequestInput
@@ -488,6 +511,7 @@ export type StoredFileCreateWithoutCoachPhotoInput = {
   createdAt?: Date | string
   studentDocuments?: Prisma.StudentDocumentCreateNestedManyWithoutFileInput
   photoChangeRequest?: Prisma.StudentPhotoChangeRequestCreateNestedOneWithoutNewFileInput
+  registrationRequestPhoto?: Prisma.StudentRegistrationRequestCreateNestedOneWithoutPhotoFileInput
 }
 
 export type StoredFileUncheckedCreateWithoutCoachPhotoInput = {
@@ -500,6 +524,7 @@ export type StoredFileUncheckedCreateWithoutCoachPhotoInput = {
   createdAt?: Date | string
   studentDocuments?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutFileInput
   photoChangeRequest?: Prisma.StudentPhotoChangeRequestUncheckedCreateNestedOneWithoutNewFileInput
+  registrationRequestPhoto?: Prisma.StudentRegistrationRequestUncheckedCreateNestedOneWithoutPhotoFileInput
 }
 
 export type StoredFileCreateOrConnectWithoutCoachPhotoInput = {
@@ -528,6 +553,7 @@ export type StoredFileUpdateWithoutCoachPhotoInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   studentDocuments?: Prisma.StudentDocumentUpdateManyWithoutFileNestedInput
   photoChangeRequest?: Prisma.StudentPhotoChangeRequestUpdateOneWithoutNewFileNestedInput
+  registrationRequestPhoto?: Prisma.StudentRegistrationRequestUpdateOneWithoutPhotoFileNestedInput
 }
 
 export type StoredFileUncheckedUpdateWithoutCoachPhotoInput = {
@@ -538,6 +564,75 @@ export type StoredFileUncheckedUpdateWithoutCoachPhotoInput = {
   objectKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  studentDocuments?: Prisma.StudentDocumentUncheckedUpdateManyWithoutFileNestedInput
+  photoChangeRequest?: Prisma.StudentPhotoChangeRequestUncheckedUpdateOneWithoutNewFileNestedInput
+  registrationRequestPhoto?: Prisma.StudentRegistrationRequestUncheckedUpdateOneWithoutPhotoFileNestedInput
+}
+
+export type StoredFileCreateWithoutRegistrationRequestPhotoInput = {
+  id?: string
+  mime: string
+  size: number
+  provider?: $Enums.StoredFileProvider
+  objectKey?: string | null
+  data?: runtime.Bytes | null
+  createdAt?: Date | string
+  coachPhoto?: Prisma.UserCreateNestedOneWithoutPhotoFileInput
+  studentDocuments?: Prisma.StudentDocumentCreateNestedManyWithoutFileInput
+  photoChangeRequest?: Prisma.StudentPhotoChangeRequestCreateNestedOneWithoutNewFileInput
+}
+
+export type StoredFileUncheckedCreateWithoutRegistrationRequestPhotoInput = {
+  id?: string
+  mime: string
+  size: number
+  provider?: $Enums.StoredFileProvider
+  objectKey?: string | null
+  data?: runtime.Bytes | null
+  createdAt?: Date | string
+  coachPhoto?: Prisma.UserUncheckedCreateNestedOneWithoutPhotoFileInput
+  studentDocuments?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutFileInput
+  photoChangeRequest?: Prisma.StudentPhotoChangeRequestUncheckedCreateNestedOneWithoutNewFileInput
+}
+
+export type StoredFileCreateOrConnectWithoutRegistrationRequestPhotoInput = {
+  where: Prisma.StoredFileWhereUniqueInput
+  create: Prisma.XOR<Prisma.StoredFileCreateWithoutRegistrationRequestPhotoInput, Prisma.StoredFileUncheckedCreateWithoutRegistrationRequestPhotoInput>
+}
+
+export type StoredFileUpsertWithoutRegistrationRequestPhotoInput = {
+  update: Prisma.XOR<Prisma.StoredFileUpdateWithoutRegistrationRequestPhotoInput, Prisma.StoredFileUncheckedUpdateWithoutRegistrationRequestPhotoInput>
+  create: Prisma.XOR<Prisma.StoredFileCreateWithoutRegistrationRequestPhotoInput, Prisma.StoredFileUncheckedCreateWithoutRegistrationRequestPhotoInput>
+  where?: Prisma.StoredFileWhereInput
+}
+
+export type StoredFileUpdateToOneWithWhereWithoutRegistrationRequestPhotoInput = {
+  where?: Prisma.StoredFileWhereInput
+  data: Prisma.XOR<Prisma.StoredFileUpdateWithoutRegistrationRequestPhotoInput, Prisma.StoredFileUncheckedUpdateWithoutRegistrationRequestPhotoInput>
+}
+
+export type StoredFileUpdateWithoutRegistrationRequestPhotoInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mime?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.IntFieldUpdateOperationsInput | number
+  provider?: Prisma.EnumStoredFileProviderFieldUpdateOperationsInput | $Enums.StoredFileProvider
+  objectKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  coachPhoto?: Prisma.UserUpdateOneWithoutPhotoFileNestedInput
+  studentDocuments?: Prisma.StudentDocumentUpdateManyWithoutFileNestedInput
+  photoChangeRequest?: Prisma.StudentPhotoChangeRequestUpdateOneWithoutNewFileNestedInput
+}
+
+export type StoredFileUncheckedUpdateWithoutRegistrationRequestPhotoInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  mime?: Prisma.StringFieldUpdateOperationsInput | string
+  size?: Prisma.IntFieldUpdateOperationsInput | number
+  provider?: Prisma.EnumStoredFileProviderFieldUpdateOperationsInput | $Enums.StoredFileProvider
+  objectKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  data?: Prisma.NullableBytesFieldUpdateOperationsInput | runtime.Bytes | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  coachPhoto?: Prisma.UserUncheckedUpdateOneWithoutPhotoFileNestedInput
   studentDocuments?: Prisma.StudentDocumentUncheckedUpdateManyWithoutFileNestedInput
   photoChangeRequest?: Prisma.StudentPhotoChangeRequestUncheckedUpdateOneWithoutNewFileNestedInput
 }
@@ -552,6 +647,7 @@ export type StoredFileCreateWithoutPhotoChangeRequestInput = {
   createdAt?: Date | string
   coachPhoto?: Prisma.UserCreateNestedOneWithoutPhotoFileInput
   studentDocuments?: Prisma.StudentDocumentCreateNestedManyWithoutFileInput
+  registrationRequestPhoto?: Prisma.StudentRegistrationRequestCreateNestedOneWithoutPhotoFileInput
 }
 
 export type StoredFileUncheckedCreateWithoutPhotoChangeRequestInput = {
@@ -564,6 +660,7 @@ export type StoredFileUncheckedCreateWithoutPhotoChangeRequestInput = {
   createdAt?: Date | string
   coachPhoto?: Prisma.UserUncheckedCreateNestedOneWithoutPhotoFileInput
   studentDocuments?: Prisma.StudentDocumentUncheckedCreateNestedManyWithoutFileInput
+  registrationRequestPhoto?: Prisma.StudentRegistrationRequestUncheckedCreateNestedOneWithoutPhotoFileInput
 }
 
 export type StoredFileCreateOrConnectWithoutPhotoChangeRequestInput = {
@@ -592,6 +689,7 @@ export type StoredFileUpdateWithoutPhotoChangeRequestInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coachPhoto?: Prisma.UserUpdateOneWithoutPhotoFileNestedInput
   studentDocuments?: Prisma.StudentDocumentUpdateManyWithoutFileNestedInput
+  registrationRequestPhoto?: Prisma.StudentRegistrationRequestUpdateOneWithoutPhotoFileNestedInput
 }
 
 export type StoredFileUncheckedUpdateWithoutPhotoChangeRequestInput = {
@@ -604,6 +702,7 @@ export type StoredFileUncheckedUpdateWithoutPhotoChangeRequestInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coachPhoto?: Prisma.UserUncheckedUpdateOneWithoutPhotoFileNestedInput
   studentDocuments?: Prisma.StudentDocumentUncheckedUpdateManyWithoutFileNestedInput
+  registrationRequestPhoto?: Prisma.StudentRegistrationRequestUncheckedUpdateOneWithoutPhotoFileNestedInput
 }
 
 export type StoredFileCreateWithoutStudentDocumentsInput = {
@@ -616,6 +715,7 @@ export type StoredFileCreateWithoutStudentDocumentsInput = {
   createdAt?: Date | string
   coachPhoto?: Prisma.UserCreateNestedOneWithoutPhotoFileInput
   photoChangeRequest?: Prisma.StudentPhotoChangeRequestCreateNestedOneWithoutNewFileInput
+  registrationRequestPhoto?: Prisma.StudentRegistrationRequestCreateNestedOneWithoutPhotoFileInput
 }
 
 export type StoredFileUncheckedCreateWithoutStudentDocumentsInput = {
@@ -628,6 +728,7 @@ export type StoredFileUncheckedCreateWithoutStudentDocumentsInput = {
   createdAt?: Date | string
   coachPhoto?: Prisma.UserUncheckedCreateNestedOneWithoutPhotoFileInput
   photoChangeRequest?: Prisma.StudentPhotoChangeRequestUncheckedCreateNestedOneWithoutNewFileInput
+  registrationRequestPhoto?: Prisma.StudentRegistrationRequestUncheckedCreateNestedOneWithoutPhotoFileInput
 }
 
 export type StoredFileCreateOrConnectWithoutStudentDocumentsInput = {
@@ -656,6 +757,7 @@ export type StoredFileUpdateWithoutStudentDocumentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coachPhoto?: Prisma.UserUpdateOneWithoutPhotoFileNestedInput
   photoChangeRequest?: Prisma.StudentPhotoChangeRequestUpdateOneWithoutNewFileNestedInput
+  registrationRequestPhoto?: Prisma.StudentRegistrationRequestUpdateOneWithoutPhotoFileNestedInput
 }
 
 export type StoredFileUncheckedUpdateWithoutStudentDocumentsInput = {
@@ -668,6 +770,7 @@ export type StoredFileUncheckedUpdateWithoutStudentDocumentsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   coachPhoto?: Prisma.UserUncheckedUpdateOneWithoutPhotoFileNestedInput
   photoChangeRequest?: Prisma.StudentPhotoChangeRequestUncheckedUpdateOneWithoutNewFileNestedInput
+  registrationRequestPhoto?: Prisma.StudentRegistrationRequestUncheckedUpdateOneWithoutPhotoFileNestedInput
 }
 
 
@@ -712,6 +815,7 @@ export type StoredFileSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   coachPhoto?: boolean | Prisma.StoredFile$coachPhotoArgs<ExtArgs>
   studentDocuments?: boolean | Prisma.StoredFile$studentDocumentsArgs<ExtArgs>
   photoChangeRequest?: boolean | Prisma.StoredFile$photoChangeRequestArgs<ExtArgs>
+  registrationRequestPhoto?: boolean | Prisma.StoredFile$registrationRequestPhotoArgs<ExtArgs>
   _count?: boolean | Prisma.StoredFileCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["storedFile"]>
 
@@ -750,6 +854,7 @@ export type StoredFileInclude<ExtArgs extends runtime.Types.Extensions.InternalA
   coachPhoto?: boolean | Prisma.StoredFile$coachPhotoArgs<ExtArgs>
   studentDocuments?: boolean | Prisma.StoredFile$studentDocumentsArgs<ExtArgs>
   photoChangeRequest?: boolean | Prisma.StoredFile$photoChangeRequestArgs<ExtArgs>
+  registrationRequestPhoto?: boolean | Prisma.StoredFile$registrationRequestPhotoArgs<ExtArgs>
   _count?: boolean | Prisma.StoredFileCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type StoredFileIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -761,6 +866,7 @@ export type $StoredFilePayload<ExtArgs extends runtime.Types.Extensions.Internal
     coachPhoto: Prisma.$UserPayload<ExtArgs> | null
     studentDocuments: Prisma.$StudentDocumentPayload<ExtArgs>[]
     photoChangeRequest: Prisma.$StudentPhotoChangeRequestPayload<ExtArgs> | null
+    registrationRequestPhoto: Prisma.$StudentRegistrationRequestPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1167,6 +1273,7 @@ export interface Prisma__StoredFileClient<T, Null = never, ExtArgs extends runti
   coachPhoto<T extends Prisma.StoredFile$coachPhotoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StoredFile$coachPhotoArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   studentDocuments<T extends Prisma.StoredFile$studentDocumentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StoredFile$studentDocumentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentDocumentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   photoChangeRequest<T extends Prisma.StoredFile$photoChangeRequestArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StoredFile$photoChangeRequestArgs<ExtArgs>>): Prisma.Prisma__StudentPhotoChangeRequestClient<runtime.Types.Result.GetResult<Prisma.$StudentPhotoChangeRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  registrationRequestPhoto<T extends Prisma.StoredFile$registrationRequestPhotoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.StoredFile$registrationRequestPhotoArgs<ExtArgs>>): Prisma.Prisma__StudentRegistrationRequestClient<runtime.Types.Result.GetResult<Prisma.$StudentRegistrationRequestPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1655,6 +1762,25 @@ export type StoredFile$photoChangeRequestArgs<ExtArgs extends runtime.Types.Exte
    */
   include?: Prisma.StudentPhotoChangeRequestInclude<ExtArgs> | null
   where?: Prisma.StudentPhotoChangeRequestWhereInput
+}
+
+/**
+ * StoredFile.registrationRequestPhoto
+ */
+export type StoredFile$registrationRequestPhotoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StudentRegistrationRequest
+   */
+  select?: Prisma.StudentRegistrationRequestSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StudentRegistrationRequest
+   */
+  omit?: Prisma.StudentRegistrationRequestOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StudentRegistrationRequestInclude<ExtArgs> | null
+  where?: Prisma.StudentRegistrationRequestWhereInput
 }
 
 /**

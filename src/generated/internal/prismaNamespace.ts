@@ -400,6 +400,7 @@ export const ModelName = {
   County: 'County',
   User: 'User',
   Student: 'Student',
+  StudentRegistrationRequest: 'StudentRegistrationRequest',
   Belt: 'Belt',
   AgeCategory: 'AgeCategory',
   WeightClass: 'WeightClass',
@@ -432,7 +433,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "county" | "user" | "student" | "belt" | "ageCategory" | "weightClass" | "competition" | "competitionCounty" | "coachCountyChangeRequest" | "studentTransfer" | "studentPhotoChangeRequest" | "studentProvinceChangeRequest" | "auditLog" | "deadlineExtension" | "storedFile" | "studentDocument" | "payment" | "loginFailure" | "registration" | "refund"
+    modelProps: "county" | "user" | "student" | "studentRegistrationRequest" | "belt" | "ageCategory" | "weightClass" | "competition" | "competitionCounty" | "coachCountyChangeRequest" | "studentTransfer" | "studentPhotoChangeRequest" | "studentProvinceChangeRequest" | "auditLog" | "deadlineExtension" | "storedFile" | "studentDocument" | "payment" | "loginFailure" | "registration" | "refund"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -655,6 +656,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.StudentCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.StudentCountAggregateOutputType> | number
+        }
+      }
+    }
+    StudentRegistrationRequest: {
+      payload: Prisma.$StudentRegistrationRequestPayload<ExtArgs>
+      fields: Prisma.StudentRegistrationRequestFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.StudentRegistrationRequestFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentRegistrationRequestPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.StudentRegistrationRequestFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentRegistrationRequestPayload>
+        }
+        findFirst: {
+          args: Prisma.StudentRegistrationRequestFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentRegistrationRequestPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.StudentRegistrationRequestFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentRegistrationRequestPayload>
+        }
+        findMany: {
+          args: Prisma.StudentRegistrationRequestFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentRegistrationRequestPayload>[]
+        }
+        create: {
+          args: Prisma.StudentRegistrationRequestCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentRegistrationRequestPayload>
+        }
+        createMany: {
+          args: Prisma.StudentRegistrationRequestCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.StudentRegistrationRequestCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentRegistrationRequestPayload>[]
+        }
+        delete: {
+          args: Prisma.StudentRegistrationRequestDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentRegistrationRequestPayload>
+        }
+        update: {
+          args: Prisma.StudentRegistrationRequestUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentRegistrationRequestPayload>
+        }
+        deleteMany: {
+          args: Prisma.StudentRegistrationRequestDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.StudentRegistrationRequestUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.StudentRegistrationRequestUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentRegistrationRequestPayload>[]
+        }
+        upsert: {
+          args: Prisma.StudentRegistrationRequestUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$StudentRegistrationRequestPayload>
+        }
+        aggregate: {
+          args: Prisma.StudentRegistrationRequestAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateStudentRegistrationRequest>
+        }
+        groupBy: {
+          args: Prisma.StudentRegistrationRequestGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StudentRegistrationRequestGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.StudentRegistrationRequestCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.StudentRegistrationRequestCountAggregateOutputType> | number
         }
       }
     }
@@ -1992,7 +2067,7 @@ export const StudentScalarFieldEnum = {
   nationalCode: 'nationalCode',
   birthDate: 'birthDate',
   insuranceDate: 'insuranceDate',
-  tkdBankChargeDate: 'tkdBankChargeDate',
+  tkdBankChargeYear: 'tkdBankChargeYear',
   mobile: 'mobile',
   beltCertificateDate: 'beltCertificateDate',
   beltId: 'beltId',
@@ -2006,6 +2081,31 @@ export const StudentScalarFieldEnum = {
 } as const
 
 export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]
+
+
+export const StudentRegistrationRequestScalarFieldEnum = {
+  id: 'id',
+  coachId: 'coachId',
+  fullName: 'fullName',
+  gender: 'gender',
+  nationalCode: 'nationalCode',
+  birthDate: 'birthDate',
+  insuranceDate: 'insuranceDate',
+  tkdBankChargeYear: 'tkdBankChargeYear',
+  mobile: 'mobile',
+  beltCertificateDate: 'beltCertificateDate',
+  beltId: 'beltId',
+  photoFileId: 'photoFileId',
+  status: 'status',
+  reviewNote: 'reviewNote',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  studentId: 'studentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentRegistrationRequestScalarFieldEnum = (typeof StudentRegistrationRequestScalarFieldEnum)[keyof typeof StudentRegistrationRequestScalarFieldEnum]
 
 
 export const BeltScalarFieldEnum = {
@@ -2396,6 +2496,20 @@ export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'Int'
+ */
+export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+    
+
+
+/**
+ * Reference to a field of type 'Int[]'
+ */
+export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+/**
  * Reference to a field of type 'ProfileStatus'
  */
 export type EnumProfileStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ProfileStatus'>
@@ -2410,16 +2524,16 @@ export type ListEnumProfileStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
- * Reference to a field of type 'Int'
+ * Reference to a field of type 'StudentRegistrationStatus'
  */
-export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>
+export type EnumStudentRegistrationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentRegistrationStatus'>
     
 
 
 /**
- * Reference to a field of type 'Int[]'
+ * Reference to a field of type 'StudentRegistrationStatus[]'
  */
-export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+export type ListEnumStudentRegistrationStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StudentRegistrationStatus[]'>
     
 
 
@@ -2856,6 +2970,7 @@ export type GlobalOmitConfig = {
   county?: Prisma.CountyOmit
   user?: Prisma.UserOmit
   student?: Prisma.StudentOmit
+  studentRegistrationRequest?: Prisma.StudentRegistrationRequestOmit
   belt?: Prisma.BeltOmit
   ageCategory?: Prisma.AgeCategoryOmit
   weightClass?: Prisma.WeightClassOmit

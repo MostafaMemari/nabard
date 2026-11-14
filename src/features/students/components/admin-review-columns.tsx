@@ -1,11 +1,11 @@
 "use client";
 
 import { Avatar, type DataTableColumn, StatusBadge } from "@/components/shared";
-import { formatJalaliDate, toPersianDigits } from "@/lib/format";
-import type { PendingReviewStudent } from "../types";
-import { profileStatusKey } from "../types";
+import { formatJalaliDate } from "@/lib/format";
+import type { RegistrationRequestDetail } from "../types";
+import { registrationStatusKey } from "../types";
 
-export function useAdminReviewColumns(): DataTableColumn<PendingReviewStudent>[] {
+export function useAdminReviewColumns(): DataTableColumn<RegistrationRequestDetail>[] {
   return [
     {
       id: "student",
@@ -21,12 +21,12 @@ export function useAdminReviewColumns(): DataTableColumn<PendingReviewStudent>[]
     { id: "coach", header: "مربی", cell: (row) => row.coachName, sortValue: (row) => row.coachName },
     { id: "nationalCode", header: "کد ملی", cell: (row) => <span className="tabular-nums">{row.nationalCode}</span>, minScreen: "lg" },
     {
-      id: "documents",
-      header: "مدارک",
-      cell: (row) => <span className="tabular-nums">{`${toPersianDigits(row.documents.length)} از ۴`}</span>,
+      id: "photo",
+      header: "عکس پرسنلی",
+      cell: (row) => <span className="text-subtle">{row.photoUrl ? "بارگذاری شده" : "بارگذاری نشده"}</span>,
       minScreen: "lg",
     },
     { id: "createdAt", header: "تاریخ", cell: (row) => formatJalaliDate(new Date(row.createdAt)), minScreen: "xl" },
-    { id: "status", header: "وضعیت", cell: (row) => <StatusBadge status={profileStatusKey(row.profileStatus)} /> },
+    { id: "status", header: "وضعیت", cell: (row) => <StatusBadge status={registrationStatusKey(row.status)} /> },
   ];
 }

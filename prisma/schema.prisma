@@ -146,6 +146,12 @@ enum ProfileStatus {
   REJECTED @map("rejected")
 }
 
+enum StudentRegistrationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
 enum StoredFileProvider {
   DB @map("db")
   R2 @map("r2")
@@ -202,6 +208,8 @@ model User {
   refunds                Refund[]                       @relation("RefundCoach")
   processedRefunds       Refund[]                       @relation("RefundProcessedBy")
   reviewedProfiles       Student[]                      @relation("StudentProfileReviewedBy")
+  registrationRequests         StudentRegistrationRequest[] @relation("RegistrationRequestCoach")
+  decidedRegistrationRequests  StudentRegistrationRequest[] @relation("RegistrationRequestReviewedBy")
   countyChangeRequests   CoachCountyChangeRequest[]     @relation("CountyChangeCoach")
   decidedCountyChanges   CoachCountyChangeRequest[]     @relation("CountyChangeDecidedBy")
   transfersFrom          StudentTransfer[]              @relation("TransferFromCoach")
@@ -250,6 +258,8 @@ model Student {
 
   documents StudentDocument[]
 
+  registrationRequests StudentRegistrationRequest[] @relation("RegistrationRequestStudent")
+
   registrations          Registration[]
   transfers              StudentTransfer[]              @relation("StudentTransferStudent")
   photoChangeRequests    StudentPhotoChangeRequest[]    @relation("StudentPhotoChangeStudent")
@@ -260,6 +270,51 @@ model Student {
 
   @@index([coachId])
   @@map("students")
+}
+
+// A coach's registration request for a new student lives here — not in the
+// students table — until a province admin approves it. A rejected request
+// never blocks the national code: another coach can register the same person
+// later, and the same coach can edit and resubmit the rejected request.
+model StudentRegistrationRequest {
+  id                  String                     @id @default(uuid()) @map("id")
+  coachId             String                     @map("coach_id")
+  coach               User                       @relation("RegistrationRequestCoach", fields: [coachId], references: [id])
+  fullName            String                     @map("full_name") @db.VarChar(80)
+  gender              Gender                     @map("gender")
+  nationalCode        String                     @map("national_code") @db.VarChar(10)
+  birthDate           DateTime                   @map("birth_date") @db.Date
+
+  insuranceDate DateTime? @map("insurance_date") @db.Date
+  tkdBankChargeYear Int? @map("tkd_bank_charge_year")
+
+  mobile              String?                    @map("mobile") @db.VarChar(11)
+  beltCertificateDate DateTime?                  @map("belt_certificate_date") @db.Date
+
+  beltId String @map("belt_id")
+  belt   Belt   @relation(fields: [beltId], references: [id])
+
+  // Personal photo uploaded by the coach while the request is under review.
+  // It becomes the student's PHOTO document on approval.
+  photoFileId String?      @unique @map("photo_file_id")
+  photoFile   StoredFile?  @relation("RegistrationRequestPhoto", fields: [photoFileId], references: [id], onDelete: SetNull)
+
+  status       StudentRegistrationStatus  @default(PENDING) @map("status")
+  reviewNote   String?                    @map("review_note") @db.VarChar(500)
+  reviewedById String?                    @map("reviewed_by_id")
+  reviewedBy   User?                      @relation("RegistrationRequestReviewedBy", fields: [reviewedById], references: [id])
+  reviewedAt   DateTime?                  @map("reviewed_at")
+
+  // Set when the request is approved and the student row was created.
+  studentId String?    @unique @map("student_id")
+  student   Student?   @relation("RegistrationRequestStudent", fields: [studentId], references: [id])
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([coachId, status])
+  @@index([nationalCode])
+  @@map("student_registration_requests")
 }
 
 // ───────────── Base data (same as the existing schema) ─────────────
@@ -278,6 +333,7 @@ model Belt {
   isActive Boolean  @default(true) @map("is_active")
 
   students Student[]
+  registrationRequests StudentRegistrationRequest[]
   minFor   Competition[] @relation("CompetitionMinBelt")
   maxFor   Competition[] @relation("CompetitionMaxBelt")
 
@@ -533,6 +589,7 @@ model StoredFile {
   coachPhoto         User?                      @relation("CoachPhotoFile")
   studentDocuments   StudentDocument[]
   photoChangeRequest StudentPhotoChangeRequest? @relation("StudentPhotoChangeFile")
+  registrationRequestPhoto StudentRegistrationRequest? @relation("RegistrationRequestPhoto")
 
   @@map("stored_files")
 }

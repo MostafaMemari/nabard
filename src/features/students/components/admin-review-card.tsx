@@ -3,11 +3,11 @@
 import { ChevronLeftIcon } from "lucide-react";
 import Link from "next/link";
 import { Avatar, MobileCardChips, MobileCardLine, StatusBadge } from "@/components/shared";
-import { formatJalaliDate, toPersianDigits } from "@/lib/format";
-import type { PendingReviewStudent } from "../types";
-import { profileStatusKey } from "../types";
+import { formatJalaliDate } from "@/lib/format";
+import type { RegistrationRequestDetail } from "../types";
+import { registrationStatusKey } from "../types";
 
-export function AdminReviewCard({ student, href }: { student: PendingReviewStudent; href: string }) {
+export function AdminReviewCard({ student, href }: { student: RegistrationRequestDetail; href: string }) {
   return (
     <div className="rounded-xl border border-border bg-card shadow-card">
       <div className="p-4 pb-2.5">
@@ -17,7 +17,7 @@ export function AdminReviewCard({ student, href }: { student: PendingReviewStude
         >
           <Avatar id={student.id} name={student.fullName} size="md" src={student.photoUrl ?? undefined} />
           <span className="min-w-0 flex-1 truncate text-sm font-medium">{student.fullName}</span>
-          <StatusBadge status={profileStatusKey(student.profileStatus)} />
+          <StatusBadge status={registrationStatusKey(student.status)} />
           <ChevronLeftIcon aria-hidden className="size-4 shrink-0 text-muted-foreground" />
         </Link>
       </div>
@@ -25,7 +25,9 @@ export function AdminReviewCard({ student, href }: { student: PendingReviewStude
         <MobileCardLine label="مربی" value={student.coachName} />
         <MobileCardLine label="کد ملی" value={<span className="tabular-nums">{student.nationalCode}</span>} />
         <MobileCardChips>
-          <span className="text-subtle text-muted-foreground">{`${toPersianDigits(student.documents.length)} از ۴ مدرک`}</span>
+          <span className="text-subtle text-muted-foreground">
+            {student.photoUrl ? "عکس پرسنلی: بارگذاری شده" : "عکس پرسنلی: بارگذاری نشده"}
+          </span>
           <span className="text-subtle text-muted-foreground">{formatJalaliDate(new Date(student.createdAt))}</span>
         </MobileCardChips>
       </div>

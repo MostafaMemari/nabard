@@ -29,6 +29,9 @@ export const auditActions = {
   provinceChangeRequested: "province_change.requested",
   provinceChangeApproved: "province_change.approved",
   provinceChangeRejected: "province_change.rejected",
+  registrationRequested: "registration_request.requested",
+  registrationApproved: "registration_request.approved",
+  registrationRejected: "registration_request.rejected",
 } as const;
 
 export const auditEntityTypes = {
@@ -42,6 +45,7 @@ export const auditEntityTypes = {
   registration: "registration",
   photoChange: "photo_change",
   provinceChange: "province_change",
+  registrationRequest: "registration_request",
 } as const;
 
 export type AuditEntry = {

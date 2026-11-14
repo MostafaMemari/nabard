@@ -54,7 +54,7 @@ export async function countRefunds(province: Province, status: RefundStatus): Pr
 }
 
 export async function countPendingProfiles(province: Province): Promise<number> {
-  return getPrisma().student.count({ where: { profileStatus: "PENDING", coach: { province } } });
+  return getPrisma().studentRegistrationRequest.count({ where: { status: "PENDING", coach: { province } } });
 }
 
 export async function countPendingCountyChanges(province: Province): Promise<number> {

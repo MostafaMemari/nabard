@@ -68,8 +68,8 @@ export const studentListQuerySchema = z.object({
   pageSize: z.coerce.number().int().min(1).max(100).optional(),
 });
 
-export const pendingReviewQuerySchema = z.object({
-  status: z.enum(["PENDING", "REJECTED"]).optional(),
+export const registrationRequestListQuerySchema = z.object({
+  status: z.enum(["PENDING", "APPROVED", "REJECTED"]).optional(),
   page: z.coerce.number().int().min(1).optional(),
   pageSize: z.coerce.number().int().min(1).max(100).optional(),
 });
@@ -84,7 +84,7 @@ export type StudentFormValues = z.input<typeof studentSchema>;
 export type CreateStudentInput = z.output<typeof createStudentSchema>;
 export type UpdateStudentBeltInput = z.output<typeof updateStudentBeltSchema>;
 export type StudentListQuery = z.output<typeof studentListQuerySchema>;
-export type PendingReviewQuery = z.output<typeof pendingReviewQuerySchema>;
+export type RegistrationRequestListQuery = z.output<typeof registrationRequestListQuerySchema>;
 export type RejectProfileInput = z.output<typeof rejectProfileSchema>;
 
 export const emptyStudentForm: StudentFormValues = {

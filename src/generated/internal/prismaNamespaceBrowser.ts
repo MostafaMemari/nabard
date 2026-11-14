@@ -54,6 +54,7 @@ export const ModelName = {
   County: 'County',
   User: 'User',
   Student: 'Student',
+  StudentRegistrationRequest: 'StudentRegistrationRequest',
   Belt: 'Belt',
   AgeCategory: 'AgeCategory',
   WeightClass: 'WeightClass',
@@ -126,7 +127,7 @@ export const StudentScalarFieldEnum = {
   nationalCode: 'nationalCode',
   birthDate: 'birthDate',
   insuranceDate: 'insuranceDate',
-  tkdBankChargeDate: 'tkdBankChargeDate',
+  tkdBankChargeYear: 'tkdBankChargeYear',
   mobile: 'mobile',
   beltCertificateDate: 'beltCertificateDate',
   beltId: 'beltId',
@@ -140,6 +141,31 @@ export const StudentScalarFieldEnum = {
 } as const
 
 export type StudentScalarFieldEnum = (typeof StudentScalarFieldEnum)[keyof typeof StudentScalarFieldEnum]
+
+
+export const StudentRegistrationRequestScalarFieldEnum = {
+  id: 'id',
+  coachId: 'coachId',
+  fullName: 'fullName',
+  gender: 'gender',
+  nationalCode: 'nationalCode',
+  birthDate: 'birthDate',
+  insuranceDate: 'insuranceDate',
+  tkdBankChargeYear: 'tkdBankChargeYear',
+  mobile: 'mobile',
+  beltCertificateDate: 'beltCertificateDate',
+  beltId: 'beltId',
+  photoFileId: 'photoFileId',
+  status: 'status',
+  reviewNote: 'reviewNote',
+  reviewedById: 'reviewedById',
+  reviewedAt: 'reviewedAt',
+  studentId: 'studentId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type StudentRegistrationRequestScalarFieldEnum = (typeof StudentRegistrationRequestScalarFieldEnum)[keyof typeof StudentRegistrationRequestScalarFieldEnum]
 
 
 export const BeltScalarFieldEnum = {

@@ -43,7 +43,8 @@ function repoWith(overrides: Partial<StudentRepository> = {}): StudentRepository
       { id: "belt-blue", label: "آبی" },
     ]),
     findExistingNationalCodes: vi.fn(async () => new Set<string>()),
-    createStudents: vi.fn(async () => 2),
+    findRequestNationalCodes: vi.fn(async () => new Set<string>()),
+    createRegistrationRequests: vi.fn(async () => 2),
     ...overrides,
   } as unknown as StudentRepository;
 }
@@ -60,7 +61,7 @@ describe("importStudents authorization", () => {
     const result = await importStudents(repo, coachUser, "coach-1", await importFile([HEADER, ROW]));
 
     expect(result).toEqual({ imported: 2, errors: [] });
-    expect(repo.createStudents).toHaveBeenCalledWith([
+    expect(repo.createRegistrationRequests).toHaveBeenCalledWith([
       expect.objectContaining({
         fullName: "علی رضایی",
         nationalCode: "0012345678",
@@ -84,7 +85,7 @@ describe("importStudents authorization", () => {
     const result = await importStudents(repo, adminUser, "coach-2", await importFile([HEADER, ROW]));
 
     expect(result.imported).toBe(2);
-    expect(repo.createStudents).toHaveBeenCalledWith([expect.objectContaining({ coachId: "coach-2", gender: "MALE" })]);
+    expect(repo.createRegistrationRequests).toHaveBeenCalledWith([expect.objectContaining({ coachId: "coach-2", gender: "MALE" })]);
   });
 
   it("hides coaches of other provinces from admins", async () => {
@@ -118,8 +119,8 @@ describe("importStudents validation", () => {
     const result = await importStudents(repo, coachUser, "coach-1", await importFile([HEADER, ROW]));
 
     expect(result.imported).toBe(0);
-    expect(result.errors).toEqual([{ row: 2, message: "این کد ملی قبلاً ثبت شده است" }]);
-    expect(repo.createStudents).not.toHaveBeenCalled();
+    expect(result.errors).toEqual([{ row: 2, message: "هنرجوی تأیید شده ای با این کد ملی وجود دارد" }]);
+    expect(repo.createRegistrationRequests).not.toHaveBeenCalled();
   });
 
   it("reports a duplicate national code inside the file once per row", async () => {
@@ -136,7 +137,7 @@ describe("importStudents validation", () => {
 
     expect(result.imported).toBe(0);
     expect(result.errors[0]?.message).toContain("بنفش");
-    expect(repo.createStudents).not.toHaveBeenCalled();
+    expect(repo.createRegistrationRequests).not.toHaveBeenCalled();
   });
 
   it("matches belts ignoring persian digits and spaces", async () => {

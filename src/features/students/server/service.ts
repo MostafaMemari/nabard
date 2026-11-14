@@ -1,14 +1,16 @@
+import { type AuditRepository, auditActions, auditEntityTypes } from "@/features/audit";
 import type { Province } from "@/generated/client";
 import { AppError } from "@/lib/api";
 import type { ListResult } from "@/lib/pagination";
 import type { CurrentUser } from "@/lib/session";
 import { deleteStorageFileQuietly } from "@/lib/storage";
+import { readProfileImage } from "@/lib/storage/image";
 import type { Storage } from "@/lib/storage/types";
-import type { CreateStudentInput, PendingReviewQuery, StudentListQuery, UpdateStudentBeltInput } from "../schemas";
+import type { CreateStudentInput, RegistrationRequestListQuery, StudentListQuery, UpdateStudentBeltInput } from "../schemas";
 import type {
-  NewStudentData,
-  PendingReviewFilters,
-  PendingReviewStudent,
+  RegistrationRequestFilters,
+  RegistrationRequestRecord,
+  RegistrationRequestWithCoach,
   StudentDetail,
   StudentDocumentRecord,
   StudentFilters,
@@ -67,10 +69,6 @@ export function provinceOf(identity: UserIdentityRecord): Province {
   if (identity.province === null) throw forbidden();
 
   return identity.province;
-}
-
-function duplicateNationalCode(): AppError {
-  return new AppError(409, "CONFLICT", "این کد ملی قبلاً ثبت شده است");
 }
 
 function invalidBelt(): AppError {
@@ -169,15 +167,39 @@ export async function getStudent(repo: StudentRepository, storage: Storage, user
   };
 }
 
-export async function createStudent(repo: StudentRepository, user: CurrentUser, input: CreateStudentInput): Promise<StudentRecord> {
+function duplicateApprovedNationalCode(): AppError {
+  return new AppError(409, "CONFLICT", "هنرجوی تأیید شده ای با این کد ملی وجود دارد");
+}
+
+function pendingRequestExists(): AppError {
+  return new AppError(409, "CONFLICT", "برای این کد ملی یک درخواست ثبت هنرجو در انتظار بررسی وجود دارد");
+}
+
+function requestNotFound(): AppError {
+  return new AppError(404, "NOT_FOUND", "درخواست ثبت هنرجو یافت نشد");
+}
+
+function approvedRequestLocked(): AppError {
+  return new AppError(409, "CONFLICT", "این درخواست تأیید شده و قابل تغییر نیست");
+}
+
+// The coach registers a student as a request — not a student row. The data
+// becomes a real student only when a province admin approves the request.
+export async function createRegistrationRequest(
+  repo: StudentRepository,
+  audit: AuditRepository,
+  user: CurrentUser,
+  input: CreateStudentInput,
+): Promise<RegistrationRequestRecord> {
   const identity = await requireActiveUser(repo, user);
   if (identity.role !== "COACH") throw forbidden();
   if (!identity.gender) throw coachGenderMissing();
 
-  if (await repo.findNationalCodeOwner(input.nationalCode)) throw duplicateNationalCode();
+  if (await repo.findNationalCodeOwner(input.nationalCode)) throw duplicateApprovedNationalCode();
+  if (await repo.findPendingRequestByNationalCode(input.nationalCode)) throw pendingRequestExists();
   if (!(await repo.activeBeltExists(input.beltId))) throw invalidBelt();
 
-  const data: NewStudentData = {
+  const row = await repo.createRegistrationRequest({
     fullName: input.fullName,
     gender: identity.gender,
     nationalCode: input.nationalCode,
@@ -188,27 +210,72 @@ export async function createStudent(repo: StudentRepository, user: CurrentUser, 
     tkdBankChargeYear: input.tkdBankChargeYear ? Number(input.tkdBankChargeYear) : null,
     beltId: input.beltId,
     coachId: user.id,
-  };
+  });
 
-  return repo.createStudent(data);
+  await audit.createAuditLog({
+    actorId: user.id,
+    action: auditActions.registrationRequested,
+    entityType: auditEntityTypes.registrationRequest,
+    entityId: row.id,
+    details: { nationalCode: input.nationalCode },
+  });
+
+  return row;
 }
 
-// After registration the student profile is locked; the province admin can
-// only move the student between belts.
-export async function updateStudentBelt(
+// A rejected (or still pending) request can be corrected by its coach; every
+// edit resubmits it for review. Approved requests are locked history.
+export async function updateRegistrationRequest(
+  repo: StudentRepository,
+  user: CurrentUser,
+  id: string,
+  input: CreateStudentInput,
+): Promise<RegistrationRequestRecord> {
+  const identity = await requireActiveUser(repo, user);
+  if (identity.role !== "COACH") throw forbidden();
+
+  const request = await repo.findRegistrationRequestById(id);
+  if (!request || request.coachId !== user.id) throw requestNotFound();
+  if (request.status === "APPROVED") throw approvedRequestLocked();
+
+  if (await repo.findNationalCodeOwner(input.nationalCode)) throw duplicateApprovedNationalCode();
+  if (await repo.findPendingRequestByNationalCode(input.nationalCode, id)) throw pendingRequestExists();
+  if (!(await repo.activeBeltExists(input.beltId))) throw invalidBelt();
+
+  const updated = await repo.updateRegistrationRequest(id, {
+    fullName: input.fullName,
+    nationalCode: input.nationalCode,
+    birthDate: new Date(input.birthDate),
+    mobile: input.mobile,
+    beltCertificateDate: input.beltCertificateDate ? new Date(input.beltCertificateDate) : null,
+    insuranceDate: input.insuranceDate ? new Date(input.insuranceDate) : null,
+    tkdBankChargeYear: input.tkdBankChargeYear ? Number(input.tkdBankChargeYear) : null,
+    beltId: input.beltId,
+  });
+  if (!updated) throw approvedRequestLocked();
+
+  return updated;
+}
+
+// The province admin can correct the requested belt while the request is
+// under review; after approval the belt moves through the student page.
+export async function updateRegistrationRequestBelt(
   repo: StudentRepository,
   user: CurrentUser,
   id: string,
   input: UpdateStudentBeltInput,
-): Promise<StudentRecord> {
+): Promise<RegistrationRequestRecord> {
   const identity = await requireActiveUser(repo, user);
   if (identity.role !== "ADMIN") throw forbidden();
 
-  const student = await repo.findStudentById(id);
-  if (!student || student.coachProvince !== provinceOf(identity)) throw studentNotFound();
+  const request = await repo.findRegistrationRequestById(id);
+  if (!request || request.coachProvince !== provinceOf(identity)) throw requestNotFound();
   if (!(await repo.beltExists(input.beltId))) throw invalidBelt();
 
-  return repo.updateStudent(id, { beltId: input.beltId });
+  const updated = await repo.updateRegistrationRequestBelt(id, input.beltId);
+  if (!updated) throw new AppError(409, "CONFLICT", "این درخواست بررسی شده است و کمربند آن قابل تغییر نیست");
+
+  return updated;
 }
 
 export async function deleteStudent(repo: StudentRepository, storage: Storage, user: CurrentUser, id: string): Promise<{ id: string }> {
@@ -277,66 +344,142 @@ export async function readStudentDocument(
   return { stream: file.stream, mime: file.mime, size: file.size };
 }
 
-export async function listPendingReviewStudents(
+// Coaches see their own requests (all statuses); admins see their province's
+// requests that still need an action, unless a status filter is given.
+export async function listRegistrationRequests(
   repo: StudentRepository,
   storage: Storage,
   user: CurrentUser,
-  query: PendingReviewQuery,
-): Promise<ListResult<PendingReviewStudent>> {
+  query: RegistrationRequestListQuery,
+): Promise<ListResult<RegistrationRequestWithCoach>> {
   const identity = await requireActiveUser(repo, user);
-  if (identity.role !== "ADMIN") throw forbidden();
+
+  let filters: RegistrationRequestFilters;
+  if (identity.role === "COACH") {
+    filters = { coachId: user.id };
+  } else if (identity.role === "ADMIN") {
+    filters = { province: provinceOf(identity) };
+  } else if (identity.role === "SUPER_ADMIN") {
+    filters = {};
+  } else {
+    throw forbidden();
+  }
+
+  if (query.status) {
+    filters.status = query.status;
+  } else if (identity.role !== "COACH") {
+    filters.status = { in: ["PENDING", "REJECTED"] };
+  }
 
   const page = query.page ?? 1;
   const pageSize = Math.min(query.pageSize ?? DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
-  const filters: PendingReviewFilters = { province: provinceOf(identity), status: query.status };
 
-  const [total, students] = await Promise.all([
-    repo.countPendingReviewStudents(filters),
-    repo.findPendingReviewStudents(filters, (page - 1) * pageSize, pageSize),
+  const [total, requests] = await Promise.all([
+    repo.countRegistrationRequests(filters),
+    repo.findRegistrationRequests(filters, (page - 1) * pageSize, pageSize),
   ]);
 
-  // One batched url lookup for every photo and document on the page.
-  const urls = await resolveFileUrls(
-    storage,
-    students.flatMap((student) => [student.photoFileId, ...student.documents.map((document) => document.fileId)]),
-  );
-
-  return {
-    data: students.map((student) => {
-      const { photoFileId, ...rest } = student;
-      return {
-        ...rest,
-        documents: documentsWithUrls(student.documents, urls),
-        ...(photoFileId ? { photoUrl: urls.get(photoFileId) ?? null } : {}),
-      };
-    }),
-    meta: { page, pageSize, total },
-  };
+  return { data: await withPhotoUrls(storage, requests), meta: { page, pageSize, total } };
 }
 
-async function reviewProfile(
+export async function getRegistrationRequest(
   repo: StudentRepository,
+  storage: Storage,
+  user: CurrentUser,
+  id: string,
+): Promise<RegistrationRequestRecord> {
+  const identity = await requireActiveUser(repo, user);
+  const request = await repo.findRegistrationRequestById(id);
+  if (!request) throw requestNotFound();
+
+  const inScope =
+    identity.role === "SUPER_ADMIN" ||
+    (identity.role === "ADMIN" ? request.coachProvince === provinceOf(identity) : request.coachId === user.id);
+  if (!inScope) throw requestNotFound();
+
+  const [withUrl] = await withPhotoUrls(storage, [request]);
+  const { coachProvince: _province, ...record } = withUrl;
+  return record;
+}
+
+// The coach uploads or replaces the personal photo of a not-yet-approved
+// request; the province admin needs it before approving. On approval the
+// photo becomes the student's PHOTO document.
+export async function setRegistrationRequestPhoto(
+  repo: StudentRepository,
+  storage: Storage,
+  user: CurrentUser,
+  id: string,
+  file: File,
+): Promise<RegistrationRequestRecord> {
+  const identity = await requireActiveUser(repo, user);
+  if (identity.role !== "COACH") throw forbidden();
+
+  const request = await repo.findRegistrationRequestById(id);
+  if (!request || request.coachId !== user.id) throw requestNotFound();
+  if (request.status === "APPROVED") throw approvedRequestLocked();
+
+  const image = await readProfileImage(file);
+  const stored = await storage.put({ ...image, folder: "student-photos" });
+
+  try {
+    const previousFileId = await repo.setRegistrationRequestPhoto(id, stored.id);
+    if (previousFileId === null) {
+      throw approvedRequestLocked();
+    }
+    if (previousFileId) {
+      await deleteStorageFileQuietly(storage, previousFileId);
+    }
+    return { ...request, photoFileId: stored.id };
+  } catch (error) {
+    await deleteStorageFileQuietly(storage, stored.id);
+    throw error;
+  }
+}
+
+async function decideRequest(
+  repo: StudentRepository,
+  audit: AuditRepository,
   user: CurrentUser,
   id: string,
   status: "APPROVED" | "REJECTED",
   note: string | null,
-): Promise<StudentRecord> {
+): Promise<RegistrationRequestRecord> {
   const identity = await requireActiveUser(repo, user);
   if (identity.role !== "ADMIN") throw forbidden();
 
-  const student = await repo.findStudentById(id);
-  if (!student || student.coachProvince !== provinceOf(identity)) throw studentNotFound();
+  const request = await repo.findRegistrationRequestById(id);
+  if (!request || request.coachProvince !== provinceOf(identity)) throw requestNotFound();
 
-  const updated = await repo.updateProfileStatusFromPendingOrRejected(id, { status, note, reviewedById: user.id });
-  if (!updated) throw new AppError(409, "CONFLICT", "این پروفایل قبلا بررسی شده است");
+  const decided = await repo.decideRegistrationRequest(id, { status, note, reviewedById: user.id });
+  if (!decided) throw new AppError(409, "CONFLICT", "این درخواست قبلاً بررسی شده است");
 
-  return updated;
+  await audit.createAuditLog({
+    actorId: user.id,
+    action: status === "APPROVED" ? auditActions.registrationApproved : auditActions.registrationRejected,
+    entityType: auditEntityTypes.registrationRequest,
+    entityId: id,
+    details: { coachId: request.coachId },
+  });
+
+  return decided;
 }
 
-export function approveStudentProfile(repo: StudentRepository, user: CurrentUser, id: string): Promise<StudentRecord> {
-  return reviewProfile(repo, user, id, "APPROVED", null);
+export function approveRegistrationRequest(
+  repo: StudentRepository,
+  audit: AuditRepository,
+  user: CurrentUser,
+  id: string,
+): Promise<RegistrationRequestRecord> {
+  return decideRequest(repo, audit, user, id, "APPROVED", null);
 }
 
-export function rejectStudentProfile(repo: StudentRepository, user: CurrentUser, id: string, note: string): Promise<StudentRecord> {
-  return reviewProfile(repo, user, id, "REJECTED", note);
+export function rejectRegistrationRequest(
+  repo: StudentRepository,
+  audit: AuditRepository,
+  user: CurrentUser,
+  id: string,
+  note: string,
+): Promise<RegistrationRequestRecord> {
+  return decideRequest(repo, audit, user, id, "REJECTED", note);
 }

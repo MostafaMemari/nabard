@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { createStudent } from "../api";
+import { createRegistrationRequest } from "../api";
 import { emptyStudentForm, type StudentFormValues, studentSchema } from "../schemas";
 
 export function useStudentForm() {
@@ -27,9 +27,9 @@ export function useStudentForm() {
     };
 
     try {
-      await createStudent(input);
+      await createRegistrationRequest(input);
       toast.success("درخواست ثبت هنرجو ثبت شد و برای بررسی به ادمین استان ارسال شد");
-      router.push("/coach/students");
+      router.push("/coach/requests");
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "ذخیره انجام نشد. دوباره تلاش کنید");
     }

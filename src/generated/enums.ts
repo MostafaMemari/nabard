@@ -185,6 +185,15 @@ export const ProfileStatus = {
 export type ProfileStatus = (typeof ProfileStatus)[keyof typeof ProfileStatus]
 
 
+export const StudentRegistrationStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type StudentRegistrationStatus = (typeof StudentRegistrationStatus)[keyof typeof StudentRegistrationStatus]
+
+
 export const StoredFileProvider = {
   DB: 'DB',
   R2: 'R2'
