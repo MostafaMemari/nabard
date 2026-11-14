@@ -1,6 +1,5 @@
 export * from "./api";
 export * from "./components/coach-photo-change-dialog";
-export * from "./components/coach-photo-changes-section";
 export * from "./components/photo-change-decision-dialog";
 export * from "./components/photo-changes-screen";
 export * from "./hooks/use-photo-changes";

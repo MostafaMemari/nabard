@@ -1,5 +1,4 @@
 export * from "./api";
-export * from "./components/coach-province-changes-section";
 export * from "./components/province-change-decision-dialog";
 export * from "./components/province-change-request-dialog";
 export * from "./components/province-changes-screen";

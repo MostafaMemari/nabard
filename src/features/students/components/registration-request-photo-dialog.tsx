@@ -7,7 +7,6 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { FieldError } from "@/components/ui/field";
 import { ACCEPTED_PROFILE_TYPES, compressProfileImage } from "@/lib/compress-image";
 import { setRegistrationRequestPhoto } from "../api";
-import type { RegistrationRequest } from "../types";
 
 // Coach attaches or replaces the personal photo of a registration request;
 // the province admin needs it before the request can be approved.
@@ -17,7 +16,7 @@ export function RegistrationRequestPhotoDialog({
   onOpenChange,
   onUploaded,
 }: {
-  request: RegistrationRequest;
+  request: { id: string; fullName: string };
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onUploaded: () => Promise<unknown>;

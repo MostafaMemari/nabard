@@ -1,7 +1,6 @@
 export * from "./api";
 export * from "./components/coach-change-dialog";
 export * from "./components/coach-reassign-dialog";
-export * from "./components/coach-transfers-section";
 export * from "./components/transfer-request-dialog";
 export * from "./components/transfers-screen";
 export * from "./hooks/use-transfers";
