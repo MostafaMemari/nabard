@@ -7,9 +7,10 @@ import { useForm, useWatch } from "react-hook-form";
 import { toast } from "sonner";
 import { type Gender, useAgeCategories, useBelts, useWeightClasses } from "@/features/base-data";
 import { useRegistrations } from "@/features/registrations";
+import { jalaliTodayIso } from "@/lib/format";
 import { createCompetition, updateCompetition } from "../api";
 import { useCompetition } from "../hooks/use-competitions";
-import { type CompetitionFormValues, competitionSchema, emptyCompetitionForm } from "../schemas";
+import { type CompetitionFormValues, competitionSchema, createCompetitionFormSchema, emptyCompetitionForm } from "../schemas";
 import type { CompetitionInput, CompetitionLevel, Discipline } from "../types";
 
 export function useCompetitionForm(competitionId?: string) {
@@ -27,8 +28,13 @@ export function useCompetitionForm(competitionId?: string) {
   const { ageCategories } = useAgeCategories();
 
   const form = useForm<CompetitionFormValues, unknown, CompetitionFormValues>({
-    resolver: zodResolver(competitionSchema),
-    defaultValues: emptyCompetitionForm,
+    resolver: zodResolver(isEdit ? competitionSchema : createCompetitionFormSchema),
+    defaultValues: {
+      ...emptyCompetitionForm,
+      // Dates start on today so a new competition cannot be saved in the past.
+      registrationDeadline: jalaliTodayIso(),
+      eventDate: jalaliTodayIso(),
+    },
   });
   const values = useWatch({ control: form.control });
 

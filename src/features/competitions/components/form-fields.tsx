@@ -23,6 +23,6 @@ export function FormSelectField({ control, name, label, items }: FieldProps & { 
   return <ControlledSelectField control={control} name={name} label={label} items={items} />;
 }
 
-export function FormDateField({ control, name, label }: FieldProps) {
-  return <ControlledDateField control={control} name={name} label={label} />;
+export function FormDateField({ control, name, label, min }: FieldProps & { min?: string }) {
+  return <ControlledDateField control={control} name={name} label={label} min={min} />;
 }

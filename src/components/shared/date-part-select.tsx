@@ -8,21 +8,28 @@ export function DatePartSelect({
   placeholder,
   onChange,
   disabled,
+  disabledValues = [],
 }: {
   items: Record<string, string>;
   value: string;
   placeholder: string;
   onChange: (value: string) => void;
   disabled?: boolean;
+  disabledValues?: string[];
 }) {
   return (
-    <Select items={items} value={value === "" ? "" : value} onValueChange={(next) => onChange(String(next))} disabled={disabled}>
+    <Select
+      items={items}
+      value={value === "" ? "" : value}
+      onValueChange={(next) => onChange(next === null ? "" : String(next))}
+      disabled={disabled}
+    >
       <SelectTrigger aria-label={placeholder} className="w-full justify-between">
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
       <SelectContent>
         {Object.keys(items).map((item) => (
-          <SelectItem key={item} value={item}>
+          <SelectItem key={item} value={item} disabled={disabledValues.includes(item)}>
             {items[item]}
           </SelectItem>
         ))}

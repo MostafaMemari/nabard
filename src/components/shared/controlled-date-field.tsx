@@ -15,12 +15,13 @@ export function ControlledDateField<T extends FieldValues>({
   name,
   label,
   variant = "default",
-}: SharedFieldProps<T> & { variant?: "default" | "birth" }) {
+  min,
+}: SharedFieldProps<T> & { variant?: "default" | "birth"; min?: string }) {
   const [yearFrom, yearTo] = variant === "birth" ? [birthYearFrom, birthYearTo] : [];
   return (
     <FieldBody control={control} name={name} label={label}>
       {({ value, onChange }) => (
-        <JalaliDateField value={value} onChange={(iso: string) => onChange(iso)} yearFrom={yearFrom} yearTo={yearTo} />
+        <JalaliDateField value={value} onChange={(iso: string) => onChange(iso)} yearFrom={yearFrom} yearTo={yearTo} min={min} />
       )}
     </FieldBody>
   );

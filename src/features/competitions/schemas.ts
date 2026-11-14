@@ -1,3 +1,4 @@
+import { getDate, getMonth, getYear } from "date-fns-jalali";
 import { z } from "zod";
 import { normalizeDigits } from "@/lib/format";
 import { provinceValues } from "@/lib/provinces";
@@ -30,6 +31,18 @@ export const competitionSchema = z
     path: ["countyIds"],
   });
 
+// Create form only: dates may not be in the past. Editing an existing
+// competition keeps past dates legal so old events stay editable.
+export const createCompetitionFormSchema = competitionSchema
+  .refine((data) => !isBeforeToday(data.registrationDeadline), {
+    message: "مهلت ثبت نام نمی تواند قبل از امروز باشد",
+    path: ["registrationDeadline"],
+  })
+  .refine((data) => !isBeforeToday(data.eventDate), {
+    message: "تاریخ برگزاری نمی تواند قبل از امروز باشد",
+    path: ["eventDate"],
+  });
+
 export type CompetitionFormValues = {
   title: string;
   description: string;
@@ -48,6 +61,18 @@ export type CompetitionFormValues = {
 
 function isIsoDate(value: string): boolean {
   return /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(value) && !Number.isNaN(new Date(value).getTime());
+}
+
+// Same Jalali day or later than today (browser calendar — matches the date field).
+function isBeforeToday(value: string): boolean {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return true;
+  const today = new Date();
+  return (
+    getYear(date) < getYear(today) ||
+    (getYear(date) === getYear(today) &&
+      (getMonth(date) < getMonth(today) || (getMonth(date) === getMonth(today) && getDate(date) < getDate(today))))
+  );
 }
 
 const titleField = z.string().trim().min(3, "عنوان مسابقه باید حداقل ۳ حرف باشد");

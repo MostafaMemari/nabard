@@ -1,6 +1,13 @@
+import { getDate, getMonth, getYear, newDate } from "date-fns-jalali";
 import { describe, expect, it } from "vitest";
 import { normalizeDigits } from "../../lib/format";
-import { cancelCompetitionSchema, competitionSchema, createCompetitionSchema, updateCompetitionSchema } from "./schemas";
+import {
+  cancelCompetitionSchema,
+  competitionSchema,
+  createCompetitionFormSchema,
+  createCompetitionSchema,
+  updateCompetitionSchema,
+} from "./schemas";
 
 const valid = {
   title: "مسابقات قهرمانی استان",
@@ -55,6 +62,59 @@ describe("competition form schema", () => {
 
   it("normalizes digits in the fee", () => {
     expect(normalizeDigits("۳۵۰,۰۰۰")).toBe("350000");
+  });
+});
+
+describe("createCompetitionFormSchema", () => {
+  // ISO of local midnight shifted by Jalali days relative to today.
+  function isoOf(dayOffset: number): string {
+    const now = new Date();
+    return newDate(getYear(now), getMonth(now), getDate(now) + dayOffset).toISOString();
+  }
+
+  it("accepts dates from today onwards", () => {
+    const result = createCompetitionFormSchema.safeParse({
+      ...valid,
+      registrationDeadline: isoOf(0),
+      eventDate: isoOf(1),
+    });
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects a registration deadline before today", () => {
+    const result = createCompetitionFormSchema.safeParse({
+      ...valid,
+      registrationDeadline: isoOf(-1),
+      eventDate: isoOf(1),
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues.some((issue) => issue.path[0] === "registrationDeadline")).toBe(true);
+    }
+  });
+
+  it("rejects an event date before today", () => {
+    const result = createCompetitionFormSchema.safeParse({
+      ...valid,
+      registrationDeadline: isoOf(-2),
+      eventDate: isoOf(-1),
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues.some((issue) => issue.path[0] === "eventDate")).toBe(true);
+    }
+  });
+
+  it("still requires the event date after the deadline", () => {
+    const result = createCompetitionFormSchema.safeParse({
+      ...valid,
+      registrationDeadline: isoOf(1),
+      eventDate: isoOf(0),
+    });
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error.issues.some((issue) => issue.path[0] === "eventDate")).toBe(true);
+    }
   });
 });
 

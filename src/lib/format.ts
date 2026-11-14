@@ -80,9 +80,24 @@ const jalaliYearFormatter = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
 });
 
+const jalaliDatePartsFormatter = new Intl.DateTimeFormat("en-US", {
+  calendar: "persian",
+  timeZone: "Asia/Tehran",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
 export function jalaliYear(value: Date | number): number {
   const year = jalaliYearFormatter.formatToParts(new Date(value)).find((part) => part.type === "year")?.value ?? "";
   return Number(year.replace(/\D/g, ""));
+}
+
+// ISO of today (Jalali, Tehran) at midnight — the earliest selectable date for
+// deadlines and event days. Numbers stay latin so the value parses as ISO.
+export function jalaliTodayIso(): string {
+  const get = (type: string) => jalaliDatePartsFormatter.formatToParts(new Date()).find((part) => part.type === type)?.value ?? "";
+  return `${get("year")}-${get("month")}-${get("day")}T00:00:00+03:30`;
 }
 
 export function formatJalaliDateTime(value: Date | number): string {
