@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "cn";
-import { ArrowLeftRightIcon, ImageUpIcon, InboxIcon, MapPinnedIcon, UserPlusIcon } from "lucide-react";
+import { ArrowLeftRightIcon, ImageUpIcon, InboxIcon, MapPinnedIcon, PlusIcon, UserPlusIcon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { DataTable, type DataTableColumn, type FilterTab, ListToolbar, PageHeader, StatusBadge } from "@/components/shared";
@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useBelts } from "@/features/base-data";
 import { photoChangeStatusKey, usePhotoChangeRequests } from "@/features/photo-changes";
 import { provinceChangeStatusKey, useProvinceChangeRequests } from "@/features/province-changes";
+import { NewRequestDialog } from "@/features/requests/components/new-request-dialog";
 import { RegistrationRequestPhotoDialog } from "@/features/students/components/registration-request-photo-dialog";
 import { useRegistrationRequests } from "@/features/students/hooks/use-registration-requests";
 import { type RegistrationStatus, registrationStatusKey } from "@/features/students/types";
@@ -159,6 +160,7 @@ function StatusCard({ value, label, active, onClick }: { value: number; label: s
 export function CoachRequestsScreen() {
   const [typeFilter, setTypeFilter] = useState<RequestTypeFilter>("all");
   const [statusFilter, setStatusFilter] = useState<RequestStatusFilter>("all");
+  const [newOpen, setNewOpen] = useState(false);
 
   const { requests, isLoading, error, mutate } = useRegistrationRequests({ pageSize: 100 });
   const { result: transfers, isLoading: transfersLoading, error: transfersError, mutate: reloadTransfers } = useTransferRequests();
@@ -264,9 +266,36 @@ export function CoachRequestsScreen() {
     { id: "actions", header: "عملیات", cell: (row) => <RowActions row={row} onChanged={mutate} />, minScreen: "lg" },
   ];
 
+  const pendingIdsOf = (kind: RequestKind) =>
+    new Set(rows.filter((row) => row.kind === kind && row.status === "PENDING").map((row) => row.id));
+  const refreshAll = () => {
+    void mutate();
+    void reloadTransfers();
+    void reloadPhotoRequests();
+    void reloadProvinceRequests();
+  };
+
   return (
     <>
-      <PageHeader title="درخواست ها" description="همه درخواست های شما: ثبت هنرجو، انتقال، تغییر عکس و تغییر استان" />
+      <PageHeader
+        title="درخواست ها"
+        description="همه درخواست های شما: ثبت هنرجو، انتقال، تغییر عکس و تغییر استان"
+        action={
+          <Button type="button" onClick={() => setNewOpen(true)}>
+            <PlusIcon data-icon="inline-start" />
+            ثبت درخواست جدید
+          </Button>
+        }
+      />
+
+      <NewRequestDialog
+        open={newOpen}
+        onOpenChange={setNewOpen}
+        pendingPhotoIds={pendingIdsOf("photo")}
+        pendingCoachIds={pendingIdsOf("transfer")}
+        pendingProvinceIds={pendingIdsOf("province")}
+        onRequested={refreshAll}
+      />
 
       <div className="grid gap-4 sm:grid-cols-3">
         {statusCards.map((card) => (

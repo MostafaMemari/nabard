@@ -24,15 +24,27 @@ export function FilterTabs({
   value,
   onChange,
   scroll = false,
+  variant = "row",
 }: {
   items: FilterTab[];
   counts?: Record<string, number>;
   value: string;
   onChange: (id: string) => void;
   scroll?: boolean;
+  // "grid" lays the tabs out three per row on mobile (list toolbars);
+  // "row" keeps the classic horizontal strip everywhere.
+  variant?: "row" | "grid";
 }) {
+  const grid = variant === "grid";
+
   return (
-    <div className={cn("flex items-center gap-1.5", scroll && "overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden")}>
+    <div
+      className={cn(
+        grid
+          ? "grid grid-cols-3 gap-2 md:flex md:items-center md:gap-1.5"
+          : cn("flex items-center gap-1.5", scroll && "overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"),
+      )}
+    >
       {items.map((item) => {
         const active = item.id === value;
         return (
@@ -40,7 +52,7 @@ export function FilterTabs({
             key={item.id}
             type="button"
             aria-current={active ? "true" : undefined}
-            className={tabClass(active, scroll)}
+            className={cn(tabClass(active, scroll && !grid), grid && "w-full justify-center")}
             onClick={() => onChange(item.id)}
           >
             {item.dot}
