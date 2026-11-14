@@ -38,12 +38,6 @@ export function CompetitionsScreen() {
         emptyTitle={
           view.search.value.trim() !== "" ? `نتیجه ای برای «${view.search.value.trim()}» پیدا نشد` : "هنوز مسابقه ای ثبت نشده است"
         }
-        emptyAction={
-          <Button render={<Link href="/admin/competitions/new" />} size="sm">
-            <PlusIcon data-icon="inline-start" />
-            مسابقه جدید
-          </Button>
-        }
         toolbar={
           <ListToolbar
             tabs={view.tabs}
