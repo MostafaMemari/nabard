@@ -56,7 +56,7 @@ export function CoachShell({ active, children }: { active: string; children: Rea
           </div>
         </header>
         <main id="coach-main" className="flex-1">
-          <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 @5xl:p-8">{children}</div>
+          <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 @5xl:gap-8 @5xl:p-8">{children}</div>
         </main>
         <MobileBottomNav items={coachNavItems} groups={navGroups} active={active} label="ناوبری مربی" className="@5xl:hidden" />
       </div>

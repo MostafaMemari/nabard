@@ -1,6 +1,6 @@
 "use client";
 
-import { MedalIcon, ReceiptTextIcon, TrophyIcon } from "lucide-react";
+import { ClipboardListIcon, MedalIcon, ReceiptTextIcon, TrophyIcon } from "lucide-react";
 import { AdminShell } from "@/components/layout/admin-shell";
 import { CoachShell } from "@/components/layout/coach-shell";
 import { Avatar, DeadlineChip, StatusBadge, SummaryCard } from "@/components/shared";
@@ -24,9 +24,9 @@ function AdminShellDemo() {
   return (
     <AdminShell active="payments">
       <div className="grid gap-4 sm:grid-cols-3">
-        <SummaryCard value={formatNumber(3)} label="رسید در انتظار بررسی" href="#" linkLabel="مشاهده فهرست" />
-        <SummaryCard value={formatNumber(2)} label="مسابقه باز" href="#" linkLabel="مشاهده مسابقات" />
-        <SummaryCard value={formatNumber(12)} label="ثبت نام این هفته" href="#" linkLabel="مشاهده ثبت نام ها" />
+        <SummaryCard value={3} label="رسید در انتظار بررسی" href="#" icon={ReceiptTextIcon} tone="warning" />
+        <SummaryCard value={2} label="مسابقه باز" href="#" icon={TrophyIcon} />
+        <SummaryCard value={12} label="ثبت نام این هفته" href="#" icon={ClipboardListIcon} />
       </div>
       <div className="grid gap-4 lg:grid-cols-2">
         <section className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5 shadow-card">
@@ -93,9 +93,9 @@ function CoachShellDemo() {
   return (
     <CoachShell active="home">
       <div className="grid gap-4 sm:grid-cols-3">
-        <SummaryCard value={formatNumber(2)} label="مسابقه باز" />
-        <SummaryCard value={formatNumber(9)} label="ثبت نام من" />
-        <SummaryCard value={formatNumber(1)} label="در انتظار بررسی" />
+        <SummaryCard value={2} label="مسابقه باز" icon={TrophyIcon} />
+        <SummaryCard value={9} label="ثبت نام من" icon={ClipboardListIcon} />
+        <SummaryCard value={1} label="در انتظار بررسی" icon={ReceiptTextIcon} tone="warning" />
       </div>
       <section className="flex flex-col gap-3 rounded-xl border border-border bg-card p-5 shadow-card">
         <h3 className="flex items-center gap-2 text-base font-semibold">

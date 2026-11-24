@@ -63,8 +63,8 @@ These make the product feel designed. Use them consistently.
 - **Belt chips**: small pill with a colored dot and the belt name wherever a belt appears.
 - **Status badges**: soft tinted pill with a dot and a Persian label.
 - **Deadline indicator** on competitions: «۳ روز مانده» chip, warning color under 3 days, danger color when passed.
-- **Summary cards** at the top of home pages: a number, a label and an optional link to the filtered list. No icon-in-circle decoration, no fake trends.
-- **Subtle page header**: title, one-line description in muted text, primary action on the end side, breadcrumbs only on detail pages. Below 1024px the title is hidden because the mobile top bar already carries the section name; the description and action stay.
+- **Summary tiles** at the top of home pages: small icon chip (tinted `IconTile`), a 28px semibold tabular number, and a one-line muted label; the whole tile is the link when a destination exists (subtle chevron at the end). Pending queues carry the warning tone; an empty queue goes quiet — grey chip, muted number — so live counts stand out from zeros. Grid: two columns on phones (three or four from `sm` up). No fake trends.
+- **Subtle page header**: title, one-line description in muted text, primary action on the end side, breadcrumbs only on detail pages. Below 1024px the title is visually hidden (kept for screen readers) because the mobile top bar already carries the section name; the description and action stay.
 
 ## Layout
 

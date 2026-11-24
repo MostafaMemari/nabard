@@ -1,5 +1,6 @@
 "use client";
 
+import { ClipboardListIcon, ReceiptTextIcon, TrophyIcon } from "lucide-react";
 import { Avatar, BeltChip, DeadlineChip, StatusBadge, type StatusKey, SummaryCard } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { useBelts } from "@/features/base-data";
@@ -46,9 +47,9 @@ export function ComponentShowcase() {
     <div className="flex flex-col gap-8">
       <Section title="کارت های خلاصه">
         <div className="grid gap-4 sm:grid-cols-3">
-          <SummaryCard value={formatNumber(3)} label="رسید در انتظار بررسی" href="#" linkLabel="مشاهده فهرست" />
-          <SummaryCard value={formatNumber(2)} label="مسابقه باز" href="#" linkLabel="مشاهده مسابقات" />
-          <SummaryCard value={formatNumber(12)} label="ثبت نام این هفته" />
+          <SummaryCard value={3} label="رسید در انتظار بررسی" href="#" icon={ReceiptTextIcon} tone="warning" />
+          <SummaryCard value={2} label="مسابقه باز" href="#" icon={TrophyIcon} />
+          <SummaryCard value={12} label="ثبت نام این هفته" icon={ClipboardListIcon} />
         </div>
       </Section>
 

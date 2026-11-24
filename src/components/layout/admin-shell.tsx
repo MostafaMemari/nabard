@@ -127,7 +127,7 @@ export function AdminShell({ active, children }: { active: string; children: Rea
           </div>
         </header>
         <main id="admin-main" className="flex-1">
-          <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 lg:p-8 print:p-0">{children}</div>
+          <div className="mx-auto flex w-full max-w-content flex-col gap-6 p-4 lg:gap-8 lg:p-8 print:p-0">{children}</div>
         </main>
         <MobileBottomNav
           items={mobilePrimary}

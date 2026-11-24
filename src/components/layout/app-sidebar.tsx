@@ -64,7 +64,7 @@ export function AppSidebar({
         <div className="flex flex-col gap-4">
           {groups.map((group, groupIndex) => (
             <div key={group.label ?? groupIndex} className="flex flex-col gap-0.5">
-              {group.label ? <p className="px-3 pb-1.5 text-xs text-sidebar-foreground/60">{group.label}</p> : null}
+              {group.label ? <p className="px-3 pb-1.5 text-xs font-medium text-sidebar-foreground/60">{group.label}</p> : null}
               <ul className="flex flex-col gap-0.5">
                 {group.items.map((item) => (
                   <li key={item.id}>

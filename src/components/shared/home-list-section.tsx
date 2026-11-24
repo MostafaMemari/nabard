@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronLeftIcon } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { ErrorBanner, SkeletonRows } from "@/components/shared";
@@ -29,9 +30,10 @@ export function HomeListSection({
         <h2 className="text-base font-semibold">{title}</h2>
         <Link
           href={href}
-          className="text-subtle min-h-11 py-2.5 font-medium text-primary underline-offset-4 hover:underline md:min-h-0 md:py-0"
+          className="text-subtle flex min-h-11 items-center gap-0.5 py-2.5 font-medium text-primary underline-offset-4 hover:underline md:min-h-0 md:py-0"
         >
           مشاهده همه
+          <ChevronLeftIcon aria-hidden className="size-3.5" />
         </Link>
       </div>
       {error ? (
