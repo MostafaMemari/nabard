@@ -21,14 +21,12 @@ export function WorkspaceSheet({
 }) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      {/* Chrome Android scroll-lock keeps dvh at the expanded size while the
-          toolbar reappears, so a 92dvh sheet hides its header under the address
-          bar; the svh cap keeps the top edge below the toolbar in every state. */}
-      <SheetContent
-        side="bottom"
-        showCloseButton={false}
-        className="mx-auto h-[min(92dvh,calc(100svh_-_5rem))] max-w-content gap-0 rounded-t-2xl p-0"
-      >
+      {/* The height comes from anchoring, not from a height utility: in the
+          production bundle the base data-[side=bottom]:h-auto rule sorts after
+          any caller height class and wins, so height classes silently lose and
+          the sheet grows to content height, pushing its header off screen.
+          With a top inset, h-auto stretches between top and bottom instead. */}
+      <SheetContent side="bottom" showCloseButton={false} className="mx-auto top-20 max-w-content gap-0 rounded-t-2xl p-0">
         <SheetTitle className="sr-only">میز کار</SheetTitle>
         <div className="flex h-14 shrink-0 items-center justify-between border-b border-border px-4">
           <span className="flex items-center gap-2 text-base font-semibold">
