@@ -1,7 +1,7 @@
 "use client";
 
 import { MapIcon } from "lucide-react";
-import { DataTable, MobileCard, PageHeader } from "@/components/shared";
+import { DataTable, PageHeader } from "@/components/shared";
 import { toPersianDigits } from "@/lib/format";
 import { provinceLabels } from "@/lib/provinces";
 import { useSuperSummary } from "../hooks/use-super-summary";
@@ -52,7 +52,7 @@ function SummaryCardRow({ row }: { row: ProvinceSummary }) {
   ];
 
   return (
-    <MobileCard className="gap-0">
+    <div className="rounded-xl border border-border bg-card p-4 shadow-card">
       <p className="mb-2 text-center text-sm font-medium">{provinceLabels[row.province]}</p>
       <dl className="grid grid-cols-3 gap-x-3 gap-y-2 text-center">
         {items.map(([label, value]) => (
@@ -62,7 +62,7 @@ function SummaryCardRow({ row }: { row: ProvinceSummary }) {
           </div>
         ))}
       </dl>
-    </MobileCard>
+    </div>
   );
 }
 

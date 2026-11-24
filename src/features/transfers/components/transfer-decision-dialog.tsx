@@ -1,9 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Note } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
@@ -29,7 +27,6 @@ export function TransferDecisionDialog({
     defaultValues: { note: "" },
   });
   const approving = decision === "approve";
-  const [working, setWorking] = useState(false);
 
   function close() {
     form.reset({ note: "" });
@@ -48,9 +45,7 @@ export function TransferDecisionDialog({
   async function approve() {
     if (!request) return;
 
-    setWorking(true);
     const done = await decide(request.id, "approve");
-    setWorking(false);
     if (done) {
       close();
     }
@@ -65,7 +60,7 @@ export function TransferDecisionDialog({
         }
       }}
     >
-      <DialogContent showCloseButton={false} className="sm:max-w-md">
+      <DialogContent showCloseButton={false} className="max-w-md">
         <DialogHeader>
           <DialogTitle>{approving ? "تأیید انتقال هنرجو" : "رد درخواست انتقال"}</DialogTitle>
           <DialogDescription>
@@ -75,7 +70,9 @@ export function TransferDecisionDialog({
           </DialogDescription>
         </DialogHeader>
         {approving ? (
-          <Note tone="primary">فقط مربی هنرجو تغییر می کند؛ ثبت نام ها، پرداخت ها و بازپرداخت های قبلی با مربی قبلی می مانند</Note>
+          <p className="text-subtle rounded-lg bg-primary-subtle px-3 py-2 text-primary">
+            فقط مربی هنرجو تغییر می کند؛ ثبت نام ها، پرداخت ها و بازپرداخت های قبلی با مربی قبلی می مانند
+          </p>
         ) : (
           <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
             <Field data-invalid={form.formState.errors.note ? "" : undefined}>
@@ -103,7 +100,9 @@ export function TransferDecisionDialog({
             <Button type="button" variant="outline" onClick={close}>
               انصراف
             </Button>
-            <Button type="button" onClick={() => void approve()} disabled={working}></Button>
+            <Button type="button" onClick={() => void approve()}>
+              تأیید انتقال
+            </Button>
           </DialogFooter>
         ) : null}
       </DialogContent>

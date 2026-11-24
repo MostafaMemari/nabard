@@ -62,6 +62,7 @@ export function useProvinceChangeColumns({
             <Button
               size="sm"
               variant="outline"
+              className="text-success hover:text-success"
               onClick={(event) => {
                 event.stopPropagation();
                 onDecide(row, "approve");
@@ -71,7 +72,8 @@ export function useProvinceChangeColumns({
             </Button>
             <Button
               size="sm"
-              variant="destructive"
+              variant="outline"
+              className="text-danger hover:text-danger"
               onClick={(event) => {
                 event.stopPropagation();
                 onDecide(row, "reject");

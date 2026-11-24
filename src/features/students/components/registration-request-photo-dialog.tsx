@@ -81,7 +81,7 @@ export function RegistrationRequestPhotoDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent showCloseButton={false} className="sm:max-w-md">
+      <DialogContent showCloseButton={false} className="max-w-md">
         <DialogHeader>
           <DialogTitle>عکس پرسنلی «{request.fullName}»</DialogTitle>
           <DialogDescription>عکس را برای بررسی ادمین استان بارگذاری کنید؛ بدون عکس، درخواست قابل تأیید نیست</DialogDescription>

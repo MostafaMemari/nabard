@@ -5,9 +5,9 @@ import { MapPinnedIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
-import { ControlledSelectField, Note } from "@/components/shared";
+import { ControlledSelectField } from "@/components/shared";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { listCoachTargets } from "@/features/users";
 import { provinceLabels, provinceValues } from "@/lib/provinces";
 import { useProvinceChangeCreate } from "../hooks/use-province-changes";
@@ -70,7 +70,7 @@ export function ProvinceChangeRequestDialog({
         }
       }}
     >
-      <DialogContent showCloseButton={false} className="sm:max-w-md">
+      <DialogContent showCloseButton={false} className="max-w-md">
         <DialogHeader>
           <DialogTitle>درخواست تغییر استان «{studentName}»</DialogTitle>
           <DialogDescription>
@@ -79,7 +79,9 @@ export function ProvinceChangeRequestDialog({
         </DialogHeader>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           {hasPending ? (
-            <Note>برای این هنرجو درخواست انتقال یا تغییر استان در انتظار بررسی وجود دارد؛ تا نتیجه آن، درخواست جدید ثبت نمی شود</Note>
+            <p className="text-subtle rounded-lg bg-warning-bg px-3 py-2.5 text-warning">
+              برای این هنرجو درخواست انتقال یا تغییر استان در انتظار بررسی وجود دارد؛ تا نتیجه آن، درخواست جدید ثبت نمی شود
+            </p>
           ) : null}
           <ControlledSelectField
             control={form.control}
@@ -104,20 +106,22 @@ export function ProvinceChangeRequestDialog({
             />
           ) : null}
           {toProvince && !targets.isLoading && (targets.data ?? []).length === 0 ? (
-            <Note>مربی فعالی در این استان ثبت نشده است؛ استان دیگری را انتخاب کنید</Note>
+            <p className="text-subtle rounded-lg bg-warning-bg px-3 py-2 text-warning">
+              مربی فعالی در این استان ثبت نشده است؛ استان دیگری را انتخاب کنید
+            </p>
           ) : null}
           <p className="text-subtle text-muted-foreground">
             جنسیت مربی مقصد باید با جنسیت هنرجو یکسان باشد؛ در غیر این صورت درخواست ثبت نمی شود
           </p>
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={close}>
+          <div className="flex items-center justify-end gap-3">
+            <Button type="button" variant="ghost" onClick={close}>
               انصراف
             </Button>
             <Button type="submit" disabled={working || targets.isLoading}>
               <MapPinnedIcon data-icon="inline-start" />
               {working ? "در حال ثبت…" : "ثبت درخواست"}
             </Button>
-          </DialogFooter>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

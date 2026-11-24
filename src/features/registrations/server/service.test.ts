@@ -88,7 +88,7 @@ const competition = {
   maxBeltId: "belt-blue",
   rules: null,
   feePerStudent: BigInt(2500000),
-  registrationDeadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  registrationDeadline: new Date("2026-11-20T20:30:00.000Z"),
   eventDate: new Date("2026-11-25T08:00:00.000Z"),
   createdAt: new Date("2026-09-01T10:00:00.000Z"),
 };

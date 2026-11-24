@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useTransferRequestDialog } from "../hooks/use-transfer-request-dialog";
@@ -26,7 +26,7 @@ export function TransferRequestDialog({
         }
       }}
     >
-      <DialogContent showCloseButton={false} className="sm:max-w-md">
+      <DialogContent showCloseButton={false} className="max-w-md">
         <DialogHeader>
           <DialogTitle>انتقال هنرجو به من</DialogTitle>
           <DialogDescription>کد ملی هنرجو را وارد کنید؛ پس از جستجو، نتیجه به صورت مخفی نشان داده می شود</DialogDescription>
@@ -54,14 +54,14 @@ export function TransferRequestDialog({
           <p className="text-subtle text-muted-foreground">
             با تأیید مدیر استان فقط مربی هنرجو تغییر می کند و ثبت نام ها و پرداخت های قبلی دست نخورده می مانند
           </p>
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={close}>
+          <div className="flex items-center justify-end gap-3">
+            <Button type="button" variant="ghost" onClick={close}>
               انصراف
             </Button>
             <Button type="submit" disabled={working}>
               {working ? (result ? "در حال ثبت…" : "در حال جستجو…") : result ? "ثبت درخواست" : "جستجو"}
             </Button>
-          </DialogFooter>
+          </div>
         </form>
       </DialogContent>
     </Dialog>

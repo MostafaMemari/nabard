@@ -24,7 +24,7 @@ const paymentRow: PaymentWithScope = {
   createdAt,
   updatedAt: createdAt,
   coachProvince: "TEHRAN",
-  competitionDeadline: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+  competitionDeadline: new Date("2026-11-20T20:30:00.000Z"),
 };
 
 const rejectedPayment: PaymentWithScope = { ...paymentRow, id: "pay-8", status: "REJECTED", note: "رسید ناخوانا است" };

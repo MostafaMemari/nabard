@@ -84,20 +84,3 @@ Verified non-issues: login form layout at 390 is correct live (screenshot artifa
 Issues 1–6 fixed by a shared card mode on `DataTable` (`renderCard`) with per-column `minScreen` triage, one `MobileCard` anatomy, bottom-sheet filters (`ListToolbar`), and mobile bottom navigation in `AdminShell`. Issue 7 fixed in `ListToolbar`; issue 8 fixed with the admin bottom nav; issue 9 rebuilt as selection cards with dimmed ineligible rows and reasons; issues 10–13 fixed (44px mobile targets, `dir="ltr"` + inputMode/autoComplete on numeric fields, `prefers-reduced-motion`, tabular numerals, token widths). Issue 14 accepted: sort buttons live inside desktop-only tables. Issue 15 fixed by reusing the shared empty state. Final sweep: 54/54 route–viewport checks with no page overflow and zero console errors.
 
 Remaining accepted deviations: `/dev/ui` demo files stay over 80 lines (frozen showcase); table-header sort buttons are pointer-sized (desktop-only context).
-
-## Consistency pass 2 — domains built after the first audit
-
-Scope: requests, photo/province/county changes, refunds, transfers, admins, super, analytics and their routes — audited after the resolution above, fixed in the same pass. Also covers the inline filter grid that replaced the ListToolbar bottom sheet (the owner chose always-visible filters, three per row on mobile).
-
-- High: 17 `text-success/text-danger hover:…` outline recipes replaced by two sanctioned treatments — paired decisions use `variant="outline"` (approve) and `variant="destructive"` (reject), quiet per-row destructive secondaries keep ghost with a real `hover:bg-danger-bg` (students card delete, receipt image remove). Hover state was identical to rest in all old recipes.
-- High: 13 `max-w-md/lg` DialogContent widths prefixed with `sm:` so the base `max-w-[calc(100%-2rem)]` holds on phones (dialogs were edge-to-edge below 640px).
-- Medium: approve buttons in the four decision dialogs got a working state (disabled + «در حال ثبت…»); double-submit was possible before.
-- Medium: new shared `Note` callout (warning/primary tones) replaced 13 hand-rolled `bg-*-bg px-3 py-2…` paragraphs with two paddings; coach-facing dialog footers now use `DialogFooter` with outline cancels, matching the admin dialogs.
-- Medium: county-change coach dialog error state moved to shared `ErrorBanner`; transfer route arrows unified to `→`; receipt download link rebuilt on Button `render={<a/>}`.
-- Medium: `size="sm"` buttons reachable on mobile got the `h-11` bump (`coach/requests` row actions, admin home empty action, coach dialog actions, `ErrorBanner` retry).
-- Structure: `coach-requests-screen` (338 lines) split into `request-rows`/`request-card`/`request-status-card`/`use-request-rows`; `new-request-dialog` (237) split into `request-kind-tiles` (config-driven, kills the repeated tile class string) + dialog; all under the 150-line limit.
-- Low: review cards (photo, province, county, transfer, refund, super coaches, super home summary) migrated onto the `MobileCard` family; `/super/base-data` got the Suspense + `ScreenSpinner` wrapper its siblings have.
-
-Accepted deviations: `BarList` keeps its quiet inner empty line (inside a chart card, not a data view); the bordered icon callouts on the request edit screen and student profile header stay custom (distinct visual intent); chart axis micro-labels (`text-[10px]/[11px]`) are deliberate chart typography.
-
-Validation: biome, tsc, vitest (663 tests) and the production build pass; overflow probe (`scrollWidth = innerWidth`) clean on 25 routes at 390px (super, admin and coach shells including the pages above) and 1280px spot checks; screenshot review of the county-change card (standardized decision pair), coach requests page (mobile and desktop). Service test fixtures with hardcoded deadlines (`2026-11-20`) were moved to relative dates after they began expiring against the real clock.

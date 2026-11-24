@@ -1,9 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Note } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
@@ -30,7 +28,6 @@ export function ProvinceChangeDecisionDialog({
     defaultValues: { note: "" },
   });
   const approving = decision === "approve";
-  const [working, setWorking] = useState(false);
 
   function close() {
     form.reset({ note: "" });
@@ -49,9 +46,7 @@ export function ProvinceChangeDecisionDialog({
   async function approve() {
     if (!request) return;
 
-    setWorking(true);
     const done = await decide(request.id, "approve");
-    setWorking(false);
     if (done) {
       close();
     }
@@ -66,7 +61,7 @@ export function ProvinceChangeDecisionDialog({
         }
       }}
     >
-      <DialogContent showCloseButton={false} className="sm:max-w-md">
+      <DialogContent showCloseButton={false} className="max-w-md">
         <DialogHeader>
           <DialogTitle>{approving ? "تأیید تغییر استان هنرجو" : "رد درخواست تغییر استان"}</DialogTitle>
           <DialogDescription>
@@ -76,9 +71,9 @@ export function ProvinceChangeDecisionDialog({
           </DialogDescription>
         </DialogHeader>
         {approving ? (
-          <Note tone="primary">
+          <p className="text-subtle rounded-lg bg-primary-subtle px-3 py-2 text-primary">
             با تأیید، هنرجو از فهرست مربی فعلی خارج و به مربی استان شما منتقل می شود؛ سابقه ثبت نام ها باقی می ماند
-          </Note>
+          </p>
         ) : (
           <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
             <Field data-invalid={form.formState.errors.note ? "" : undefined}>
@@ -106,7 +101,9 @@ export function ProvinceChangeDecisionDialog({
             <Button type="button" variant="outline" onClick={close}>
               انصراف
             </Button>
-            <Button type="button" onClick={() => void approve()} disabled={working}></Button>
+            <Button type="button" onClick={() => void approve()}>
+              تأیید انتقال
+            </Button>
           </DialogFooter>
         ) : null}
       </DialogContent>

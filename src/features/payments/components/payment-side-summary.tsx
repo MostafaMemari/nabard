@@ -65,7 +65,12 @@ export function PaymentSideSummary({
             <Button disabled={working} onClick={() => void onConfirmReceipt()}>
               تأیید رسید
             </Button>
-            <Button variant="destructive" disabled={working} onClick={onOpenReject}>
+            <Button
+              variant="outline"
+              className="text-danger hover:bg-danger-bg hover:text-danger"
+              disabled={working}
+              onClick={onOpenReject}
+            >
               رد رسید
             </Button>
           </div>

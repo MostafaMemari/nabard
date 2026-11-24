@@ -5,9 +5,9 @@ import { ArrowLeftRightIcon } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
-import { ControlledSelectField, Note } from "@/components/shared";
+import { ControlledSelectField } from "@/components/shared";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { listCoachTargets } from "@/features/users";
 import { useCoachChangeRequest } from "../hooks/use-transfers";
 import { type CreateCoachChangeValues, createCoachChangeSchema } from "../schemas";
@@ -62,7 +62,7 @@ export function CoachChangeDialog({
         }
       }}
     >
-      <DialogContent showCloseButton={false} className="sm:max-w-md">
+      <DialogContent showCloseButton={false} className="max-w-md">
         <DialogHeader>
           <DialogTitle>درخواست تغییر مربی «{studentName}»</DialogTitle>
           <DialogDescription>
@@ -70,7 +70,9 @@ export function CoachChangeDialog({
           </DialogDescription>
         </DialogHeader>
         {hasPending ? (
-          <Note>یک درخواست انتقال یا تغییر استان برای این هنرجو در انتظار بررسی است؛ تا نتیجه آن، درخواست جدید ثبت نمی شود</Note>
+          <p className="text-subtle rounded-lg bg-warning-bg px-3 py-2.5 text-warning">
+            یک درخواست انتقال یا تغییر استان برای این هنرجو در انتظار بررسی است؛ تا نتیجه آن، درخواست جدید ثبت نمی شود
+          </p>
         ) : (
           <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
             <ControlledSelectField
@@ -80,19 +82,21 @@ export function CoachChangeDialog({
               placeholder={targets.isLoading ? "در حال دریافت مربیان…" : "انتخاب مربی"}
               items={items}
             />
-            {targets.data !== undefined && targets.data.length === 0 ? <Note>مربی فعال دیگری در استان شما ثبت نشده است</Note> : null}
+            {targets.data !== undefined && targets.data.length === 0 ? (
+              <p className="text-subtle rounded-lg bg-warning-bg px-3 py-2 text-warning">مربی فعال دیگری در استان شما ثبت نشده است</p>
+            ) : null}
             <p className="text-subtle text-muted-foreground">
               ثبت نام ها و پرداخت های قبلی هنرجو با مربی فعلی می ماند و فقط مربی هنرجو تغییر می کند
             </p>
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={close}>
+            <div className="flex items-center justify-end gap-3">
+              <Button type="button" variant="ghost" onClick={close}>
                 انصراف
               </Button>
               <Button type="submit" disabled={working || targets.isLoading}>
                 <ArrowLeftRightIcon data-icon="inline-start" />
                 {working ? "در حال ثبت…" : "ثبت درخواست"}
               </Button>
-            </DialogFooter>
+            </div>
           </form>
         )}
       </DialogContent>

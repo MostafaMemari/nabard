@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { ControlledSelectField, Note, StatusBadge } from "@/components/shared";
+import { ControlledSelectField, StatusBadge } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { roleLabels, useMe } from "@/features/auth";
@@ -26,9 +26,9 @@ function LatestRequest({ request }: { request: CountyChangeRequest | null }) {
         <span className="text-subtle text-muted-foreground">{formatJalaliDate(new Date(request.createdAt))}</span>
       </div>
       <p className="text-subtle text-sm">
-        {countyChangeStatusLabels[request.status]}: {request.fromCountyName} → {request.toCountyName}
+        {countyChangeStatusLabels[request.status]}: {request.fromCountyName} ← {request.toCountyName}
       </p>
-      {request.note ? <Note>{request.note}</Note> : null}
+      {request.note ? <p className="rounded-lg bg-warning-bg px-3 py-2 text-subtle text-warning">{request.note}</p> : null}
     </div>
   );
 }
@@ -66,7 +66,7 @@ export function CoachProfileDialog({ open, onOpenChange }: { open: boolean; onOp
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent showCloseButton={false} className="sm:max-w-md">
+      <DialogContent showCloseButton={false} className="max-w-md">
         <DialogHeader>
           <DialogTitle>پروفایل مربی</DialogTitle>
           <DialogDescription>شهرستان فعلی شما و وضعیت درخواست تغییر شهرستان</DialogDescription>
