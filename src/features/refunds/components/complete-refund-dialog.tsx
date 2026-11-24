@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { Note } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
@@ -58,7 +59,7 @@ export function CompleteRefundDialog({
             بازپرداخت {amount} تومان به مربی هنرجوی «{refund?.studentName ?? ""}» ثبت می شود
           </DialogDescription>
         </DialogHeader>
-        {refund?.note ? <p className="rounded-lg bg-warning-bg px-3 py-2 text-subtle text-warning">{refund.note}</p> : null}
+        {refund?.note ? <Note>{refund.note}</Note> : null}
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <Field data-invalid={form.formState.errors.note ? "" : undefined}>
             <FieldLabel htmlFor="refund-note">یادداشت (اختیاری)</FieldLabel>

@@ -23,6 +23,7 @@ export * from "./icon-tile";
 export * from "./jalali-date-field";
 export * from "./list-toolbar";
 export * from "./mobile-card";
+export * from "./note";
 export * from "./page-header";
 export * from "./rows-skeleton";
 export * from "./screen-spinner";

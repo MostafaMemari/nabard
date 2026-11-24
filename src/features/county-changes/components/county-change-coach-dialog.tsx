@@ -2,7 +2,7 @@
 
 import { ArrowLeftIcon } from "lucide-react";
 import Link from "next/link";
-import { DescriptionList } from "@/components/shared";
+import { DescriptionList, ErrorBanner } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -22,7 +22,7 @@ export function CountyChangeCoachDialog({ coachId, onClose }: { coachId: string 
         if (!next) onClose();
       }}
     >
-      <DialogContent showCloseButton className="max-w-md">
+      <DialogContent showCloseButton className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>اطلاعات مربی</DialogTitle>
           <DialogDescription>مشخصات حساب مربی و شهرستان فعلی او</DialogDescription>
@@ -33,7 +33,7 @@ export function CountyChangeCoachDialog({ coachId, onClose }: { coachId: string 
             <Skeleton className="h-40 w-full" />
           </div>
         ) : error || !coach ? (
-          <p className="text-subtle text-muted-foreground">اطلاعات مربی بارگذاری نشد</p>
+          <ErrorBanner message="اطلاعات مربی بارگذاری نشد" onRetry={() => void mutate()} />
         ) : (
           <div className="flex flex-col gap-4">
             <DescriptionList
@@ -45,17 +45,12 @@ export function CountyChangeCoachDialog({ coachId, onClose }: { coachId: string 
                 { term: "تاریخ عضویت", value: formatJalaliDate(new Date(coach.createdAt)) },
               ]}
             />
-            <Button variant="outline" size="sm" className="self-start" render={<Link href={`/admin/coaches/${coach.id}`} />}>
+            <Button variant="outline" size="sm" className="h-11 self-start sm:h-8" render={<Link href={`/admin/coaches/${coach.id}`} />}>
               مشاهده پروفایل کامل
               <ArrowLeftIcon data-icon="inline-end" />
             </Button>
           </div>
         )}
-        {error ? (
-          <Button variant="ghost" size="sm" className="self-start" onClick={() => void mutate()}>
-            تلاش دوباره
-          </Button>
-        ) : null}
       </DialogContent>
     </Dialog>
   );

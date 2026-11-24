@@ -1,7 +1,7 @@
 "use client";
 
 import { UsersIcon } from "lucide-react";
-import { Avatar, DataTable, PageHeader, StatusBadge } from "@/components/shared";
+import { Avatar, DataTable, MobileCard, MobileCardLine, MobileCardTop, PageHeader, StatusBadge } from "@/components/shared";
 import type { User } from "@/features/users";
 import { GenderChip, useCoaches } from "@/features/users";
 import { toPersianDigits } from "@/lib/format";
@@ -28,25 +28,16 @@ const columns = [
 
 function CoachCard({ coach }: { coach: User }) {
   return (
-    <div className="rounded-xl border border-border bg-card p-4 shadow-card">
-      <div className="flex items-center gap-3">
-        <Avatar id={coach.id} name={coach.fullName} size="md" />
-        <p className="min-w-0 flex-1 truncate text-sm font-medium">{coach.fullName}</p>
-        <StatusBadge status={coach.isActive ? "ACTIVE" : "INACTIVE"} />
-      </div>
-      <div className="mt-2 flex items-baseline justify-between gap-3">
-        <span className="text-subtle text-muted-foreground">شماره همراه</span>
-        <span className="text-sm tabular-nums">{toPersianDigits(coach.mobile)}</span>
-      </div>
-      <div className="mt-1 flex items-baseline justify-between gap-3">
-        <span className="text-subtle text-muted-foreground">جنسیت</span>
-        <GenderChip gender={coach.gender} />
-      </div>
-      <div className="mt-1 flex items-baseline justify-between gap-3">
-        <span className="text-subtle text-muted-foreground">شهرستان</span>
-        <span className="text-sm">{coach.countyName ?? "نامشخص"}</span>
-      </div>
-    </div>
+    <MobileCard>
+      <MobileCardTop
+        leading={<Avatar id={coach.id} name={coach.fullName} size="md" />}
+        title={coach.fullName}
+        end={<StatusBadge status={coach.isActive ? "ACTIVE" : "INACTIVE"} />}
+      />
+      <MobileCardLine label="شماره همراه" value={toPersianDigits(coach.mobile)} />
+      <MobileCardLine label="جنسیت" value={<GenderChip gender={coach.gender} />} />
+      <MobileCardLine label="شهرستان" value={coach.countyName ?? "نامشخص"} />
+    </MobileCard>
   );
 }
 

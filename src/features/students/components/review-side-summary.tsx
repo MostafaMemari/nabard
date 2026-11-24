@@ -1,6 +1,6 @@
 "use client";
 
-import { BeltChip, DescriptionList, StatusBadge } from "@/components/shared";
+import { BeltChip, DescriptionList, Note, StatusBadge } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import type { Belt } from "@/features/base-data";
 import { formatJalaliDate, toPersianDigits } from "@/lib/format";
@@ -27,9 +27,7 @@ export function ReviewSideSummary({
         <StatusBadge status={registrationStatusKey(request.status)} />
       </div>
 
-      {request.status === "REJECTED" && request.reviewNote ? (
-        <p className="rounded-lg bg-warning-bg px-3 py-2 text-subtle text-warning">{request.reviewNote}</p>
-      ) : null}
+      {request.status === "REJECTED" && request.reviewNote ? <Note>{request.reviewNote}</Note> : null}
 
       <DescriptionList
         items={[
@@ -69,7 +67,7 @@ export function ReviewSideSummary({
           <Button onClick={onApprove} disabled={working}>
             تأیید و افزودن هنرجو
           </Button>
-          <Button variant="outline" className="text-danger" onClick={onReject} disabled={working}>
+          <Button variant="destructive" onClick={onReject} disabled={working}>
             رد درخواست
           </Button>
         </div>

@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DownloadIcon } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -39,6 +40,7 @@ export function PhotoChangeDecisionDialog({
     defaultValues: { note: "" },
   });
   const approving = decision === "approve";
+  const [working, setWorking] = useState(false);
 
   function close() {
     form.reset({ note: "" });
@@ -57,7 +59,9 @@ export function PhotoChangeDecisionDialog({
   async function approve() {
     if (!request) return;
 
+    setWorking(true);
     const done = await decide(request.id, "approve");
+    setWorking(false);
     if (done) {
       close();
     }
@@ -72,7 +76,7 @@ export function PhotoChangeDecisionDialog({
         }
       }}
     >
-      <DialogContent showCloseButton={false} className="max-w-lg">
+      <DialogContent showCloseButton={false} className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{approving ? "تأیید تغییر عکس هنرجو" : "رد درخواست تغییر عکس"}</DialogTitle>
           <DialogDescription>
@@ -89,20 +93,16 @@ export function PhotoChangeDecisionDialog({
               ) : null}
               {request ? <PhotoBox label="عکس جدید" src={photoChangeFileUrl(request.id)} /> : null}
             </div>
-            <a
-              href={request ? photoChangeFileUrl(request.id, true) : "#"}
-              download
-              className="flex items-center justify-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-muted/50"
-            >
+            <Button type="button" variant="outline" render={<a href={request ? photoChangeFileUrl(request.id, true) : "#"} download />}>
               <DownloadIcon aria-hidden className="size-4" />
               دانلود عکس جدید
-            </a>
+            </Button>
             <DialogFooter>
               <Button type="button" variant="outline" onClick={close}>
                 انصراف
               </Button>
-              <Button type="button" onClick={() => void approve()}>
-                تأیید و جایگزینی عکس
+              <Button type="button" onClick={() => void approve()} disabled={working}>
+                {working ? "در حال ثبت…" : "تأیید و جایگزینی عکس"}
               </Button>
             </DialogFooter>
           </div>

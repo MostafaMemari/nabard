@@ -76,7 +76,6 @@ export function usePhotoChangeColumns({
             <Button
               size="sm"
               variant="outline"
-              className="text-success hover:text-success"
               onClick={(event) => {
                 event.stopPropagation();
                 onDecide(row, "approve");
@@ -86,8 +85,7 @@ export function usePhotoChangeColumns({
             </Button>
             <Button
               size="sm"
-              variant="outline"
-              className="text-danger hover:text-danger"
+              variant="destructive"
               onClick={(event) => {
                 event.stopPropagation();
                 onDecide(row, "reject");

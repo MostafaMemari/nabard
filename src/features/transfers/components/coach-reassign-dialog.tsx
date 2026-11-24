@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { ControlledSelectField } from "@/components/shared";
+import { ControlledSelectField, Note } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { reassignCoachStudents } from "../api";
@@ -60,18 +60,16 @@ export function CoachReassignDialog({
         }
       }}
     >
-      <DialogContent showCloseButton={false} className="max-w-md">
+      <DialogContent showCloseButton={false} className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>انتقال هنرجویان</DialogTitle>
           <DialogDescription>همه هنرجویان «{coachName}» به مربی دیگری از همین استان منتقل می شوند</DialogDescription>
         </DialogHeader>
-        <p className="text-subtle rounded-lg bg-warning-bg px-3 py-2 text-warning">
-          {studentCount} هنرجو منتقل می شود. ثبت نام ها و پرداخت ها با مربی فعلی می مانند و پروفایل هنرجویان تغییر نمی کند
-        </p>
+        <Note>هنرجو منتقل می شود. ثبت نام ها و پرداخت ها با مربی فعلی می مانند و پروفایل هنرجویان تغییر نمی کند</Note>
         <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
           <ControlledSelectField control={form.control} name="toCoachId" label="مربی مقصد" items={items} />
           <DialogFooter>
-            <Button type="button" variant="ghost" onClick={close}>
+            <Button type="button" variant="outline" onClick={close}>
               انصراف
             </Button>
             <Button type="submit" disabled={working || targets.length === 0}>

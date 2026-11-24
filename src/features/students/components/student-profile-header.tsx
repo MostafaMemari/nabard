@@ -1,7 +1,7 @@
 "use client";
 
 import { LockIcon, UserIcon } from "lucide-react";
-import { SectionCard, StatusBadge } from "@/components/shared";
+import { Note, SectionCard, StatusBadge } from "@/components/shared";
 import { personGenderLabels } from "@/features/base-data";
 import { formatJalaliDate } from "@/lib/format";
 import { profileStatusKey, type StudentDetail } from "../types";
@@ -32,9 +32,7 @@ export function StudentProfileHeader({ student }: { student: StudentDetail }) {
         </div>
       </div>
 
-      {student.profileStatus === "REJECTED" && student.profileNote ? (
-        <p className="rounded-lg bg-warning-bg px-3 py-2 text-subtle text-warning">{student.profileNote}</p>
-      ) : null}
+      {student.profileStatus === "REJECTED" && student.profileNote ? <Note>{student.profileNote}</Note> : null}
 
       <p className="flex items-start gap-2 rounded-lg border border-primary/20 bg-primary-subtle px-3 py-2.5 text-subtle text-primary">
         <LockIcon aria-hidden className="mt-0.5 size-4 shrink-0" />
