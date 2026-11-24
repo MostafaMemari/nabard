@@ -21,7 +21,14 @@ export function WorkspaceSheet({
 }) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="bottom" showCloseButton={false} className="mx-auto h-[92dvh] max-w-content gap-0 rounded-t-2xl p-0">
+      {/* Chrome Android scroll-lock keeps dvh at the expanded size while the
+          toolbar reappears, so a 92dvh sheet hides its header under the address
+          bar; the svh cap keeps the top edge below the toolbar in every state. */}
+      <SheetContent
+        side="bottom"
+        showCloseButton={false}
+        className="mx-auto h-[min(92dvh,calc(100svh_-_5rem))] max-w-content gap-0 rounded-t-2xl p-0"
+      >
         <SheetTitle className="sr-only">میز کار</SheetTitle>
         <div className="flex h-14 shrink-0 items-center justify-between border-b border-border px-4">
           <span className="flex items-center gap-2 text-base font-semibold">
