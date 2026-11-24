@@ -1,7 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Note } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
@@ -27,6 +29,7 @@ export function CountyChangeDecisionDialog({
     defaultValues: { note: "" },
   });
   const approving = decision === "approve";
+  const [working, setWorking] = useState(false);
 
   function close() {
     form.reset({ note: "" });
@@ -45,7 +48,9 @@ export function CountyChangeDecisionDialog({
   async function approve() {
     if (!request) return;
 
+    setWorking(true);
     const done = await decide(request.id, "approve");
+    setWorking(false);
     if (done) {
       close();
     }
@@ -60,7 +65,7 @@ export function CountyChangeDecisionDialog({
         }
       }}
     >
-      <DialogContent showCloseButton={false} className="max-w-md">
+      <DialogContent showCloseButton={false} className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{approving ? "تأیید درخواست" : "رد درخواست"}</DialogTitle>
           <DialogDescription>
@@ -70,9 +75,7 @@ export function CountyChangeDecisionDialog({
           </DialogDescription>
         </DialogHeader>
         {approving ? (
-          <p className="text-subtle rounded-lg bg-primary-subtle px-3 py-2 text-primary">
-            ثبت نام ها و هنرجویان مربی بدون تغییر می مانند و فقط شهرستان او به روز می شود
-          </p>
+          <Note tone="primary">ثبت نام ها و هنرجویان مربی بدون تغییر می مانند و فقط شهرستان او به روز می شود</Note>
         ) : (
           <form onSubmit={form.handleSubmit(submit)} noValidate className="flex flex-col gap-4">
             <Field data-invalid={form.formState.errors.note ? "" : undefined}>
@@ -100,9 +103,7 @@ export function CountyChangeDecisionDialog({
             <Button type="button" variant="outline" onClick={close}>
               انصراف
             </Button>
-            <Button type="button" onClick={() => void approve()}>
-              تأیید درخواست
-            </Button>
+            <Button type="button" onClick={() => void approve()} disabled={working}></Button>
           </DialogFooter>
         ) : null}
       </DialogContent>

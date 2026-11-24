@@ -2,6 +2,7 @@
 
 import { ImageUpIcon, Trash2Icon, UploadIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Note } from "@/components/shared";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { FieldError } from "@/components/ui/field";
@@ -98,7 +99,7 @@ export function CoachPhotoChangeDialog({
         }
       }}
     >
-      <DialogContent showCloseButton={false} className="max-w-md">
+      <DialogContent showCloseButton={false} className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>درخواست تغییر عکس «{studentName}»</DialogTitle>
           <DialogDescription>
@@ -107,9 +108,7 @@ export function CoachPhotoChangeDialog({
         </DialogHeader>
 
         {hasPending ? (
-          <p className="text-subtle rounded-lg bg-warning-bg px-3 py-2.5 text-warning">
-            یک درخواست تغییر عکس برای این هنرجو در انتظار بررسی است؛ تا نتیجه آن، درخواست جدید ثبت نمی شود
-          </p>
+          <Note>یک درخواست تغییر عکس برای این هنرجو در انتظار بررسی است؛ تا نتیجه آن، درخواست جدید ثبت نمی شود</Note>
         ) : (
           <>
             <input
@@ -138,7 +137,7 @@ export function CoachPhotoChangeDialog({
             {error ? <FieldError errors={[{ message: error }]} /> : null}
             <div className="flex items-center justify-between gap-3">
               {file ? (
-                <Button type="button" variant="ghost" className="text-danger hover:text-danger" onClick={clearFile}>
+                <Button type="button" variant="ghost" className="text-danger hover:bg-danger-bg hover:text-danger" onClick={clearFile}>
                   <Trash2Icon data-icon="inline-start" />
                   حذف تصویر
                 </Button>

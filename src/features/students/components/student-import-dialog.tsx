@@ -27,7 +27,7 @@ export function StudentImportDialog({
         if (!next) close();
       }}
     >
-      <DialogContent showCloseButton={false} className="max-w-lg">
+      <DialogContent showCloseButton={false} className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>وارد کردن گروهی هنرجو با اکسل</DialogTitle>
           <DialogDescription>

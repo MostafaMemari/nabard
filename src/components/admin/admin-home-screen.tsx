@@ -43,7 +43,7 @@ export function AdminHomeScreen() {
               icon={TrophyIcon}
               title="هنوز مسابقه ای ثبت نشده است"
               action={
-                <Button size="sm" render={<Link href="/admin/competitions/new" />}>
+                <Button size="sm" className="h-11 md:h-8" render={<Link href="/admin/competitions/new" />}>
                   <PlusIcon data-icon="inline-start" />
                   مسابقه جدید
                 </Button>

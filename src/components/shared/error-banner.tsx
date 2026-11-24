@@ -7,7 +7,7 @@ export function ErrorBanner({ message = "دریافت اطلاعات ناموف�
     <div className="flex items-center justify-between gap-3 rounded-xl border border-danger/30 bg-danger-bg px-4 py-3 text-sm text-danger">
       <span>{message}</span>
       {onRetry ? (
-        <Button type="button" variant="outline" size="sm" onClick={onRetry}>
+        <Button type="button" variant="outline" size="sm" className="h-11 sm:h-8" onClick={onRetry}>
           تلاش دوباره
         </Button>
       ) : null}
